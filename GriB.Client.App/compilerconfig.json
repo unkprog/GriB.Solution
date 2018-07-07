@@ -1,10 +1,10 @@
 ﻿[
   {
-    "outputFile": "Content/css/materialize.css",
+    "outputFile": "Contents/css/materialize.css",
     "inputFile": "Scss/materialize.scss"
   },
   {
-    "outputFile": "Content/css/app.css",
+    "outputFile": "Contents/css/app.css",
     "inputFile": "Scss/app.scss"
   }
 ]
