@@ -47,7 +47,8 @@
     <TypeScriptNoEmitOnError>True</TypeScriptNoEmitOnError>
     <TypeScriptSourceMap>True</TypeScriptSourceMap>
     <TypeScriptMapRoot />
-    <TypeScriptSourceRoot />
+    <TypeScriptSourceRoot>
+    </TypeScriptSourceRoot>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -112,12 +113,15 @@
     <Content Include="Content\js\lib\kendo\kendo.data.js" />
     <Content Include="Content\js\lib\kendo\kendo.data.odata.js" />
     <Content Include="Content\js\lib\kendo\kendo.data.xml.js" />
+    <Content Include="Content\js\lib\materialize.min.js" />
     <Content Include="Content\js\lib\require\domReady.js" />
     <Content Include="Content\js\lib\require\require.js" />
     <Content Include="Content\js\nls\en\strings.js" />
     <Content Include="Content\js\nls\root\strings.js" />
     <Content Include="Content\js\nls\strings.js" />
     <Content Include="Content\view\index.html" />
+    <Content Include="Content\view\login\index.html" />
+    <Content Include="Content\view\start.html" />
     <Content Include="Content\view\main.html" />
     <Content Include="Global.asax" />
     <Content Include="Web.config">
@@ -189,7 +193,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Content\js\app\controllers\" />
     <Folder Include="Controllers\" />
     <Folder Include="Models\" />
   </ItemGroup>
@@ -197,9 +200,13 @@
     <TypeScriptCompile Include="Content\js\app\application.ts" />
     <TypeScriptCompile Include="Content\js\app\common\variables.ts" />
     <Content Include="Content\js\app\init.js" />
+    <TypeScriptCompile Include="Content\js\app\controllers\basecontroller.ts" />
+    <TypeScriptCompile Include="Content\js\app\controllers\security\logincontroller.ts" />
+    <TypeScriptCompile Include="Content\js\app\controllers\startcontroller.ts" />
     <TypeScriptCompile Include="Content\js\app\interfaces\icontroller.ts" />
     <TypeScriptCompile Include="Content\js\lib\jquery.d.ts" />
     <TypeScriptCompile Include="Content\js\lib\kendo\kendo.d.ts" />
+    <TypeScriptCompile Include="Content\js\lib\materialize.d.ts" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />

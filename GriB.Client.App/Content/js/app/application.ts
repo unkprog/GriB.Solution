@@ -1,6 +1,6 @@
-﻿/// <reference path="interfaces/icontroller.ts" />
-import vars = require('common/variables');
-import int = require('interfaces/icontroller');
+﻿import vars = require('app/common/variables');
+import int = require('app/interfaces/icontroller');
+import sc = require('app/controllers/startcontroller');
 
 export module App {
     class ControllersStack {
@@ -77,12 +77,19 @@ export module App {
             this.progressControl.hide();
         }
 
+        appContent: JQuery;
+        appTitle: JQuery;
         private loadAppView() {
             let self = this;
             $.when($.ajax({ url: "/Content/view/main.html", cache: false })).done((template) => {
                 try {
                     $("#mainview").html(template);
                     kendo.bind($("#mainview"), this._model);
+
+                    self.appTitle = $("#app-title");
+                    self.appContent = $("#app-content");
+                    $('.sidenav').sidenav();
+                    self.openStartView();
                 } finally {
                     self.HideLoading();
                 }
@@ -95,23 +102,37 @@ export module App {
         public OpenView(controller: int.Interfaces.IController, backController?: int.Interfaces.IController) {
             var self = this;
             if ($("#" + controller.Options.Id).length > 0) return;     //Already loaded and current
-            //self.ShowLoading();
+            self.ShowLoading();
             $.when($.ajax({ url: controller.Options.Url, cache: false })).done((template) => {
                 try {
-                    self._controller = controller;
-                   // self._appTitle.html(controller.Header);
+                    if (self._controller)
+                        self._controller.ViewHide(this);
 
-                    //let view: kendo.View = self._controller.CreateView(template);
-                    //self.contentLayout.showIn("#content-layout", view);
-                    //$("#" + self._controller.Id).css("visibility", "visible");
+                    self._controller = controller;
                     self._controllersStack.Push(backController);
+
+                    let header = controller.Header;
+                    if (header)
+                        self.appTitle.html(header);
+
+                    let view = $(template);//.find("#" + self._controller.Options.Id);
+                    if (view.length > 0) {
+                        kendo.bind(view, self._controller.Model);
+                        self._controller.ViewInit(this);
+                    }
+                    self.appContent.html(view[0]);
+                    self._controller.ViewShow(this);
+ 
                 } finally {
                     //self.HideLoading();
                 }
             }).fail((e) => {
-                //self.HideLoading();
+                self.HideLoading();
             });
         }
 
+        private openStartView() {
+            this.OpenView(new sc.controllers.StartController({ Url: "/Content/view/start.html", Id: "app-start" }));
+        }
     }
 }

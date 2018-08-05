@@ -2,7 +2,7 @@
     baseUrl: "/Content/js",
     paths: {
         jquery: "lib/jquery-3.3.1.min",
-        materialize: "lib/materialize/materialize.min",
+        materialize: "lib/materialize.min",
         "kendo.core": "lib/kendo/kendo.core",
         "kendo.data": "lib/kendo/kendo.data",
         "kendo.data.odata": "lib/kendo/kendo.data.odata",
@@ -23,7 +23,7 @@
     };
 })();
 
-define(["domReady", "jquery", "kendo.binder"], function (domReady, jquery, kendoBinder) {
+define(["domReady", "jquery", "materialize", "kendo.binder"], function (domReady, jquery, materialize, kendoBinder) {
     $("#progress-container").show();
     domReady(function () {
         require(["app/application"], function (app) {

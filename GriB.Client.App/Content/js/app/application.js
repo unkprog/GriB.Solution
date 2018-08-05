@@ -1,4 +1,4 @@
-define(["require", "exports"], function (require, exports) {
+define(["require", "exports", "app/controllers/startcontroller"], function (require, exports, sc) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var App;
@@ -75,6 +75,10 @@ define(["require", "exports"], function (require, exports) {
                     try {
                         $("#mainview").html(template);
                         kendo.bind($("#mainview"), _this._model);
+                        self.appTitle = $("#app-title");
+                        self.appContent = $("#app-content");
+                        $('.sidenav').sidenav();
+                        self.openStartView();
                     }
                     finally {
                         self.HideLoading();
@@ -85,25 +89,37 @@ define(["require", "exports"], function (require, exports) {
                 });
             };
             Application.prototype.OpenView = function (controller, backController) {
+                var _this = this;
                 var self = this;
                 if ($("#" + controller.Options.Id).length > 0)
                     return; //Already loaded and current
-                //self.ShowLoading();
+                self.ShowLoading();
                 $.when($.ajax({ url: controller.Options.Url, cache: false })).done(function (template) {
                     try {
+                        if (self._controller)
+                            self._controller.ViewHide(_this);
                         self._controller = controller;
-                        // self._appTitle.html(controller.Header);
-                        //let view: kendo.View = self._controller.CreateView(template);
-                        //self.contentLayout.showIn("#content-layout", view);
-                        //$("#" + self._controller.Id).css("visibility", "visible");
                         self._controllersStack.Push(backController);
+                        var header = controller.Header;
+                        if (header)
+                            self.appTitle.html(header);
+                        var view = $(template); //.find("#" + self._controller.Options.Id);
+                        if (view.length > 0) {
+                            kendo.bind(view, self._controller.Model);
+                            self._controller.ViewInit(_this);
+                        }
+                        self.appContent.html(view[0]);
+                        self._controller.ViewShow(_this);
                     }
                     finally {
                         //self.HideLoading();
                     }
                 }).fail(function (e) {
-                    //self.HideLoading();
+                    self.HideLoading();
                 });
+            };
+            Application.prototype.openStartView = function () {
+                this.OpenView(new sc.controllers.StartController({ Url: "/Content/view/start.html", Id: "app-start" }));
             };
             return Application;
         }());

@@ -21,9 +21,9 @@ define({
     /////////////////////////////////////////////////////////////////////////////////////////////
     //              LoginController                                                            //
     /////////////////////////////////////////////////////////////////////////////////////////////
-    "logincontroller$labelHeaderAutorization": "Авторизация",
+    "logincontroller$labelAutorization": "Авторизация",
 
-    "logincontroller$labelHeader": "Вход",
+    "logincontroller$labelEnter": "Авторизация",
     "logincontroller$labelUser": "Пользователь",
     "logincontroller$labelPassword": "Пароль",
 

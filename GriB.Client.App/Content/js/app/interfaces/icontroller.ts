@@ -3,12 +3,13 @@
     export interface IControllerOptions {
         Url: string;
         Id: string;
-        Header: string;
     }
 
     export interface IController {
         Options: IControllerOptions;
         Model: any;
+
+        Header: string;
 
         ViewInit(e: any): void;
         ViewShow(e: any): void;
