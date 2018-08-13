@@ -8,7 +8,7 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-define(["require", "exports", "app/controllers/basecontroller"], function (require, exports, bc) {
+define(["require", "exports", "app/controllers/basecontroller", "../common/variables"], function (require, exports, bc, variables_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var controllers;
@@ -20,7 +20,8 @@ define(["require", "exports", "app/controllers/basecontroller"], function (requi
             }
             StartController.prototype.createModel = function () {
                 return {
-                    "Header": "POS Cloud"
+                    "Header": "POS Cloud",
+                    "labelEnter": variables_1._statres("button$label$demo")
                 };
             };
             return StartController;

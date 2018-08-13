@@ -33,6 +33,7 @@ export module App {
 
         private _model: any;
         constructor() {
+
             this._controllersStack = new ControllersStack();
             this._model = new kendo.data.ObservableObject({
                 "labelOk" : "Ok"

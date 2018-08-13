@@ -18,10 +18,14 @@ define({
     "button$label$delete": "Удалить",
     "button$label$find": "Поиск",
 
+    "button$label$demo": "Демо",
+    "button$label$register": "Регистрация",
+    "button$label$enter": "Вход",
+
     /////////////////////////////////////////////////////////////////////////////////////////////
-    //              LoginController                                                            //
+    //              StartController                                                            //
     /////////////////////////////////////////////////////////////////////////////////////////////
-    "logincontroller$labelAutorization": "Авторизация",
+    "start$label$enter": "Вход",
 
     "logincontroller$labelEnter": "Авторизация",
     "logincontroller$labelUser": "Пользователь",

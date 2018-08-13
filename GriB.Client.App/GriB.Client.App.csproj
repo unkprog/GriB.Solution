@@ -207,6 +207,7 @@
     <TypeScriptCompile Include="Content\js\lib\jquery.d.ts" />
     <TypeScriptCompile Include="Content\js\lib\kendo\kendo.d.ts" />
     <TypeScriptCompile Include="Content\js\lib\materialize.d.ts" />
+    <TypeScriptCompile Include="Content\js\lib\require\require.d.ts" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
