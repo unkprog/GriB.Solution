@@ -4,19 +4,20 @@ define(["require", "exports", "i18n!nls/strings"], function (require, exports) {
     Object.defineProperty(exports, "__esModule", { value: true });
     var App;
     (function (App) {
-        var StaticRes = /** @class */ (function () {
-            function StaticRes() {
-                var sr = this;
-                sr.i18nData = require("i18n!nls/strings");
-                exports._statres = function (id) { return sr.GetString(id); };
+        var StaticResources = /** @class */ (function () {
+            function StaticResources() {
+                this.i18nData = require("i18n!nls/strings");
             }
-            StaticRes.prototype.GetString = function (id) {
+            StaticResources.prototype.GetString = function (id) {
                 return (this.i18nData && this.i18nData[id]) ? this.i18nData[id] : "";
             };
-            return StaticRes;
+            return StaticResources;
         }());
-        App.StaticRes = StaticRes;
-        new StaticRes();
+        var staticResources = new StaticResources();
+        exports._statres = function (id) { return staticResources.GetString(id); };
+        exports._absUrl = function (refUrl) {
+            return _appData.BaseUrl + refUrl;
+        };
     })(App = exports.App || (exports.App = {}));
 });
 //# sourceMappingURL=variables.js.map

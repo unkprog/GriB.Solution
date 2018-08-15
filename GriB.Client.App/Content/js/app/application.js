@@ -35,6 +35,7 @@ define(["require", "exports", "app/controllers/startcontroller"], function (requ
             function Application() {
                 this._controllersStack = new ControllersStack();
                 this._model = new kendo.data.ObservableObject({
+                    "AppHeader": "POS Cloud",
                     "labelOk": "Ok"
                 });
                 this.Initailize();
@@ -47,6 +48,11 @@ define(["require", "exports", "app/controllers/startcontroller"], function (requ
                 configurable: true
             });
             Application.prototype.resize = function (e) {
+                var heigth = window.innerHeight;
+                heigth = heigth - this.navbarControl.height();
+                this.contentControl.height(heigth);
+                if (this._controller)
+                    this._controller.ViewResize(e);
             };
             Application.prototype.backButtonClick = function (e) {
                 this._controllersStack.Pop();
@@ -54,6 +60,7 @@ define(["require", "exports", "app/controllers/startcontroller"], function (requ
             };
             Application.prototype.Initailize = function () {
                 this.progressControl = $("#progress-container");
+                this.contentControl = $("#app-content");
                 this.Resize = $.proxy(this.resize, this);
                 this.BackButtonClick = $.proxy(this.backButtonClick, this);
                 this.loadAppView();
@@ -75,9 +82,10 @@ define(["require", "exports", "app/controllers/startcontroller"], function (requ
                     try {
                         $("#mainview").html(template);
                         kendo.bind($("#mainview"), _this._model);
-                        self.appTitle = $("#app-title");
-                        self.appContent = $("#app-content");
+                        self.contentControl = $("#app-content");
+                        self.navbarControl = $("#app-navbar");
                         $('.sidenav').sidenav();
+                        self.resize(undefined);
                         self.openStartView();
                     }
                     finally {
@@ -102,13 +110,13 @@ define(["require", "exports", "app/controllers/startcontroller"], function (requ
                         self._controllersStack.Push(backController);
                         var header = controller.Header;
                         if (header)
-                            self.appTitle.html(header);
+                            self._model.set("AppHeader", header);
                         var view = $(template); //.find("#" + self._controller.Options.Id);
                         if (view.length > 0) {
                             kendo.bind(view, self._controller.Model);
                             self._controller.ViewInit(_this);
                         }
-                        self.appContent.html(view[0]);
+                        self.contentControl.html(view[0]);
                         self._controller.ViewShow(_this);
                     }
                     finally {

@@ -31,11 +31,12 @@ export module App {
 
     export class Application {
 
-        private _model: any;
+        private _model: kendo.data.ObservableObject;
         constructor() {
 
             this._controllersStack = new ControllersStack();
             this._model = new kendo.data.ObservableObject({
+                "AppHeader": "POS Cloud",
                 "labelOk" : "Ok"
             });
             this.Initailize();
@@ -49,6 +50,12 @@ export module App {
 
         public Resize: { (e: any): void; };
         private resize(e) {
+            let heigth = window.innerHeight;
+            heigth = heigth - this.navbarControl.height();
+            this.contentControl.height(heigth);
+
+            if (this._controller)
+                this._controller.ViewResize(e);
         }
 
         public BackButtonClick: { (e: any): void; };
@@ -58,8 +65,12 @@ export module App {
         }
 
         private progressControl: JQuery;
+        private navbarControl: JQuery;
+        private contentControl: JQuery;
         public Initailize(): void {
             this.progressControl = $("#progress-container");
+            this.contentControl = $("#app-content");
+
             this.Resize = $.proxy(this.resize, this);
             this.BackButtonClick = $.proxy(this.backButtonClick, this);
             this.loadAppView();
@@ -78,8 +89,7 @@ export module App {
             this.progressControl.hide();
         }
 
-        appContent: JQuery;
-        appTitle: JQuery;
+      
         private loadAppView() {
             let self = this;
             $.when($.ajax({ url: "/Content/view/main.html", cache: false })).done((template) => {
@@ -87,9 +97,10 @@ export module App {
                     $("#mainview").html(template);
                     kendo.bind($("#mainview"), this._model);
 
-                    self.appTitle = $("#app-title");
-                    self.appContent = $("#app-content");
+                    self.contentControl = $("#app-content");
+                    self.navbarControl = $("#app-navbar");
                     $('.sidenav').sidenav();
+                    self.resize(undefined);
                     self.openStartView();
                 } finally {
                     self.HideLoading();
@@ -114,14 +125,14 @@ export module App {
 
                     let header = controller.Header;
                     if (header)
-                        self.appTitle.html(header);
+                        self._model.set("AppHeader", header);
 
                     let view = $(template);//.find("#" + self._controller.Options.Id);
                     if (view.length > 0) {
                         kendo.bind(view, self._controller.Model);
                         self._controller.ViewInit(this);
                     }
-                    self.appContent.html(view[0]);
+                    self.contentControl.html(view[0]);
                     self._controller.ViewShow(this);
  
                 } finally {

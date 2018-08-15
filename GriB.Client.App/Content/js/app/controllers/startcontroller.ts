@@ -11,10 +11,25 @@ export module controllers {
         protected createModel(): any {
             return {
                 "Header": "POS Cloud",
-                "labelEnter": _statres("button$label$demo")
+                "labelTitle": _statres("label$autorization"),
+                "labelPhone": _statres("label$phone"),
+                "labelPassword": _statres("label$password"),
+
+                "labelForgot": _statres("button$label$forgot"),
+                "labelRegister": _statres("button$label$register"),
+                "labelEnter": _statres("button$label$enter"),
             };
         }
 
+
+        public ViewInit(e: any): void {
+            $('#app-modal-login').modal();
+            M.updateTextFields();
+        }
+
+        public ViewShow(e: any): void {
+            $('#app-modal-login').modal('open');
+        }
        
     }
 }

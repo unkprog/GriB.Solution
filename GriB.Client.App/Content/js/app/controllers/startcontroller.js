@@ -21,8 +21,20 @@ define(["require", "exports", "app/controllers/basecontroller", "../common/varia
             StartController.prototype.createModel = function () {
                 return {
                     "Header": "POS Cloud",
-                    "labelEnter": variables_1._statres("button$label$demo")
+                    "labelTitle": variables_1._statres("label$autorization"),
+                    "labelPhone": variables_1._statres("label$phone"),
+                    "labelPassword": variables_1._statres("label$password"),
+                    "labelForgot": variables_1._statres("button$label$forgot"),
+                    "labelRegister": variables_1._statres("button$label$register"),
+                    "labelEnter": variables_1._statres("button$label$enter"),
                 };
+            };
+            StartController.prototype.ViewInit = function (e) {
+                $('#app-modal-login').modal();
+                M.updateTextFields();
+            };
+            StartController.prototype.ViewShow = function (e) {
+                $('#app-modal-login').modal('open');
             };
             return StartController;
         }(bc.controllers.BaseController));

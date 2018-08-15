@@ -101,6 +101,8 @@
     <Content Include="Content\css\app.min.css">
       <DependentUpon>app.css</DependentUpon>
     </Content>
+    <Content Include="Content\css\material-icons\MaterialIcons-Regular.svg" />
+    <Content Include="Content\css\material-icons\MaterialIcons.css" />
     <Content Include="Content\css\materialize.css" />
     <Content Include="Content\css\materialize.min.css">
       <DependentUpon>materialize.css</DependentUpon>
@@ -140,6 +142,11 @@
     <None Include="compilerconfig.json.defaults">
       <DependentUpon>compilerconfig.json</DependentUpon>
     </None>
+    <Content Include="Content\css\material-icons\MaterialIcons-Regular.eot" />
+    <Content Include="Content\css\material-icons\MaterialIcons-Regular.ijmap" />
+    <Content Include="Content\css\material-icons\MaterialIcons-Regular.ttf" />
+    <Content Include="Content\css\material-icons\MaterialIcons-Regular.woff" />
+    <Content Include="Content\css\material-icons\MaterialIcons-Regular.woff2" />
     <None Include="packages.config" />
     <Content Include="Scss\components\forms\_checkboxes.scss" />
     <Content Include="Scss\components\forms\_file-input.scss" />
