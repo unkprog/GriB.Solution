@@ -1,6 +1,7 @@
 ﻿import vars = require('app/common/variables');
 import int = require('app/interfaces/icontroller');
-import sc = require('app/controllers/startcontroller');
+import intapp = require('app/interfaces/iapplication');
+import sc = require('app/controllers/security/logincontroller');
 
 export module App {
     class ControllersStack {
@@ -29,11 +30,11 @@ export module App {
         }
     }
 
-    export class Application {
+    export class Application implements intapp.Interfaces.IApplication {
 
         private _model: kendo.data.ObservableObject;
         constructor() {
-
+            vars._app = this;
             this._controllersStack = new ControllersStack();
             this._model = new kendo.data.ObservableObject({
                 "AppHeader": "POS Cloud",
@@ -101,9 +102,9 @@ export module App {
                     self.navbarControl = $("#app-navbar");
                     $('.sidenav').sidenav();
                     self.resize(undefined);
-                    self.openStartView();
+                    self.openLoginView();
                 } finally {
-                    self.HideLoading();
+                    //self.HideLoading();
                 }
             }).fail((e) => {
                 self.HideLoading();
@@ -114,8 +115,10 @@ export module App {
         public OpenView(controller: int.Interfaces.IController, backController?: int.Interfaces.IController) {
             var self = this;
             if ($("#" + controller.Options.Id).length > 0) return;     //Already loaded and current
+
             self.ShowLoading();
             $.when($.ajax({ url: controller.Options.Url, cache: false })).done((template) => {
+                let isInit: boolean = false;
                 try {
                     if (self._controller)
                         self._controller.ViewHide(this);
@@ -127,24 +130,22 @@ export module App {
                     if (header)
                         self._model.set("AppHeader", header);
 
-                    let view = $(template);//.find("#" + self._controller.Options.Id);
-                    if (view.length > 0) {
-                        kendo.bind(view, self._controller.Model);
-                        self._controller.ViewInit(this);
-                    }
+                    let view = $(template);
+                    isInit = self._controller.ViewInit(view);
                     self.contentControl.html(view[0]);
+                    
                     self._controller.ViewShow(this);
- 
                 } finally {
-                    //self.HideLoading();
+                    if (isInit)
+                        self.HideLoading();
                 }
             }).fail((e) => {
                 self.HideLoading();
             });
         }
 
-        private openStartView() {
-            this.OpenView(new sc.controllers.StartController({ Url: "/Content/view/start.html", Id: "app-start" }));
+        private openLoginView() {
+            this.OpenView(new sc.Controllers.Security.LoginController({ Url: "/Content/view/security/login.html", Id: "app-login" }));
         }
     }
 }

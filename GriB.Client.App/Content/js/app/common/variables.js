@@ -1,4 +1,3 @@
-/// <amd-dependency path="i18n!nls/strings" />
 define(["require", "exports", "i18n!nls/strings"], function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });

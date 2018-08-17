@@ -1,8 +1,9 @@
 ﻿/// <amd-dependency path="i18n!nls/strings" />
+import int = require('app/interfaces/iapplication');
 
-
-export declare var _statres: { (id: string): string; };    //Access to static resources
-export declare var _absUrl: { (url: string): string; };    //Create absolute ref to resource
+export let _app: int.Interfaces.IApplication;
+export declare let _statres: { (id: string): string; };    //Access to static resources
+export declare let _absUrl: { (url: string): string; };    //Create absolute ref to resource
 
 
 declare var _appData: {

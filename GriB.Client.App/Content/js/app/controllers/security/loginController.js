@@ -8,13 +8,13 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-define(["require", "exports", "../basecontroller"], function (require, exports, bc) {
+define(["require", "exports", "app/common/basecontroller", "app/controllers/security/registercontroller", "app/common/variables"], function (require, exports, bc, rc, variables_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    var controllers;
-    (function (controllers) {
-        var security;
-        (function (security) {
+    var Controllers;
+    (function (Controllers) {
+        var Security;
+        (function (Security) {
             var LoginController = /** @class */ (function (_super) {
                 __extends(LoginController, _super);
                 function LoginController(options) {
@@ -22,13 +22,32 @@ define(["require", "exports", "../basecontroller"], function (require, exports, 
                 }
                 LoginController.prototype.createModel = function () {
                     return {
-                        "Header": ""
+                        "Header": "POS Cloud",
+                        "labelTitle": variables_1._statres("label$autorization"),
+                        "labelPhone": variables_1._statres("label$phone"),
+                        "labelPassword": variables_1._statres("label$password"),
+                        "labelForgot": variables_1._statres("button$label$forgot"),
+                        "labelRegister": variables_1._statres("button$label$register"),
+                        "labelEnter": variables_1._statres("button$label$enter"),
                     };
                 };
+                LoginController.prototype.ViewInit = function (view) {
+                    var result = _super.prototype.ViewInit.call(this, view);
+                    this.RegisterButtonClick = this.createClick("btn-register", this.registerButtonClick, this);
+                    return result;
+                };
+                LoginController.prototype.ViewShow = function (e) {
+                    M.updateTextFields();
+                    //$('#app-modal-login').modal();
+                    //$('#app-modal-login').modal('open');
+                };
+                LoginController.prototype.registerButtonClick = function (e) {
+                    variables_1._app.OpenView(new rc.Controllers.Security.RegisterController({ Url: "/Content/view/security/register.html", Id: "app-register" }), this);
+                };
                 return LoginController;
-            }(bc.controllers.BaseController));
-            security.LoginController = LoginController;
-        })(security = controllers.security || (controllers.security = {}));
-    })(controllers = exports.controllers || (exports.controllers = {}));
+            }(bc.Controllers.BaseController));
+            Security.LoginController = LoginController;
+        })(Security = Controllers.Security || (Controllers.Security = {}));
+    })(Controllers = exports.Controllers || (exports.Controllers = {}));
 });
 //# sourceMappingURL=logincontroller.js.map

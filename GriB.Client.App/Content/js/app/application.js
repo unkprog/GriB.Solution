@@ -1,4 +1,4 @@
-define(["require", "exports", "app/controllers/startcontroller"], function (require, exports, sc) {
+define(["require", "exports", "app/common/variables", "app/controllers/security/logincontroller"], function (require, exports, vars, sc) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var App;
@@ -33,6 +33,7 @@ define(["require", "exports", "app/controllers/startcontroller"], function (requ
         }());
         var Application = /** @class */ (function () {
             function Application() {
+                vars._app = this;
                 this._controllersStack = new ControllersStack();
                 this._model = new kendo.data.ObservableObject({
                     "AppHeader": "POS Cloud",
@@ -86,10 +87,10 @@ define(["require", "exports", "app/controllers/startcontroller"], function (requ
                         self.navbarControl = $("#app-navbar");
                         $('.sidenav').sidenav();
                         self.resize(undefined);
-                        self.openStartView();
+                        self.openLoginView();
                     }
                     finally {
-                        self.HideLoading();
+                        //self.HideLoading();
                     }
                 }).fail(function (e) {
                     self.HideLoading();
@@ -103,6 +104,7 @@ define(["require", "exports", "app/controllers/startcontroller"], function (requ
                     return; //Already loaded and current
                 self.ShowLoading();
                 $.when($.ajax({ url: controller.Options.Url, cache: false })).done(function (template) {
+                    var isInit = false;
                     try {
                         if (self._controller)
                             self._controller.ViewHide(_this);
@@ -111,23 +113,21 @@ define(["require", "exports", "app/controllers/startcontroller"], function (requ
                         var header = controller.Header;
                         if (header)
                             self._model.set("AppHeader", header);
-                        var view = $(template); //.find("#" + self._controller.Options.Id);
-                        if (view.length > 0) {
-                            kendo.bind(view, self._controller.Model);
-                            self._controller.ViewInit(_this);
-                        }
+                        var view = $(template);
+                        isInit = self._controller.ViewInit(view);
                         self.contentControl.html(view[0]);
                         self._controller.ViewShow(_this);
                     }
                     finally {
-                        //self.HideLoading();
+                        if (isInit)
+                            self.HideLoading();
                     }
                 }).fail(function (e) {
                     self.HideLoading();
                 });
             };
-            Application.prototype.openStartView = function () {
-                this.OpenView(new sc.controllers.StartController({ Url: "/Content/view/start.html", Id: "app-start" }));
+            Application.prototype.openLoginView = function () {
+                this.OpenView(new sc.Controllers.Security.LoginController({ Url: "/Content/view/security/login.html", Id: "app-login" }));
             };
             return Application;
         }());
