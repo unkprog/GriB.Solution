@@ -8,7 +8,7 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-define(["require", "exports", "app/common/basecontroller"], function (require, exports, bc) {
+define(["require", "exports", "app/common/basecontroller", "app/services/registerservice", "app/common/variables"], function (require, exports, bc, rs, variables_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var Controllers;
@@ -18,17 +18,27 @@ define(["require", "exports", "app/common/basecontroller"], function (require, e
             var RegisterController = /** @class */ (function (_super) {
                 __extends(RegisterController, _super);
                 function RegisterController(options) {
-                    return _super.call(this, options) || this;
+                    var _this = _super.call(this, options) || this;
+                    _this.registerService = new rs.Services.RegisterService(null);
+                    return _this;
                 }
                 RegisterController.prototype.createModel = function () {
                     return {
-                        "Header": ""
+                        "Header": "",
+                        "labelTitle": variables_1._statres("button$label$register"),
+                        "labelPhone": variables_1._statres("label$phone"),
+                        "labelRegister": variables_1._statres("button$label$register"),
                     };
                 };
                 RegisterController.prototype.ViewInit = function (view) {
                     var result = _super.prototype.ViewInit.call(this, view);
                     //this.RegisterButtonClick = this.createClick("btn-register", this.registerButtonClick, this);
-                    return result;
+                    this.loadSettings();
+                    return false;
+                };
+                RegisterController.prototype.loadSettings = function () {
+                    this.registerService.GetSR(function (e) {
+                    });
                 };
                 return RegisterController;
             }(bc.Controllers.BaseController));

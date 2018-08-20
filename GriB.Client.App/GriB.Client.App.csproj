@@ -132,12 +132,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Controllers\SettingsController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Managers\AppSettings.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="appSettings.config" />
     <None Include="compilerconfig.json" />
     <None Include="compilerconfig.json.defaults">
       <DependentUpon>compilerconfig.json</DependentUpon>
@@ -201,7 +204,6 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Content\view\login\" />
-    <Folder Include="Controllers\" />
     <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>
@@ -213,6 +215,9 @@
     <TypeScriptCompile Include="Content\js\app\controllers\security\logincontroller.ts" />
     <TypeScriptCompile Include="Content\js\app\interfaces\iapplication.ts" />
     <TypeScriptCompile Include="Content\js\app\interfaces\icontroller.ts" />
+    <TypeScriptCompile Include="Content\js\app\interfaces\iservice.ts" />
+    <TypeScriptCompile Include="Content\js\app\common\baseservice.ts" />
+    <TypeScriptCompile Include="Content\js\app\services\registerservice.ts" />
     <TypeScriptCompile Include="Content\js\lib\jquery.d.ts" />
     <TypeScriptCompile Include="Content\js\lib\kendo\kendo.d.ts" />
     <TypeScriptCompile Include="Content\js\lib\materialize.d.ts" />
