@@ -14,9 +14,9 @@ define(["require", "exports", "i18n!nls/strings"], function (require, exports) {
         }());
         var staticResources = new StaticResources();
         exports._statres = function (id) { return staticResources.GetString(id); };
-        exports._absUrl = function (refUrl) {
-            return _appData.BaseUrl + refUrl;
-        };
+        //_absUrl = (refUrl: string) => {
+        //    return _appData.BaseUrl + refUrl;
+        //};
     })(App = exports.App || (exports.App = {}));
 });
 //# sourceMappingURL=variables.js.map

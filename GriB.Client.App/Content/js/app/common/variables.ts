@@ -6,11 +6,11 @@ export declare let _statres: { (id: string): string; };    //Access to static re
 export declare let _absUrl: { (url: string): string; };    //Create absolute ref to resource
 
 
-declare var _appData: {
+ export declare let _appSettings: {
     IsDebug: boolean;
     Version: string;
     Language: string;
-    BaseUrl: string;
+    RegisterUrl: string;
 };
 
 export module App {
@@ -31,9 +31,9 @@ export module App {
 
     let staticResources = new StaticResources();
     _statres = (id: string) => { return staticResources.GetString(id); }
-    _absUrl = (refUrl: string) => {
-        return _appData.BaseUrl + refUrl;
-    };
+    //_absUrl = (refUrl: string) => {
+    //    return _appData.BaseUrl + refUrl;
+    //};
 }
 
  

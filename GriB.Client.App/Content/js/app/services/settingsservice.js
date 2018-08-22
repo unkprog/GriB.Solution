@@ -13,17 +13,17 @@ define(["require", "exports", "app/common/baseservice"], function (require, expo
     Object.defineProperty(exports, "__esModule", { value: true });
     var Services;
     (function (Services) {
-        var RegisterService = /** @class */ (function (_super) {
-            __extends(RegisterService, _super);
-            function RegisterService(options) {
-                return _super.call(this, options) || this;
+        var SettingsService = /** @class */ (function (_super) {
+            __extends(SettingsService, _super);
+            function SettingsService(options) {
+                return _super.call(this, { BaseUrl: "/api/settings" }) || this;
             }
-            RegisterService.prototype.GetSR = function (Callback) {
-                this.GetApi({ Action: "/sr", Callback: Callback });
+            SettingsService.prototype.GetSettings = function (Callback) {
+                this.GetApi({ Action: "/settings", Callback: Callback });
             };
-            return RegisterService;
+            return SettingsService;
         }(base.Services.BaseService));
-        Services.RegisterService = RegisterService;
+        Services.SettingsService = SettingsService;
     })(Services = exports.Services || (exports.Services = {}));
 });
-//# sourceMappingURL=registerservice.js.map
+//# sourceMappingURL=settingsservice.js.map

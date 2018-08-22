@@ -217,6 +217,7 @@
     <TypeScriptCompile Include="Content\js\app\interfaces\icontroller.ts" />
     <TypeScriptCompile Include="Content\js\app\interfaces\iservice.ts" />
     <TypeScriptCompile Include="Content\js\app\common\baseservice.ts" />
+    <TypeScriptCompile Include="Content\js\app\services\settingsservice.ts" />
     <TypeScriptCompile Include="Content\js\app\services\registerservice.ts" />
     <TypeScriptCompile Include="Content\js\lib\jquery.d.ts" />
     <TypeScriptCompile Include="Content\js\lib\kendo\kendo.d.ts" />

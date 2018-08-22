@@ -7,10 +7,11 @@ using System.Web.Routing;
 
 namespace GriB.General.App
 {
-    public class WebApiApplication : System.Web.HttpApplication
+    public class WebApiApplication : HttpApplication
     {
         protected void Application_Start()
         {
+            Managers.Database.CheckAndUpdate();
             GlobalConfiguration.Configure(WebApiConfig.Register);
         }
     }

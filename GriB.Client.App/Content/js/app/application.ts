@@ -1,6 +1,7 @@
 ﻿import vars = require('app/common/variables');
 import int = require('app/interfaces/icontroller');
 import intapp = require('app/interfaces/iapplication');
+import svc = require('app/services/settingsservice');
 import sc = require('app/controllers/security/logincontroller');
 
 export module App {
@@ -33,9 +34,11 @@ export module App {
     export class Application implements intapp.Interfaces.IApplication {
 
         private _model: kendo.data.ObservableObject;
+        private _settingsService: svc.Services.SettingsService;
         constructor() {
             vars._app = this;
             this._controllersStack = new ControllersStack();
+            this._settingsService = new svc.Services.SettingsService(null);
             this._model = new kendo.data.ObservableObject({
                 "AppHeader": "POS Cloud",
                 "labelOk" : "Ok"
@@ -69,12 +72,17 @@ export module App {
         private navbarControl: JQuery;
         private contentControl: JQuery;
         public Initailize(): void {
-            this.progressControl = $("#progress-container");
-            this.contentControl = $("#app-content");
+            let app = this;
+            app.progressControl = $("#progress-container");
+            app.contentControl = $("#app-content");
 
-            this.Resize = $.proxy(this.resize, this);
-            this.BackButtonClick = $.proxy(this.backButtonClick, this);
-            this.loadAppView();
+            app.Resize = $.proxy(app.resize, app);
+            app.BackButtonClick = $.proxy(app.backButtonClick, app);
+            app._settingsService.GetSettings((e) => {
+                vars._appSettings = e;
+                app.loadAppView();
+            });
+            
         }
 
         public RestoreController() {

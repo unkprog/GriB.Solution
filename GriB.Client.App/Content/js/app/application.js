@@ -1,4 +1,4 @@
-define(["require", "exports", "app/common/variables", "app/controllers/security/logincontroller"], function (require, exports, vars, sc) {
+define(["require", "exports", "app/common/variables", "app/services/settingsservice", "app/controllers/security/logincontroller"], function (require, exports, vars, svc, sc) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var App;
@@ -35,6 +35,7 @@ define(["require", "exports", "app/common/variables", "app/controllers/security/
             function Application() {
                 vars._app = this;
                 this._controllersStack = new ControllersStack();
+                this._settingsService = new svc.Services.SettingsService(null);
                 this._model = new kendo.data.ObservableObject({
                     "AppHeader": "POS Cloud",
                     "labelOk": "Ok"
@@ -60,11 +61,15 @@ define(["require", "exports", "app/common/variables", "app/controllers/security/
                 this.RestoreController();
             };
             Application.prototype.Initailize = function () {
-                this.progressControl = $("#progress-container");
-                this.contentControl = $("#app-content");
-                this.Resize = $.proxy(this.resize, this);
-                this.BackButtonClick = $.proxy(this.backButtonClick, this);
-                this.loadAppView();
+                var app = this;
+                app.progressControl = $("#progress-container");
+                app.contentControl = $("#app-content");
+                app.Resize = $.proxy(app.resize, app);
+                app.BackButtonClick = $.proxy(app.backButtonClick, app);
+                app._settingsService.GetSettings(function (e) {
+                    vars._appSettings = e;
+                    app.loadAppView();
+                });
             };
             Application.prototype.RestoreController = function () {
                 if (this._controllersStack.Current)

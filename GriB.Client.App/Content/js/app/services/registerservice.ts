@@ -5,7 +5,7 @@ export module Services {
     export class RegisterService extends base.Services.BaseService {
 
         constructor(options: int.Interfaces.IServiceOptions) {
-            super({ BaseUrl: "/api/settings" });
+            super(options);
         }
 
         public GetSR(Callback: (responseData: any) => void) {
