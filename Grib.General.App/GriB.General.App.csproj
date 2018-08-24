@@ -82,6 +82,7 @@
   <ItemGroup>
     <Content Include="Content\index.html" />
     <Content Include="Global.asax" />
+    <Content Include="Scripts\Sql\01.001.[pos_user].sql" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
@@ -107,6 +108,12 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Models\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\GriB.Common\GriB.Common.csproj">
+      <Project>{d1ec7a16-5393-4584-b7ed-eddbaed18d59}</Project>
+      <Name>GriB.Common</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

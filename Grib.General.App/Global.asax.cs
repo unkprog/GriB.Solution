@@ -11,7 +11,7 @@ namespace GriB.General.App
     {
         protected void Application_Start()
         {
-            Managers.Database.CheckAndUpdate();
+            Managers.Database.CheckAndUpdate(Server.MapPath("/"));
             GlobalConfiguration.Configure(WebApiConfig.Register);
         }
     }
