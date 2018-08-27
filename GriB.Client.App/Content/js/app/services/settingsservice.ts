@@ -1,10 +1,10 @@
 ﻿import base = require("app/common/baseservice");
-import int = require('app/interfaces/iservice');
+//import int = require('app/interfaces/iservice');
 
 export module Services {
     export class SettingsService extends base.Services.BaseService {
 
-        constructor(options: int.Interfaces.IServiceOptions) {
+        constructor(options: Interfaces.IServiceOptions) {
             super({ BaseUrl: "/api/settings" });
         }
 

@@ -1,3 +1,5 @@
+/// <amd-dependency path="i18n!nls/strings" />
+//import int = require('app/interfaces/iapplication');
 define(["require", "exports", "i18n!nls/strings"], function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
@@ -12,11 +14,12 @@ define(["require", "exports", "i18n!nls/strings"], function (require, exports) {
             };
             return StaticResources;
         }());
-        var staticResources = new StaticResources();
-        exports._statres = function (id) { return staticResources.GetString(id); };
+        App.StaticResources = StaticResources;
         //_absUrl = (refUrl: string) => {
         //    return _appData.BaseUrl + refUrl;
         //};
-    })(App = exports.App || (exports.App = {}));
+    })(App || (App = {}));
+    var staticResources = new App.StaticResources();
+    exports._statres = function (id) { return staticResources.GetString(id); };
 });
 //# sourceMappingURL=variables.js.map

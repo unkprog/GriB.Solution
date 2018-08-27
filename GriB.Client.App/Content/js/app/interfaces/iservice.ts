@@ -1,4 +1,4 @@
-﻿export module Interfaces {
+﻿namespace Interfaces {
     export interface IServiceOptions {
         BaseUrl: string;
     }

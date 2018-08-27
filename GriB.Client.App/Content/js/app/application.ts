@@ -1,15 +1,13 @@
 ﻿import vars = require('app/common/variables');
-import int = require('app/interfaces/icontroller');
-import intapp = require('app/interfaces/iapplication');
 import svc = require('app/services/settingsservice');
 import sc = require('app/controllers/security/logincontroller');
 
 export module App {
     class ControllersStack {
-        private _controllers: int.Interfaces.IController[] = [];
-        private _current: int.Interfaces.IController;
+        private _controllers: Interfaces.IController[] = [];
+        private _current: Interfaces.IController;
 
-        public get Current(): int.Interfaces.IController {
+        public get Current(): Interfaces.IController {
             return this._current;
         }
 
@@ -20,7 +18,7 @@ export module App {
                 this._current = undefined;
         }
 
-        public Push(controller: int.Interfaces.IController) {
+        public Push(controller: Interfaces.IController) {
             var self = this;
             if (controller) {
                 self._controllers.push(controller);
@@ -31,7 +29,7 @@ export module App {
         }
     }
 
-    export class Application implements intapp.Interfaces.IApplication {
+    export class Application implements Interfaces.IApplication {
 
         private _model: kendo.data.ObservableObject;
         private _settingsService: svc.Services.SettingsService;
@@ -41,14 +39,15 @@ export module App {
             this._settingsService = new svc.Services.SettingsService(null);
             this._model = new kendo.data.ObservableObject({
                 "AppHeader": "POS Cloud",
-                "labelOk" : "Ok"
+                "labelOk": "Ok",
+                "contentError":""
             });
             this.Initailize();
         }
 
         private _controllersStack: ControllersStack;
-        private _controller: int.Interfaces.IController;
-        public get Controller(): int.Interfaces.IController {
+        private _controller: Interfaces.IController;
+        public get Controller(): Interfaces.IController {
             return this._controller;
         }
 
@@ -112,7 +111,7 @@ export module App {
                     self.resize(undefined);
                     self.openLoginView();
                 } finally {
-                    //self.HideLoading();
+                   
                 }
             }).fail((e) => {
                 self.HideLoading();
@@ -120,7 +119,7 @@ export module App {
             });
         }
 
-        public OpenView(controller: int.Interfaces.IController, backController?: int.Interfaces.IController) {
+        public OpenView(controller: Interfaces.IController, backController?: Interfaces.IController) {
             var self = this;
             if ($("#" + controller.Options.Id).length > 0) return;     //Already loaded and current
 
@@ -154,6 +153,24 @@ export module App {
 
         private openLoginView() {
             this.OpenView(new sc.Controllers.Security.LoginController({ Url: "/Content/view/security/login.html", Id: "app-login" }));
+        }
+
+
+
+        private dialogError: JQuery;
+        private dialogErrorContent: JQuery;
+        public ShowError(e: string) {
+
+            if (!this.dialogError) {
+                this.dialogError = $("#app-error-dialog");
+                this.dialogErrorContent = $("#app-error-dialog-content");
+                this.dialogError.modal();
+            }
+
+            this.dialogErrorContent.html(e);
+            this.dialogError.modal("open");
+
+        //    //this._model.set("contentError", )
         }
     }
 }

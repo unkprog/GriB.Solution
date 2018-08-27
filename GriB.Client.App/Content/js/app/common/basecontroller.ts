@@ -1,14 +1,12 @@
-﻿import int = require('../interfaces/icontroller');
-
-export module Controllers {
-    export class BaseController implements int.Interfaces.IController {
-        constructor(options: int.Interfaces.IControllerOptions) {
+﻿export namespace Controllers {
+    export class BaseController implements Interfaces.IController {
+        constructor(options: Interfaces.IControllerOptions) {
             this._options = options;
             this._model = this.createModel();
         }
 
-        private _options: int.Interfaces.IControllerOptions;
-        public get Options(): int.Interfaces.IControllerOptions {
+        private _options: Interfaces.IControllerOptions;
+        public get Options(): Interfaces.IControllerOptions {
             return this._options;
         }
 
@@ -46,16 +44,16 @@ export module Controllers {
         public ViewResize(e?: any): void {
         }
 
-        protected createClick(elemName: string, clickFunc: (e: any) => any, controller: int.Interfaces.IController): any {
+        protected createClick(elemName: string | JQuery, clickFunc: any, controller: any): any {
             var result = $.proxy(clickFunc, controller);
-            var elem = this._view.find("#" + elemName);
+            var elem: JQuery = elemName instanceof $ ? <JQuery>elemName : $("#" + elemName);
             if (elem.length > 0) {
                 elem[0].addEventListener(("ontouchstart" in window) ? "touchend" : "click", result, false);
             }
             return result;
         }
 
-        protected createKeyPress(elemName: string[], clickFunc: (e: any) => any, controller: int.Interfaces.IController): any {
+        protected createKeyPress(elemName: string[], clickFunc: (e: any) => any, controller: Interfaces.IController): any {
             var result = $.proxy(clickFunc, controller);
             $.each(elemName, function (index, el) {
                 var $inp = $("#" + el);
@@ -67,10 +65,10 @@ export module Controllers {
         }
 
 
-        protected deleteClick(elemName: string, proxyFunc: (e: any) => any): any {
-            var $btn = this._view.find("#" + elemName);
-            if ($btn.length > 0)
-                $btn[0].removeEventListener(("ontouchstart" in window) ? "touchend" : "click", proxyFunc);
+        protected deleteClick(elemName: string | JQuery, proxyFunc: any): any {
+            let btn: JQuery = elemName instanceof $ ? <JQuery>elemName : $("#" + elemName);
+            if (btn.length > 0)
+                btn[0].removeEventListener(("ontouchstart" in window) ? "touchend" : "click", proxyFunc);
         }
 
         protected deleteKeyPress(elemName: string[], proxyFunc: (e: any) => any): any {

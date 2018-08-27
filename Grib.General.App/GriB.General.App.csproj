@@ -108,6 +108,7 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Models\" />
+    <Folder Include="Scripts\Query\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\GriB.Common\GriB.Common.csproj">

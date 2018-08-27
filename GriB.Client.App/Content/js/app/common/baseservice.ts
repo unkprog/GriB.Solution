@@ -1,9 +1,7 @@
-﻿import int = require('app/interfaces/iservice');
+﻿export namespace Services {
+    export class BaseService implements Interfaces.IService {
 
-export module Services {
-    export class BaseService implements int.Interfaces.IService {
-
-        private _options: int.Interfaces.IServiceOptions;
+        private _options: Interfaces.IServiceOptions;
         //private _errorHandler: (e: any) => void;
         //protected _baseUrl: string;
 
@@ -13,12 +11,12 @@ export module Services {
 
 
 
-        constructor(options: int.Interfaces.IServiceOptions) {
+        constructor(options: Interfaces.IServiceOptions) {
             //this._errorHandler = options.Error;//errorHandler;
             this._options = options;
         }
 
-        public GetApi(options: int.Interfaces.IServiceCallOptions): void {
+        public GetApi(options: Interfaces.IServiceCallOptions): void {
             let self = this;
             let action = self._options.BaseUrl + options.Action;
             $.ajax({
@@ -36,7 +34,7 @@ export module Services {
             });
         }
 
-        public PostApi(options: int.Interfaces.IServiceCallOptions): void {
+        public PostApi(options: Interfaces.IServiceCallOptions): void {
             let self = this;
             $.ajax({
                 url: self._options.BaseUrl + options.Action,

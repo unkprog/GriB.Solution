@@ -8,7 +8,7 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-define(["require", "exports", "app/common/basecontroller", "app/services/registerservice", "app/common/variables"], function (require, exports, bc, rs, variables_1) {
+define(["require", "exports", "app/common/basecontroller", "app/services/registerservice", "app/common/variables"], function (require, exports, bc, rs, vars) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var Controllers;
@@ -25,20 +25,23 @@ define(["require", "exports", "app/common/basecontroller", "app/services/registe
                 RegisterController.prototype.createModel = function () {
                     return {
                         "Header": "",
-                        "labelTitle": variables_1._statres("button$label$register"),
-                        "labelPhone": variables_1._statres("label$phone"),
-                        "labelRegister": variables_1._statres("button$label$register"),
+                        "labelTitle": vars._statres("button$label$register"),
+                        "labelPhone": vars._statres("label$phone"),
+                        "labelRegister": vars._statres("button$label$register"),
                     };
                 };
                 RegisterController.prototype.ViewInit = function (view) {
                     var result = _super.prototype.ViewInit.call(this, view);
-                    //this.RegisterButtonClick = this.createClick("btn-register", this.registerButtonClick, this);
+                    this.RegisterButtonClick = this.createClick("btn-register", this.registerButtonClick, this);
                     this.loadSettings();
                     return false;
                 };
                 RegisterController.prototype.loadSettings = function () {
                     this.registerService.GetSR(function (e) {
                     });
+                };
+                RegisterController.prototype.registerButtonClick = function (e) {
+                    //vars._app.OpenView(new rs.Controllers.Security.RegisterController({ Url: "/Content/view/security/register.html", Id: "app-register" }), this);
                 };
                 return RegisterController;
             }(bc.Controllers.BaseController));

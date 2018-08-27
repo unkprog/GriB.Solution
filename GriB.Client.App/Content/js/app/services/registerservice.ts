@@ -1,10 +1,9 @@
 ﻿import base = require("app/common/baseservice");
-import int = require('app/interfaces/iservice');
 
-export module Services {
+export namespace Services {
     export class RegisterService extends base.Services.BaseService {
 
-        constructor(options: int.Interfaces.IServiceOptions) {
+        constructor(options: Interfaces.IServiceOptions) {
             super(options);
         }
 

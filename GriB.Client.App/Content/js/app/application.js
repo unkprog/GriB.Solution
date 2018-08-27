@@ -38,7 +38,8 @@ define(["require", "exports", "app/common/variables", "app/services/settingsserv
                 this._settingsService = new svc.Services.SettingsService(null);
                 this._model = new kendo.data.ObservableObject({
                     "AppHeader": "POS Cloud",
-                    "labelOk": "Ok"
+                    "labelOk": "Ok",
+                    "contentError": ""
                 });
                 this.Initailize();
             }
@@ -95,7 +96,6 @@ define(["require", "exports", "app/common/variables", "app/services/settingsserv
                         self.openLoginView();
                     }
                     finally {
-                        //self.HideLoading();
                     }
                 }).fail(function (e) {
                     self.HideLoading();
@@ -133,6 +133,16 @@ define(["require", "exports", "app/common/variables", "app/services/settingsserv
             };
             Application.prototype.openLoginView = function () {
                 this.OpenView(new sc.Controllers.Security.LoginController({ Url: "/Content/view/security/login.html", Id: "app-login" }));
+            };
+            Application.prototype.ShowError = function (e) {
+                if (!this.dialogError) {
+                    this.dialogError = $("#app-error-dialog");
+                    this.dialogErrorContent = $("#app-error-dialog-content");
+                    this.dialogError.modal();
+                }
+                this.dialogErrorContent.html(e);
+                this.dialogError.modal("open");
+                //    //this._model.set("contentError", )
             };
             return Application;
         }());

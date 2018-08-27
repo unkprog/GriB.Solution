@@ -54,7 +54,7 @@ define(["require", "exports"], function (require, exports) {
             };
             BaseController.prototype.createClick = function (elemName, clickFunc, controller) {
                 var result = $.proxy(clickFunc, controller);
-                var elem = this._view.find("#" + elemName);
+                var elem = elemName instanceof $ ? elemName : $("#" + elemName);
                 if (elem.length > 0) {
                     elem[0].addEventListener(("ontouchstart" in window) ? "touchend" : "click", result, false);
                 }
@@ -71,9 +71,9 @@ define(["require", "exports"], function (require, exports) {
                 return result;
             };
             BaseController.prototype.deleteClick = function (elemName, proxyFunc) {
-                var $btn = this._view.find("#" + elemName);
-                if ($btn.length > 0)
-                    $btn[0].removeEventListener(("ontouchstart" in window) ? "touchend" : "click", proxyFunc);
+                var btn = elemName instanceof $ ? elemName : $("#" + elemName);
+                if (btn.length > 0)
+                    btn[0].removeEventListener(("ontouchstart" in window) ? "touchend" : "click", proxyFunc);
             };
             BaseController.prototype.deleteKeyPress = function (elemName, proxyFunc) {
                 $.each(elemName, function (index, el) {

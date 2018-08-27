@@ -8,7 +8,7 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-define(["require", "exports", "app/common/basecontroller", "app/controllers/security/registercontroller", "app/common/variables"], function (require, exports, bc, rc, variables_1) {
+define(["require", "exports", "app/common/basecontroller", "app/controllers/security/registercontroller", "app/common/variables"], function (require, exports, bc, rc, vars) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var Controllers;
@@ -23,12 +23,12 @@ define(["require", "exports", "app/common/basecontroller", "app/controllers/secu
                 LoginController.prototype.createModel = function () {
                     return {
                         "Header": "POS Cloud",
-                        "labelTitle": variables_1._statres("label$autorization"),
-                        "labelPhone": variables_1._statres("label$phone"),
-                        "labelPassword": variables_1._statres("label$password"),
-                        "labelForgot": variables_1._statres("button$label$forgot"),
-                        "labelRegister": variables_1._statres("button$label$register"),
-                        "labelEnter": variables_1._statres("button$label$enter"),
+                        "labelTitle": vars._statres("label$autorization"),
+                        "labelPhone": vars._statres("label$phone"),
+                        "labelPassword": vars._statres("label$password"),
+                        "labelForgot": vars._statres("button$label$forgot"),
+                        "labelRegister": vars._statres("button$label$register"),
+                        "labelEnter": vars._statres("button$label$enter"),
                     };
                 };
                 LoginController.prototype.ViewInit = function (view) {
@@ -42,7 +42,7 @@ define(["require", "exports", "app/common/basecontroller", "app/controllers/secu
                     //$('#app-modal-login').modal('open');
                 };
                 LoginController.prototype.registerButtonClick = function (e) {
-                    variables_1._app.OpenView(new rc.Controllers.Security.RegisterController({ Url: "/Content/view/security/register.html", Id: "app-register" }), this);
+                    vars._app.OpenView(new rc.Controllers.Security.RegisterController({ Url: "/Content/view/security/register.html", Id: "app-register" }), this);
                 };
                 return LoginController;
             }(bc.Controllers.BaseController));

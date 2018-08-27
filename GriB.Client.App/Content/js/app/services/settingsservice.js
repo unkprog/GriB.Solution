@@ -11,6 +11,7 @@ var __extends = (this && this.__extends) || (function () {
 define(["require", "exports", "app/common/baseservice"], function (require, exports, base) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
+    //import int = require('app/interfaces/iservice');
     var Services;
     (function (Services) {
         var SettingsService = /** @class */ (function (_super) {

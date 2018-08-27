@@ -1,4 +1,4 @@
-﻿export module Interfaces {
+﻿namespace Interfaces {
 
     export interface IControllerOptions {
         Url: string;
