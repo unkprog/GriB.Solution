@@ -12,5 +12,7 @@ namespace GriB.General.App.Controllers
         {
             query = new Query(AppSettings.Database.ConnectionString, AppSettings.Database.Path.Query, logger);
         }
+
+
     }
 }

@@ -89,6 +89,7 @@
     </Compile>
     <Compile Include="Managers\AppSettings.cs" />
     <Compile Include="Managers\Database.cs" />
+    <Compile Include="Managers\pos\Users.cs" />
     <Compile Include="Models\pos\pos_user.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
