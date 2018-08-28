@@ -1,12 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using GriB.Common.Diagnostics;
 
 namespace GriB.Common.Web.Http
 {
-    //public class ApiController : System.Web.Http.ApiController
-    //{
-    //}
+    public class BaseApiController : System.Web.Http.ApiController
+    {
+        protected ILogger logger;
+
+        public BaseApiController()
+        {
+            logger = new Logger();
+        }
+
+    }
 }

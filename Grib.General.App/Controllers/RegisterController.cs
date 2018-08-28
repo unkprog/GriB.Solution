@@ -1,13 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Web.Http;
+﻿using GriB.Common.Sql;
+using GriB.Common.Web.Http;
+using GriB.General.App.Managers;
 
 namespace GriB.General.App.Controllers
 {
-    public class RegisterController : ApiController
+    public class RegisterController : BaseApiController
     {
+        Query query;
+
+        public RegisterController():base()
+        {
+            query = new Query(AppSettings.Database.ConnectionString, AppSettings.Database.Path.Query, logger);
+        }
     }
 }

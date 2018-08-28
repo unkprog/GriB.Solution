@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Data.SqlClient;
 using System.IO;
-using System.Text;
-using System.Web;
+using System.Data.SqlClient;
 
 namespace GriB.General.App.Managers
 {
@@ -55,7 +52,7 @@ namespace GriB.General.App.Managers
 
         private static void CreateTables(string rootPath)
         {
-            string path = string.Concat(rootPath, "\\Scripts\\Sql");
+            string path = string.Concat(rootPath, AppSettings.Database.Path.Sql);
 
             Common.Sql.Helper.CreateCommand(AppSettings.Database.ConnectionString, string.Empty,
                 (connection, command) =>

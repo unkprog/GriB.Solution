@@ -1,13 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using GriB.Common.Web.Http;
 
 namespace GriB.Client.App.Controllers
 {
-    public class SettingsController : ApiController
+    public class SettingsController : BaseApiController
     {
         [HttpGet]
         [ActionName("settings")]

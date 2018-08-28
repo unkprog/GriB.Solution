@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Text;
 
 namespace GriB.Common.IO
 {
@@ -23,6 +24,30 @@ namespace GriB.Common.IO
             {
                 action(file);
             }
+        }
+
+        public static string ReadFileAsString(string aFileName)
+        {
+            StringBuilder strBuilder = new StringBuilder();
+            if (File.Exists(aFileName))
+            {
+                string line = "";
+
+                using (FileStream fileStream = new FileStream(aFileName, FileMode.Open, FileAccess.Read, FileShare.Read, 4096, false))
+                {
+                    using (StreamReader streamReader = new StreamReader(fileStream, Encoding.Default))
+                    {
+                        line = streamReader.ReadLine();
+                        while (line != null)
+                        {
+                            strBuilder.AppendLine(line);
+                            line = streamReader.ReadLine();
+                        }
+                    }
+                    fileStream.Close();
+                }
+            }
+            return strBuilder.ToString();
         }
     }
 }

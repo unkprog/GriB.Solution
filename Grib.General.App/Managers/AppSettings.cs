@@ -20,11 +20,11 @@ namespace GriB.General.App.Managers
 
         public static class Database
         {
-            public static string DataSource     => GetAttribute("Database.DataSource");
+            public static string DataSource => GetAttribute("Database.DataSource");
             public static string InitialCatalog => GetAttribute("Database.InitialCatalog");
-            public static bool IsSSPI           => GetAttributeBool("Database.IsSSPI");
-            public static string UserID         => GetAttribute("Database.UserID");
-            public static string Password       => GetAttribute("Database.Password");
+            public static bool IsSSPI => GetAttributeBool("Database.IsSSPI");
+            public static string UserID => GetAttribute("Database.UserID");
+            public static string Password => GetAttribute("Database.Password");
 
             private static int _ConnectTimeout = 60;
             private static readonly string _ApplicationName = "POS Cloud Api";
@@ -72,6 +72,12 @@ namespace GriB.General.App.Managers
                     //sqlConnectionStringBuilder.TrustServerCertificate = true;
                     return sqlConnectionStringBuilder.ToString();
                 }
+            }
+
+            public static class Path
+            {
+                public static string Sql   => GetAttribute("Database.Path.Sql");
+                public static string Query => GetAttribute("Database.Path.Query");
             }
         }
     }

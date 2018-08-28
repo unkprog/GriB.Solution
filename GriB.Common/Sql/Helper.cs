@@ -32,6 +32,31 @@ namespace GriB.Common.Sql
             );
         }
 
+
+        public static void ExecuteQuery(string connectionString, string commandText, SqlParameter[] sqlParameters, Action<object[]> action)
+        {
+            if (action == null)
+                return;
+
+            CreateCommand(connectionString, commandText,
+                 (connection, command) =>
+                 {
+                     if (sqlParameters != null && sqlParameters.Length > 0)
+                         command.Parameters.AddRange(sqlParameters);
+
+                     using (SqlDataReader reader = command.ExecuteReader())
+                     {
+                         object[] values = new object[reader.FieldCount];
+                         while(reader.Read())
+                         {
+                             reader.GetValues(values);
+                             action(values);
+                         }
+                     }
+                 }
+            );
+        }
+
         public static void LoadSqlScript(string file, Action<string> action)
         {
             if (!File.Exists(file))
