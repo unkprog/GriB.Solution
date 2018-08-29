@@ -42,8 +42,8 @@ define(["require", "exports"], function (require, exports) {
                 configurable: true
             });
             BaseController.prototype.ViewInit = function (view) {
-                kendo.bind(view, this._model);
                 this._view = view;
+                kendo.bind(view, this._model);
                 return true;
             };
             BaseController.prototype.ViewShow = function (e) {
@@ -54,10 +54,9 @@ define(["require", "exports"], function (require, exports) {
             };
             BaseController.prototype.createClick = function (elemName, clickFunc, controller) {
                 var result = $.proxy(clickFunc, controller);
-                var elem = elemName instanceof $ ? elemName : $("#" + elemName);
-                if (elem.length > 0) {
-                    elem[0].addEventListener(("ontouchstart" in window) ? "touchend" : "click", result, false);
-                }
+                var elem = elemName instanceof $ ? elemName : controller.View.find("#" + elemName);
+                for (var i = 0, iCount = elem.length; i < iCount; i++)
+                    elem[i].addEventListener(("ontouchstart" in window) ? "touchend" : "click", result, false);
                 return result;
             };
             BaseController.prototype.createKeyPress = function (elemName, clickFunc, controller) {
@@ -71,9 +70,10 @@ define(["require", "exports"], function (require, exports) {
                 return result;
             };
             BaseController.prototype.deleteClick = function (elemName, proxyFunc) {
-                var btn = elemName instanceof $ ? elemName : $("#" + elemName);
-                if (btn.length > 0)
-                    btn[0].removeEventListener(("ontouchstart" in window) ? "touchend" : "click", proxyFunc);
+                var controller = this;
+                var elem = elemName instanceof $ ? elemName : controller.View.find("#" + elemName);
+                for (var i = 0, iCount = elem.length; i < iCount; i++)
+                    elem[i].removeEventListener(("ontouchstart" in window) ? "touchend" : "click", proxyFunc);
             };
             BaseController.prototype.deleteKeyPress = function (elemName, proxyFunc) {
                 $.each(elemName, function (index, el) {

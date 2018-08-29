@@ -32,8 +32,8 @@
         }
 
         public ViewInit(view: JQuery): boolean {
-            kendo.bind(view, this._model);
             this._view = view;
+            kendo.bind(view, this._model);
             return true;
         }
 
@@ -44,12 +44,11 @@
         public ViewResize(e?: any): void {
         }
 
-        protected createClick(elemName: string | JQuery, clickFunc: any, controller: any): any {
+        protected createClick(elemName: string | JQuery, clickFunc: any, controller: Interfaces.IController): any {
             var result = $.proxy(clickFunc, controller);
-            var elem: JQuery = elemName instanceof $ ? <JQuery>elemName : $("#" + elemName);
-            if (elem.length > 0) {
-                elem[0].addEventListener(("ontouchstart" in window) ? "touchend" : "click", result, false);
-            }
+            var elem: JQuery = elemName instanceof $ ? <JQuery>elemName : controller.View.find("#" + elemName);
+            for (let i = 0, iCount = elem.length; i < iCount; i++)
+                elem[i].addEventListener(("ontouchstart" in window) ? "touchend" : "click", result, false);
             return result;
         }
 
@@ -66,9 +65,10 @@
 
 
         protected deleteClick(elemName: string | JQuery, proxyFunc: any): any {
-            let btn: JQuery = elemName instanceof $ ? <JQuery>elemName : $("#" + elemName);
-            if (btn.length > 0)
-                btn[0].removeEventListener(("ontouchstart" in window) ? "touchend" : "click", proxyFunc);
+            let controller: Interfaces.IController = this;
+            let elem: JQuery = elemName instanceof $ ? <JQuery>elemName : controller.View.find("#" + elemName);
+            for (let i = 0, iCount = elem.length; i < iCount; i++)
+                elem[i].removeEventListener(("ontouchstart" in window) ? "touchend" : "click", proxyFunc);
         }
 
         protected deleteKeyPress(elemName: string[], proxyFunc: (e: any) => any): any {

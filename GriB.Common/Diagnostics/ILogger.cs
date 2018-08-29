@@ -1,260 +1,130 @@
 ﻿using System;
 using System.Linq;
-using System.Collections.Generic;
 using System.Diagnostics;
-using Microsoft.Practices.EnterpriseLibrary.Logging;
-using Microsoft.Practices.EnterpriseLibrary.Logging.ExtraInformation;
+using System.Reflection;
 
 namespace GriB.Common.Diagnostics
 {
     public interface ILogger
     {
-        bool IsLoggingEnabled();
+        bool IsLogging { get; set; }
 
-        /// <summary>
-        /// Get debug context information
-        /// </summary>
-        IDictionary<string, object> GetDebugInfo();
-
-        /// <summary>
-        /// Get Managed-Security context information
-        /// </summary>
-        IDictionary<string, object> GetManagedSecurityInfo();
-
-        /// <summary>
-        /// Get Unmanaged-Security context information
-        /// </summary>
-        IDictionary<string, object> GetUnmanagedSecurityInfo();
-
-        /// <summary>
-        /// Get COM+ context information
-        /// </summary>
-        IDictionary<string, object> GetComPlusInfo();
-
+        string Source { get; set; }
         /// <summary>
         /// Запись отладочного сообщения
         /// </summary>
-        void WriteDebug(string message);
+        void WriteDebug(string message, string trace);
 
-        #region Write
-        void Write(object message);
-        void Write(object message, IDictionary<string, object> properties);
-        void Write(object message, IEnumerable<string> categories);
-        void Write(object message, string category);
-        void Write(object message, IEnumerable<string> categories, IDictionary<string, object> properties);
-        void Write(object message, IEnumerable<string> categories, int priority);
-        void Write(object message, string category, IDictionary<string, object> properties);
-        void Write(object message, string category, int priority);
-        void Write(object message, IEnumerable<string> categories, int priority, IDictionary<string, object> properties);
-        void Write(object message, IEnumerable<string> categories, int priority, int eventId);
-        void Write(object message, string category, int priority, IDictionary<string, object> properties);
-        void Write(object message, string category, int priority, int eventId);
-        void Write(object message, IEnumerable<string> categories, int priority, int eventId, TraceEventType severity);
-        void Write(object message, string category, int priority, int eventId, TraceEventType severity);
-        void Write(object message, IEnumerable<string> categories, int priority, int eventId, TraceEventType severity, string title);
-        void Write(object message, string category, int priority, int eventId, TraceEventType severity, string title);
-        void Write(object message, IEnumerable<string> categories, TraceEventType severity, string title = null, IDictionary<string, object> properties = null, int priority = -1, int eventId = -1);
-        void Write(object message, string category, int priority, int eventId, TraceEventType severity, string title, IDictionary<string, object> properties);
-        #endregion
+        /// <summary>
+        /// Запись сообщения ошибки
+        /// </summary>
+        void WriteError(string error, string trace);
+
+        /// <summary>
+        /// Запись сообщения ошибки
+        /// </summary>
+        void WriteError(Exception ex);
+
+        // <summary>
+        /// Запись информационного сообщения
+        /// </summary>
+        void WriteInfo(string info, string trace);
     }
 
 
     public class Logger : ILogger
     {
-        /// <summary>
-        /// EL LogWriter object
-        /// </summary>
-        protected LogWriter logWriter;
-
         public Logger()
         {
-            LogWriterFactory logWriterFactory = new LogWriterFactory();
-            logWriter = logWriterFactory.Create();
+
         }
 
-        protected void WriteApplicationEvent(string eventName, EventLogEntryType entryType, int eventId = -1)
+        public bool IsLogging { get; set; }
+        public string Source { get; set; }
+
+        /// <summary>
+        /// Запись отладочного сообщения
+        /// </summary>
+        public virtual void WriteDebug(string message, string trace)
         {
-            try
+            //Write(message, "Debug");
+        }
+
+        /// <summary>
+        /// Запись сообщения ошибки
+        /// </summary>
+        public virtual void WriteError(string error, string trace)
+        {
+            Write(error, EventLogEntryType.Error, trace);
+        }
+
+        /// <summary>
+        /// Запись сообщения ошибки
+        /// </summary>
+        public virtual void WriteError(Exception ex)
+        {
+            WriteError(ex.Message, ex.StackTrace);
+        }
+
+        // <summary>
+        /// Запись информационного сообщения
+        /// </summary>
+        public virtual void WriteInfo(string info, string trace)
+        {
+            Write(info, EventLogEntryType.Information, trace);
+        }
+
+        public virtual void Write(string message, EventLogEntryType eventType, string trace = null, int eventId = -1, short category = -1)
+        {
+            if (IsLogging)
             {
-                string sourceName = "EL5Logger";
-                if (!EventLog.SourceExists(sourceName))
-                    EventLog.CreateEventSource(sourceName, "Application");
-
-                if (eventId == -1)
-                    EventLog.WriteEntry(sourceName, eventName, entryType);
-                else
-                    EventLog.WriteEntry(sourceName, eventName, entryType, eventId);
-            }
-            catch (Exception ex)
-            {
-                Debug.Fail("WriteApplicationEvent failed!", ex.ToString());
-            }
-        }
-
-        public virtual bool IsLoggingEnabled()
-        {
-            return logWriter.IsLoggingEnabled();
-        }
-
-        public virtual IDictionary<string, object> GetDebugInfo()
-        {
-            Dictionary<string, object> dict = new Dictionary<string, object>();
-            DebugInformationProvider provider = new DebugInformationProvider();
-            provider.PopulateDictionary(dict);
-            return dict;
-        }
-
-        public virtual IDictionary<string, object> GetManagedSecurityInfo()
-        {
-            Dictionary<string, object> dict = new Dictionary<string, object>();
-            ManagedSecurityContextInformationProvider provider = new ManagedSecurityContextInformationProvider();
-            provider.PopulateDictionary(dict);
-            return dict;
-        }
-
-        public virtual IDictionary<string, object> GetUnmanagedSecurityInfo()
-        {
-            Dictionary<string, object> dict = new Dictionary<string, object>();
-            UnmanagedSecurityContextInformationProvider provider = new UnmanagedSecurityContextInformationProvider();
-            provider.PopulateDictionary(dict);
-            return dict;
-        }
-
-        public virtual IDictionary<string, object> GetComPlusInfo()
-        {
-            Dictionary<string, object> dict = new Dictionary<string, object>();
-            ComPlusInformationProvider provider = new ComPlusInformationProvider();
-            provider.PopulateDictionary(dict);
-            return dict;
-        }
-
-        public virtual void WriteDebug(string message)
-        {
-            Write(message, "Debug");
-        }
-
-        #region ILogger.Write
-        public virtual void Write(object message)
-        {
-            Write(message, new string[] { }, TraceEventType.Information, string.Empty, null, -1, -1);
-        }
-
-        public virtual void Write(object message, IDictionary<string, object> properties)
-        {
-            Write(message, new string[] { }, TraceEventType.Information, string.Empty, properties, -1, -1);
-        }
-
-        public virtual void Write(object message, IEnumerable<string> categories)
-        {
-            Write(message, categories, TraceEventType.Information, string.Empty, null, -1, -1);
-        }
-
-        public virtual void Write(object message, string category)
-        {
-            Write(message, new string[] { category }, TraceEventType.Information, string.Empty, null, -1, -1);
-        }
-
-        public virtual void Write(object message, IEnumerable<string> categories, IDictionary<string, object> properties)
-        {
-            Write(message, categories, TraceEventType.Information, string.Empty, properties, -1, -1);
-        }
-
-        public virtual void Write(object message, IEnumerable<string> categories, int priority)
-        {
-            Write(message, categories, TraceEventType.Information, string.Empty, null, priority, -1);
-        }
-
-        public virtual void Write(object message, string category, IDictionary<string, object> properties)
-        {
-            Write(message, new string[] { category }, TraceEventType.Information, string.Empty, properties, -1, -1);
-        }
-
-        public virtual void Write(object message, string category, int priority)
-        {
-            Write(message, new string[] { category }, TraceEventType.Information, string.Empty, null, priority, -1);
-        }
-
-        public virtual void Write(object message, IEnumerable<string> categories, int priority, IDictionary<string, object> properties)
-        {
-            Write(message, categories, TraceEventType.Information, string.Empty, properties, priority, -1);
-        }
-
-        public virtual void Write(object message, IEnumerable<string> categories, int priority, int eventId)
-        {
-            Write(message, categories, TraceEventType.Information, string.Empty, null, priority, eventId);
-        }
-
-        public virtual void Write(object message, string category, int priority, IDictionary<string, object> properties)
-        {
-            Write(message, new string[] { category }, TraceEventType.Information, string.Empty, properties, priority, -1);
-        }
-
-        public virtual void Write(object message, string category, int priority, int eventId)
-        {
-            Write(message, new string[] { category }, TraceEventType.Information, string.Empty, null, priority, eventId);
-        }
-
-        public virtual void Write(object message, IEnumerable<string> categories, int priority, int eventId, TraceEventType severity)
-        {
-            Write(message, categories, severity, string.Empty, null, priority, eventId);
-        }
-
-        public virtual void Write(object message, string category, int priority, int eventId, TraceEventType severity)
-        {
-            Write(message, new string[] { category }, severity, string.Empty, null, priority, eventId);
-        }
-
-        public virtual void Write(object message, IEnumerable<string> categories, int priority, int eventId, TraceEventType severity, string title)
-        {
-            Write(message, categories, severity, title, null, priority, eventId);
-        }
-
-        public virtual void Write(object message, string category, int priority, int eventId, TraceEventType severity, string title)
-        {
-            Write(message, new string[] { category }, severity, title, null, priority, eventId);
-        }
-
-        public virtual void Write(object message, IEnumerable<string> categories, TraceEventType severity, string title = null, IDictionary<string, object> properties = null, int priority = -1, int eventId = -1)
-        {
-            try
-            {
-                if (logWriter.IsLoggingEnabled())
+                string eventMessage = message;
+                if (!string.IsNullOrEmpty(trace))
+                    eventMessage = string.Concat(eventMessage, Environment.NewLine, Environment.NewLine, "Stack trace:", Environment.NewLine, trace);
+#if DEBUG
+                Debug.WriteLine(eventMessage, eventType.ToString());
+#endif
+                string source = GetSource();
+                using (EventLog eventLog = new EventLog("Application"))
                 {
-                    LogEntry entry = new LogEntry();
-
-                    if (categories != null && categories.Count() > 0)
-                        entry.Categories = categories.ToArray();
-                    if (message != null)
-                        entry.Message = message.ToString();
-                    if (!string.IsNullOrEmpty(title))
-                        entry.Title = title;
-                    if (eventId != -1)
-                        entry.EventId = eventId;
-                    if (priority != -1)
-                        entry.Priority = priority;
-                    if (properties != null)
-                        entry.ExtendedProperties = properties;
-                    entry.Severity = severity;
-
-                    if (logWriter.ShouldLog(entry))
-                        logWriter.Write(entry);
-                }
-                else
-                {
-                    WriteApplicationEvent("Resources.Warning_LoggingDisabled", EventLogEntryType.Warning);
+                    eventLog.Source = source; // "Application";
+                    eventLog.WriteEntry(eventMessage, eventType, eventId, category);
                 }
             }
-            catch (Exception ex)
+        }
+
+        private string GetSource()
+        {
+            // If the caller has explicitly set a source value, just use it.
+            if (!string.IsNullOrWhiteSpace(Source)) { return Source; }
+
+            try
             {
-                WriteApplicationEvent(ex.ToString(), EventLogEntryType.Error, LogWriter.LogWriterFailureEventID);
+                var assembly = Assembly.GetEntryAssembly();
+
+                // GetEntryAssembly() can return null when called in the context of a unit test project.
+                // That can also happen when called from an app hosted in IIS, or even a windows service.
+
+                if (assembly == null)
+                {
+                    assembly = Assembly.GetExecutingAssembly();
+                }
+
+
+                if (assembly == null)
+                {
+                    // From http://stackoverflow.com/a/14165787/279516:
+                    assembly = new StackTrace().GetFrames().Last().GetMethod().Module.Assembly;
+                }
+
+                if (assembly == null) { return "Application"; }
+
+                return assembly.GetName().Name;
+            }
+            catch
+            {
+                return "Application";
             }
         }
-
-        public virtual void Write(object message, string category, int priority, int eventId, TraceEventType severity, string title, IDictionary<string, object> properties)
-        {
-            Write(message, new string[] { category }, severity, title, properties, priority, eventId);
-        }
-        #endregion
-
     }
 }
