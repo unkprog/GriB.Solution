@@ -3,13 +3,17 @@ import bc = require('app/common/basecontroller');
 import rs = require('app/services/registerservice');
 import vars = require('app/common/variables');
 
-export namespace Controllers.Security {
-    export class RegisterController extends bc.Controllers.BaseController {
+export namespace Controller.Security {
+    export class Register extends bc.Controller.Base {
 
         registerService: rs.Services.RegisterService;
-        constructor(options: Interfaces.IControllerOptions) {
-            super(options);
+        constructor() {
+            super();
             this.registerService = new rs.Services.RegisterService(null);
+        }
+
+        protected createOptions(): Interfaces.IControllerOptions {
+            return { Url: "/Content/view/security/register.html", Id: "app-register" };
         }
 
         protected createModel(): any {
@@ -17,6 +21,7 @@ export namespace Controllers.Security {
                 "Header": "",
                 "labelTitle": vars._statres("button$label$register"),
                 "labelPhone": vars._statres("label$phone"),
+                "labelEmail": vars._statres("label$email"),
                 "labelRegister": vars._statres("button$label$register"),
 
             };
@@ -32,9 +37,9 @@ export namespace Controllers.Security {
         }
 
         private loadSettings() {
-            this.registerService.GetSR((e) => {
+            //this.registerService.GetSR((e) => {
 
-            });
+            //});
         }
 
 

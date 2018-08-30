@@ -1,4 +1,4 @@
-define(["require", "exports", "app/common/variables", "app/services/settingsservice", "app/controllers/security/logincontroller"], function (require, exports, vars, svc, sc) {
+define(["require", "exports", "app/common/variables", "app/services/settingsservice"], function (require, exports, vars, svc) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var App;
@@ -102,6 +102,18 @@ define(["require", "exports", "app/common/variables", "app/services/settingsserv
                     alert(e.responseText);
                 });
             };
+            Application.prototype.OpenController = function (options, backController) {
+                var self = this;
+                var url = "/Content/js/app/controller/" + options.Url + ".js";
+                require([url], function (module) {
+                    var controller = options.getController(module); // new controllerLoaded();
+                    self.OpenView(controller, backController);
+                });
+                //$.when($.ajax({ url: options.Url, cache: false })).done((template) => {
+                //}).fail((e) => {
+                //    //self.HideLoading();
+                //});
+            };
             Application.prototype.OpenView = function (controller, backController) {
                 var _this = this;
                 var self = this;
@@ -132,7 +144,8 @@ define(["require", "exports", "app/common/variables", "app/services/settingsserv
                 });
             };
             Application.prototype.openLoginView = function () {
-                this.OpenView(new sc.Controllers.Security.LoginController({ Url: "/Content/view/security/login.html", Id: "app-login" }));
+                this.OpenController({ Url: "security/login", getController: function (module) { return new module.Controller.Security.Login(); } });
+                //this.OpenView(new sc.Controllers.Security.LoginController());
             };
             Application.prototype.ShowError = function (e) {
                 if (!this.dialogError) {

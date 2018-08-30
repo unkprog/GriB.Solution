@@ -1,6 +1,5 @@
 ﻿import vars = require('app/common/variables');
 import svc = require('app/services/settingsservice');
-import sc = require('app/controllers/security/logincontroller');
 
 export module App {
     class ControllersStack {
@@ -119,11 +118,25 @@ export module App {
             });
         }
 
+        public OpenController(options: any, backController?: Interfaces.IController) {
+            var self = this;
+            let url:string = "/Content/js/app/controller/" + options.Url + ".js";
+            require([url], function (module) {
+                let controller: Interfaces.IController = options.getController(module);// new controllerLoaded();
+                self.OpenView(controller, backController);
+            });
+            //$.when($.ajax({ url: options.Url, cache: false })).done((template) => {
+
+            //}).fail((e) => {
+            //    //self.HideLoading();
+            //});
+        }
+
         public OpenView(controller: Interfaces.IController, backController?: Interfaces.IController) {
             var self = this;
             if ($("#" + controller.Options.Id).length > 0) return;     //Already loaded and current
-
             self.ShowLoading();
+
             $.when($.ajax({ url: controller.Options.Url, cache: false })).done((template) => {
                 let isInit: boolean = false;
                 try {
@@ -152,7 +165,8 @@ export module App {
         }
 
         private openLoginView() {
-            this.OpenView(new sc.Controllers.Security.LoginController({ Url: "/Content/view/security/login.html", Id: "app-login" }));
+            this.OpenController({ Url: "security/login", getController: function (module: any) { return new module.Controller.Security.Login(); } });
+            //this.OpenView(new sc.Controllers.Security.LoginController());
         }
 
 

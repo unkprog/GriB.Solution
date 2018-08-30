@@ -1,23 +1,29 @@
-﻿export namespace Controllers {
-    export class BaseController implements Interfaces.IController {
-        constructor(options: Interfaces.IControllerOptions) {
-            this._options = options;
+﻿export namespace Controller {
+    export class Base implements Interfaces.IController {
+        constructor() {
+            this._options = this.createOptions();
             this._model = this.createModel();
         }
 
+        protected createOptions(): Interfaces.IControllerOptions {
+            return {
+                Url: "",
+                Id: ""
+            };
+        }
         private _options: Interfaces.IControllerOptions;
         public get Options(): Interfaces.IControllerOptions {
             return this._options;
         }
 
-        protected createModel(): any {
+        protected createModel(): Interfaces.IControllerModel {
             return {
                 "Header": ""
             };
         }
 
-        private _model: any;
-        public get Model(): any {
+        private _model: Interfaces.IControllerModel;
+        public get Model(): Interfaces.IControllerModel {
             return this._model;
         }
 

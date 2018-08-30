@@ -122,6 +122,7 @@
     <Content Include="Content\js\nls\root\strings.js" />
     <Content Include="Content\js\nls\strings.js" />
     <Content Include="Content\view\index.html" />
+    <Content Include="Content\view\security\test.html" />
     <Content Include="Content\view\security\register.html" />
     <Content Include="Content\view\security\login.html" />
     <Content Include="Content\view\main.html" />
@@ -211,8 +212,9 @@
     <TypeScriptCompile Include="Content\js\app\common\variables.ts" />
     <Content Include="Content\js\app\init.js" />
     <TypeScriptCompile Include="Content\js\app\common\basecontroller.ts" />
-    <TypeScriptCompile Include="Content\js\app\controllers\security\registercontroller.ts" />
-    <TypeScriptCompile Include="Content\js\app\controllers\security\logincontroller.ts" />
+    <TypeScriptCompile Include="Content\js\app\controller\security\test.ts" />
+    <TypeScriptCompile Include="Content\js\app\controller\security\register.ts" />
+    <TypeScriptCompile Include="Content\js\app\controller\security\login.ts" />
     <TypeScriptCompile Include="Content\js\app\interfaces\iapplication.ts" />
     <TypeScriptCompile Include="Content\js\app\interfaces\icontroller.ts" />
     <TypeScriptCompile Include="Content\js\app\interfaces\iservice.ts" />

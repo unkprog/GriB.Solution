@@ -5,9 +5,13 @@
         Id: string;
     }
 
+    export interface IControllerModel {
+        Header: string
+    }
+
     export interface IController {
         Options: IControllerOptions;
-        Model: any;
+        Model: IControllerModel;
         View: JQuery;
 
         Header: string;

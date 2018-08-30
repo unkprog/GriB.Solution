@@ -8,7 +8,7 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-define(["require", "exports", "app/common/basecontroller", "app/controllers/security/registercontroller", "app/common/variables"], function (require, exports, bc, rc, vars) {
+define(["require", "exports", "app/common/basecontroller", "app/common/variables"], function (require, exports, bc, vars) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var Controllers;
@@ -17,9 +17,12 @@ define(["require", "exports", "app/common/basecontroller", "app/controllers/secu
         (function (Security) {
             var LoginController = /** @class */ (function (_super) {
                 __extends(LoginController, _super);
-                function LoginController(options) {
-                    return _super.call(this, options) || this;
+                function LoginController() {
+                    return _super.call(this) || this;
                 }
+                LoginController.prototype.createOptions = function () {
+                    return { Url: "/Content/view/security/login.html", Id: "app-login" };
+                };
                 LoginController.prototype.createModel = function () {
                     return {
                         "Header": "POS Cloud",
@@ -34,15 +37,18 @@ define(["require", "exports", "app/common/basecontroller", "app/controllers/secu
                 LoginController.prototype.ViewInit = function (view) {
                     var result = _super.prototype.ViewInit.call(this, view);
                     this.RegisterButtonClick = this.createClick("btn-register", this.registerButtonClick, this);
+                    this.ForgotButtonClick = this.createClick("btn-forgot", this.forgotButtonClick, this);
                     return result;
                 };
                 LoginController.prototype.ViewShow = function (e) {
                     M.updateTextFields();
-                    //$('#app-modal-login').modal();
-                    //$('#app-modal-login').modal('open');
                 };
                 LoginController.prototype.registerButtonClick = function (e) {
-                    vars._app.OpenView(new rc.Controllers.Security.RegisterController({ Url: "/Content/view/security/register.html", Id: "app-register" }), this);
+                    //vars._app.OpenView(new rc.Controllers.Security.RegisterController(), this);
+                    vars._app.OpenController({ Url: "security/registercontroller", getController: function (module) { return new module.Controllers.Security.RegisterController(); } }, this);
+                };
+                LoginController.prototype.forgotButtonClick = function (e) {
+                    vars._app.OpenController({ Url: "security/testcontroller", getController: function (module) { return new module.Controllers.Security.TestController(); } }, this);
                 };
                 return LoginController;
             }(bc.Controllers.BaseController));
