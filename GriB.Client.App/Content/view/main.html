@@ -15,14 +15,14 @@
 
 
 <!-- Modal Structure -->
-<div id="app-error-dialog" class="modal">
+<div id="app-error-dialog" class="modal modal-fixed-footer">
     <div class="modal-content">
-        <h4 id="app-error-dialog-header">Error</h4>
+        <h4 id="app-error-dialog-header" data-bind="text:labelError">Error</h4>
         <div id="app-error-dialog-content" class="row">
             Контент
         </div>
     </div>
     <div class="modal-footer">
-        <a href="#!" class="modal-close waves-effect waves-green btn-flat" data-bind="text:labelOk">Agree</a>
+        <a id="app-error-dialog-ok" class="btn width150px" style="width:150px;" data-bind="text:labelOk">Agree</a>
     </div>
 </div>

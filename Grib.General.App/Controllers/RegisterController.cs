@@ -4,7 +4,7 @@ using System.Web.Http;
 using GriB.Common.Sql;
 using GriB.Common.Web.Http;
 using GriB.General.App.Managers;
-using GriB.General.App.Models.pos;
+using GriB.Common.Models.pos;
 
 namespace GriB.General.App.Controllers
 {
@@ -17,13 +17,23 @@ namespace GriB.General.App.Controllers
             _query = new Query(AppSettings.Database.ConnectionString, AppSettings.Database.Path.Query, logger);
         }
 
-        [HttpPost]
-        [ActionName("register")]
-        public HttpResponseMessage Register(pos_register register)
+        //[HttpPost]
+        //[ActionName("registerUser")]
+        //public HttpResponseMessage registerUser(register_user register)
+        //{
+        //    return TryCatchResponse(() =>
+        //    {
+        //        return Request.CreateResponse(HttpStatusCode.OK, new { response = "Ok" });
+        //    });
+        //}
+
+        [HttpGet]
+        [ActionName("test")]
+        public HttpResponseMessage test()
         {
             return TryCatchResponse(() =>
             {
-                return Request.CreateResponse(HttpStatusCode.OK);
+                return Request.CreateResponse(HttpStatusCode.OK, new { response = "Ok" });
             });
         }
     }

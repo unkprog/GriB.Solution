@@ -34,21 +34,27 @@ define(["require", "exports", "app/common/basecontroller", "app/common/variables
                         "labelEnter": vars._statres("button$label$enter"),
                     };
                 };
-                Login.prototype.ViewInit = function (view) {
-                    var result = _super.prototype.ViewInit.call(this, view);
-                    this.RegisterButtonClick = this.createClick("btn-register", this.registerButtonClick, this);
-                    this.ForgotButtonClick = this.createClick("btn-forgot", this.forgotButtonClick, this);
-                    return result;
+                Login.prototype.createEvents = function () {
+                    this.LoginButtonClick = this.createClickEvent("btn-login", this.loginButtonClick); //, this);
+                    this.RegisterButtonClick = this.createClickEvent("btn-register", this.registerButtonClick); //, this);
+                    this.ForgotButtonClick = this.createClickEvent("btn-forgot", this.forgotButtonClick); //, this);
+                };
+                Login.prototype.destroyEvents = function () {
+                    this.destroyClickEvent("btn-login", this.RegisterButtonClick);
+                    this.destroyClickEvent("btn-register", this.RegisterButtonClick);
+                    this.destroyClickEvent("btn-forgot", this.RegisterButtonClick);
                 };
                 Login.prototype.ViewShow = function (e) {
+                    _super.prototype.ViewShow.call(this, e);
                     M.updateTextFields();
                 };
+                Login.prototype.loginButtonClick = function (e) {
+                };
                 Login.prototype.registerButtonClick = function (e) {
-                    //vars._app.OpenView(new rc.Controllers.Security.RegisterController(), this);
-                    vars._app.OpenController({ Url: "security/register", getController: function (module) { return new module.Controller.Security.Register(); } }, this);
+                    vars._app.OpenController("security/register", this);
                 };
                 Login.prototype.forgotButtonClick = function (e) {
-                    vars._app.OpenController({ Url: "security/test", getController: function (module) { return new module.Controller.Security.Test(); } }, this);
+                    vars._showError("Ntcnjdjt cjj,otybt");
                 };
                 return Login;
             }(bc.Controller.Base));

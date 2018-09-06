@@ -1,4 +1,5 @@
 ﻿import vars = require('app/common/variables');
+import utils = require('app/common/utils');
 import svc = require('app/services/settingsservice');
 
 export module App {
@@ -35,10 +36,11 @@ export module App {
         constructor() {
             vars._app = this;
             this._controllersStack = new ControllersStack();
-            this._settingsService = new svc.Services.SettingsService(null);
+            this._settingsService = new svc.Services.SettingsService();
             this._model = new kendo.data.ObservableObject({
                 "AppHeader": "POS Cloud",
-                "labelOk": "Ok",
+                "labelOk": vars._statres("button$label$ok"),
+                "labelError": vars._statres("label$error"),
                 "contentError":""
             });
             this.Initailize();
@@ -60,8 +62,8 @@ export module App {
                 this._controller.ViewResize(e);
         }
 
-        public BackButtonClick: { (e: any): void; };
-        private backButtonClick(e) {
+        public ControllerBack: { (e: any): void; };
+        private controllerBack(e) {
             this._controllersStack.Pop();
             this.RestoreController();
         }
@@ -71,11 +73,14 @@ export module App {
         private contentControl: JQuery;
         public Initailize(): void {
             let app = this;
+
+            $.support.cors = true;
+          
             app.progressControl = $("#progress-container");
             app.contentControl = $("#app-content");
 
             app.Resize = $.proxy(app.resize, app);
-            app.BackButtonClick = $.proxy(app.backButtonClick, app);
+            app.ControllerBack = $.proxy(app.controllerBack, app);
             app._settingsService.GetSettings((e) => {
                 vars._appSettings = e;
                 app.loadAppView();
@@ -108,7 +113,7 @@ export module App {
                     self.navbarControl = $("#app-navbar");
                     $('.sidenav').sidenav();
                     self.resize(undefined);
-                    self.openLoginView();
+                    self.initAfterLoaded();
                 } finally {
                    
                 }
@@ -118,18 +123,16 @@ export module App {
             });
         }
 
-        public OpenController(options: any, backController?: Interfaces.IController) {
+        public OpenController(urlController: string, backController?: Interfaces.IController) {
             var self = this;
-            let url:string = "/Content/js/app/controller/" + options.Url + ".js";
-            require([url], function (module) {
-                let controller: Interfaces.IController = options.getController(module);// new controllerLoaded();
-                self.OpenView(controller, backController);
-            });
-            //$.when($.ajax({ url: options.Url, cache: false })).done((template) => {
-
-            //}).fail((e) => {
-            //    //self.HideLoading();
-            //});
+            let ctrlCreate: any = vars._controllers[urlController]
+            if (ctrlCreate) {
+                let url: string = "/Content/js/app/controller/" + urlController + ".js";
+                require([url], function (module) {
+                    let controller: Interfaces.IController = ctrlCreate(module);
+                    self.OpenView(controller, backController);
+                });
+            }
         }
 
         public OpenView(controller: Interfaces.IController, backController?: Interfaces.IController) {
@@ -164,27 +167,42 @@ export module App {
             });
         }
 
-        private openLoginView() {
-            this.OpenController({ Url: "security/login", getController: function (module: any) { return new module.Controller.Security.Login(); } });
-            //this.OpenView(new sc.Controllers.Security.LoginController());
+        private login(): void {
+            this.OpenController("security/login");
         }
 
 
+        private initAfterLoaded() {
+            //this.initDialogError();
+            this.login();
+        }
+
+
+        public HandleError(e: any): void {
+            this.ShowError(e);
+        }
 
         private dialogError: JQuery;
         private dialogErrorContent: JQuery;
-        public ShowError(e: string) {
-
+        private initDialogError() {
             if (!this.dialogError) {
                 this.dialogError = $("#app-error-dialog");
                 this.dialogErrorContent = $("#app-error-dialog-content");
-                this.dialogError.modal();
+                this.CloseDialogError = utils.createClickEvent("app-error-dialog-ok", this.closeDialogError, this, $("#app-error-dialog"));
+                this.dialogError.modal({ dismissible: false });
             }
+        }
 
+        public ShowError(e: string) {
+            this.initDialogError();
             this.dialogErrorContent.html(e);
             this.dialogError.modal("open");
+        }
 
-        //    //this._model.set("contentError", )
+        public CloseDialogError: { (e: any): void; };
+        private closeDialogError(e) {
+            if (this.dialogError) 
+                this.dialogError.modal("close");
         }
     }
 }

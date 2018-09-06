@@ -8,7 +8,7 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-define(["require", "exports", "app/common/basecontroller", "app/services/registerservice", "app/common/variables"], function (require, exports, bc, rs, vars) {
+define(["require", "exports", "app/common/basecontroller", "app/services/accountservice", "app/common/variables", "app/common/utils"], function (require, exports, bc, acc, vars, utils) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var Controller;
@@ -19,7 +19,7 @@ define(["require", "exports", "app/common/basecontroller", "app/services/registe
                 __extends(Register, _super);
                 function Register() {
                     var _this = _super.call(this) || this;
-                    _this.registerService = new rs.Services.RegisterService(null);
+                    _this.accountService = new acc.Services.AccountService();
                     return _this;
                 }
                 Register.prototype.createOptions = function () {
@@ -31,21 +31,37 @@ define(["require", "exports", "app/common/basecontroller", "app/services/registe
                         "labelTitle": vars._statres("button$label$register"),
                         "labelPhone": vars._statres("label$phone"),
                         "labelEmail": vars._statres("label$email"),
+                        "labelPassword": vars._statres("label$password"),
+                        "labelConfirmPassword": vars._statres("label$confirmPassword"),
                         "labelRegister": vars._statres("button$label$register"),
                     };
                 };
-                Register.prototype.ViewInit = function (view) {
-                    var result = _super.prototype.ViewInit.call(this, view);
-                    this.RegisterButtonClick = this.createClick("btn-register", this.registerButtonClick, this);
-                    this.loadSettings();
-                    return false;
+                Register.prototype.createEvents = function () {
+                    this.RegisterButtonClick = this.createClickEvent("btn-register", this.registerButtonClick);
                 };
-                Register.prototype.loadSettings = function () {
-                    //this.registerService.GetSR((e) => {
-                    //});
+                Register.prototype.destroyEvents = function () {
+                    this.destroyClickEvent("btn-register", this.RegisterButtonClick);
                 };
                 Register.prototype.registerButtonClick = function (e) {
-                    //vars._app.OpenView(new rs.Controllers.Security.RegisterController({ Url: "/Content/view/security/register.html", Id: "app-register" }), this);
+                    var controller = this;
+                    var model = {
+                        Phone: $('#register-phone').val(),
+                        EMail: $('#register-email').val()
+                    };
+                    if (this.validate(model)) {
+                        controller.accountService.Register(model, function (responseData) {
+                        });
+                    }
+                };
+                Register.prototype.validate = function (model) {
+                    var validateMessage = '';
+                    if (!utils.validatePhone(model.Phone))
+                        validateMessage = validateMessage + (validateMessage !== '' ? '<br/>' : '') + vars._statres('msg$error$phoneNumberIncorrect');
+                    if (!utils.validateEmail(model.EMail))
+                        validateMessage = validateMessage + (validateMessage !== '' ? '<br/>' : '') + vars._statres('msg$error$invalidEmailAddress');
+                    if (validateMessage !== '')
+                        vars._showError(validateMessage);
+                    return (validateMessage === '');
                 };
                 return Register;
             }(bc.Controller.Base));

@@ -25,27 +25,36 @@ export namespace Controller.Security {
             };
         }
 
-        public ViewInit(view: JQuery): boolean {
-            let result :boolean = super.ViewInit(view);
-            this.RegisterButtonClick = this.createClick("btn-register", this.registerButtonClick, this);
-            this.ForgotButtonClick = this.createClick("btn-forgot", this.forgotButtonClick, this);
-            return result;
+        protected createEvents(): void {
+            this.LoginButtonClick = this.createClickEvent("btn-login", this.loginButtonClick);//, this);
+            this.RegisterButtonClick = this.createClickEvent("btn-register", this.registerButtonClick);//, this);
+            this.ForgotButtonClick = this.createClickEvent("btn-forgot", this.forgotButtonClick);//, this);
+        }
+
+        protected destroyEvents(): void {
+            this.destroyClickEvent("btn-login", this.RegisterButtonClick);
+            this.destroyClickEvent("btn-register", this.RegisterButtonClick);
+            this.destroyClickEvent("btn-forgot", this.RegisterButtonClick);
         }
 
         public ViewShow(e: any): void {
+            super.ViewShow(e);
             M.updateTextFields();
+        }
+
+        public LoginButtonClick: { (e: any): void; };
+        private loginButtonClick(e) {
         }
 
         public RegisterButtonClick: { (e: any): void; };
         private registerButtonClick(e) {
-            //vars._app.OpenView(new rc.Controllers.Security.RegisterController(), this);
-            vars._app.OpenController({ Url: "security/register", getController: function (module: any) { return new module.Controller.Security.Register(); } }, this);
+            vars._app.OpenController("security/register", this);
 
         }
 
         public ForgotButtonClick: { (e: any): void; };
         private forgotButtonClick(e) {
-            vars._app.OpenController({ Url: "security/test", getController: function (module: any) { return new module.Controller.Security.Test(); } }, this);
+            vars._showError("Ntcnjdjt cjj,otybt");
         }
     }
 }

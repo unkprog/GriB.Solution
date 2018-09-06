@@ -1,4 +1,7 @@
-﻿export namespace Controller {
+﻿import vars = require('app/common/variables');
+import utils = require('app/common/utils');
+
+export namespace Controller {
     export class Base implements Interfaces.IController {
         constructor() {
             this._options = this.createOptions();
@@ -40,22 +43,29 @@
         public ViewInit(view: JQuery): boolean {
             this._view = view;
             kendo.bind(view, this._model);
+            this.createEvents();
             return true;
+        }
+
+        protected createEvents(): void {
         }
 
         public ViewShow(e: any): void {
         }
+
         public ViewHide(e: any): void {
+            this.destroyEvents();
+
         }
+
+        protected destroyEvents(): void {
+        }
+
         public ViewResize(e?: any): void {
         }
 
-        protected createClick(elemName: string | JQuery, clickFunc: any, controller: Interfaces.IController): any {
-            var result = $.proxy(clickFunc, controller);
-            var elem: JQuery = elemName instanceof $ ? <JQuery>elemName : controller.View.find("#" + elemName);
-            for (let i = 0, iCount = elem.length; i < iCount; i++)
-                elem[i].addEventListener(("ontouchstart" in window) ? "touchend" : "click", result, false);
-            return result;
+        protected createClickEvent(elemName: string | JQuery, clickFunc: any/*, controller: Interfaces.IController*/): any {
+            return utils.createClickEvent(elemName, clickFunc, this, this.View);
         }
 
         protected createKeyPress(elemName: string[], clickFunc: (e: any) => any, controller: Interfaces.IController): any {
@@ -69,12 +79,8 @@
             return result;
         }
 
-
-        protected deleteClick(elemName: string | JQuery, proxyFunc: any): any {
-            let controller: Interfaces.IController = this;
-            let elem: JQuery = elemName instanceof $ ? <JQuery>elemName : controller.View.find("#" + elemName);
-            for (let i = 0, iCount = elem.length; i < iCount; i++)
-                elem[i].removeEventListener(("ontouchstart" in window) ? "touchend" : "click", proxyFunc);
+        protected destroyClickEvent(elemName: string | JQuery, proxyFunc: any): any {
+            utils.destroyClickEvent(elemName, proxyFunc, this.View);
         }
 
         protected deleteKeyPress(elemName: string[], proxyFunc: (e: any) => any): any {

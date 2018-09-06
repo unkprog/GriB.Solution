@@ -4,8 +4,12 @@
 export module Services {
     export class SettingsService extends base.Services.BaseService {
 
-        constructor(options: Interfaces.IServiceOptions) {
-            super({ BaseUrl: "/api/settings" });
+        constructor() {
+            super();
+        }
+
+        public get Options(): Interfaces.IServiceOptions {
+            return { BaseUrl: '/api/settings' };
         }
 
         public GetSettings(Callback: (responseData: any) => void) {

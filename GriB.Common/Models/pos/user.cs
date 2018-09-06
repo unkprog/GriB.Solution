@@ -1,6 +1,6 @@
-﻿namespace GriB.General.App.Models.pos
+﻿namespace GriB.Common.Models.pos
 {
-    public class pos_user : pos_base
+    public class user : model_base
     {
         public int regtype { get; set; }
         public string phone { get; set; }

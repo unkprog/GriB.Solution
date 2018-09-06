@@ -13,17 +13,24 @@ define(["require", "exports", "app/common/baseservice"], function (require, expo
     Object.defineProperty(exports, "__esModule", { value: true });
     var Services;
     (function (Services) {
-        var RegisterService = /** @class */ (function (_super) {
-            __extends(RegisterService, _super);
-            function RegisterService(options) {
-                return _super.call(this, options) || this;
+        var AccountService = /** @class */ (function (_super) {
+            __extends(AccountService, _super);
+            function AccountService() {
+                return _super.call(this) || this;
             }
-            RegisterService.prototype.RegisterUser = function (model, Callback) {
-                this.PostApi({ Action: "/registerUser", RequestData: JSON.stringify(model), Callback: Callback });
+            Object.defineProperty(AccountService.prototype, "Options", {
+                get: function () {
+                    return { BaseUrl: '/api/account' };
+                },
+                enumerable: true,
+                configurable: true
+            });
+            AccountService.prototype.Register = function (model, Callback) {
+                this.PostApi({ Action: "/register", RequestData: JSON.stringify(model), Callback: Callback });
             };
-            return RegisterService;
+            return AccountService;
         }(base.Services.BaseService));
-        Services.RegisterService = RegisterService;
+        Services.AccountService = AccountService;
     })(Services = exports.Services || (exports.Services = {}));
 });
-//# sourceMappingURL=registerservice.js.map
+//# sourceMappingURL=accountservice.js.map

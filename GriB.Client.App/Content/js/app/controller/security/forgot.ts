@@ -2,7 +2,7 @@
 import vars = require('app/common/variables');
 
 export namespace Controller.Security {
-    export class Test extends bc.Controller.Base {
+    export class Forgot extends bc.Controller.Base {
 
         constructor() {
             super();
@@ -21,13 +21,6 @@ export namespace Controller.Security {
                 "labelRegister": vars._statres("button$label$register"),
 
             };
-        }
-
-        public ViewInit(view: JQuery): boolean {
-            //let result: boolean = super.ViewInit(view);
-            //this.RegisterButtonClick = this.createClick("btn-register", this.registerButtonClick, this);
-            //this.loadSettings();
-            return true;
         }
 
     }

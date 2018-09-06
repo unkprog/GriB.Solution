@@ -1,4 +1,4 @@
-define(["require", "exports", "app/common/variables", "app/services/settingsservice"], function (require, exports, vars, svc) {
+define(["require", "exports", "app/common/variables", "app/common/utils", "app/services/settingsservice"], function (require, exports, vars, utils, svc) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var App;
@@ -35,10 +35,11 @@ define(["require", "exports", "app/common/variables", "app/services/settingsserv
             function Application() {
                 vars._app = this;
                 this._controllersStack = new ControllersStack();
-                this._settingsService = new svc.Services.SettingsService(null);
+                this._settingsService = new svc.Services.SettingsService();
                 this._model = new kendo.data.ObservableObject({
                     "AppHeader": "POS Cloud",
-                    "labelOk": "Ok",
+                    "labelOk": vars._statres("button$label$ok"),
+                    "labelError": vars._statres("label$error"),
                     "contentError": ""
                 });
                 this.Initailize();
@@ -57,16 +58,17 @@ define(["require", "exports", "app/common/variables", "app/services/settingsserv
                 if (this._controller)
                     this._controller.ViewResize(e);
             };
-            Application.prototype.backButtonClick = function (e) {
+            Application.prototype.controllerBack = function (e) {
                 this._controllersStack.Pop();
                 this.RestoreController();
             };
             Application.prototype.Initailize = function () {
                 var app = this;
+                $.support.cors = true;
                 app.progressControl = $("#progress-container");
                 app.contentControl = $("#app-content");
                 app.Resize = $.proxy(app.resize, app);
-                app.BackButtonClick = $.proxy(app.backButtonClick, app);
+                app.ControllerBack = $.proxy(app.controllerBack, app);
                 app._settingsService.GetSettings(function (e) {
                     vars._appSettings = e;
                     app.loadAppView();
@@ -93,7 +95,7 @@ define(["require", "exports", "app/common/variables", "app/services/settingsserv
                         self.navbarControl = $("#app-navbar");
                         $('.sidenav').sidenav();
                         self.resize(undefined);
-                        self.openLoginView();
+                        self.initAfterLoaded();
                     }
                     finally {
                     }
@@ -102,17 +104,16 @@ define(["require", "exports", "app/common/variables", "app/services/settingsserv
                     alert(e.responseText);
                 });
             };
-            Application.prototype.OpenController = function (options, backController) {
+            Application.prototype.OpenController = function (urlController, backController) {
                 var self = this;
-                var url = "/Content/js/app/controller/" + options.Url + ".js";
-                require([url], function (module) {
-                    var controller = options.getController(module); // new controllerLoaded();
-                    self.OpenView(controller, backController);
-                });
-                //$.when($.ajax({ url: options.Url, cache: false })).done((template) => {
-                //}).fail((e) => {
-                //    //self.HideLoading();
-                //});
+                var ctrlCreate = vars._controllers[urlController];
+                if (ctrlCreate) {
+                    var url = "/Content/js/app/controller/" + urlController + ".js";
+                    require([url], function (module) {
+                        var controller = ctrlCreate(module);
+                        self.OpenView(controller, backController);
+                    });
+                }
             };
             Application.prototype.OpenView = function (controller, backController) {
                 var _this = this;
@@ -143,19 +144,32 @@ define(["require", "exports", "app/common/variables", "app/services/settingsserv
                     self.HideLoading();
                 });
             };
-            Application.prototype.openLoginView = function () {
-                this.OpenController({ Url: "security/login", getController: function (module) { return new module.Controller.Security.Login(); } });
-                //this.OpenView(new sc.Controllers.Security.LoginController());
+            Application.prototype.login = function () {
+                this.OpenController("security/login");
             };
-            Application.prototype.ShowError = function (e) {
+            Application.prototype.initAfterLoaded = function () {
+                //this.initDialogError();
+                this.login();
+            };
+            Application.prototype.HandleError = function (e) {
+                this.ShowError(e);
+            };
+            Application.prototype.initDialogError = function () {
                 if (!this.dialogError) {
                     this.dialogError = $("#app-error-dialog");
                     this.dialogErrorContent = $("#app-error-dialog-content");
-                    this.dialogError.modal();
+                    this.CloseDialogError = utils.createClickEvent("app-error-dialog-ok", this.closeDialogError, this, $("#app-error-dialog"));
+                    this.dialogError.modal({ dismissible: false });
                 }
+            };
+            Application.prototype.ShowError = function (e) {
+                this.initDialogError();
                 this.dialogErrorContent.html(e);
                 this.dialogError.modal("open");
-                //    //this._model.set("contentError", )
+            };
+            Application.prototype.closeDialogError = function (e) {
+                if (this.dialogError)
+                    this.dialogError.modal("close");
             };
             return Application;
         }());

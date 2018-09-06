@@ -16,9 +16,16 @@ define(["require", "exports", "app/common/baseservice"], function (require, expo
     (function (Services) {
         var SettingsService = /** @class */ (function (_super) {
             __extends(SettingsService, _super);
-            function SettingsService(options) {
-                return _super.call(this, { BaseUrl: "/api/settings" }) || this;
+            function SettingsService() {
+                return _super.call(this) || this;
             }
+            Object.defineProperty(SettingsService.prototype, "Options", {
+                get: function () {
+                    return { BaseUrl: '/api/settings' };
+                },
+                enumerable: true,
+                configurable: true
+            });
             SettingsService.prototype.GetSettings = function (Callback) {
                 this.GetApi({ Action: "/settings", Callback: Callback });
             };

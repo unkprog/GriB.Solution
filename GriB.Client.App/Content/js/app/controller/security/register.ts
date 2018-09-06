@@ -1,15 +1,15 @@
-﻿//import ic = require('app/interfaces/icontroller');
-import bc = require('app/common/basecontroller');
-import rs = require('app/services/registerservice');
+﻿import bc = require('app/common/basecontroller');
+import acc = require('app/services/accountservice');
 import vars = require('app/common/variables');
+import utils = require('app/common/utils');
 
 export namespace Controller.Security {
     export class Register extends bc.Controller.Base {
 
-        registerService: rs.Services.RegisterService;
+        accountService: acc.Services.AccountService;
         constructor() {
             super();
-            this.registerService = new rs.Services.RegisterService(null);
+            this.accountService = new acc.Services.AccountService();
         }
 
         protected createOptions(): Interfaces.IControllerOptions {
@@ -22,30 +22,48 @@ export namespace Controller.Security {
                 "labelTitle": vars._statres("button$label$register"),
                 "labelPhone": vars._statres("label$phone"),
                 "labelEmail": vars._statres("label$email"),
+                "labelPassword": vars._statres("label$password"),
+                "labelConfirmPassword": vars._statres("label$confirmPassword"),
                 "labelRegister": vars._statres("button$label$register"),
-
             };
         }
 
-
-
-        public ViewInit(view: JQuery): boolean {
-            let result: boolean = super.ViewInit(view);
-            this.RegisterButtonClick = this.createClick("btn-register", this.registerButtonClick, this);
-            this.loadSettings();
-            return false;
+        protected createEvents(): void {
+            this.RegisterButtonClick = this.createClickEvent("btn-register", this.registerButtonClick);
         }
 
-        private loadSettings() {
-            //this.registerService.GetSR((e) => {
-
-            //});
+        protected destroyEvents(): void {
+            this.destroyClickEvent("btn-register", this.RegisterButtonClick);
         }
-
 
         public RegisterButtonClick: { (e: any): void; };
         private registerButtonClick(e) {
-            //vars._app.OpenView(new rs.Controllers.Security.RegisterController({ Url: "/Content/view/security/register.html", Id: "app-register" }), this);
+            let controller = this;
+            let model: Interfaces.Model.IRegisterModel = {
+                Phone: <string> $('#register-phone').val(),
+                EMail: <string> $('#register-email').val()
+            };
+            if (this.validate(model)) {
+                controller.accountService.Register(model, (responseData) => {
+
+                });
+            }
+           
+        }
+
+        private validate(model: Interfaces.Model.IRegisterModel): boolean {
+            let validateMessage: string = '';
+
+            if (!utils.validatePhone(model.Phone))
+                validateMessage = validateMessage + (validateMessage !== '' ? '<br/>' : '') + vars._statres('msg$error$phoneNumberIncorrect');
+
+            if (!utils.validateEmail(model.EMail))
+                validateMessage = validateMessage + (validateMessage !== '' ? '<br/>' : '') + vars._statres('msg$error$invalidEmailAddress');
+
+            if (validateMessage !== '')
+                vars._showError(validateMessage);
+
+            return (validateMessage === '');
         }
     }
 }

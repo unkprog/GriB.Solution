@@ -33,7 +33,7 @@ require(["domReady", "jquery"], function (domReady, jquery) {
                     _app.Resize(e);
                 });
                 window.onpopstate = function (e) {
-                    //_app.BackButtonClick(e);
+                    _app.ControllerBack(e);
                 };
             })
         });

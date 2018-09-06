@@ -1,47 +1,53 @@
-define(["require", "exports"], function (require, exports) {
+define(["require", "exports", "./variables"], function (require, exports, variables_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var Services;
     (function (Services) {
         var BaseService = /** @class */ (function () {
-            function BaseService(options) {
-                //this._errorHandler = options.Error;//errorHandler;
-                this._options = options;
+            function BaseService() {
             }
-            //private _errorHandler: (e: any) => void;
-            //protected _baseUrl: string;
+            Object.defineProperty(BaseService.prototype, "Options", {
+                get: function () {
+                    return { BaseUrl: '' };
+                },
+                enumerable: true,
+                configurable: true
+            });
             BaseService.prototype.handleError = function (e, onError) {
-                //    //_app.HandleError(e);
+                variables_1._app.HandleError(e);
             };
             BaseService.prototype.GetApi = function (options) {
                 var self = this;
-                var action = self._options.BaseUrl + options.Action;
+                var action = (self.Options && self.Options.BaseUrl ? self.Options.BaseUrl : '') + options.Action;
                 $.ajax({
                     url: action,
                     type: "get",
                     dataType: "json",
+                    crossDomain: options.CrossDomain,
                     data: options.RequestData,
-                    success: function (responseData) {
+                    success: function (responseData, textStatus, jqXHR) {
                         if (options.Callback)
                             options.Callback(responseData);
                     },
-                    error: function (e) {
+                    error: function (e, textStatus, errorThrown) {
                         self.handleError(e, options.Error);
                     }
                 });
             };
             BaseService.prototype.PostApi = function (options) {
                 var self = this;
+                var action = (self.Options && self.Options.BaseUrl ? self.Options.BaseUrl : '') + options.Action;
                 $.ajax({
-                    url: self._options.BaseUrl + options.Action,
+                    url: action,
                     type: "post",
                     dataType: "json",
+                    crossDomain: options.CrossDomain,
                     data: options.RequestData,
-                    success: function (responseData) {
+                    success: function (responseData, textStatus, jqXHR) {
                         if (options.Callback)
                             options.Callback(responseData);
                     },
-                    error: function (e) {
+                    error: function (e, textStatus, errorThrown) {
                         self.handleError(e, options.Error);
                     }
                 });

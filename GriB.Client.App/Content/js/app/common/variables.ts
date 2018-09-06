@@ -1,16 +1,15 @@
 ﻿/// <amd-dependency path="i18n!nls/strings" />
-//import int = require('app/interfaces/iapplication');
 
 export declare let _app: Interfaces.IApplication;
 export declare let _statres: (id: string) => string;
 export declare let _absUrl: (id: string) => string;   //Create absolute ref to resource
-
+export declare let _showError: (error: string) => void;
 
 export declare let _appSettings: {
     IsDebug: boolean;
     Version: string;
     Language: string;
-    RegisterUrl: string;
+    ServerRegister: string;
 };
 
 
@@ -26,11 +25,16 @@ namespace App {
             return (this.i18nData && this.i18nData[id]) ? this.i18nData[id] : "";
         }
     }
-    //_absUrl = (refUrl: string) => {
-    //    return _appData.BaseUrl + refUrl;
-    //};
 }
 
 let staticResources = new App.StaticResources();
 _statres = (id: string) => { return staticResources.GetString(id); }
- 
+_showError = (error: string) => { _app.ShowError(error); }
+
+
+export declare let _controllers: any;
+_controllers = {};
+_controllers["security/login"] = function (module: any): Interfaces.IController { return new module.Controller.Security.Login(); };
+_controllers["security/register"] = function (module: any): Interfaces.IController { return new module.Controller.Security.Register(); };
+
+

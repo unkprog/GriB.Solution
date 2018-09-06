@@ -1,34 +1,33 @@
-﻿export namespace Services {
+﻿import { _app } from "./variables";
+
+export namespace Services {
     export class BaseService implements Interfaces.IService {
 
-        private _options: Interfaces.IServiceOptions;
-        //private _errorHandler: (e: any) => void;
-        //protected _baseUrl: string;
-
-        protected handleError(e: any, onError?: (e: any) => void) {
-        //    //_app.HandleError(e);
+        constructor() {
         }
 
+        public get Options(): Interfaces.IServiceOptions {
+            return { BaseUrl: '' };
+        }
 
-
-        constructor(options: Interfaces.IServiceOptions) {
-            //this._errorHandler = options.Error;//errorHandler;
-            this._options = options;
+        protected handleError(e: any, onError?: (e: any) => void) {
+            _app.HandleError(e);
         }
 
         public GetApi(options: Interfaces.IServiceCallOptions): void {
             let self = this;
-            let action = self._options.BaseUrl + options.Action;
+            let action = (self.Options && self.Options.BaseUrl ? self.Options.BaseUrl : '') + options.Action;
             $.ajax({
                 url: action,
                 type: "get",
                 dataType: "json",
+                crossDomain: options.CrossDomain,
                 data: options.RequestData,
-                success: function (responseData) {
+                success: function (responseData, textStatus, jqXHR) {
                     if (options.Callback)
                         options.Callback(responseData);
                 },
-                error: function (e) {
+                error: function (e, textStatus, errorThrown) {
                     self.handleError(e, options.Error);
                 }
             });
@@ -36,16 +35,18 @@
 
         public PostApi(options: Interfaces.IServiceCallOptions): void {
             let self = this;
+            let action = (self.Options && self.Options.BaseUrl ? self.Options.BaseUrl : '') + options.Action;
             $.ajax({
-                url: self._options.BaseUrl + options.Action,
+                url: action,
                 type: "post",
                 dataType: "json",
+                crossDomain: options.CrossDomain,
                 data: options.RequestData,
-                success: function (responseData) {
+                success: function (responseData, textStatus, jqXHR) {
                     if (options.Callback)
                         options.Callback(responseData);
                 },
-                error: function (e) {
+                error: function (e, textStatus, errorThrown) {
                     self.handleError(e, options.Error);
                 }
             });
