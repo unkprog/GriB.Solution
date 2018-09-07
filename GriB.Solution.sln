@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GriB.Client.App", "GriB.Cli
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GriB.Common", "GriB.Common\GriB.Common.csproj", "{D1EC7A16-5393-4584-B7ED-EDDBAED18D59}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Grib.Console.Test", "Grib.Console.Test\Grib.Console.Test.csproj", "{CC79EACE-6F42-4799-9688-CC0295937CCD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,12 +29,16 @@ Global
 		{D1EC7A16-5393-4584-B7ED-EDDBAED18D59}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D1EC7A16-5393-4584-B7ED-EDDBAED18D59}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D1EC7A16-5393-4584-B7ED-EDDBAED18D59}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CC79EACE-6F42-4799-9688-CC0295937CCD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CC79EACE-6F42-4799-9688-CC0295937CCD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CC79EACE-6F42-4799-9688-CC0295937CCD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CC79EACE-6F42-4799-9688-CC0295937CCD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		EnterpriseLibraryConfigurationToolBinariesPathV6 = packages\EnterpriseLibrary.Common.6.0.1304.0\lib\NET45;packages\EnterpriseLibrary.Logging.6.0.1304.0\lib\NET45
 		SolutionGuid = {EAC2E5AA-F73A-4301-87B1-0A49A98CD79B}
+		EnterpriseLibraryConfigurationToolBinariesPathV6 = packages\EnterpriseLibrary.Common.6.0.1304.0\lib\NET45;packages\EnterpriseLibrary.Logging.6.0.1304.0\lib\NET45
 	EndGlobalSection
 EndGlobal

@@ -8,24 +8,24 @@ using GriB.Common.Models.pos;
 
 namespace GriB.General.App.Controllers
 {
-    public class RegisterController : BaseApiController
+    public class AccountController : BaseApiController
     {
         private Query _query;
 
-        public RegisterController() : base()
+        public AccountController() : base()
         {
             _query = new Query(AppSettings.Database.ConnectionString, AppSettings.Database.Path.Query, logger);
         }
 
-        //[HttpPost]
-        //[ActionName("registerUser")]
-        //public HttpResponseMessage registerUser(register_user register)
-        //{
-        //    return TryCatchResponse(() =>
-        //    {
-        //        return Request.CreateResponse(HttpStatusCode.OK, new { response = "Ok" });
-        //    });
-        //}
+        [HttpPost]
+        [ActionName("register")]
+        public HttpResponseMessage register(register_user register)
+        {
+            return TryCatchResponse(() =>
+            {
+                return Request.CreateResponse(HttpStatusCode.OK, new { response = "Ok" });
+            });
+        }
 
         [HttpGet]
         [ActionName("test")]
