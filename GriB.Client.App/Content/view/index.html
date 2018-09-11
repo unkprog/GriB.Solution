@@ -13,12 +13,25 @@
 
 <body>
     <div id="mainview"></div>
-    <div id="progress-container" class="container container-center">
+    <!--<div id="progress-container" class="container container-center">
         <div class="progress center">
             <div id="progress-status" class="indeterminate"></div>
         </div>
+    </div>-->
+    <div id="progress-container" class="container-center">
+        <div class="preloader-wrapper big active">
+            <div class="spinner-layer">
+                <div class="circle-clipper left">
+                    <div class="circle"></div>
+                </div><div class="gap-patch">
+                    <div class="circle"></div>
+                </div><div class="circle-clipper right">
+                    <div class="circle"></div>
+                </div>
+            </div>
+        </div>
     </div>
-    <!--JavaScript at end of body for optimized loading-->
-    <script data-main="/Content/js/app/init" src="/Content/js/lib/require/require.js"></script>
+        <!--JavaScript at end of body for optimized loading-->
+        <script data-main="/Content/js/app/init" src="/Content/js/lib/require/require.js"></script>
 </body>
 </html>

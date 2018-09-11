@@ -109,6 +109,10 @@
     <Folder Include="App_Data\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\GriB.Common.Json\GriB.Common.Json.csproj">
+      <Project>{2c8c0e6f-cc46-4143-9bfd-0d43ed4cd815}</Project>
+      <Name>GriB.Common.Json</Name>
+    </ProjectReference>
     <ProjectReference Include="..\GriB.Common\GriB.Common.csproj">
       <Project>{d1ec7a16-5393-4584-b7ed-eddbaed18d59}</Project>
       <Name>GriB.Common</Name>

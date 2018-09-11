@@ -6,7 +6,7 @@ namespace GriB.Common.Net
     {
         public static void SendEMail(string fromEmail, string password, string toAddress, string subject, string body)
         {
-            using (System.Net.Mail.MailMessage myMail = new System.Net.Mail.MailMessage())
+            using (MailMessage myMail = new MailMessage())
             {
                 myMail.From = new MailAddress(fromEmail);
                 myMail.To.Add(toAddress);

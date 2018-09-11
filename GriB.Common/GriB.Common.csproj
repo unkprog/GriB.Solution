@@ -75,5 +75,11 @@
   <ItemGroup>
     <Folder Include="Resources\" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\GriB.Common.Json\GriB.Common.Json.csproj">
+      <Project>{2c8c0e6f-cc46-4143-9bfd-0d43ed4cd815}</Project>
+      <Name>GriB.Common.Json</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
