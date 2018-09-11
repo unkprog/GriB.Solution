@@ -56,6 +56,7 @@ define(["require", "exports", "app/common/utils"], function (require, exports, u
             Base.prototype.createEvents = function () {
             };
             Base.prototype.ViewShow = function (e) {
+                M.updateTextFields();
             };
             Base.prototype.ViewHide = function (e) {
                 this.destroyEvents();

@@ -40,7 +40,8 @@ export namespace Services {
                 url: action,
                 type: "post",
                 dataType: "json",
-                crossDomain: options.CrossDomain,
+                contentType: "application/json",
+                //crossDomain: options.CrossDomain,
                 data: options.RequestData,
                 success: function (responseData, textStatus, jqXHR) {
                     if (options.Callback)

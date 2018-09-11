@@ -46,7 +46,6 @@ define(["require", "exports", "app/common/basecontroller", "app/common/variables
                 };
                 Login.prototype.ViewShow = function (e) {
                     _super.prototype.ViewShow.call(this, e);
-                    M.updateTextFields();
                 };
                 Login.prototype.loginButtonClick = function (e) {
                 };

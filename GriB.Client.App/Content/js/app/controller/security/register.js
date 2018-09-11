@@ -45,8 +45,9 @@ define(["require", "exports", "app/common/basecontroller", "app/services/account
                 Register.prototype.registerButtonClick = function (e) {
                     var controller = this;
                     var model = {
-                        Phone: $('#register-phone').val(),
-                        EMail: $('#register-email').val()
+                        regtype: 0,
+                        phone: $('#register-phone').val(),
+                        email: $('#register-email').val()
                     };
                     if (this.validate(model)) {
                         controller.accountService.Register(model, function (responseData) {
@@ -55,9 +56,9 @@ define(["require", "exports", "app/common/basecontroller", "app/services/account
                 };
                 Register.prototype.validate = function (model) {
                     var validateMessage = '';
-                    if (!utils.validatePhone(model.Phone))
+                    if (!utils.validatePhone(model.phone))
                         validateMessage = validateMessage + (validateMessage !== '' ? '<br/>' : '') + vars._statres('msg$error$phoneNumberIncorrect');
-                    if (!utils.validateEmail(model.EMail))
+                    if (!utils.validateEmail(model.email))
                         validateMessage = validateMessage + (validateMessage !== '' ? '<br/>' : '') + vars._statres('msg$error$invalidEmailAddress');
                     if (validateMessage !== '')
                         vars._showError(validateMessage);

@@ -22,7 +22,7 @@ namespace GriB.Common.Web.Http
             {
                 return func.Invoke();
             }
-            catch (Exception ex)
+            catch (ApiException ex)
             {
                 logger.WriteError(ex);
                 return Request.CreateResponse(HttpStatusCode.InternalServerError, new
@@ -40,7 +40,7 @@ namespace GriB.Common.Web.Http
                 Task<HttpResponseMessage> taskInvoke = func.Invoke();
                 return await taskInvoke;
             }
-            catch (Exception ex)
+            catch (ApiException ex)
             {
                 logger.WriteError(ex);
                 return Request.CreateResponse(HttpStatusCode.InternalServerError, new

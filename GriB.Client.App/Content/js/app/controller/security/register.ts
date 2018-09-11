@@ -40,8 +40,9 @@ export namespace Controller.Security {
         private registerButtonClick(e) {
             let controller = this;
             let model: Interfaces.Model.IRegisterModel = {
-                Phone: <string> $('#register-phone').val(),
-                EMail: <string> $('#register-email').val()
+                regtype: 0,
+                phone: <string>$('#register-phone').val(),
+                email: <string>$('#register-email').val()
             };
             if (this.validate(model)) {
                 controller.accountService.Register(model, (responseData) => {
@@ -54,10 +55,10 @@ export namespace Controller.Security {
         private validate(model: Interfaces.Model.IRegisterModel): boolean {
             let validateMessage: string = '';
 
-            if (!utils.validatePhone(model.Phone))
+            if (!utils.validatePhone(model.phone))
                 validateMessage = validateMessage + (validateMessage !== '' ? '<br/>' : '') + vars._statres('msg$error$phoneNumberIncorrect');
 
-            if (!utils.validateEmail(model.EMail))
+            if (!utils.validateEmail(model.email))
                 validateMessage = validateMessage + (validateMessage !== '' ? '<br/>' : '') + vars._statres('msg$error$invalidEmailAddress');
 
             if (validateMessage !== '')

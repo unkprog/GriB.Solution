@@ -60,14 +60,20 @@
     <Compile Include="Models\pos\model_base.cs" />
     <Compile Include="Models\pos\register_user.cs" />
     <Compile Include="Models\pos\user.cs" />
+    <Compile Include="Net\EMail.cs" />
+    <Compile Include="Net\SMS.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Sql\Helper.cs" />
     <Compile Include="Sql\Query.cs" />
     <Compile Include="Web\Http\ApiController.cs" />
+    <Compile Include="Web\Http\Exception.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Resources\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

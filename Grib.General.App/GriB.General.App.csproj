@@ -77,7 +77,10 @@
   <ItemGroup>
     <Content Include="Content\index.html" />
     <Content Include="Global.asax" />
-    <Content Include="Scripts\Query\[get_user].sql" />
+    <Content Include="Scripts\Query\[user_get_id].sql" />
+    <Content Include="Scripts\Query\[user_sec_pass].sql" />
+    <Content Include="Scripts\Query\[user_ins].sql" />
+    <Content Include="Scripts\Query\[user_get].sql" />
     <Content Include="Scripts\Sql\01.001.[pos_user].sql" />
     <Content Include="Web.config" />
   </ItemGroup>

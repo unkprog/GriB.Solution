@@ -1,6 +1,7 @@
 ﻿namespace Interfaces.Model {
     export interface IRegisterModel {
-        Phone: string;
-        EMail: string;
+        regtype: number;
+        phone: string;
+        email: string;
     }
 }

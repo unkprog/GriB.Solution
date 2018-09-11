@@ -51,6 +51,7 @@ export namespace Controller {
         }
 
         public ViewShow(e: any): void {
+            M.updateTextFields();
         }
 
         public ViewHide(e: any): void {

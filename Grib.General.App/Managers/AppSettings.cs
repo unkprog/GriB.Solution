@@ -20,6 +20,8 @@ namespace GriB.General.App.Managers
 
         public static class Database
         {
+            public static string su => "su"; 
+
             public static string DataSource => GetAttribute("Database.DataSource");
             public static string InitialCatalog => GetAttribute("Database.InitialCatalog");
             public static bool IsSSPI => GetAttributeBool("Database.IsSSPI");
@@ -79,6 +81,12 @@ namespace GriB.General.App.Managers
                 public static string Sql   => GetAttribute("Database.Path.Sql");
                 public static string Query => GetAttribute("Database.Path.Query");
             }
+        }
+
+        public static class Mail
+        {
+            public static string Address => GetAttribute("Mail.Address");
+            public static string Password => GetAttribute("Mail.Password");
         }
     }
 }

@@ -1,7 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Web;
 using System.Web.Http;
+using System.Web.Http.Dispatcher;
 
 namespace GriB.General.App
 {
@@ -17,8 +23,29 @@ namespace GriB.General.App
             config.Routes.MapHttpRoute(
                 name: "DefaultApi",
                 routeTemplate: "api/{controller}/{action}/{id}",
-                defaults: new { id = RouteParameter.Optional }
+                defaults: new { id = RouteParameter.Optional }//,
+                //constraints: null,
+                //handler: new NormalizeHandler(config)
             );
+        }
+    }
+
+    public class NormalizeHandler : DelegatingHandler
+    {
+        public NormalizeHandler(HttpConfiguration httpConfiguration)
+        {
+            InnerHandler = new HttpControllerDispatcher(httpConfiguration);
+        }
+
+        protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+        {
+            var source = await request.Content.ReadAsStringAsync();
+            source = source.Replace("json=", "");
+            source = HttpUtility.UrlDecode(source);
+
+            request.Content = new StringContent(source, Encoding.UTF8, "application/json");
+
+            return await base.SendAsync(request, cancellationToken);
         }
     }
 }

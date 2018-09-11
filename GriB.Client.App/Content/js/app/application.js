@@ -53,8 +53,9 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/s
             });
             Application.prototype.resize = function (e) {
                 var heigth = window.innerHeight;
-                heigth = heigth - this.navbarControl.height();
-                this.contentControl.height(heigth);
+                heigth = heigth - (this.navbarControl ? this.navbarControl.height() : 0);
+                if (this.contentControl)
+                    this.contentControl.height(heigth);
                 if (this._controller)
                     this._controller.ViewResize(e);
             };

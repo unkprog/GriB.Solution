@@ -39,7 +39,6 @@ export namespace Controller.Security {
 
         public ViewShow(e: any): void {
             super.ViewShow(e);
-            M.updateTextFields();
         }
 
         public LoginButtonClick: { (e: any): void; };
