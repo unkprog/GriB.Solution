@@ -1,7 +1,10 @@
 var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    }
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
@@ -27,6 +30,9 @@ define(["require", "exports", "app/common/baseservice"], function (require, expo
             });
             AccountService.prototype.Register = function (model, Callback) {
                 this.PostApi({ Action: "/register", RequestData: JSON.stringify(model), Callback: Callback });
+            };
+            AccountService.prototype.Recovery = function (model, Callback) {
+                this.PostApi({ Action: "/recovery", RequestData: JSON.stringify(model), Callback: Callback });
             };
             return AccountService;
         }(base.Services.BaseService));

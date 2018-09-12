@@ -14,5 +14,9 @@ export namespace Services {
         public Register(model: Interfaces.Model.IRegisterModel, Callback: (responseData: any) => void) {
             this.PostApi({ Action: "/register", RequestData: JSON.stringify(model), Callback: Callback });
         }
+
+        public Recovery(model: Interfaces.Model.IRegisterModel, Callback: (responseData: any) => void) {
+            this.PostApi({ Action: "/recovery", RequestData: JSON.stringify(model), Callback: Callback });
+        }
     }
 }

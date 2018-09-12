@@ -25,7 +25,7 @@ namespace GriB.Common.Web.Http
             catch (ApiException ex)
             {
                 logger.WriteError(ex);
-                return Request.CreateResponse(HttpStatusCode.InternalServerError, new
+                return Request.CreateResponse(HttpStatusCode.OK, new
                 {
                     error = ex.Message,
                     trace = ex.StackTrace
@@ -52,15 +52,12 @@ namespace GriB.Common.Web.Http
         }
 
 
-        public async Task<TResult> PostJson<TResult, TParam>(string server, TParam data)
+        public async Task<TResult> PostJson<TResult, TParam>(string server, string url, TParam data)
         {
-            //Task<TResult> task = PostJsonAsync<TResult, TParam>(server, data);
-            ////task.Wait();
-            //return task.Result;
-            return await PostJsonAsync<TResult, TParam>(server, data);
+            return await PostJsonAsync<TResult, TParam>(server, url, data);
         }
 
-        public async Task<TResult> PostJsonAsync<TResult, TParam>(string server, TParam data)
+        public async Task<TResult> PostJsonAsync<TResult, TParam>(string server, string url, TParam data)
         {
             TResult result = default(TResult);
             HttpResponseMessage response = null;
@@ -70,7 +67,7 @@ namespace GriB.Common.Web.Http
                 client.DefaultRequestHeaders.Accept.Clear();
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-                response = await client.PostAsJsonAsync("api/account/register", data);
+                response = await client.PostAsJsonAsync(url, data);
                 response.EnsureSuccessStatusCode();
             }
 

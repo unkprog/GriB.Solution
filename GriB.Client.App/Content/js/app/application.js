@@ -131,11 +131,12 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/s
                         self._controllersStack.Push(backController);
                         var header = controller.Header;
                         if (header)
-                            self._model.set("AppHeader", header);
+                            self._model.set("AppHeader", header + ' ' + self.contentControl.width());
                         var view = $(template);
                         isInit = self._controller.ViewInit(view);
                         self.contentControl.html(view[0]);
                         self._controller.ViewShow(_this);
+                        self._controller.ViewResize(_this);
                     }
                     finally {
                         if (isInit)
@@ -149,7 +150,6 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/s
                 this.OpenController("security/login");
             };
             Application.prototype.initAfterLoaded = function () {
-                //this.initDialogError();
                 this.login();
             };
             Application.prototype.HandleError = function (e) {

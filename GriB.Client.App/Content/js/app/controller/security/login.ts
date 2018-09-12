@@ -26,15 +26,15 @@ export namespace Controller.Security {
         }
 
         protected createEvents(): void {
-            this.LoginButtonClick = this.createClickEvent("btn-login", this.loginButtonClick);//, this);
-            this.RegisterButtonClick = this.createClickEvent("btn-register", this.registerButtonClick);//, this);
-            this.ForgotButtonClick = this.createClickEvent("btn-forgot", this.forgotButtonClick);//, this);
+            this.LoginButtonClick = this.createClickEvent("btn-login", this.loginButtonClick);
+            this.RegisterButtonClick = this.createClickEvent("btn-register", this.registerButtonClick);
+            this.ForgotButtonClick = this.createClickEvent("btn-forgot", this.forgotButtonClick);
         }
 
         protected destroyEvents(): void {
-            this.destroyClickEvent("btn-login", this.RegisterButtonClick);
+            this.destroyClickEvent("btn-login", this.LoginButtonClick);
             this.destroyClickEvent("btn-register", this.RegisterButtonClick);
-            this.destroyClickEvent("btn-forgot", this.RegisterButtonClick);
+            this.destroyClickEvent("btn-forgot", this.ForgotButtonClick);
         }
 
         public ViewShow(e: any): void {
@@ -48,12 +48,11 @@ export namespace Controller.Security {
         public RegisterButtonClick: { (e: any): void; };
         private registerButtonClick(e) {
             vars._app.OpenController("security/register", this);
-
         }
 
         public ForgotButtonClick: { (e: any): void; };
         private forgotButtonClick(e) {
-            vars._showError("Ntcnjdjt cjj,otybt");
+            vars._app.OpenController("security/forgot", this);
         }
     }
 }

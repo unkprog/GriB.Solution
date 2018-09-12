@@ -10,11 +10,20 @@ export namespace Services {
             return { BaseUrl: '' };
         }
 
-        protected handleError(e: any, onError?: (e: any) => void) {
-            _app.HandleError(e);
+        protected handleError(e: any) {
+            let isHandled: boolean = false;
+            _app.HideLoading();
+
+            if (this.Options.OnError)
+                isHandled = this.Options.OnError(e);
+
+            if (!isHandled)
+                _app.HandleError(e);
         }
 
         public GetApi(options: Interfaces.IServiceCallOptions): void {
+            _app.ShowLoading();
+
             let self = this;
             let action = (self.Options && self.Options.BaseUrl ? self.Options.BaseUrl : '') + options.Action;
             $.ajax({
@@ -24,16 +33,21 @@ export namespace Services {
                 crossDomain: options.CrossDomain,
                 data: options.RequestData,
                 success: function (responseData, textStatus, jqXHR) {
-                    if (options.Callback)
+                    if (responseData.error)
+                        self.handleError(responseData.error);
+                    else if (options.Callback)
                         options.Callback(responseData);
+                    _app.HideLoading();
                 },
                 error: function (e, textStatus, errorThrown) {
-                    self.handleError(e, options.Error);
+                    self.handleError(e);
                 }
             });
         }
 
         public PostApi(options: Interfaces.IServiceCallOptions): void {
+            _app.ShowLoading();
+
             let self = this;
             let action = (self.Options && self.Options.BaseUrl ? self.Options.BaseUrl : '') + options.Action;
             $.ajax({
@@ -41,14 +55,16 @@ export namespace Services {
                 type: "post",
                 dataType: "json",
                 contentType: "application/json",
-                //crossDomain: options.CrossDomain,
                 data: options.RequestData,
                 success: function (responseData, textStatus, jqXHR) {
-                    if (options.Callback)
+                    if (responseData.error)
+                        self.handleError(responseData.error);
+                    else if (options.Callback)
                         options.Callback(responseData);
+                    _app.HideLoading();
                 },
                 error: function (e, textStatus, errorThrown) {
-                    self.handleError(e, options.Error);
+                    self.handleError(e);
                 }
             });
         }

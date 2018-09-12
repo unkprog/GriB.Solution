@@ -1,6 +1,7 @@
 ﻿namespace Interfaces {
     export interface IServiceOptions {
         BaseUrl: string;
+        OnError?: (e: any) => boolean;
     }
 
     export interface IServiceCallOptions {

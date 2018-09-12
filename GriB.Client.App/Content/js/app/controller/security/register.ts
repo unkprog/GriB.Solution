@@ -2,6 +2,7 @@
 import acc = require('app/services/accountservice');
 import vars = require('app/common/variables');
 import utils = require('app/common/utils');
+import { _app } from 'app/common/variables';
 
 export namespace Controller.Security {
     export class Register extends bc.Controller.Base {
@@ -44,6 +45,7 @@ export namespace Controller.Security {
                 phone: <string>$('#register-phone').val(),
                 email: <string>$('#register-email').val()
             };
+
             if (this.validate(model)) {
                 controller.accountService.Register(model, (responseData) => {
 
@@ -58,7 +60,7 @@ export namespace Controller.Security {
             if (!utils.validatePhone(model.phone))
                 validateMessage = validateMessage + (validateMessage !== '' ? '<br/>' : '') + vars._statres('msg$error$phoneNumberIncorrect');
 
-            if (!utils.validateEmail(model.email))
+            if (!utils.isNullOrEmpty(model.email) && !utils.validateEmail(model.email))
                 validateMessage = validateMessage + (validateMessage !== '' ? '<br/>' : '') + vars._statres('msg$error$invalidEmailAddress');
 
             if (validateMessage !== '')

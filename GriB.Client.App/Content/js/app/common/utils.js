@@ -15,6 +15,10 @@ define(["require", "exports"], function (require, exports) {
             elem[i].removeEventListener(("ontouchstart" in window) ? "touchend" : "click", proxyFunc);
     }
     exports.destroyClickEvent = destroyClickEvent;
+    function isNullOrEmpty(value) {
+        return (value === null || value === undefined || value === '');
+    }
+    exports.isNullOrEmpty = isNullOrEmpty;
     function validateEmail(email) {
         if (!email)
             return false;

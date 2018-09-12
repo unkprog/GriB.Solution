@@ -12,6 +12,9 @@ export function destroyClickEvent(elemName: string | JQuery, proxyFunc: any, vie
         elem[i].removeEventListener(("ontouchstart" in window) ? "touchend" : "click", proxyFunc);
 }
 
+export function isNullOrEmpty(value: string): boolean {
+    return (value === null || value === undefined || value === '');
+}
 
 export function validateEmail(email: string): boolean {
     if (!email) return false;

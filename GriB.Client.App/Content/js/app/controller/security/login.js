@@ -1,7 +1,10 @@
 var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    }
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
@@ -35,14 +38,14 @@ define(["require", "exports", "app/common/basecontroller", "app/common/variables
                     };
                 };
                 Login.prototype.createEvents = function () {
-                    this.LoginButtonClick = this.createClickEvent("btn-login", this.loginButtonClick); //, this);
-                    this.RegisterButtonClick = this.createClickEvent("btn-register", this.registerButtonClick); //, this);
-                    this.ForgotButtonClick = this.createClickEvent("btn-forgot", this.forgotButtonClick); //, this);
+                    this.LoginButtonClick = this.createClickEvent("btn-login", this.loginButtonClick);
+                    this.RegisterButtonClick = this.createClickEvent("btn-register", this.registerButtonClick);
+                    this.ForgotButtonClick = this.createClickEvent("btn-forgot", this.forgotButtonClick);
                 };
                 Login.prototype.destroyEvents = function () {
-                    this.destroyClickEvent("btn-login", this.RegisterButtonClick);
+                    this.destroyClickEvent("btn-login", this.LoginButtonClick);
                     this.destroyClickEvent("btn-register", this.RegisterButtonClick);
-                    this.destroyClickEvent("btn-forgot", this.RegisterButtonClick);
+                    this.destroyClickEvent("btn-forgot", this.ForgotButtonClick);
                 };
                 Login.prototype.ViewShow = function (e) {
                     _super.prototype.ViewShow.call(this, e);
@@ -53,7 +56,7 @@ define(["require", "exports", "app/common/basecontroller", "app/common/variables
                     vars._app.OpenController("security/register", this);
                 };
                 Login.prototype.forgotButtonClick = function (e) {
-                    vars._showError("Ntcnjdjt cjj,otybt");
+                    vars._app.OpenController("security/forgot", this);
                 };
                 return Login;
             }(bc.Controller.Base));

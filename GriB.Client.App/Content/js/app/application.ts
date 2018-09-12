@@ -153,13 +153,14 @@ export module App {
 
                     let header = controller.Header;
                     if (header)
-                        self._model.set("AppHeader", header);
+                        self._model.set("AppHeader", header + ' ' + self.contentControl.width());
 
                     let view = $(template);
                     isInit = self._controller.ViewInit(view);
                     self.contentControl.html(view[0]);
                     
                     self._controller.ViewShow(this);
+                    self._controller.ViewResize(this);
                 } finally {
                     if (isInit)
                         self.HideLoading();
@@ -173,12 +174,9 @@ export module App {
             this.OpenController("security/login");
         }
 
-
         private initAfterLoaded() {
-            //this.initDialogError();
             this.login();
         }
-
 
         public HandleError(e: any): void {
             this.ShowError(e);

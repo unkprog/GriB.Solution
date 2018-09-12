@@ -13,10 +13,16 @@ define(["require", "exports", "./variables"], function (require, exports, variab
                 enumerable: true,
                 configurable: true
             });
-            BaseService.prototype.handleError = function (e, onError) {
-                variables_1._app.HandleError(e);
+            BaseService.prototype.handleError = function (e) {
+                var isHandled = false;
+                variables_1._app.HideLoading();
+                if (this.Options.OnError)
+                    isHandled = this.Options.OnError(e);
+                if (!isHandled)
+                    variables_1._app.HandleError(e);
             };
             BaseService.prototype.GetApi = function (options) {
+                variables_1._app.ShowLoading();
                 var self = this;
                 var action = (self.Options && self.Options.BaseUrl ? self.Options.BaseUrl : '') + options.Action;
                 $.ajax({
@@ -26,15 +32,19 @@ define(["require", "exports", "./variables"], function (require, exports, variab
                     crossDomain: options.CrossDomain,
                     data: options.RequestData,
                     success: function (responseData, textStatus, jqXHR) {
-                        if (options.Callback)
+                        if (responseData.error)
+                            self.handleError(responseData.error);
+                        else if (options.Callback)
                             options.Callback(responseData);
+                        variables_1._app.HideLoading();
                     },
                     error: function (e, textStatus, errorThrown) {
-                        self.handleError(e, options.Error);
+                        self.handleError(e);
                     }
                 });
             };
             BaseService.prototype.PostApi = function (options) {
+                variables_1._app.ShowLoading();
                 var self = this;
                 var action = (self.Options && self.Options.BaseUrl ? self.Options.BaseUrl : '') + options.Action;
                 $.ajax({
@@ -42,14 +52,16 @@ define(["require", "exports", "./variables"], function (require, exports, variab
                     type: "post",
                     dataType: "json",
                     contentType: "application/json",
-                    //crossDomain: options.CrossDomain,
                     data: options.RequestData,
                     success: function (responseData, textStatus, jqXHR) {
-                        if (options.Callback)
+                        if (responseData.error)
+                            self.handleError(responseData.error);
+                        else if (options.Callback)
                             options.Callback(responseData);
+                        variables_1._app.HideLoading();
                     },
                     error: function (e, textStatus, errorThrown) {
-                        self.handleError(e, options.Error);
+                        self.handleError(e);
                     }
                 });
             };

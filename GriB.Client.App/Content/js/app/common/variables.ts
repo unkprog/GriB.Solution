@@ -34,7 +34,9 @@ _showError = (error: string) => { _app.ShowError(error); }
 
 export declare let _controllers: any;
 _controllers = {};
-_controllers["security/login"] = function (module: any): Interfaces.IController { return new module.Controller.Security.Login(); };
+
+_controllers["security/login"]    = function (module: any): Interfaces.IController { return new module.Controller.Security.Login(); };
 _controllers["security/register"] = function (module: any): Interfaces.IController { return new module.Controller.Security.Register(); };
+_controllers["security/forgot"]   = function (module: any): Interfaces.IController { return new module.Controller.Security.Forgot(); };
 
 
