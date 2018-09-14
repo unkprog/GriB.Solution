@@ -1,5 +1,4 @@
-﻿import vars = require('app/common/variables');
-import utils = require('app/common/utils');
+﻿import utils = require('app/common/utils');
 
 export namespace Controller {
     export class Base implements Interfaces.IController {
@@ -19,14 +18,14 @@ export namespace Controller {
             return this._options;
         }
 
-        protected createModel(): Interfaces.IControllerModel {
-            return {
+        protected createModel(): kendo.data.ObservableObject {
+            return new kendo.data.ObservableObject({
                 "Header": ""
-            };
+            });
         }
 
-        private _model: Interfaces.IControllerModel;
-        public get Model(): Interfaces.IControllerModel {
+        private _model: kendo.data.ObservableObject;
+        public get Model(): kendo.data.ObservableObject {
             return this._model;
         }
 
@@ -37,7 +36,7 @@ export namespace Controller {
        
 
         public get Header(): string {
-            return this._model ? this._model.Header : "";
+            return this._model ? this._model.get("Header") : "";
         }
 
         public ViewInit(view: JQuery): boolean {

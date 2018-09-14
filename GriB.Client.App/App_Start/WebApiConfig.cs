@@ -10,6 +10,7 @@ namespace GriB.Client.App
         public static void Register(HttpConfiguration config)
         {
             // Конфигурация и службы веб-API
+            config.Filters.Add(new AuthorizeAttribute());
 
             // Маршруты веб-API
             config.MapHttpAttributeRoutes();

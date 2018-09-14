@@ -12,5 +12,6 @@
         OpenView(controller: Interfaces.IController, backController?: Interfaces.IController): void;
         HandleError(e: any): void;
         ShowError(e: string): void;
+        ShowMessage(header: string, message: string, onClose?: () => void): void;
     }
 }

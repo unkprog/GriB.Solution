@@ -122,10 +122,11 @@
     <Content Include="Content\js\nls\root\strings.js" />
     <Content Include="Content\js\nls\strings.js" />
     <Content Include="Content\view\index.html" />
-    <Content Include="Content\view\security\forgot.html" />
+    <Content Include="Content\view\main.html" />
+    <Content Include="Content\view\security\recovery.html" />
     <Content Include="Content\view\security\register.html" />
     <Content Include="Content\view\security\login.html" />
-    <Content Include="Content\view\main.html" />
+    <Content Include="Content\view\app.html" />
     <Content Include="Global.asax" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
@@ -205,16 +206,18 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Content\view\login\" />
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="Content\js\app\application.ts" />
+    <TypeScriptCompile Include="Content\js\app\common\basedialog.ts" />
     <TypeScriptCompile Include="Content\js\app\common\utils.ts" />
     <TypeScriptCompile Include="Content\js\app\common\variables.ts" />
     <Content Include="Content\js\app\init.js" />
     <TypeScriptCompile Include="Content\js\app\common\basecontroller.ts" />
+    <TypeScriptCompile Include="Content\js\app\controller\dialog\modaldialog.ts" />
+    <TypeScriptCompile Include="Content\js\app\controller\main.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\security\account.ts" />
-    <TypeScriptCompile Include="Content\js\app\controller\security\forgot.ts" />
+    <TypeScriptCompile Include="Content\js\app\controller\security\recovery.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\security\register.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\security\login.ts" />
     <TypeScriptCompile Include="Content\js\app\interfaces\iapplication.ts" />
@@ -234,7 +237,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\GriB.Common\GriB.Common.csproj">
-      <Project>{D1EC7A16-5393-4584-B7ED-EDDBAED18D59}</Project>
+      <Project>{d1ec7a16-5393-4584-b7ed-eddbaed18d59}</Project>
       <Name>GriB.Common</Name>
     </ProjectReference>
   </ItemGroup>

@@ -3,16 +3,15 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
 
-namespace GriB.Common
+namespace GriB.Common.Net
 {
-
     public static partial class Json
     {
         /// <summary>
         /// This class encodes and decodes JSON strings.
         /// Spec. details, see http://www.json.org/
         /// </summary>
-        internal sealed class JsonParser
+        internal sealed class Parser
         {
             enum Token
             {
@@ -35,7 +34,7 @@ namespace GriB.Common
             Token lookAheadToken = Token.None;
             int index;
 
-            internal JsonParser(string json)
+            internal Parser(string json)
             {
                 this.json = json;
             }
@@ -466,4 +465,3 @@ namespace GriB.Common
         }
     }
 }
-

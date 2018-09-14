@@ -77,12 +77,16 @@
   <ItemGroup>
     <Content Include="Content\index.html" />
     <Content Include="Global.asax" />
-    <Content Include="Scripts\Query\[user_get_id].sql" />
-    <Content Include="Scripts\Query\[user_sec_pass].sql" />
-    <Content Include="Scripts\Query\[user_ins].sql" />
-    <Content Include="Scripts\Query\[user_get].sql" />
-    <Content Include="Scripts\Sql\01.001.[pos_user].sql" />
-    <Content Include="Web.config" />
+    <Content Include="Scripts\Query\user\role\[get].sql" />
+    <Content Include="Scripts\Query\user\role\[ins].sql" />
+    <Content Include="Scripts\Query\user\sec\[set].sql" />
+    <Content Include="Scripts\Query\user\[ins].sql" />
+    <Content Include="Scripts\Query\user\[get].sql" />
+    <Content Include="Scripts\Sql\01.001.[pos_role].sql" />
+    <Content Include="Scripts\Sql\01.002.[pos_user].sql" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\WebApiConfig.cs" />
@@ -109,10 +113,6 @@
     <Folder Include="App_Data\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\GriB.Common.Json\GriB.Common.Json.csproj">
-      <Project>{2c8c0e6f-cc46-4143-9bfd-0d43ed4cd815}</Project>
-      <Name>GriB.Common.Json</Name>
-    </ProjectReference>
     <ProjectReference Include="..\GriB.Common\GriB.Common.csproj">
       <Project>{d1ec7a16-5393-4584-b7ed-eddbaed18d59}</Project>
       <Name>GriB.Common</Name>

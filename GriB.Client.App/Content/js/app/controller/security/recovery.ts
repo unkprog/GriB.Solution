@@ -1,27 +1,26 @@
-﻿/// <reference path="account.ts" />
-import vars = require('app/common/variables');
+﻿import vars = require('app/common/variables');
 import acc = require('app/controller/security/account');
 import utils = require('app/common/utils');
 import { _app } from 'app/common/variables';
 
 export namespace Controller.Security {
-    export class Forgot extends acc.Controller.Security.Account {
+    export class Recovery extends acc.Controller.Security.Account {
 
         constructor() {
             super();
         }
 
         protected createOptions(): Interfaces.IControllerOptions {
-            return { Url: "/Content/view/security/forgot.html", Id: "app-forgot" };
+            return { Url: "/Content/view/security/recovery.html", Id: "app-recovery" };
         }
 
-        protected createModel(): any {
-            return {
+        protected createModel(): kendo.data.ObservableObject {
+            return new kendo.data.ObservableObject({
                 "Header": "",
                 "labelTitle": vars._statres("label$passwordRecovery"),
                 "labelPhone": vars._statres("label$phone"),
                 "labelRecover": vars._statres("label$recover"),
-            };
+            });
         }
 
         protected createEvents(): void {
@@ -36,13 +35,15 @@ export namespace Controller.Security {
         private recoveryButtonClick(e) {
             let controller = this;
             let model: Interfaces.Model.IRegisterModel = {
-                regtype: 0,
                 phone: <string>$('#recovery-phone').val(),
-                email: ''
             };
 
             if (this.validate(model)) {
                 controller.AccountService.Recovery(model, (responseData) => {
+                    if (responseData == "Ok")
+                        _app.ShowMessage(vars._statres("label$passwordRecovery"), vars._statres("msg$success$Recovery"), () => { _app.OpenController("security/login"); });
+                    else
+                        _app.ShowError(responseData);
                 });
             }
 

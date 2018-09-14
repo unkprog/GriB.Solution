@@ -1,6 +1,4 @@
 ﻿import vars = require('app/common/variables');
-import utils = require('app/common/utils');
-import svc = require('app/services/settingsservice');
 
 export module App {
     class ControllersStack {
@@ -32,11 +30,9 @@ export module App {
     export class Application implements Interfaces.IApplication {
 
         private _model: kendo.data.ObservableObject;
-        private _settingsService: svc.Services.SettingsService;
         constructor() {
             vars._app = this;
             this._controllersStack = new ControllersStack();
-            this._settingsService = new svc.Services.SettingsService();
             this._model = new kendo.data.ObservableObject({
                 "AppHeader": "POS Cloud",
                 "labelOk": vars._statres("button$label$ok"),
@@ -83,11 +79,7 @@ export module App {
 
             app.Resize = $.proxy(app.resize, app);
             app.ControllerBack = $.proxy(app.controllerBack, app);
-            app._settingsService.GetSettings((e) => {
-                vars._appSettings = e;
-                app.loadAppView();
-            });
-            
+            app.loadAppView();
         }
 
         public RestoreController() {
@@ -106,10 +98,10 @@ export module App {
       
         private loadAppView() {
             let self = this;
-            $.when($.ajax({ url: "/Content/view/main.html", cache: false })).done((template) => {
+            $.when($.ajax({ url: "/Content/view/app.html", cache: false })).done((template) => {
                 try {
-                    $("#mainview").html(template);
-                    kendo.bind($("#mainview"), this._model);
+                    $("#app-view").html(template);
+                    kendo.bind($("#app-view"), this._model);
 
                     self.contentControl = $("#app-content");
                     self.navbarControl = $("#app-navbar");
@@ -182,27 +174,20 @@ export module App {
             this.ShowError(e);
         }
 
-        private dialogError: JQuery;
-        private dialogErrorContent: JQuery;
-        private initDialogError() {
-            if (!this.dialogError) {
-                this.dialogError = $("#app-error-dialog");
-                this.dialogErrorContent = $("#app-error-dialog-content");
-                this.CloseDialogError = utils.createClickEvent("app-error-dialog-ok", this.closeDialogError, this, $("#app-error-dialog"));
-                this.dialogError.modal({ dismissible: false });
-            }
+        public ShowError(e: string): void {
+            //require(['app/controller/dialog/errordialog'], function (dialog) {
+            //    let errorDialog: Interfaces.IDialog = new dialog.Controller.Dialog.ModalDialog();
+            //    errorDialog.Show(vars._statres("label$error"), e);
+            //});
+            this.ShowMessage(vars._statres("label$error"), e);
         }
 
-        public ShowError(e: string) {
-            this.initDialogError();
-            this.dialogErrorContent.html(e);
-            this.dialogError.modal("open");
-        }
-
-        public CloseDialogError: { (e: any): void; };
-        private closeDialogError(e) {
-            if (this.dialogError) 
-                this.dialogError.modal("close");
+        public ShowMessage(header: string, message: string, onClose?: () => void): void {
+            require(['app/controller/dialog/modaldialog'], function (dialog) {
+                let messagerDialog: Interfaces.IDialog = new dialog.Controller.Dialog.ModalDialog();
+                messagerDialog.OnClose = onClose;
+                messagerDialog.Show(header, message);
+            });
         }
     }
 }

@@ -22,9 +22,9 @@ define(["require", "exports", "app/common/utils"], function (require, exports, u
                 configurable: true
             });
             Base.prototype.createModel = function () {
-                return {
+                return new kendo.data.ObservableObject({
                     "Header": ""
-                };
+                });
             };
             Object.defineProperty(Base.prototype, "Model", {
                 get: function () {
@@ -42,7 +42,7 @@ define(["require", "exports", "app/common/utils"], function (require, exports, u
             });
             Object.defineProperty(Base.prototype, "Header", {
                 get: function () {
-                    return this._model ? this._model.Header : "";
+                    return this._model ? this._model.get("Header") : "";
                 },
                 enumerable: true,
                 configurable: true

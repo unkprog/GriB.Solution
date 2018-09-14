@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Net;
 using System.Net.Http;
-using System.Net.Http.Headers;
+using System.Security.Principal;
+using System.Threading;
 using System.Threading.Tasks;
+using System.Web;
 using GriB.Common.Diagnostics;
 
 namespace GriB.Common.Web.Http
@@ -14,6 +16,15 @@ namespace GriB.Common.Web.Http
         public BaseApiController()
         {
             logger = new Logger();
+        }
+
+        private void SetPrincipal(IPrincipal principal)
+        {
+            Thread.CurrentPrincipal = principal;
+            if (HttpContext.Current != null)
+            {
+                HttpContext.Current.User = principal;
+            }
         }
 
         public HttpResponseMessage TryCatchResponse(Func<HttpResponseMessage> func)
@@ -49,32 +60,6 @@ namespace GriB.Common.Web.Http
                     trace = ex.StackTrace
                 });
             }
-        }
-
-
-        public async Task<TResult> PostJson<TResult, TParam>(string server, string url, TParam data)
-        {
-            return await PostJsonAsync<TResult, TParam>(server, url, data);
-        }
-
-        public async Task<TResult> PostJsonAsync<TResult, TParam>(string server, string url, TParam data)
-        {
-            TResult result = default(TResult);
-            HttpResponseMessage response = null;
-            using (HttpClient client = new HttpClient())
-            {
-                client.BaseAddress = new Uri(server);
-                client.DefaultRequestHeaders.Accept.Clear();
-                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-
-                response = await client.PostAsJsonAsync(url, data);
-                response.EnsureSuccessStatusCode();
-            }
-
-            if (response != null)
-                result = await response.Content.ReadAsAsync<TResult>();
-
-            return result;
         }
     }
 }

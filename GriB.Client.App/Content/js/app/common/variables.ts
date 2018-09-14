@@ -37,6 +37,6 @@ _controllers = {};
 
 _controllers["security/login"]    = function (module: any): Interfaces.IController { return new module.Controller.Security.Login(); };
 _controllers["security/register"] = function (module: any): Interfaces.IController { return new module.Controller.Security.Register(); };
-_controllers["security/forgot"]   = function (module: any): Interfaces.IController { return new module.Controller.Security.Forgot(); };
+_controllers["security/recovery"]   = function (module: any): Interfaces.IController { return new module.Controller.Security.Recovery(); };
 
 

@@ -35,7 +35,7 @@ require(["domReady", "jquery"], function (domReady, jquery) {
                 window.onpopstate = function (e) {
                     _app.ControllerBack(e);
                 };
-            })
+            });
         });
     });
 });

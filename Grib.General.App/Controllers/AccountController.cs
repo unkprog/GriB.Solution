@@ -1,12 +1,13 @@
-﻿using System.Net;
+﻿using System.Linq;
+using System.Collections.Generic;
+using System.Net;
 using System.Net.Http;
+using System.Web;
 using System.Web.Http;
 using GriB.Common.Sql;
 using GriB.Common.Web.Http;
 using GriB.General.App.Managers;
 using GriB.Common.Models.pos;
-using System.Collections.Generic;
-using System.Web;
 
 namespace GriB.General.App.Controllers
 {
@@ -30,63 +31,84 @@ namespace GriB.General.App.Controllers
                 var resultSMS = Common.Net.SMS.SendSMS(user.phone, body);
             }
 
-            if (!string.IsNullOrEmpty(user.email))
-            {
-                string body = string.Concat("Ваш пароль для входа: ", user_sec.pass);
-                Common.Net.EMail.SendEMail(AppSettings.Mail.Address, AppSettings.Mail.Password, user.email, subject, body);
-            }
+            //if (!string.IsNullOrEmpty(user.email))
+            //{
+            //    string body = string.Concat("Ваш пароль для входа: ", user_sec.pass);
+            //    Common.Net.EMail.SendEMail(AppSettings.Mail.Address, AppSettings.Mail.Password, user.email, subject, body);
+            //}
         }
 
         [HttpPost]
         [ActionName("register")]
-        public HttpResponseMessage register(register_user register )//int regtype, string phone, string email)
+        public HttpResponseMessage register(register_user register)
         {
             return TryCatchResponse(() =>
             {
                 if (register == null)
                     throw new ApiException("Неверные параметры авторизации.");
                
-                List<user> users = Managers.pos.Users.GetUsers(_query, register.regtype, register.regtype == 0 ? register.phone : register.email);
+                List<user> users = Managers.pos.Users.GetUsers(_query, register.phone);
 
                 if (users != null && users.Count > 0)
                     throw new ApiException("Пользователь уже зарегистрирован.");
 
-                user user = Managers.pos.Users.Insert(_query, new user() { regtype = register.regtype, phone = register.phone, email = register.email });
+                user user = Managers.pos.Users.Insert(_query, new user() { phone = register.phone });
+                user_role user_role = Managers.pos.Users.InsertRole(_query, new user_role() { user = user.id, role = 1 });
                 setPassword(user, "Регистрация в POS Cloud");
 
-                return Request.CreateResponse(HttpStatusCode.OK, new { response = "Ok" });
+                return Request.CreateResponse(HttpStatusCode.OK, "Ok");
             });
         }
 
 
         [HttpPost]
         [ActionName("recovery")]
-        public HttpResponseMessage recovery(register_user register)//int regtype, string phone, string email)
+        public HttpResponseMessage recovery(register_user register)
         {
             return TryCatchResponse(() =>
             {
                 if (register == null)
                     throw new ApiException("Неверные параметры для восстановления.");
 
-                List<user> users = Managers.pos.Users.GetUsers(_query, register.regtype, register.regtype == 0 ? register.phone : register.email);
+                List<user> users = Managers.pos.Users.GetUsers(_query, register.phone);
 
                 if (users == null || users.Count == 0)
                     throw new ApiException("Пользователь не найден.");
 
                 setPassword(users[0], "Восстановление пароля в POS Cloud");
 
-                return Request.CreateResponse(HttpStatusCode.OK, new { response = "Ok" });
+                return Request.CreateResponse(HttpStatusCode.OK, "Ok");
             });
         }
 
-        //[HttpGet]
-        //[ActionName("test")]
-        //public HttpResponseMessage test()
-        //{
-        //    return TryCatchResponse(() =>
-        //    {
-        //        return Request.CreateResponse(HttpStatusCode.OK, new { response = "Ok" });
-        //    });
-        //}
+        [HttpPost]
+        [ActionName("login")]
+        public HttpResponseMessage login(login_user login)
+        {
+            return TryCatchResponse(() =>
+            {
+                if (login == null)
+                    throw new ApiException("Неверные параметры для входа.");
+
+                List<user> users = Managers.pos.Users.GetUsers(_query, login.phone);
+
+                if (users == null || users.Count == 0)
+                    throw new ApiException("Пользователь не найден.");
+
+                user result = null;
+                for(int i = 0, icount = users.Count; result == null && i < icount; i++)
+                {
+                    user_sec sec = Managers.pos.Users.GetPassword(_query, users[i].id);
+                    if (sec.pass == login.pass)
+                        result = users[i];
+                }
+
+                if (result == null || result.d != 0)
+                    throw new ApiException("Пользователь не найден.");
+
+                return Request.CreateResponse(HttpStatusCode.OK, result);
+            });
+        }
+
     }
 }

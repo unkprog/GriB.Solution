@@ -6,22 +6,22 @@ namespace GriB.Common.Net
 {
     public class SMS
     {
-        public class SMS_RU
-        {
-            public string status { get; set; }
-            public int status_code { get; set; }
-            public int balance { get; set; }
+        //public class SMS_RU
+        //{
+        //    public string status { get; set; }
+        //    public int status_code { get; set; }
+        //    public int balance { get; set; }
 
 
 
-            //"sms": {
-            //    "79264042915": {
-            //        "status": "OK",
-            //        "status_code": 100,
-            //        "sms_id": "201837-1000001"
-            //    }
-            //}
-        }
+        //    //"sms": {
+        //    //    "79264042915": {
+        //    //        "status": "OK",
+        //    //        "status_code": 100,
+        //    //        "sms_id": "201837-1000001"
+        //    //    }
+        //    //}
+        //}
 
         public static object SendSMS(string phone, string body)
         {
@@ -38,7 +38,7 @@ namespace GriB.Common.Net
                 myResp.Close();
             }
 
-            return Json.Parse(responseString);
+            return Common.Net.Json.Parse(responseString);
         }
     }
 }

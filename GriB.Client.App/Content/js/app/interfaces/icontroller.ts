@@ -5,13 +5,9 @@
         Id: string;
     }
 
-    export interface IControllerModel {
-        Header: string
-    }
-
     export interface IController {
         Options: IControllerOptions;
-        Model: IControllerModel;
+        Model: kendo.data.ObservableObject;
         View: JQuery;
 
         Header: string;
@@ -19,5 +15,12 @@
         ViewShow(e: any): void;
         ViewHide(e: any): void;
         ViewResize(e?: any): void;
+    }
+
+
+    export interface IDialog extends IController {
+        Show(header: string, e: string): void;
+
+        OnClose: () => void;
     }
 }

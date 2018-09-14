@@ -20,7 +20,7 @@ namespace GriB.General.App.Managers
 
         public static class Database
         {
-            public static string su => "su"; 
+            public static int su => -1; 
 
             public static string DataSource => GetAttribute("Database.DataSource");
             public static string InitialCatalog => GetAttribute("Database.InitialCatalog");

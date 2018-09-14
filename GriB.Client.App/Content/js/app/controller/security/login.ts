@@ -1,6 +1,7 @@
 ﻿import bc = require('app/common/basecontroller');
 import rc = require('app/controller/security/register');
 import vars = require('app/common/variables');
+import { _app } from 'app/common/variables';
 
 export namespace Controller.Security {
     export class Login extends bc.Controller.Base {
@@ -12,8 +13,8 @@ export namespace Controller.Security {
             return { Url: "/Content/view/security/login.html", Id: "app-login" };
         }
 
-        protected createModel(): any {
-            return {
+        protected createModel(): kendo.data.ObservableObject {
+            return new kendo.data.ObservableObject({
                 "Header": "POS Cloud",
                 "labelTitle": vars._statres("label$autorization"),
                 "labelPhone": vars._statres("label$phone"),
@@ -22,7 +23,7 @@ export namespace Controller.Security {
                 "labelForgot": vars._statres("button$label$forgot"),
                 "labelRegister": vars._statres("button$label$register"),
                 "labelEnter": vars._statres("button$label$enter"),
-            };
+            });
         }
 
         protected createEvents(): void {
@@ -43,6 +44,7 @@ export namespace Controller.Security {
 
         public LoginButtonClick: { (e: any): void; };
         private loginButtonClick(e) {
+            _app.ShowError("Test");
         }
 
         public RegisterButtonClick: { (e: any): void; };
@@ -52,7 +54,7 @@ export namespace Controller.Security {
 
         public ForgotButtonClick: { (e: any): void; };
         private forgotButtonClick(e) {
-            vars._app.OpenController("security/forgot", this);
+            vars._app.OpenController("security/recovery", this);
         }
     }
 }

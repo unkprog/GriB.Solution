@@ -11,7 +11,7 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-define(["require", "exports", "app/common/variables", "app/controller/security/account", "app/common/utils"], function (require, exports, vars, acc, utils) {
+define(["require", "exports", "app/common/variables", "app/controller/security/account", "app/common/utils", "app/common/variables"], function (require, exports, vars, acc, utils, variables_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var Controller;
@@ -27,12 +27,12 @@ define(["require", "exports", "app/common/variables", "app/controller/security/a
                     return { Url: "/Content/view/security/forgot.html", Id: "app-forgot" };
                 };
                 Forgot.prototype.createModel = function () {
-                    return {
+                    return new kendo.data.ObservableObject({
                         "Header": "",
                         "labelTitle": vars._statres("label$passwordRecovery"),
                         "labelPhone": vars._statres("label$phone"),
                         "labelRecover": vars._statres("label$recover"),
-                    };
+                    });
                 };
                 Forgot.prototype.createEvents = function () {
                     this.RecoveryButtonClick = this.createClickEvent("btn-recovery", this.recoveryButtonClick);
@@ -43,12 +43,14 @@ define(["require", "exports", "app/common/variables", "app/controller/security/a
                 Forgot.prototype.recoveryButtonClick = function (e) {
                     var controller = this;
                     var model = {
-                        regtype: 0,
                         phone: $('#recovery-phone').val(),
-                        email: ''
                     };
                     if (this.validate(model)) {
                         controller.AccountService.Recovery(model, function (responseData) {
+                            if (responseData == "Ok")
+                                variables_1._app.ShowMessage(vars._statres("label$passwordRecovery"), vars._statres("msg$success$Recovery"), function () { variables_1._app.OpenController("security/login"); });
+                            else
+                                variables_1._app.ShowError(responseData);
                         });
                     }
                 };

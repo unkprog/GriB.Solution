@@ -1,4 +1,4 @@
-define(["require", "exports", "app/common/variables", "app/common/utils", "app/services/settingsservice"], function (require, exports, vars, utils, svc) {
+define(["require", "exports", "app/common/variables"], function (require, exports, vars) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var App;
@@ -35,7 +35,6 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/s
             function Application() {
                 vars._app = this;
                 this._controllersStack = new ControllersStack();
-                this._settingsService = new svc.Services.SettingsService();
                 this._model = new kendo.data.ObservableObject({
                     "AppHeader": "POS Cloud",
                     "labelOk": vars._statres("button$label$ok"),
@@ -70,10 +69,7 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/s
                 app.contentControl = $("#app-content");
                 app.Resize = $.proxy(app.resize, app);
                 app.ControllerBack = $.proxy(app.controllerBack, app);
-                app._settingsService.GetSettings(function (e) {
-                    vars._appSettings = e;
-                    app.loadAppView();
-                });
+                app.loadAppView();
             };
             Application.prototype.RestoreController = function () {
                 if (this._controllersStack.Current)
@@ -88,10 +84,10 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/s
             Application.prototype.loadAppView = function () {
                 var _this = this;
                 var self = this;
-                $.when($.ajax({ url: "/Content/view/main.html", cache: false })).done(function (template) {
+                $.when($.ajax({ url: "/Content/view/app.html", cache: false })).done(function (template) {
                     try {
-                        $("#mainview").html(template);
-                        kendo.bind($("#mainview"), _this._model);
+                        $("#app-view").html(template);
+                        kendo.bind($("#app-view"), _this._model);
                         self.contentControl = $("#app-content");
                         self.navbarControl = $("#app-navbar");
                         $('.sidenav').sidenav();
@@ -155,22 +151,19 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/s
             Application.prototype.HandleError = function (e) {
                 this.ShowError(e);
             };
-            Application.prototype.initDialogError = function () {
-                if (!this.dialogError) {
-                    this.dialogError = $("#app-error-dialog");
-                    this.dialogErrorContent = $("#app-error-dialog-content");
-                    this.CloseDialogError = utils.createClickEvent("app-error-dialog-ok", this.closeDialogError, this, $("#app-error-dialog"));
-                    this.dialogError.modal({ dismissible: false });
-                }
-            };
             Application.prototype.ShowError = function (e) {
-                this.initDialogError();
-                this.dialogErrorContent.html(e);
-                this.dialogError.modal("open");
+                //require(['app/controller/dialog/errordialog'], function (dialog) {
+                //    let errorDialog: Interfaces.IDialog = new dialog.Controller.Dialog.ModalDialog();
+                //    errorDialog.Show(vars._statres("label$error"), e);
+                //});
+                this.ShowMessage(vars._statres("label$error"), e);
             };
-            Application.prototype.closeDialogError = function (e) {
-                if (this.dialogError)
-                    this.dialogError.modal("close");
+            Application.prototype.ShowMessage = function (header, message, onClose) {
+                require(['app/controller/dialog/modaldialog'], function (dialog) {
+                    var messagerDialog = new dialog.Controller.Dialog.ModalDialog();
+                    messagerDialog.OnClose = onClose;
+                    messagerDialog.Show(header, message);
+                });
             };
             return Application;
         }());

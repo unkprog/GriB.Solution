@@ -5,7 +5,7 @@ using System.Globalization;
 using System.Reflection;
 using System.Text;
 
-namespace GriB.Common
+namespace GriB.Common.Net
 {
     public static partial class Json
     {
@@ -14,9 +14,9 @@ namespace GriB.Common
             public Dictionary<string, bool> ExcludeProperties = new Dictionary<string, bool>();
         }
 
-        internal class JsonSerializer
+        internal class Serializer
         {
-            internal JsonSerializer(SerializeOptions aOptions = null)
+            internal Serializer(SerializeOptions aOptions = null)
             {
                 options = aOptions == null ? new SerializeOptions() : aOptions;
             }

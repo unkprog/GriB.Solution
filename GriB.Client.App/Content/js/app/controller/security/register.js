@@ -11,7 +11,7 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-define(["require", "exports", "app/common/basecontroller", "app/services/accountservice", "app/common/variables", "app/common/utils"], function (require, exports, bc, acc, vars, utils) {
+define(["require", "exports", "app/common/basecontroller", "app/services/accountservice", "app/common/variables", "app/common/utils", "app/common/variables"], function (require, exports, bc, acc, vars, utils, variables_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var Controller;
@@ -29,7 +29,7 @@ define(["require", "exports", "app/common/basecontroller", "app/services/account
                     return { Url: "/Content/view/security/register.html", Id: "app-register" };
                 };
                 Register.prototype.createModel = function () {
-                    return {
+                    return new kendo.data.ObservableObject({
                         "Header": "",
                         "labelTitle": vars._statres("button$label$register"),
                         "labelPhone": vars._statres("label$phone"),
@@ -37,7 +37,7 @@ define(["require", "exports", "app/common/basecontroller", "app/services/account
                         "labelPassword": vars._statres("label$password"),
                         "labelConfirmPassword": vars._statres("label$confirmPassword"),
                         "labelRegister": vars._statres("button$label$register"),
-                    };
+                    });
                 };
                 Register.prototype.createEvents = function () {
                     this.RegisterButtonClick = this.createClickEvent("btn-register", this.registerButtonClick);
@@ -48,12 +48,14 @@ define(["require", "exports", "app/common/basecontroller", "app/services/account
                 Register.prototype.registerButtonClick = function (e) {
                     var controller = this;
                     var model = {
-                        regtype: 0,
-                        phone: $('#register-phone').val(),
-                        email: $('#register-email').val()
+                        phone: $('#register-phone').val()
                     };
                     if (this.validate(model)) {
                         controller.accountService.Register(model, function (responseData) {
+                            if (responseData == "Ok")
+                                variables_1._app.ShowMessage(vars._statres("label$passwordRecovery"), vars._statres("msg$success$Register"), function () { variables_1._app.OpenController("security/login"); });
+                            else
+                                variables_1._app.ShowError(responseData);
                         });
                     }
                 };
@@ -61,8 +63,8 @@ define(["require", "exports", "app/common/basecontroller", "app/services/account
                     var validateMessage = '';
                     if (!utils.validatePhone(model.phone))
                         validateMessage = validateMessage + (validateMessage !== '' ? '<br/>' : '') + vars._statres('msg$error$phoneNumberIncorrect');
-                    if (!utils.isNullOrEmpty(model.email) && !utils.validateEmail(model.email))
-                        validateMessage = validateMessage + (validateMessage !== '' ? '<br/>' : '') + vars._statres('msg$error$invalidEmailAddress');
+                    //if (!utils.isNullOrEmpty(model.email) && !utils.validateEmail(model.email))
+                    //    validateMessage = validateMessage + (validateMessage !== '' ? '<br/>' : '') + vars._statres('msg$error$invalidEmailAddress');
                     if (validateMessage !== '')
                         vars._showError(validateMessage);
                     return (validateMessage === '');

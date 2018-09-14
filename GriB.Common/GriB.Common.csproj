@@ -58,9 +58,12 @@
     <Compile Include="Disposable.cs" />
     <Compile Include="IO\Helper.cs" />
     <Compile Include="Models\pos\model_base.cs" />
-    <Compile Include="Models\pos\register_user.cs" />
+    <Compile Include="Models\pos\role.cs" />
     <Compile Include="Models\pos\user.cs" />
     <Compile Include="Net\EMail.cs" />
+    <Compile Include="Net\Json.cs" />
+    <Compile Include="Net\Json.Parser.cs" />
+    <Compile Include="Net\Json.Serializer.cs" />
     <Compile Include="Net\SMS.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Sql\Helper.cs" />
@@ -74,12 +77,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\GriB.Common.Json\GriB.Common.Json.csproj">
-      <Project>{2c8c0e6f-cc46-4143-9bfd-0d43ed4cd815}</Project>
-      <Name>GriB.Common.Json</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

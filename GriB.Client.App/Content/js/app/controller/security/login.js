@@ -11,7 +11,7 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-define(["require", "exports", "app/common/basecontroller", "app/common/variables"], function (require, exports, bc, vars) {
+define(["require", "exports", "app/common/basecontroller", "app/common/variables", "app/common/variables"], function (require, exports, bc, vars, variables_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var Controller;
@@ -27,7 +27,7 @@ define(["require", "exports", "app/common/basecontroller", "app/common/variables
                     return { Url: "/Content/view/security/login.html", Id: "app-login" };
                 };
                 Login.prototype.createModel = function () {
-                    return {
+                    return new kendo.data.ObservableObject({
                         "Header": "POS Cloud",
                         "labelTitle": vars._statres("label$autorization"),
                         "labelPhone": vars._statres("label$phone"),
@@ -35,7 +35,7 @@ define(["require", "exports", "app/common/basecontroller", "app/common/variables
                         "labelForgot": vars._statres("button$label$forgot"),
                         "labelRegister": vars._statres("button$label$register"),
                         "labelEnter": vars._statres("button$label$enter"),
-                    };
+                    });
                 };
                 Login.prototype.createEvents = function () {
                     this.LoginButtonClick = this.createClickEvent("btn-login", this.loginButtonClick);
@@ -51,12 +51,13 @@ define(["require", "exports", "app/common/basecontroller", "app/common/variables
                     _super.prototype.ViewShow.call(this, e);
                 };
                 Login.prototype.loginButtonClick = function (e) {
+                    variables_1._app.ShowError("Test");
                 };
                 Login.prototype.registerButtonClick = function (e) {
                     vars._app.OpenController("security/register", this);
                 };
                 Login.prototype.forgotButtonClick = function (e) {
-                    vars._app.OpenController("security/forgot", this);
+                    vars._app.OpenController("security/recovery", this);
                 };
                 return Login;
             }(bc.Controller.Base));

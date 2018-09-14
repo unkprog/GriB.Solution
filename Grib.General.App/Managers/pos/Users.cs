@@ -8,33 +8,38 @@ namespace GriB.General.App.Managers.pos
 {
     public static class Users
     {
-        public static List<user> GetUsers(this Query query, int regtype, string find)
+        private const string cmdGet = @"user\[get]";
+        private static user readUserFromValues(object[] values) => new user() { id = (int)values[0], d = (int)values[1], cd = (DateTime)values[2], cu = (int)values[3], ud = (DateTime)values[4], uu = (int)values[5], phone = (string)values[6] };
+
+        public static List<user> GetUsers(this Query query, string phone)
         {
             List<user> result = new List<user>();
-            query.Execute("[user_get]", new SqlParameter[] { new SqlParameter("@regtype", regtype), new SqlParameter("@find", find) }
+            query.Execute(cmdGet, new SqlParameter[] { new SqlParameter("@field", "phone"), new SqlParameter() { ParameterName = "@id", Value = 0 }, new SqlParameter("@phone", phone) }
             , (values) =>
             {
-                result.Add(new user() { id = (int)values[0], regtype = (int)values[1], phone = (string)values[2], email = (string)values[3] });
+                result.Add(readUserFromValues(values));
             });
 
             return result;
         }
+
         public static user GetUser(this Query query, int id)
         {
             user result = null;
-            query.Execute("[user_get_id]", new SqlParameter[] { new SqlParameter("@id", id) }
+            query.Execute(cmdGet, new SqlParameter[] { new SqlParameter("@field", "id"), new SqlParameter("@id", id), new SqlParameter("@phone", "") }
             , (values) =>
             {
-                result = new user() { id = (int)values[0], cd = (DateTime)values[1], cu = (string)values[2], ud = (DateTime)values[3], uu = (string)values[4], regtype = (int)values[5], phone = (string)values[6], email = (string)values[7] };
+                result = readUserFromValues(values);
             });
             return result;
         }
 
+        private const string cmdIns = @"user\[ins]";
         public static user Insert(this Query query, user user)
         {
             user result = null;
-            query.Execute("[user_ins]", new SqlParameter[] { new SqlParameter("@cu", AppSettings.Database.su), new SqlParameter("@uu", AppSettings.Database.su), new SqlParameter("@regtype", user.regtype), new SqlParameter("@phone", user.phone), new SqlParameter("@email", user.email) }
-            , (values) =>
+            query.Execute(cmdIns, sqlParameters: new SqlParameter[] { new SqlParameter("@cu", AppSettings.Database.su), new SqlParameter("@uu", AppSettings.Database.su), new SqlParameter("@phone", user.phone) }
+            , action: (values) =>
             {
                 result = query.GetUser((int)values[0]);
             });
@@ -42,14 +47,35 @@ namespace GriB.General.App.Managers.pos
             return result;
         }
 
-        public static void SetPassword(this Query query, user_sec user_sec)
+        private const string cmdRoleIns = @"user\role\[ins]";
+        public static user_role InsertRole(this Query query, user_role user_role)
         {
-            //user result = null;
-            query.Execute("[user_sec_pass]", new SqlParameter[] { new SqlParameter("@id", user_sec.id), new SqlParameter("@pass", user_sec.pass) }
+            user_role result = new user_role() { user = user_role.user, role = user_role.role };
+            query.Execute(cmdRoleIns, new SqlParameter[] { new SqlParameter("@user", user_role.user), new SqlParameter("@role", user_role.role) }
             , (values) =>
             {
-                //result = query.GetUser((int)values[0]);
+                result.id = (int)values[0];
             });
+
+            return result;
+        }
+
+        private const string cmdPassGet = @"user\sec\[get]";
+        public static user_sec GetPassword(this Query query, int id)
+        {
+            user_sec user_sec = null;
+            query.Execute(cmdPassGet, new SqlParameter[] { new SqlParameter("@id", id) }
+            , (values) => {
+                user_sec = new user_sec() { id = id, pass = (string)values[1] };
+            });
+            return user_sec;
+        }
+
+        private const string cmdPassSet = @"user\sec\[set]";
+        public static void SetPassword(this Query query, user_sec user_sec)
+        {
+            query.Execute(cmdPassSet, new SqlParameter[] { new SqlParameter("@id", user_sec.id), new SqlParameter("@pass", user_sec.pass) }
+            , (values) => { });
         }
 
         private static readonly string alphabet = "aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpPqQrRsStTuUvVwWxXyYzZ01234567899876543210aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpPqQrRsStTuUvVwWxXyYzZ";
