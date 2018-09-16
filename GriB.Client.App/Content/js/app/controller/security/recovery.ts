@@ -1,6 +1,6 @@
 ﻿import vars = require('app/common/variables');
-import acc = require('app/controller/security/account');
 import utils = require('app/common/utils');
+import acc = require('app/controller/security/account');
 import { _app } from 'app/common/variables';
 
 export namespace Controller.Security {
@@ -40,15 +40,13 @@ export namespace Controller.Security {
 
             if (this.validate(model)) {
                 controller.AccountService.Recovery(model, (responseData) => {
-                    if (responseData == "Ok")
+                    if (responseData.result == "Ok")
                         _app.ShowMessage(vars._statres("label$passwordRecovery"), vars._statres("msg$success$Recovery"), () => { _app.OpenController("security/login"); });
                     else
                         _app.ShowError(responseData);
                 });
             }
-
         }
-
         private validate(model: Interfaces.Model.IRegisterModel): boolean {
             let validateMessage: string = '';
 

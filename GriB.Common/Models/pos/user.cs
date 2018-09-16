@@ -1,4 +1,6 @@
-﻿namespace GriB.Common.Models.pos
+﻿using System;
+
+namespace GriB.Common.Models.pos
 {
     public class register_user
     {
@@ -25,5 +27,16 @@
     public class user_sec : model_base
     {
         public string pass { get; set; }
+    }
+
+    public class user_person : model_base
+    {
+        public int sex { get; set; }
+        public DateTime birth { get; set; }
+        public string fname { get; set; }
+        public string mname { get; set; }
+        public string lname { get; set; }
+        public string email { get; set; }
+
     }
 }

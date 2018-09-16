@@ -52,7 +52,7 @@ define(["require", "exports", "app/common/basecontroller", "app/services/account
                     };
                     if (this.validate(model)) {
                         controller.accountService.Register(model, function (responseData) {
-                            if (responseData == "Ok")
+                            if (responseData.result == "Ok")
                                 variables_1._app.ShowMessage(vars._statres("label$passwordRecovery"), vars._statres("msg$success$Register"), function () { variables_1._app.OpenController("security/login"); });
                             else
                                 variables_1._app.ShowError(responseData);

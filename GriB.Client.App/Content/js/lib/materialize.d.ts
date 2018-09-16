@@ -1,5 +1,5 @@
 ﻿interface JQuery {
-    sidenav(): JQuery;
+    sidenav(methodName?: any, paramName?: any): JQuery;
     modal(methodName?: any, paramName?: any): JQuery;
 }
 

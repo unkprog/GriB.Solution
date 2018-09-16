@@ -15,4 +15,8 @@
         phone: string;
         pass: string;
     }
+
+    export interface IIdentity {
+        id: number;
+    }
 }

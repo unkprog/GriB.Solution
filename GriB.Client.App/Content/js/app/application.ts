@@ -145,7 +145,10 @@ export module App {
 
                     let header = controller.Header;
                     if (header)
-                        self._model.set("AppHeader", header + ' ' + self.contentControl.width());
+                        self._model.set("AppHeader", header); // + ' ' + self.contentControl.width()
+                    else
+                        if ("POS Cloud" !== self._model.get("AppHeader"))
+                            self._model.set("AppHeader", "POS Cloud");
 
                     let view = $(template);
                     isInit = self._controller.ViewInit(view);
@@ -175,10 +178,6 @@ export module App {
         }
 
         public ShowError(e: string): void {
-            //require(['app/controller/dialog/errordialog'], function (dialog) {
-            //    let errorDialog: Interfaces.IDialog = new dialog.Controller.Dialog.ModalDialog();
-            //    errorDialog.Show(vars._statres("label$error"), e);
-            //});
             this.ShowMessage(vars._statres("label$error"), e);
         }
 
@@ -189,5 +188,15 @@ export module App {
                 messagerDialog.Show(header, message);
             });
         }
+
+        private _identity: Interfaces.Model.IIdentity;
+        public get Identity(): Interfaces.Model.IIdentity {
+            return this._identity;
+        }
+
+        public set Identity(identity: Interfaces.Model.IIdentity) {
+            this._identity = identity;
+        }
+
     }
 }

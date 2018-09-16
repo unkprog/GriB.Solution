@@ -18,5 +18,9 @@ export namespace Services {
         public Recovery(model: Interfaces.Model.IRegisterModel, Callback: (responseData: any) => void) {
             this.PostApi({ Action: "/recovery", RequestData: JSON.stringify(model), Callback: Callback });
         }
+
+        public Login(model: Interfaces.Model.ILoginModel, Callback: (responseData: any) => void) {
+            this.PostApi({ Action: "/login", RequestData: JSON.stringify(model), Callback: Callback });
+        }
     }
 }

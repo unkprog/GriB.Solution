@@ -34,6 +34,9 @@ define(["require", "exports", "app/common/baseservice"], function (require, expo
             AccountService.prototype.Recovery = function (model, Callback) {
                 this.PostApi({ Action: "/recovery", RequestData: JSON.stringify(model), Callback: Callback });
             };
+            AccountService.prototype.Login = function (model, Callback) {
+                this.PostApi({ Action: "/login", RequestData: JSON.stringify(model), Callback: Callback });
+            };
             return AccountService;
         }(base.Services.BaseService));
         Services.AccountService = AccountService;

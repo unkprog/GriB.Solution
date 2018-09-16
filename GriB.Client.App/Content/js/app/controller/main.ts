@@ -3,7 +3,7 @@ import ctrl = require('app/common/basecontroller');
 import utils = require('app/common/utils');
 import { _app } from 'app/common/variables';
 
-export namespace Controller.Security {
+export namespace Controller {
     export class Main extends ctrl.Controller.Base {
 
         constructor() {
@@ -17,34 +17,34 @@ export namespace Controller.Security {
         protected createModel(): kendo.data.ObservableObject {
             return new kendo.data.ObservableObject({
                 "Header": "",
+                "userName": "John Doe",
             });
         }
 
-        //protected createEvents(): void {
-        //    this.RecoveryButtonClick = this.createClickEvent("btn-recovery", this.recoveryButtonClick);
-        //}
+        private sideNav: JQuery;
+        private buttonMenu: JQuery;
+        public ViewInit(view: JQuery): boolean {
+            let menu: JQuery = $('<li><a id="app-btn-menu"><i class="material-icons">menu</i></a></li>');
+            this.sideNav = view.find('.sidenav');
+            this.sideNav.sidenav();
+            $("#app-navbar").find(".left").append(menu);
+            this.buttonMenu = menu.find("#app-btn-menu");
+            super.ViewInit(view);
+            return true;
+        }
 
-        //protected destroyEvents(): void {
-        //    this.destroyClickEvent("btn-recovery", this.RecoveryButtonClick);
-        //}
+        protected createEvents(): void {
+            this.OpenMenuButtonClick = this.createClickEvent(this.buttonMenu, this.openMenuButtonClick);
+        }
 
-        //public RecoveryButtonClick: { (e: any): void; };
-        //private recoveryButtonClick(e) {
-        //    let controller = this;
-        //    let model: Interfaces.Model.IRegisterModel = {
-        //        phone: <string>$('#recovery-phone').val(),
-        //    };
+        protected destroyEvents(): void {
+            this.destroyClickEvent("btn-recovery", this.OpenMenuButtonClick);
+        }
 
-        //    if (this.validate(model)) {
-        //        controller.AccountService.Recovery(model, (responseData) => {
-        //            if (responseData == "Ok")
-        //                _app.ShowMessage(vars._statres("label$passwordRecovery"), vars._statres("msg$success$Recovery"), () => { _app.OpenController("security/login"); });
-        //            else
-        //                _app.ShowError(responseData);
-        //        });
-        //    }
-
-        //}
+        public OpenMenuButtonClick: { (e: any): void; };
+        private openMenuButtonClick(e) {
+            this.sideNav.sidenav('open');
+        }
 
         //private validate(model: Interfaces.Model.IRegisterModel): boolean {
         //    let validateMessage: string = '';

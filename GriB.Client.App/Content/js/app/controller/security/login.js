@@ -11,7 +11,7 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-define(["require", "exports", "app/common/basecontroller", "app/common/variables", "app/common/variables"], function (require, exports, bc, vars, variables_1) {
+define(["require", "exports", "app/common/variables", "app/common/utils", "app/controller/security/account", "app/common/variables"], function (require, exports, vars, utils, acc, variables_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var Controller;
@@ -51,7 +51,29 @@ define(["require", "exports", "app/common/basecontroller", "app/common/variables
                     _super.prototype.ViewShow.call(this, e);
                 };
                 Login.prototype.loginButtonClick = function (e) {
-                    variables_1._app.ShowError("Test");
+                    var controller = this;
+                    var model = {
+                        phone: $('#login-phone').val(),
+                        pass: $('#login-pass').val()
+                    };
+                    if (this.validate(model)) {
+                        controller.AccountService.Login(model, function (responseData) {
+                            if (responseData.result == "Ok")
+                                variables_1._app.OpenController("main");
+                            else
+                                variables_1._app.ShowError(responseData.error);
+                        });
+                    }
+                };
+                Login.prototype.validate = function (model) {
+                    var validateMessage = '';
+                    if (!utils.validatePhone(model.phone))
+                        validateMessage = validateMessage + (validateMessage !== '' ? '<br/>' : '') + vars._statres('msg$error$phoneNumberIncorrect');
+                    if (utils.isNullOrEmpty(model.pass))
+                        validateMessage = validateMessage + (validateMessage !== '' ? '<br/>' : '') + vars._statres('msg$error$invalidPassword');
+                    if (validateMessage !== '')
+                        vars._showError(validateMessage);
+                    return (validateMessage === '');
                 };
                 Login.prototype.registerButtonClick = function (e) {
                     vars._app.OpenController("security/register", this);
@@ -60,7 +82,7 @@ define(["require", "exports", "app/common/basecontroller", "app/common/variables
                     vars._app.OpenController("security/recovery", this);
                 };
                 return Login;
-            }(bc.Controller.Base));
+            }(acc.Controller.Security.Account));
             Security.Login = Login;
         })(Security = Controller.Security || (Controller.Security = {}));
     })(Controller = exports.Controller || (exports.Controller = {}));

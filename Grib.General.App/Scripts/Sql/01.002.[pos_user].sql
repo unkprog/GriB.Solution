@@ -9,8 +9,8 @@ begin
 	[d]     [int]          not null default (0),
 	[cd]    [datetime]     not null default (getdate()),
 	[cu]    [int]          not null default (0),
-	[uu]    [int]          not null default (0),
 	[ud]    [datetime]     not null default (getdate()),
+	[uu]    [int]          not null default (0),
 	[phone] [nvarchar](16) not null default (N''),
     primary key clustered ([id])
   )

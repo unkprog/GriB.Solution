@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using GriB.Client.App.Managers;
 using GriB.Common.Models.pos;
 using GriB.Common.Web.Http;
+using GriB.Common.Models.Security;
 
 namespace GriB.Client.App.Controllers
 {
@@ -31,11 +32,13 @@ namespace GriB.Client.App.Controllers
 
         [HttpPost]
         [ActionName("login")]
-        public async Task<HttpResponseMessage> login(register_user register_user)
+        public async Task<HttpResponseMessage> login(login_user login)
         => await TryCatchResponseAsync(async () =>
                                         {
-                                            var resultPost = await Common.Net.Json.PostAsync<object, register_user>(AppSettings.Server.Register, "api/account/login", register_user);
-                                            return Request.CreateResponse(HttpStatusCode.OK, resultPost);
+                                            PrincipalData principalData = await Common.Net.Json.PostAsync<PrincipalData, login_user>(AppSettings.Server.Register, "api/account/login", login);
+                                            // TODO: Добавить проверку Expires!!!
+                                            SetPrincipal(new Principal(principalData));
+                                            return Request.CreateResponse(HttpStatusCode.OK, new { result = "Ok", principal = principalData });
                                         });
     }
 }

@@ -8,6 +8,7 @@ using GriB.Common.Sql;
 using GriB.Common.Web.Http;
 using GriB.General.App.Managers;
 using GriB.Common.Models.pos;
+using GriB.Common.Models.Security;
 
 namespace GriB.General.App.Controllers
 {
@@ -56,7 +57,7 @@ namespace GriB.General.App.Controllers
                 user_role user_role = Managers.pos.Users.InsertRole(_query, new user_role() { user = user.id, role = 1 });
                 setPassword(user, "Регистрация в POS Cloud");
 
-                return Request.CreateResponse(HttpStatusCode.OK, "Ok");
+                return Request.CreateResponse(HttpStatusCode.OK, new { result = "Ok" });
             });
         }
 
@@ -77,7 +78,7 @@ namespace GriB.General.App.Controllers
 
                 setPassword(users[0], "Восстановление пароля в POS Cloud");
 
-                return Request.CreateResponse(HttpStatusCode.OK, "Ok");
+                return Request.CreateResponse(HttpStatusCode.OK, new { result = "Ok" });
             });
         }
 
@@ -95,18 +96,20 @@ namespace GriB.General.App.Controllers
                 if (users == null || users.Count == 0)
                     throw new ApiException("Пользователь не найден.");
 
-                user result = null;
-                for(int i = 0, icount = users.Count; result == null && i < icount; i++)
+                user user = null;
+                for(int i = 0, icount = users.Count; user == null && i < icount; i++)
                 {
                     user_sec sec = Managers.pos.Users.GetPassword(_query, users[i].id);
                     if (sec.pass == login.pass)
-                        result = users[i];
+                        user = users[i];
                 }
 
-                if (result == null || result.d != 0)
+                if (user == null || user.d != 0)
                     throw new ApiException("Пользователь не найден.");
 
-                return Request.CreateResponse(HttpStatusCode.OK, result);
+                user_person user_person = Managers.pos.Users.GetPerson(_query, user.id);
+
+                return Request.CreateResponse(HttpStatusCode.OK, new PrincipalData { User = user, Person = user_person });
             });
         }
 

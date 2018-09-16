@@ -57,9 +57,11 @@
     <Compile Include="Diagnostics\ILogger.cs" />
     <Compile Include="Disposable.cs" />
     <Compile Include="IO\Helper.cs" />
+    <Compile Include="Models\Security\Identity.cs" />
     <Compile Include="Models\pos\model_base.cs" />
     <Compile Include="Models\pos\role.cs" />
     <Compile Include="Models\pos\user.cs" />
+    <Compile Include="Models\Security\Principal.cs" />
     <Compile Include="Net\EMail.cs" />
     <Compile Include="Net\Json.cs" />
     <Compile Include="Net\Json.Parser.cs" />

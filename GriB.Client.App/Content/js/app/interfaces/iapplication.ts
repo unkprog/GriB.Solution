@@ -5,6 +5,8 @@
         CreateController: (module: any) => Interfaces.IController;
     }
 
+
+
     export interface IApplication {
         ShowLoading(): void;
         HideLoading(): void;
@@ -13,5 +15,7 @@
         HandleError(e: any): void;
         ShowError(e: string): void;
         ShowMessage(header: string, message: string, onClose?: () => void): void;
+
+        Identity: Interfaces.Model.IIdentity;
     }
 }

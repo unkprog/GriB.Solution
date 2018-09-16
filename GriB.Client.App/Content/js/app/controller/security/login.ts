@@ -1,10 +1,10 @@
-﻿import bc = require('app/common/basecontroller');
-import rc = require('app/controller/security/register');
-import vars = require('app/common/variables');
+﻿import vars = require('app/common/variables');
+import utils = require('app/common/utils');
+import acc = require('app/controller/security/account');
 import { _app } from 'app/common/variables';
 
 export namespace Controller.Security {
-    export class Login extends bc.Controller.Base {
+    export class Login extends acc.Controller.Security.Account {
         constructor() {
            super();
         }
@@ -44,7 +44,38 @@ export namespace Controller.Security {
 
         public LoginButtonClick: { (e: any): void; };
         private loginButtonClick(e) {
-            _app.ShowError("Test");
+            let controller = this;
+            let model: Interfaces.Model.ILoginModel = {
+                phone: <string>$('#login-phone').val(),
+                pass: <string>$('#login-pass').val()
+            };
+
+            if (this.validate(model)) {
+                controller.AccountService.Login(model, (responseData) => {
+                    if (responseData.result == "Ok")
+                        _app.OpenController("main");
+                    else
+                        _app.ShowError(responseData.error);
+                });
+            }
+
+            
+        }
+
+        private validate(model: Interfaces.Model.ILoginModel): boolean {
+            let validateMessage: string = '';
+
+            if (!utils.validatePhone(model.phone))
+                validateMessage = validateMessage + (validateMessage !== '' ? '<br/>' : '') + vars._statres('msg$error$phoneNumberIncorrect');
+           
+
+            if (utils.isNullOrEmpty(model.pass))
+                validateMessage = validateMessage + (validateMessage !== '' ? '<br/>' : '') + vars._statres('msg$error$invalidPassword');
+
+            if (validateMessage !== '')
+                vars._showError(validateMessage);
+
+            return (validateMessage === '');
         }
 
         public RegisterButtonClick: { (e: any): void; };

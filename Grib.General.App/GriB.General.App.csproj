@@ -77,8 +77,10 @@
   <ItemGroup>
     <Content Include="Content\index.html" />
     <Content Include="Global.asax" />
+    <Content Include="Scripts\Query\user\person\[get].sql" />
     <Content Include="Scripts\Query\user\role\[get].sql" />
     <Content Include="Scripts\Query\user\role\[ins].sql" />
+    <Content Include="Scripts\Query\user\sec\[get].sql" />
     <Content Include="Scripts\Query\user\sec\[set].sql" />
     <Content Include="Scripts\Query\user\[ins].sql" />
     <Content Include="Scripts\Query\user\[get].sql" />

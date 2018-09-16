@@ -18,7 +18,7 @@ namespace GriB.Common.Web.Http
             logger = new Logger();
         }
 
-        private void SetPrincipal(IPrincipal principal)
+        protected void SetPrincipal(IPrincipal principal)
         {
             Thread.CurrentPrincipal = principal;
             if (HttpContext.Current != null)

@@ -1,4 +1,43 @@
 ﻿<div id="main-view">
-   
-    Приложение запущено
+
+    <ul id="main-view-slide" class="sidenav">
+        <li>
+            <div class="user-view">
+                <div class="background">
+                    <img src="/Content/img/menu-background.png" />
+                </div>
+                <table>
+                    <tr>
+                        <td width="85px">
+                            <div class="person-image"></div>
+                        </td>
+                        <td class="person-info">
+                            <span class="white-text">John Doe</span><br />
+                            <span class="white-text">jdandturk@gmail.com</span>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </li>
+        <li><a><i class="material-icons">shopping_cart</i>POS терминал</a></li>
+        <li><a><i class="material-icons">settings</i>Настройки</a></li>
+        <!--<li><a><i class="material-icons">storage</i>Справочники</a></li>-->
+        <li><a><i class="material-icons">timeline</i>Отчеты</a></li>
+        <li><a><i class="material-icons">help</i>О программе</a></li>
+        <li><div class="divider divider-menu"></div></li>
+        <li><a><i class="material-icons">power_settings_new</i>Выход</a></li>
+    </ul>
+
 </div>
+
+<style>
+    header, main, footer, #app-navbar {
+        padding-left: 300px;
+    }
+
+    @media only screen and (max-width : 992px) {
+        header, main, footer, #app-navbar {
+            padding-left: 0;
+        }
+    }
+</style>

@@ -11,7 +11,7 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-define(["require", "exports", "app/common/variables", "app/controller/security/account", "app/common/utils", "app/common/variables"], function (require, exports, vars, acc, utils, variables_1) {
+define(["require", "exports", "app/common/variables", "app/common/utils", "app/controller/security/account", "app/common/variables"], function (require, exports, vars, utils, acc, variables_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var Controller;
@@ -47,7 +47,7 @@ define(["require", "exports", "app/common/variables", "app/controller/security/a
                     };
                     if (this.validate(model)) {
                         controller.AccountService.Recovery(model, function (responseData) {
-                            if (responseData == "Ok")
+                            if (responseData.result == "Ok")
                                 variables_1._app.ShowMessage(vars._statres("label$passwordRecovery"), vars._statres("msg$success$Recovery"), function () { variables_1._app.OpenController("security/login"); });
                             else
                                 variables_1._app.ShowError(responseData);

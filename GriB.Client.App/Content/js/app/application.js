@@ -127,7 +127,9 @@ define(["require", "exports", "app/common/variables"], function (require, export
                         self._controllersStack.Push(backController);
                         var header = controller.Header;
                         if (header)
-                            self._model.set("AppHeader", header + ' ' + self.contentControl.width());
+                            self._model.set("AppHeader", header); // + ' ' + self.contentControl.width()
+                        else if ("POS Cloud" !== self._model.get("AppHeader"))
+                            self._model.set("AppHeader", "POS Cloud");
                         var view = $(template);
                         isInit = self._controller.ViewInit(view);
                         self.contentControl.html(view[0]);
@@ -152,10 +154,6 @@ define(["require", "exports", "app/common/variables"], function (require, export
                 this.ShowError(e);
             };
             Application.prototype.ShowError = function (e) {
-                //require(['app/controller/dialog/errordialog'], function (dialog) {
-                //    let errorDialog: Interfaces.IDialog = new dialog.Controller.Dialog.ModalDialog();
-                //    errorDialog.Show(vars._statres("label$error"), e);
-                //});
                 this.ShowMessage(vars._statres("label$error"), e);
             };
             Application.prototype.ShowMessage = function (header, message, onClose) {
@@ -165,6 +163,16 @@ define(["require", "exports", "app/common/variables"], function (require, export
                     messagerDialog.Show(header, message);
                 });
             };
+            Object.defineProperty(Application.prototype, "Identity", {
+                get: function () {
+                    return this._identity;
+                },
+                set: function (identity) {
+                    this._identity = identity;
+                },
+                enumerable: true,
+                configurable: true
+            });
             return Application;
         }());
         App.Application = Application;

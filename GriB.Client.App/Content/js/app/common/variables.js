@@ -22,5 +22,6 @@ define(["require", "exports", "i18n!nls/strings"], function (require, exports) {
     exports._controllers["security/login"] = function (module) { return new module.Controller.Security.Login(); };
     exports._controllers["security/register"] = function (module) { return new module.Controller.Security.Register(); };
     exports._controllers["security/recovery"] = function (module) { return new module.Controller.Security.Recovery(); };
+    exports._controllers["main"] = function (module) { return new module.Controller.Main(); };
 });
 //# sourceMappingURL=variables.js.map

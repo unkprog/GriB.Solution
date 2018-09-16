@@ -96,5 +96,17 @@ namespace GriB.General.App.Managers.pos
             }
             return new string(chArray);
         }
+
+
+        private const string cmdPersonGet = @"user\person\[get]";
+        public static user_person GetPerson(this Query query, int id)
+        {
+            user_person user_person = null;
+            query.Execute(cmdPersonGet, new SqlParameter[] { new SqlParameter("@id", id) }
+            , (values) => {
+                user_person = new user_person() { id = id, sex = (int)values[1], birth = (DateTime)values[2], fname = (string)values[3], mname = (string)values[4], lname = (string)values[5], email = (string)values[6] };
+            });
+            return user_person;
+        }
     }
 }
