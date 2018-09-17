@@ -40,3 +40,11 @@ _controllers["security/register"] = function (module: any): Interfaces.IControll
 _controllers["security/recovery"]   = function (module: any): Interfaces.IController { return new module.Controller.Security.Recovery(); };
 _controllers["main"] = function (module: any): Interfaces.IController { return new module.Controller.Main(); };
 
+export declare let _maincontrollers: any;
+_maincontrollers = {};
+
+_maincontrollers["terminal/index"] = function (module: any): Interfaces.IController { return new module.Controller.Terminal.Index(); };
+_maincontrollers["setting/index"] = function (module: any): Interfaces.IController { return new module.Controller.Setting.Index(); };
+_maincontrollers["report/index"] = function (module: any): Interfaces.IController { return new module.Controller.Report.Index(); };
+_maincontrollers["about/index"] = function (module: any): Interfaces.IController { return new module.Controller.About.Index(); };
+

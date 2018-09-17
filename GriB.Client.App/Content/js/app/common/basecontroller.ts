@@ -1,4 +1,5 @@
 ﻿import utils = require('app/common/utils');
+import { _app } from './variables';
 
 export namespace Controller {
     export class Base implements Interfaces.IController {
@@ -88,6 +89,82 @@ export namespace Controller {
                 var $inp = $("#" + el);
                 if ($inp.length > 0)
                     $inp[0].removeEventListener("keypress", proxyFunc);
+            });
+        }
+    }
+
+
+    export class BaseContent extends Base implements Interfaces.IControllerContent {
+
+        constructor() {
+            super();
+            this._controllers = this.ControllersInit();
+        }
+
+        private _controller: any;
+        private _controllers: any;
+        private _content: JQuery;
+        protected ControllersInit(): any {
+            return {};
+        }
+
+        protected GetContent(): JQuery {
+            return null;
+        }
+
+        public ViewInit(view): boolean {
+            let result: boolean = super.ViewInit(view);
+            this._content = this.GetContent();
+            return result;
+        }
+
+        public OpenController(urlController: string, backController?: Interfaces.IController) {
+            var self = this;
+            let ctrlCreate: any = this._controllers[urlController]
+            if (ctrlCreate) {
+                let url: string = "/Content/js/app/controller/" + urlController + ".js";
+                require([url], function (module) {
+                    let controller: Interfaces.IController = ctrlCreate(module);
+                    self.OpenView(controller, backController);
+                });
+            }
+        }
+
+        public OpenView(controller: Interfaces.IController, backController?: Interfaces.IController) {
+            var self = this;
+            if ($("#" + controller.Options.Id).length > 0) return;     //Already loaded and current
+            _app.ShowLoading();
+
+            $.when($.ajax({ url: controller.Options.Url, cache: false })).done((template) => {
+                let isInit: boolean = false;
+                try {
+                    if (self._controller)
+                        self._controller.ViewHide(this);
+
+                    self._controller = controller;
+                    //TODO: Пока не заморачиваемся с кнопкой "Назад"
+                    //self._controllersStack.Push(backController);
+
+                    //TODO: Пока не заморачиваемся с заголовком
+                    //let header = controller.Header;
+                    //if (header)
+                    //    self._model.set("AppHeader", header); // + ' ' + self.contentControl.width()
+                    //else
+                    //    if ("POS Cloud" !== self._model.get("AppHeader"))
+                    //        self._model.set("AppHeader", "POS Cloud");
+
+                    let view = $(template);
+                    isInit = self._controller.ViewInit(view);
+                    self._content.html(view[0]);
+
+                    self._controller.ViewShow(this);
+                    self._controller.ViewResize(this);
+                } finally {
+                    if (isInit)
+                        _app.HideLoading();
+                }
+            }).fail((e) => {
+                _app.HideLoading();
             });
         }
     }

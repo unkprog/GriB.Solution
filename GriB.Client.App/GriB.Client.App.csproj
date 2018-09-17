@@ -122,12 +122,16 @@
     <Content Include="Content\js\nls\en\strings.js" />
     <Content Include="Content\js\nls\root\strings.js" />
     <Content Include="Content\js\nls\strings.js" />
+    <Content Include="Content\view\about\index.html" />
     <Content Include="Content\view\index.html" />
     <Content Include="Content\view\main.html" />
+    <Content Include="Content\view\report\index.html" />
     <Content Include="Content\view\security\recovery.html" />
     <Content Include="Content\view\security\register.html" />
     <Content Include="Content\view\security\login.html" />
     <Content Include="Content\view\app.html" />
+    <Content Include="Content\view\setting\index.html" />
+    <Content Include="Content\view\terminal\index.html" />
     <Content Include="Global.asax" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
@@ -207,9 +211,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Content\js\app\controller\admin\" />
-    <Folder Include="Content\js\app\controller\report\" />
-    <Folder Include="Content\js\app\controller\terminal\" />
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="Content\js\app\application.ts" />
@@ -218,12 +219,16 @@
     <TypeScriptCompile Include="Content\js\app\common\variables.ts" />
     <Content Include="Content\js\app\init.js" />
     <TypeScriptCompile Include="Content\js\app\common\basecontroller.ts" />
+    <TypeScriptCompile Include="Content\js\app\controller\about\index.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\dialog\modaldialog.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\main.ts" />
+    <TypeScriptCompile Include="Content\js\app\controller\report\index.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\security\account.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\security\recovery.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\security\register.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\security\login.ts" />
+    <TypeScriptCompile Include="Content\js\app\controller\setting\index.ts" />
+    <TypeScriptCompile Include="Content\js\app\controller\terminal\index.ts" />
     <TypeScriptCompile Include="Content\js\app\interfaces\iapplication.ts" />
     <TypeScriptCompile Include="Content\js\app\interfaces\icontroller.ts" />
     <TypeScriptCompile Include="Content\js\app\interfaces\imodel.ts" />

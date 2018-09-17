@@ -17,6 +17,9 @@
         ViewResize(e?: any): void;
     }
 
+    export interface IControllerContent extends IController {
+        OpenController(urlController: string, backController?: Interfaces.IController): void;
+    }
 
     export interface IDialog extends IController {
         Show(header: string, e: string): void;

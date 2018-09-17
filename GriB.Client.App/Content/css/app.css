@@ -29,7 +29,8 @@
   overflow-x: hidden; }
 
 .sidenav .user-view {
-  padding: 1em; }
+  padding: 1em;
+  margin: 0; }
 
 .person-image {
   width: 60px !important;

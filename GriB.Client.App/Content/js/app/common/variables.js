@@ -23,5 +23,10 @@ define(["require", "exports", "i18n!nls/strings"], function (require, exports) {
     exports._controllers["security/register"] = function (module) { return new module.Controller.Security.Register(); };
     exports._controllers["security/recovery"] = function (module) { return new module.Controller.Security.Recovery(); };
     exports._controllers["main"] = function (module) { return new module.Controller.Main(); };
+    exports._maincontrollers = {};
+    exports._maincontrollers["terminal/index"] = function (module) { return new module.Controller.Terminal.Index(); };
+    exports._maincontrollers["setting/index"] = function (module) { return new module.Controller.Setting.Index(); };
+    exports._maincontrollers["report/index"] = function (module) { return new module.Controller.Report.Index(); };
+    exports._maincontrollers["about/index"] = function (module) { return new module.Controller.About.Index(); };
 });
 //# sourceMappingURL=variables.js.map
