@@ -1,6 +1,7 @@
 ﻿/// <amd-dependency path="i18n!nls/strings" />
 
 export declare let _app: Interfaces.IApplication;
+export declare let _main: Interfaces.IControllerNavigation;
 export declare let _statres: (id: string) => string;
 export declare let _absUrl: (id: string) => string;   //Create absolute ref to resource
 export declare let _showError: (error: string) => void;
@@ -47,4 +48,8 @@ _maincontrollers["terminal/index"] = function (module: any): Interfaces.IControl
 _maincontrollers["setting/index"] = function (module: any): Interfaces.IController { return new module.Controller.Setting.Index(); };
 _maincontrollers["report/index"] = function (module: any): Interfaces.IController { return new module.Controller.Report.Index(); };
 _maincontrollers["about/index"] = function (module: any): Interfaces.IController { return new module.Controller.About.Index(); };
+
+_maincontrollers["setting/editor/organization"] = function (module: any): Interfaces.IController { return new module.Controller.Setting.Editor.Organization(); };
+_maincontrollers["setting/editor/salepoint"] = function (module: any): Interfaces.IController { return new module.Controller.Setting.Editor.SalePoint(); };
+_maincontrollers["setting/editor/employee"] = function (module: any): Interfaces.IController { return new module.Controller.Setting.Editor.Employee(); };
 

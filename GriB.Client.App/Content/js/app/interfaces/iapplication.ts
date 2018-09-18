@@ -5,13 +5,9 @@
         CreateController: (module: any) => Interfaces.IController;
     }
 
-
-
-    export interface IApplication {
+    export interface IApplication extends IControllerNavigation {
         ShowLoading(): void;
         HideLoading(): void;
-        OpenController(url: string, backController?: Interfaces.IController): void;
-        OpenView(controller: Interfaces.IController, backController?: Interfaces.IController): void;
         HandleError(e: any): void;
         ShowError(e: string): void;
         ShowMessage(header: string, message: string, onClose?: () => void): void;

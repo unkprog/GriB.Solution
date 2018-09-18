@@ -17,13 +17,26 @@
         ViewResize(e?: any): void;
     }
 
-    export interface IControllerContent extends IController {
+    export interface IControllerStack {
+        Current: Interfaces.IController;
+        Pop: () => void; 
+        Push: (controller: Interfaces.IController) => void; 
+    }
+
+    export interface IControllerNavigation {
+        ControllerBack(e: any): void;
+        RestoreController(): void;
         OpenController(urlController: string, backController?: Interfaces.IController): void;
+        OpenView(controller: Interfaces.IController, backController?: Interfaces.IController): void;
+    }
+
+    export interface IControllerEditor extends IController {
+        Save(e: any): void;
+        Cancel(e: any): void;
     }
 
     export interface IDialog extends IController {
         Show(header: string, e: string): void;
-
         OnClose: () => void;
     }
 }

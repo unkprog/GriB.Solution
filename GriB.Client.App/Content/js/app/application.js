@@ -1,40 +1,12 @@
-define(["require", "exports", "app/common/variables"], function (require, exports, vars) {
+define(["require", "exports", "app/common/variables", "app/common/basecontroller"], function (require, exports, vars, base) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var App;
     (function (App) {
-        var ControllersStack = /** @class */ (function () {
-            function ControllersStack() {
-                this._controllers = [];
-            }
-            Object.defineProperty(ControllersStack.prototype, "Current", {
-                get: function () {
-                    return this._current;
-                },
-                enumerable: true,
-                configurable: true
-            });
-            ControllersStack.prototype.Pop = function () {
-                if (this._controllers.length > 0)
-                    this._current = this._controllers.pop();
-                else
-                    this._current = undefined;
-            };
-            ControllersStack.prototype.Push = function (controller) {
-                var self = this;
-                if (controller) {
-                    self._controllers.push(controller);
-                    history.pushState({}, '');
-                }
-                else
-                    self._controllers = [];
-            };
-            return ControllersStack;
-        }());
         var Application = /** @class */ (function () {
             function Application() {
                 vars._app = this;
-                this._controllersStack = new ControllersStack();
+                this._controllersStack = new base.Controller.ControllersStack();
                 this._model = new kendo.data.ObservableObject({
                     "AppHeader": "POS Cloud",
                     "labelOk": vars._statres("button$label$ok"),
@@ -58,10 +30,6 @@ define(["require", "exports", "app/common/variables"], function (require, export
                 if (this._controller)
                     this._controller.ViewResize(e);
             };
-            Application.prototype.controllerBack = function (e) {
-                this._controllersStack.Pop();
-                this.RestoreController();
-            };
             Application.prototype.Initailize = function () {
                 var app = this;
                 $.support.cors = true;
@@ -70,10 +38,6 @@ define(["require", "exports", "app/common/variables"], function (require, export
                 app.Resize = $.proxy(app.resize, app);
                 app.ControllerBack = $.proxy(app.controllerBack, app);
                 app.loadAppView();
-            };
-            Application.prototype.RestoreController = function () {
-                if (this._controllersStack.Current)
-                    this.OpenView(this._controllersStack.Current);
             };
             Application.prototype.ShowLoading = function () {
                 this.progressControl.show();
@@ -100,6 +64,14 @@ define(["require", "exports", "app/common/variables"], function (require, export
                     self.HideLoading();
                     alert(e.responseText);
                 });
+            };
+            Application.prototype.controllerBack = function (e) {
+                this._controllersStack.Pop();
+                this.RestoreController();
+            };
+            Application.prototype.RestoreController = function () {
+                if (this._controllersStack.Current)
+                    this.OpenView(this._controllersStack.Current);
             };
             Application.prototype.OpenController = function (urlController, backController) {
                 var self = this;

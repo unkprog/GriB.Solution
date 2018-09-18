@@ -28,5 +28,8 @@ define(["require", "exports", "i18n!nls/strings"], function (require, exports) {
     exports._maincontrollers["setting/index"] = function (module) { return new module.Controller.Setting.Index(); };
     exports._maincontrollers["report/index"] = function (module) { return new module.Controller.Report.Index(); };
     exports._maincontrollers["about/index"] = function (module) { return new module.Controller.About.Index(); };
+    exports._maincontrollers["setting/editor/organization"] = function (module) { return new module.Controller.Setting.Editor.Organization(); };
+    exports._maincontrollers["setting/editor/salepoint"] = function (module) { return new module.Controller.Setting.Editor.SalePoint(); };
+    exports._maincontrollers["setting/editor/employee"] = function (module) { return new module.Controller.Setting.Editor.Employee(); };
 });
 //# sourceMappingURL=variables.js.map

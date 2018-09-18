@@ -1,13 +1,14 @@
 ﻿import vars = require('app/common/variables');
 import ctrl = require('app/common/basecontroller');
 import utils = require('app/common/utils');
-import { _app } from 'app/common/variables';
+import { _app, _main } from 'app/common/variables';
 
 export namespace Controller {
     export class Main extends ctrl.Controller.BaseContent {
 
         constructor() {
             super();
+            vars._main = this;
         }
 
         protected createOptions(): Interfaces.IControllerOptions {

@@ -1,38 +1,13 @@
 ﻿import vars = require('app/common/variables');
+import base = require('app/common/basecontroller');
 
 export module App {
-    class ControllersStack {
-        private _controllers: Interfaces.IController[] = [];
-        private _current: Interfaces.IController;
-
-        public get Current(): Interfaces.IController {
-            return this._current;
-        }
-
-        public Pop() {
-            if (this._controllers.length > 0)
-                this._current = this._controllers.pop();
-            else
-                this._current = undefined;
-        }
-
-        public Push(controller: Interfaces.IController) {
-            var self = this;
-            if (controller) {
-                self._controllers.push(controller);
-                history.pushState({}, '');
-            }
-            else
-                self._controllers = [];
-        }
-    }
-
     export class Application implements Interfaces.IApplication {
 
         private _model: kendo.data.ObservableObject;
         constructor() {
             vars._app = this;
-            this._controllersStack = new ControllersStack();
+            this._controllersStack = new base.Controller.ControllersStack();
             this._model = new kendo.data.ObservableObject({
                 "AppHeader": "POS Cloud",
                 "labelOk": vars._statres("button$label$ok"),
@@ -42,7 +17,7 @@ export module App {
             this.Initailize();
         }
 
-        private _controllersStack: ControllersStack;
+        private _controllersStack: Interfaces.IControllerStack;
         private _controller: Interfaces.IController;
         public get Controller(): Interfaces.IController {
             return this._controller;
@@ -60,12 +35,6 @@ export module App {
                 this._controller.ViewResize(e);
         }
 
-        public ControllerBack: { (e: any): void; };
-        private controllerBack(e) {
-            this._controllersStack.Pop();
-            this.RestoreController();
-        }
-
         private progressControl: JQuery;
         private navbarControl: JQuery;
         private contentControl: JQuery;
@@ -80,11 +49,6 @@ export module App {
             app.Resize = $.proxy(app.resize, app);
             app.ControllerBack = $.proxy(app.controllerBack, app);
             app.loadAppView();
-        }
-
-        public RestoreController() {
-            if (this._controllersStack.Current)
-                this.OpenView(this._controllersStack.Current);
         }
 
         public ShowLoading() {
@@ -115,6 +79,17 @@ export module App {
                 self.HideLoading();
                 alert(e.responseText);
             });
+        }
+
+        public ControllerBack: { (e: any): void; };
+        private controllerBack(e): void {
+            this._controllersStack.Pop();
+            this.RestoreController();
+        }
+
+        public RestoreController() {
+            if (this._controllersStack.Current)
+                this.OpenView(this._controllersStack.Current);
         }
 
         public OpenController(urlController: string, backController?: Interfaces.IController) {

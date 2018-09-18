@@ -19,7 +19,9 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
         var Main = /** @class */ (function (_super) {
             __extends(Main, _super);
             function Main() {
-                return _super.call(this) || this;
+                var _this = _super.call(this) || this;
+                vars._main = _this;
+                return _this;
             }
             Main.prototype.createOptions = function () {
                 return { Url: "/Content/view/main.html", Id: "main-view" };

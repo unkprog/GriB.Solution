@@ -104,10 +104,41 @@ define(["require", "exports", "app/common/utils", "./variables"], function (requ
             return Base;
         }());
         Controller.Base = Base;
+        var ControllersStack = /** @class */ (function () {
+            function ControllersStack() {
+                this._controllers = [];
+            }
+            Object.defineProperty(ControllersStack.prototype, "Current", {
+                get: function () {
+                    return this._current;
+                },
+                enumerable: true,
+                configurable: true
+            });
+            ControllersStack.prototype.Pop = function () {
+                if (this._controllers.length > 0)
+                    this._current = this._controllers.pop();
+                else
+                    this._current = undefined;
+            };
+            ControllersStack.prototype.Push = function (controller) {
+                var self = this;
+                if (controller) {
+                    self._controllers.push(controller);
+                    history.pushState({}, '');
+                }
+                else
+                    self._controllers = [];
+            };
+            return ControllersStack;
+        }());
+        Controller.ControllersStack = ControllersStack;
         var BaseContent = /** @class */ (function (_super) {
             __extends(BaseContent, _super);
             function BaseContent() {
                 var _this = _super.call(this) || this;
+                _this._controllersStack = new ControllersStack();
+                _this.ControllerBack = $.proxy(_this.controllerBack, _this);
                 _this._controllers = _this.ControllersInit();
                 return _this;
             }
@@ -121,6 +152,23 @@ define(["require", "exports", "app/common/utils", "./variables"], function (requ
                 var result = _super.prototype.ViewInit.call(this, view);
                 this._content = this.GetContent();
                 return result;
+            };
+            BaseContent.prototype.ViewResize = function (e) {
+                if (this._content) {
+                    var heigth = window.innerHeight;
+                    heigth = heigth - this._content.offset().top;
+                    this._content.height(heigth);
+                }
+                if (this._controller)
+                    this._controller.ViewResize(e);
+            };
+            BaseContent.prototype.controllerBack = function (e) {
+                this._controllersStack.Pop();
+                this.RestoreController();
+            };
+            BaseContent.prototype.RestoreController = function () {
+                if (this._controllersStack.Current)
+                    this.OpenView(this._controllersStack.Current);
             };
             BaseContent.prototype.OpenController = function (urlController, backController) {
                 var self = this;
@@ -145,8 +193,7 @@ define(["require", "exports", "app/common/utils", "./variables"], function (requ
                         if (self._controller)
                             self._controller.ViewHide(_this);
                         self._controller = controller;
-                        //TODO: Пока не заморачиваемся с кнопкой "Назад"
-                        //self._controllersStack.Push(backController);
+                        self._controllersStack.Push(backController);
                         //TODO: Пока не заморачиваемся с заголовком
                         //let header = controller.Header;
                         //if (header)
@@ -171,6 +218,50 @@ define(["require", "exports", "app/common/utils", "./variables"], function (requ
             return BaseContent;
         }(Base));
         Controller.BaseContent = BaseContent;
+        var BaseEditor = /** @class */ (function (_super) {
+            __extends(BaseEditor, _super);
+            function BaseEditor() {
+                return _super.call(this) || this;
+            }
+            BaseEditor.prototype.ViewInit = function (view) {
+                this.btnSave = $('<li><a id="editor-btn-save"><i class="material-icons">done</i></a></li>');
+                this.btnCancel = $('<li><a id="editor-btn-cancel"><i class="material-icons">close</i></a></li>');
+                $("#app-navbar").find(".right").append(this.btnSave);
+                $("#app-navbar").find(".right").append(this.btnCancel);
+                _super.prototype.ViewInit.call(this, view);
+                return true;
+            };
+            BaseEditor.prototype.ViewHide = function (e) {
+                _super.prototype.ViewHide.call(this, e);
+                if (this.btnSave)
+                    this.btnSave.remove();
+                if (this.btnCancel)
+                    this.btnCancel.remove();
+            };
+            BaseEditor.prototype.createEvents = function () {
+                this.SaveButtonClick = this.createClickEvent(this.btnSave, this.saveButtonClick);
+                this.CancelButtonClick = this.createClickEvent(this.btnCancel, this.cancelButtonClick);
+            };
+            BaseEditor.prototype.destroyEvents = function () {
+                this.destroyClickEvent(this.btnSave, this.SaveButtonClick);
+                this.destroyClickEvent(this.btnSave, this.CancelButtonClick);
+            };
+            BaseEditor.prototype.saveButtonClick = function (e) {
+                this.Save(e);
+            };
+            BaseEditor.prototype.cancelButtonClick = function (e) {
+                this.Cancel(e);
+                variables_1._main.ControllerBack(e);
+            };
+            BaseEditor.prototype.Save = function (e) {
+                throw new Error("Method not implemented.");
+            };
+            BaseEditor.prototype.Cancel = function (e) {
+                //throw new Error("Method not implemented.");
+            };
+            return BaseEditor;
+        }(Base));
+        Controller.BaseEditor = BaseEditor;
     })(Controller = exports.Controller || (exports.Controller = {}));
 });
 //# sourceMappingURL=basecontroller.js.map

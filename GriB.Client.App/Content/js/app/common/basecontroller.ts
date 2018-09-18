@@ -1,5 +1,5 @@
 ﻿import utils = require('app/common/utils');
-import { _app } from './variables';
+import { _app, _main } from './variables';
 
 export namespace Controller {
     export class Base implements Interfaces.IController {
@@ -93,14 +93,42 @@ export namespace Controller {
         }
     }
 
+    export class ControllersStack implements Interfaces.IControllerStack {
+        private _controllers: Interfaces.IController[] = [];
+        private _current: Interfaces.IController;
 
-    export class BaseContent extends Base implements Interfaces.IControllerContent {
+        public get Current(): Interfaces.IController {
+            return this._current;
+        }
+
+        public Pop() : void {
+            if (this._controllers.length > 0)
+                this._current = this._controllers.pop();
+            else
+                this._current = undefined;
+        }
+
+        public Push(controller: Interfaces.IController) : void {
+            var self = this;
+            if (controller) {
+                self._controllers.push(controller);
+                history.pushState({}, '');
+            }
+            else
+                self._controllers = [];
+        }
+    }
+
+    export class BaseContent extends Base implements Interfaces.IControllerNavigation {
 
         constructor() {
             super();
+            this._controllersStack = new ControllersStack();
+            this.ControllerBack = $.proxy(this.controllerBack, this);
             this._controllers = this.ControllersInit();
         }
 
+        private _controllersStack: Interfaces.IControllerStack;
         private _controller: any;
         private _controllers: any;
         private _content: JQuery;
@@ -116,6 +144,28 @@ export namespace Controller {
             let result: boolean = super.ViewInit(view);
             this._content = this.GetContent();
             return result;
+        }
+
+        public ViewResize(e) {
+            if (this._content) {
+                let heigth = window.innerHeight;
+                heigth = heigth - this._content.offset().top;
+                this._content.height(heigth);
+            }
+
+            if (this._controller)
+                this._controller.ViewResize(e);
+        }
+
+        public ControllerBack: { (e: any): void; };
+        private controllerBack(e): void {
+            this._controllersStack.Pop();
+            this.RestoreController();
+        }
+
+        public RestoreController() {
+            if (this._controllersStack.Current)
+                this.OpenView(this._controllersStack.Current);
         }
 
         public OpenController(urlController: string, backController?: Interfaces.IController) {
@@ -142,8 +192,7 @@ export namespace Controller {
                         self._controller.ViewHide(this);
 
                     self._controller = controller;
-                    //TODO: Пока не заморачиваемся с кнопкой "Назад"
-                    //self._controllersStack.Push(backController);
+                    self._controllersStack.Push(backController);
 
                     //TODO: Пока не заморачиваемся с заголовком
                     //let header = controller.Header;
@@ -167,5 +216,66 @@ export namespace Controller {
                 _app.HideLoading();
             });
         }
+    }
+
+    export class BaseEditor extends Base implements Interfaces.IControllerEditor {
+
+        constructor() {
+            super();
+        }
+
+        private btnSave: JQuery;
+        private btnCancel: JQuery;
+        public ViewInit(view: JQuery): boolean {
+
+            this.btnSave = $('<li><a id="editor-btn-save"><i class="material-icons">done</i></a></li>');
+            this.btnCancel = $('<li><a id="editor-btn-cancel"><i class="material-icons">close</i></a></li>');
+
+            $("#app-navbar").find(".right").append(this.btnSave);
+            $("#app-navbar").find(".right").append(this.btnCancel);
+
+
+            super.ViewInit(view);
+            return true;
+        }
+
+        public ViewHide(e) {
+            super.ViewHide(e);
+            if (this.btnSave)
+                this.btnSave.remove();
+            if (this.btnCancel)
+                this.btnCancel.remove();
+        }
+
+        protected createEvents(): void {
+            this.SaveButtonClick = this.createClickEvent(this.btnSave, this.saveButtonClick);
+            this.CancelButtonClick = this.createClickEvent(this.btnCancel, this.cancelButtonClick);
+        }
+
+        protected destroyEvents(): void {
+            this.destroyClickEvent(this.btnSave, this.SaveButtonClick);
+            this.destroyClickEvent(this.btnSave, this.CancelButtonClick);
+        }
+
+        public SaveButtonClick: { (e: any): void; };
+        private saveButtonClick(e): void  {
+            this.Save(e);
+        }
+
+        public CancelButtonClick: { (e: any): void; };
+        private cancelButtonClick(e): void {
+            this.Cancel(e);
+            _main.ControllerBack(e);
+        }
+
+        public Save(e: any): void {
+            throw new Error("Method not implemented.");
+        }
+
+        public Cancel(e: any): void {
+            //throw new Error("Method not implemented.");
+        }
+
+
     }
 }

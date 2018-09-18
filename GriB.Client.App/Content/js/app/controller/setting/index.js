@@ -11,7 +11,7 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-define(["require", "exports", "app/common/basecontroller"], function (require, exports, base) {
+define(["require", "exports", "app/common/variables", "app/common/basecontroller", "app/common/variables"], function (require, exports, vars, base, variables_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var Controller;
@@ -29,13 +29,21 @@ define(["require", "exports", "app/common/basecontroller"], function (require, e
                 Index.prototype.createModel = function () {
                     return new kendo.data.ObservableObject({
                         "Header": "POS Cloud",
+                        "labelOrganization": vars._statres("label$organization"),
+                        "labelSalesPoints": vars._statres("label$salesPoints"),
+                        "labelEmployees": vars._statres("label$employees"),
+                        "labelCurrencies": vars._statres("label$currencies"),
+                        "labelUnits": vars._statres("label$units"),
                     });
                 };
-                Index.prototype.ViewInit = function (view) {
-                    return _super.prototype.ViewInit.call(this, view);
+                Index.prototype.createEvents = function () {
+                    this.OrganizationButtonClick = this.createClickEvent("btn-organization", this.organizationButtonClick);
                 };
-                Index.prototype.ViewHide = function (e) {
-                    _super.prototype.ViewHide.call(this, e);
+                Index.prototype.destroyEvents = function () {
+                    this.destroyClickEvent("btn-organization", this.OrganizationButtonClick);
+                };
+                Index.prototype.organizationButtonClick = function (e) {
+                    variables_1._main.OpenController("setting/editor/organization", this);
                 };
                 return Index;
             }(base.Controller.Base));
