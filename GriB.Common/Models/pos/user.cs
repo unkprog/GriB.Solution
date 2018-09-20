@@ -18,6 +18,11 @@ namespace GriB.Common.Models.pos
         public string phone { get; set; }
     }
 
+    public class user_db : model_base
+    {
+        public int db   { get; set; }
+    }
+
     public class user_role : model_base
     {
         public int user { get; set; }

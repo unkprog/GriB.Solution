@@ -77,6 +77,11 @@
   <ItemGroup>
     <Content Include="Content\index.html" />
     <Content Include="Global.asax" />
+    <Content Include="Scripts\Query\server\db\[get].sql" />
+    <Content Include="Scripts\Query\server\db\[ins].sql" />
+    <Content Include="Scripts\Query\server\[get].sql" />
+    <Content Include="Scripts\Query\user\db\[get].sql" />
+    <Content Include="Scripts\Query\user\db\[ins].sql" />
     <Content Include="Scripts\Query\user\person\[get].sql" />
     <Content Include="Scripts\Query\user\role\[get].sql" />
     <Content Include="Scripts\Query\user\role\[ins].sql" />
@@ -84,8 +89,10 @@
     <Content Include="Scripts\Query\user\sec\[set].sql" />
     <Content Include="Scripts\Query\user\[ins].sql" />
     <Content Include="Scripts\Query\user\[get].sql" />
-    <Content Include="Scripts\Sql\01.001.[pos_role].sql" />
-    <Content Include="Scripts\Sql\01.002.[pos_user].sql" />
+    <Content Include="Scripts\Sql\01.001.[pos_sqldb].sql" />
+    <Content Include="Scripts\Sql\02.001.[pos_role].sql" />
+    <Content Include="Scripts\Sql\02.002.[pos_user].sql" />
+    <Content Include="Scripts\Sql\Data\01.001.[pos_sqldb_ins].sql" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -97,7 +104,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Managers\AppSettings.cs" />
-    <Compile Include="Managers\Database.cs" />
+    <Compile Include="Managers\pos\Server.cs" />
     <Compile Include="Managers\pos\Users.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Web;
+﻿using System.Web;
 using System.Web.Http;
-using System.Web.Routing;
+using System.Data.SqlClient;
+using GriB.Common.Sql;
+using GriB.General.App.Managers;
 
 namespace GriB.General.App
 {
@@ -14,12 +12,7 @@ namespace GriB.General.App
         {
             GlobalConfiguration.Configure(WebApiConfig.Register);
 
-            string mappath = Server.MapPath("/");
-            //Task.Run(() =>
-            //{
-                Managers.Database.CheckAndUpdate(mappath);
-            //});
-           
+            CheckAndCreateDatabase(Server.MapPath("/"));
         }
 
         //void Application_BeginRequest(object sender, EventArgs e)
@@ -34,5 +27,18 @@ namespace GriB.General.App
         //        HttpContext.Current.Response.End();
         //    }
         //}
+
+        private const string cmdIns_sqldb = @"Data\01.001.[pos_sqldb_ins]";
+        private void CheckAndCreateDatabase(string mappath)
+        {
+            string path = string.Concat(mappath, AppSettings.Database.Path.Sql);
+
+            Database.CreateDatabase(AppSettings.Database.ConnectionStringEmpty, AppSettings.Database.InitialCatalog);
+            Database.CreateTables(path, AppSettings.Database.ConnectionString);
+
+            Query query = new Query(AppSettings.Database.ConnectionString, path, null);
+            query.Execute(cmdIns_sqldb, new SqlParameter[] { new SqlParameter("@address", AppSettings.Database.DataSource), new SqlParameter("@user", AppSettings.Database.UserID), new SqlParameter("@pass", AppSettings.Database.Password) }
+            , (values) => { });
+        }
     }
 }

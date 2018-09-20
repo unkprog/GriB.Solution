@@ -123,7 +123,7 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
                 this.login();
             };
             Application.prototype.HandleError = function (e) {
-                this.ShowError(e);
+                this.ShowError(e.responseJSON && e.responseJSON.error ? e.responseJSON.error : e);
             };
             Application.prototype.ShowError = function (e) {
                 this.ShowMessage(vars._statres("label$error"), e);

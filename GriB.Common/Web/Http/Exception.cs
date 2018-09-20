@@ -1,6 +1,7 @@
 ﻿
 namespace GriB.Common.Web.Http
 {
+
     public  class ApiException : System.Exception
     {
         public ApiException() : base()

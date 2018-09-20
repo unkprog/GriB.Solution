@@ -78,8 +78,9 @@ namespace GriB.General.App.Managers
 
             public static class Path
             {
-                public static string Sql   => GetAttribute("Database.Path.Sql");
-                public static string Query => GetAttribute("Database.Path.Query");
+                public static string Sql     => GetAttribute("Database.Path.Sql");
+                public static string SqlData => GetAttribute("Database.Path.Sql.Data");
+                public static string Query   => GetAttribute("Database.Path.Query");
             }
         }
 

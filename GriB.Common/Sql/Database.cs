@@ -2,19 +2,14 @@
 using System.IO;
 using System.Data.SqlClient;
 
-namespace GriB.General.App.Managers
+namespace GriB.Common.Sql
 {
     public static class Database
     {
-        public static void CheckAndUpdate(string rootPath)
-        {
-            CreateDatabase();
-            CreateTables(rootPath);
-        }
 
-        private static void CreateDatabase()
+        public static void CreateDatabase(string connectionString, string catalog)
         {
-            Common.Sql.Helper.CreateCommand(AppSettings.Database.ConnectionStringEmpty, string.Empty, 
+            Helper.CreateCommand(connectionString, string.Empty,
                 (connection, command) =>
                 {
                     string instPath = string.Empty, logPath = string.Empty;
@@ -34,33 +29,31 @@ namespace GriB.General.App.Managers
 
                     command.CommandText = string.Concat("use master"
                                                        , Environment.NewLine, "declare @result bit"
-                                                       , Environment.NewLine, "set @result = case when db_id (N'", AppSettings.Database.InitialCatalog, "') is null then 1 else 0 end"
-                                                       , Environment.NewLine, "if db_id (N'", AppSettings.Database.InitialCatalog, "') is null"
-                                                       , Environment.NewLine, "   create database [", AppSettings.Database.InitialCatalog, "]"
-                                                       , Environment.NewLine, "          on primary (name = N'", AppSettings.Database.InitialCatalog, "', filename = '", instPath, AppSettings.Database.InitialCatalog, "', size = 5120KB , maxsize = unlimited, filegrowth = 1024KB)"
-                                                       , Environment.NewLine, "          log on (name = N'", AppSettings.Database.InitialCatalog, "_log', filename = '", logPath, AppSettings.Database.InitialCatalog, "_log', size = 1024KB , maxsize = 2048GB, filegrowth = 10%)"
+                                                       , Environment.NewLine, "set @result = case when db_id (N'", catalog, "') is null then 1 else 0 end"
+                                                       , Environment.NewLine, "if db_id (N'", catalog, "') is null"
+                                                       , Environment.NewLine, "   create database [", catalog, "]"
+                                                       , Environment.NewLine, "          on primary (name = N'", catalog, "', filename = '", instPath, catalog, "', size = 5120KB , maxsize = unlimited, filegrowth = 1024KB)"
+                                                       , Environment.NewLine, "          log on (name = N'", catalog, "_log', filename = '", logPath, catalog, "_log', size = 1024KB , maxsize = 2048GB, filegrowth = 10%)"
                                                        , Environment.NewLine, "          collate Cyrillic_General_CI_AS"
                                                        , Environment.NewLine, "select @result");
                     if ((bool)command.ExecuteScalar())
                     {
-                        command.CommandText = string.Concat("use master", Environment.NewLine, "alter database [", AppSettings.Database.InitialCatalog, "] set recovery simple, auto_shrink on");
+                        command.CommandText = string.Concat("use master", Environment.NewLine, "alter database [", catalog, "] set recovery simple, auto_shrink on");
                         command.ExecuteNonQuery();
                     }
                 }
             );
         }
 
-        private static void CreateTables(string rootPath)
+        public static void CreateTables(string path, string connectionString)
         {
-            string path = string.Concat(rootPath, AppSettings.Database.Path.Sql);
-
-            Common.Sql.Helper.CreateCommand(AppSettings.Database.ConnectionString, string.Empty,
+            Helper.CreateCommand(connectionString, string.Empty,
                 (connection, command) =>
                 {
-                    Common.IO.Helper.ForEachDirectoryFiles(path, "*.sql", SearchOption.TopDirectoryOnly,
+                    IO.Helper.ForEachDirectoryFiles(path, "*.sql", SearchOption.TopDirectoryOnly,
                         (fileInfo) =>
                         {
-                            Common.Sql.Helper.LoadSqlScript(fileInfo.FullName,
+                            Helper.LoadSqlScript(fileInfo.FullName,
                                 (script) =>
                                 {
                                     command.CommandText = script;
@@ -73,6 +66,12 @@ namespace GriB.General.App.Managers
             );
         }
 
-       
+        //private const string cmdIns_sqldb = @"01.001.[pos_sqldb_ins]";
+        //private static void CreateData(string path, string connectionString)
+        //{
+        //    Common.Sql.Query query = new Common.Sql.Query(connectionString, path, null);
+        //    query.Execute(cmdIns_sqldb, new SqlParameter[] { new SqlParameter("@address", AppSettings.Database.DataSource), new SqlParameter("@user", AppSettings.Database.UserID), new SqlParameter("@pass", AppSettings.Database.Password) }
+        //    , (values) =>{ });
+        //}
     }
 }

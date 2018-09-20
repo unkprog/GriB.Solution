@@ -149,7 +149,7 @@ export module App {
         }
 
         public HandleError(e: any): void {
-            this.ShowError(e);
+            this.ShowError(e.responseJSON && e.responseJSON.error ? e.responseJSON.error : e);
         }
 
         public ShowError(e: string): void {

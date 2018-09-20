@@ -6,6 +6,7 @@ begin
   create table [pos_user]
   (
 	[id]    [int]          identity(1,1) not null,
+	[pid]   [int]          not null default (0),
 	[d]     [int]          not null default (0),
 	[cd]    [datetime]     not null default (getdate()),
 	[cu]    [int]          not null default (0),
@@ -27,6 +28,27 @@ create unique nonclustered index [pos_user_idx_1] ON [pos_user] ([phone])
 
 go
 
+
+if not exists (select * from [sys].[objects] where [object_id] = object_id(N'[pos_userdb]') and type in (N'U'))
+begin
+  create table [pos_userdb]
+  (
+	[id]    [int]          not null,
+	[db]    [int]          not null,
+    primary key clustered ([id])
+  )
+end
+
+go
+
+if exists(select * from [sys].[indexes] where [name] = 'pos_userdb_idx_1')
+  drop index [pos_userdb_idx_1] on [pos_userdb]
+
+go
+
+create unique nonclustered index [pos_userdb_idx_1] ON [pos_userdb] ([id], [db])
+
+go
 if not exists (select * from [sys].[objects] where [object_id] = object_id(N'[pos_user_sec]') and type in (N'U'))
 begin
   create table [pos_user_sec]

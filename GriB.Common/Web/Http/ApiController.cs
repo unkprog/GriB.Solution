@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
 using GriB.Common.Diagnostics;
+using Newtonsoft.Json.Linq;
 
 namespace GriB.Common.Web.Http
 {
@@ -54,12 +55,20 @@ namespace GriB.Common.Web.Http
             catch (ApiException ex)
             {
                 logger.WriteError(ex);
-                return Request.CreateResponse(HttpStatusCode.InternalServerError, new
-                {
-                    error = ex.Message,
-                    trace = ex.StackTrace
-                });
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, new HttpResponseException(ex));
             }
+        }
+
+        public async Task<HttpResponseMessage> CheckResponseError(Func<Task<JObject>> funcGet, Func<JObject, HttpResponseMessage> func)
+        {
+            Task<JObject> responseTask = funcGet.Invoke();
+            JObject response = await responseTask;
+
+            HttpResponseException ex = response.ToObject<HttpResponseException>();
+            if (ex != null && !string.IsNullOrEmpty(ex.error))
+               return Request.CreateResponse(HttpStatusCode.OK, ex);
+
+            return func.Invoke(response);
         }
     }
 }

@@ -108,5 +108,24 @@ namespace GriB.General.App.Managers.pos
             });
             return user_person;
         }
+
+        private const string cmdDatabaseIns = @"user\db\[ins]";
+        public static user_db DatabaseIns(this Query query, user_db user_db)
+        {
+            query.Execute(cmdDatabaseIns, new SqlParameter[] { new SqlParameter("@id", user_db.db), new SqlParameter("@db", user_db.db) }
+            , (values) => { });
+            return user_db;
+        }
+
+        private const string cmdDatabaseGet = @"user\db\[get]";
+        public static user_db GetDatabase(this Query query, int id)
+        {
+            user_db user_db = null;
+            query.Execute(cmdDatabaseGet, new SqlParameter[] { new SqlParameter("@id", id) }
+            , (values) => {
+                user_db = new user_db() { id = id, db = (int)values[1] };
+            });
+            return user_db;
+        }
     }
 }

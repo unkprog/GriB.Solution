@@ -15,4 +15,11 @@ namespace GriB.Common.Models.pos
         public DateTime ud { get; set; }
         public int      uu { get; set; }
     }
+
+    public class model_login : model_base
+    {
+        public string user { get; set; }
+        public string pass { get; set; }
+
+    }
 }

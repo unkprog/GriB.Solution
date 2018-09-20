@@ -21,7 +21,7 @@ namespace GriB.General.App.Controllers
             _query = new Query(AppSettings.Database.ConnectionString, string.Concat(HttpContext.Current.Request.PhysicalApplicationPath, AppSettings.Database.Path.Query), logger);
         }
 
-        private void setPassword(user user, string subject)
+        private user_sec setPassword(user user, string subject)
         {
             user_sec user_sec = new user_sec() { id = user.id, pass = Managers.pos.Users.GeneratePassword(8) };
 
@@ -29,7 +29,7 @@ namespace GriB.General.App.Controllers
             if (!string.IsNullOrEmpty(user.phone))
             {
                 string body = string.Concat("Ваш пароль для входа: ", user_sec.pass);
-                var resultSMS = Common.Net.SMS.SendSMS(user.phone, body);
+                //var resultSMS = Common.Net.SMS.SendSMS(user.phone, body);
             }
 
             //if (!string.IsNullOrEmpty(user.email))
@@ -37,6 +37,7 @@ namespace GriB.General.App.Controllers
             //    string body = string.Concat("Ваш пароль для входа: ", user_sec.pass);
             //    Common.Net.EMail.SendEMail(AppSettings.Mail.Address, AppSettings.Mail.Password, user.email, subject, body);
             //}
+            return user_sec;
         }
 
         [HttpPost]
@@ -55,9 +56,17 @@ namespace GriB.General.App.Controllers
 
                 user user = Managers.pos.Users.Insert(_query, new user() { phone = register.phone });
                 user_role user_role = Managers.pos.Users.InsertRole(_query, new user_role() { user = user.id, role = 1 });
-                setPassword(user, "Регистрация в POS Cloud");
+                user_sec user_sec = setPassword(user, "Регистрация в POS Cloud");
 
-                return Request.CreateResponse(HttpStatusCode.OK, new { result = "Ok" });
+                List<sqlsrv> servers = Managers.pos.Server.GetServers(_query);
+                if (servers == null || servers.Count == 0)
+                    throw new ApiException("Невозможно создать персональную базу. Обратитесь в техподдержку.");
+
+                sqldb newdb = Managers.pos.Server.InsertServerDatabases(_query, new sqldb() { server = servers[0].id, catalog = string.Concat("pdb_", register.phone), user = string.Concat("pdbu_", register.phone), pass = user_sec.pass });
+
+                Managers.pos.Users.DatabaseIns(_query, new user_db() { id = user.id, db = newdb.id });
+
+                return Request.CreateResponse(HttpStatusCode.OK, new HttpRegisterMessage() { server = servers[0], database = newdb });
             });
         }
 
