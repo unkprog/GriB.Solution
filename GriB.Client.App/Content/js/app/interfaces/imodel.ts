@@ -1,10 +1,11 @@
 ﻿namespace Interfaces.Model {
-
-    export interface IIdentityModel {
+    export interface IModelBase {
         id: number;
+    }
+
+    export interface IIdentityModel extends IModelBase {
         phone: string;
         role: number;
-
     }
 
     export interface IRegisterModel {
@@ -16,7 +17,13 @@
         pass: string;
     }
 
-    export interface IIdentity {
-        id: number;
+    export interface IIdentity extends IModelBase {
+    }
+
+    export interface IOrganizationModel extends IModelBase {
+        name: string;
+        website: string;
+        email: string;
+        phone: string;
     }
 }

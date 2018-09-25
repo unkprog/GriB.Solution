@@ -33,6 +33,22 @@ define(["require", "exports", "app/common/basecontroller"], function (require, e
                             "Header": "",
                         });
                     };
+                    Organization.prototype.loadData = function (afterLoad) {
+                        if (afterLoad)
+                            afterLoad();
+                        return true;
+                    };
+                    Organization.prototype.Save = function (data, afterSave) {
+                        _super.prototype.Save.call(this, data, afterSave);
+                    };
+                    Organization.prototype.getDataToSave = function () {
+                        var result = null;
+                        return result;
+                    };
+                    Organization.prototype.validate = function (data) {
+                        var result = true;
+                        return result;
+                    };
                     return Organization;
                 }(base.Controller.BaseEditor));
                 Editor.Organization = Organization;

@@ -249,7 +249,10 @@ export namespace Controller {
             view.prepend(this.navHeader);
 
             super.ViewInit(view);
-            return true;
+
+            return this.loadData(function () {
+                _app.HideLoading();
+            });
         }
 
         public ViewHide(e) {
@@ -272,7 +275,13 @@ export namespace Controller {
 
         public SaveButtonClick: { (e: any): void; };
         private saveButtonClick(e): void  {
-            this.Save(e);
+            let data: Interfaces.Model.IModelBase = this.getDataToSave();
+
+            if (this.validate(data)) {
+                this.Save(data, function () {
+                    _main.ControllerBack(e);
+                });
+            }
         }
 
         public CancelButtonClick: { (e: any): void; };
@@ -281,12 +290,26 @@ export namespace Controller {
             _main.ControllerBack(e);
         }
 
-        public Save(e: any): void {
-            throw new Error("Method not implemented.");
+        protected loadData(afterLoad: () => void): boolean {
+            if (afterLoad)
+                afterLoad();
+            return true;
+        }
+
+        protected getDataToSave(): Interfaces.Model.IModelBase {
+            return null;
+        }
+
+        protected validate(data: Interfaces.Model.IModelBase): boolean {
+            return true;
+        }
+
+        public Save(data: Interfaces.Model.IModelBase, afterSave: () => void): void {
+            if (afterSave)
+                afterSave();
         }
 
         public Cancel(e: any): void {
-            //throw new Error("Method not implemented.");
         }
 
 

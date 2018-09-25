@@ -239,7 +239,9 @@ define(["require", "exports", "app/common/utils", "./variables"], function (requ
                 this.navHeader.find("#editButtons").append(this.btnCancel);
                 view.prepend(this.navHeader);
                 _super.prototype.ViewInit.call(this, view);
-                return true;
+                return this.loadData(function () {
+                    variables_1._app.HideLoading();
+                });
             };
             BaseEditor.prototype.ViewHide = function (e) {
                 _super.prototype.ViewHide.call(this, e);
@@ -257,17 +259,33 @@ define(["require", "exports", "app/common/utils", "./variables"], function (requ
                 this.destroyClickEvent(this.btnSave, this.CancelButtonClick);
             };
             BaseEditor.prototype.saveButtonClick = function (e) {
-                this.Save(e);
+                var data = this.getDataToSave();
+                if (this.validate(data)) {
+                    this.Save(data, function () {
+                        variables_1._main.ControllerBack(e);
+                    });
+                }
             };
             BaseEditor.prototype.cancelButtonClick = function (e) {
                 this.Cancel(e);
                 variables_1._main.ControllerBack(e);
             };
-            BaseEditor.prototype.Save = function (e) {
-                throw new Error("Method not implemented.");
+            BaseEditor.prototype.loadData = function (afterLoad) {
+                if (afterLoad)
+                    afterLoad();
+                return true;
+            };
+            BaseEditor.prototype.getDataToSave = function () {
+                return null;
+            };
+            BaseEditor.prototype.validate = function (data) {
+                return true;
+            };
+            BaseEditor.prototype.Save = function (data, afterSave) {
+                if (afterSave)
+                    afterSave();
             };
             BaseEditor.prototype.Cancel = function (e) {
-                //throw new Error("Method not implemented.");
             };
             return BaseEditor;
         }(Base));

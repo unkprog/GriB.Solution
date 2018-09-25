@@ -18,5 +18,30 @@ export namespace Controller.Setting.Editor {
                 "Header": "",
             });
         }
+
+        private dataOrg: Interfaces.Model.IOrganizationModel;
+
+        protected loadData(afterLoad: () => void): boolean {
+            if (afterLoad)
+                afterLoad();
+            return true;
+        }
+
+        public Save(data: Interfaces.Model.IOrganizationModel,  afterSave: () => void): void {
+            super.Save(data, afterSave);
+        }
+
+        protected getDataToSave(): Interfaces.Model.IOrganizationModel {
+            let result: Interfaces.Model.IOrganizationModel = null;
+
+            return result;
+        }
+
+        protected validate(data: Interfaces.Model.IOrganizationModel): boolean {
+            let result: boolean = true;
+
+
+            return result;
+        }
     }
 }

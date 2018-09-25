@@ -31,7 +31,7 @@
     }
 
     export interface IControllerEditor extends IController {
-        Save(e: any): void;
+        Save(data: Interfaces.Model.IModelBase, afterSave: () => void): void;
         Cancel(e: any): void;
     }
 
