@@ -45,6 +45,27 @@ namespace GriB.Common.Sql
             );
         }
 
+        public static void CreateDatabaseUser(string connectionString, string catalog, string login, string pass)
+        {
+            Helper.CreateCommand(connectionString, string.Empty,
+               (connection, command) =>
+               {
+                   command.CommandTimeout = 0;
+
+                   command.CommandText = string .Concat("use [master]", Environment.NewLine, "create login [", login, "] with password='", pass, "', default_database=[", catalog, "], check_expiration=off, check_policy=on");
+                   command.ExecuteNonQuery();
+
+                   command.CommandText = string.Concat("use [", catalog, "]", Environment.NewLine, "create user [", login, "] from login [", login, "] with default_schema=[dbo]");
+                   command.ExecuteNonQuery();
+                   command.CommandText = string.Concat("use [", catalog, "]", Environment.NewLine, "grant control on database::[", catalog, "] to [", login, "]");
+                   command.ExecuteNonQuery();
+
+                   command.CommandText = string.Concat("use [master]", Environment.NewLine, "deny view any database to [", login, "]");
+                   command.ExecuteNonQuery();
+
+               });
+        }
+
         public static void CreateTables(string path, string connectionString)
         {
             Helper.CreateCommand(connectionString, string.Empty,

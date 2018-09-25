@@ -224,16 +224,29 @@ export namespace Controller {
             super();
         }
 
+        private navHeader: JQuery;
         private btnSave: JQuery;
         private btnCancel: JQuery;
         public ViewInit(view: JQuery): boolean {
 
-            this.btnSave = $('<li><a id="editor-btn-save"><i class="material-icons">done</i></a></li>');
-            this.btnCancel = $('<li><a id="editor-btn-cancel"><i class="material-icons">close</i></a></li>');
+            let navbarHeader: string = '<div class="navbar-fixed">';
+            navbarHeader += '        <nav style="height: auto;">';
+            navbarHeader += '            <div class="nav-wrapper editor-header editor-header-bg">';
+            navbarHeader += '                <a class="editor-header-title">Редактор организации</a>';
+            navbarHeader += '                <ul id="editButtons" class="right"></ul>';
+            navbarHeader += '            </div>';
+            navbarHeader += '        </nav>';
+            navbarHeader += '    </div>';
 
-            $("#app-navbar").find(".right").append(this.btnSave);
-            $("#app-navbar").find(".right").append(this.btnCancel);
+            this.navHeader = $(navbarHeader);
 
+            this.btnSave = $('<li><a id="editor-btn-save" class="editor-header-button"><i class="material-icons editor-header">done</i></a></li>');
+            this.btnCancel = $('<li><a id="editor-btn-cancel" class="editor-header-button"><i class="material-icons editor-header">close</i></a></li>');
+
+            this.navHeader.find("#editButtons").append(this.btnSave);
+            this.navHeader.find("#editButtons").append(this.btnCancel);
+
+            view.prepend(this.navHeader);
 
             super.ViewInit(view);
             return true;

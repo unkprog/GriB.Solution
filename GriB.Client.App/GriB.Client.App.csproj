@@ -136,6 +136,10 @@
     <Content Include="Content\view\setting\index.html" />
     <Content Include="Content\view\terminal\index.html" />
     <Content Include="Global.asax" />
+    <Content Include="Scripts\Sql\01.002.[t_orgtypeinfo].sql" />
+    <Content Include="Scripts\Sql\01.001.[t_orgtype].sql" />
+    <Content Include="Scripts\Sql\02.002.[t_orginfo].sql" />
+    <Content Include="Scripts\Sql\02.001.[t_org].sql" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -214,6 +218,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Scripts\Sql\Data\" />
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="Content\js\app\application.ts" />

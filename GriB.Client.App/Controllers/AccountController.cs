@@ -8,6 +8,7 @@ using GriB.Common.Models.pos;
 using GriB.Common.Web.Http;
 using GriB.Common.Models.Security;
 using GriB.Common.Sql;
+using System.Web.Hosting;
 
 namespace GriB.Client.App.Controllers
 {
@@ -19,15 +20,15 @@ namespace GriB.Client.App.Controllers
         public async Task<HttpResponseMessage> register(register_user register_user)
         => await TryCatchResponseAsync(async () =>
                                         {
-                                            //var resultPost = await Common.Net.Json.PostAsync<object, register_user>(AppSettings.Server.Register, "api/account/register", register_user);
-                                            //return Request.CreateResponse(HttpStatusCode.OK, resultPost);
                                             return await CheckResponseError(
                                                async () => await Common.Net.Json.PostAsync<JObject, register_user>(AppSettings.Server.Register, "api/account/register", register_user)
                                                    , (response) =>
                                                    {
                                                        HttpRegisterMessage registerMessage = response.ToObject<HttpRegisterMessage>();
                                                        Database.CreateDatabase(registerMessage.server.ConnectionString(), registerMessage.database.catalog);
-
+                                                       Database.CreateDatabaseUser(registerMessage.server.ConnectionString(), registerMessage.database.catalog, registerMessage.database.user, registerMessage.database.pass);
+                                                       string path = string.Concat(HostingEnvironment.ApplicationPhysicalPath, AppSettings.Database.Path.Sql);
+                                                       Database.CreateTables(path, registerMessage.database.ConnectionString(registerMessage.server));
                                                        return Request.CreateResponse(HttpStatusCode.OK, new { result = "Ok", response });
                                                    });
                                         });
