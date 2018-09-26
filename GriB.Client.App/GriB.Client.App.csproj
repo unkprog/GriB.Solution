@@ -134,6 +134,8 @@
     <Content Include="Content\view\setting\index.html" />
     <Content Include="Content\view\terminal\index.html" />
     <Content Include="Global.asax" />
+    <Content Include="Scripts\Query\Organization\Info\[get].sql" />
+    <Content Include="Scripts\Query\Organization\[get].sql" />
     <Content Include="Scripts\Sql\01.002.[t_orgtypeinfo].sql" />
     <Content Include="Scripts\Sql\01.001.[t_orgtype].sql" />
     <Content Include="Scripts\Sql\02.002.[t_orginfo].sql" />
@@ -150,6 +152,8 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Managers\AppSettings.cs" />
+    <Compile Include="Managers\Editors\Organization.cs" />
+    <Compile Include="Models\t_org.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

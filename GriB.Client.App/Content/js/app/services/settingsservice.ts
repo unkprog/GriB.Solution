@@ -15,5 +15,9 @@ export module Services {
         public GetSettings(Callback: (responseData: any) => void) {
             this.GetApi({ Action: "/settings", Callback: Callback });
         }
+
+        public GetOrganization(Callback: (responseData: any) => void) {
+            this.GetApi({ Action: "/get_organization", Callback: Callback });
+        }
     }
 }

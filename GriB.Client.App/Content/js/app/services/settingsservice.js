@@ -32,6 +32,9 @@ define(["require", "exports", "app/common/baseservice"], function (require, expo
             SettingsService.prototype.GetSettings = function (Callback) {
                 this.GetApi({ Action: "/settings", Callback: Callback });
             };
+            SettingsService.prototype.GetOrganization = function (Callback) {
+                this.GetApi({ Action: "/get_organization", Callback: Callback });
+            };
             return SettingsService;
         }(base.Services.BaseService));
         Services.SettingsService = SettingsService;

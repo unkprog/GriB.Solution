@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace GriB.Common.Models.pos
 {
@@ -21,5 +22,33 @@ namespace GriB.Common.Models.pos
         public string user { get; set; }
         public string pass { get; set; }
 
+    }
+
+    public class model_property : model_base
+    {
+        public int    typeval { get; set; }
+        public string name    { get; set; }
+    }
+
+    public class model_property_value : model_base
+    {
+        public model_property_value()
+        {
+            property = new model_property();
+        }
+
+        public model_property property { get; set; }
+        public string         value    { get; set; }
+    }
+
+    public class model_reference : model_sys
+    {
+        public model_reference()
+        {
+            properties = new List<model_property_value>();
+        }
+
+        public string name { get; set; }
+        public List<model_property_value> properties { get; set; }
     }
 }
