@@ -230,9 +230,9 @@ export namespace Controller {
         public ViewInit(view: JQuery): boolean {
 
             let navbarHeader: string = '<div class="navbar-fixed">';
-            navbarHeader += '        <nav style="height: auto;">';
-            navbarHeader += '            <div class="nav-wrapper editor-header editor-header-bg">';
-            navbarHeader += '                <a class="editor-header-title">Редактор организации</a>';
+            navbarHeader += '        <nav class="editor-header-nav">';
+            navbarHeader += '            <div class="nav-wrapper editor-header">';
+            navbarHeader += '                <a class="editor-header-title">' + this.Header + '</a>';
             navbarHeader += '                <ul id="editButtons" class="right"></ul>';
             navbarHeader += '            </div>';
             navbarHeader += '        </nav>';
@@ -240,8 +240,8 @@ export namespace Controller {
 
             this.navHeader = $(navbarHeader);
 
-            this.btnSave = $('<li><a id="editor-btn-save" class="editor-header-button"><i class="material-icons editor-header">done</i></a></li>');
-            this.btnCancel = $('<li><a id="editor-btn-cancel" class="editor-header-button"><i class="material-icons editor-header">close</i></a></li>');
+            this.btnSave = $('<li><a id="editor-btn-save" class="editor-header-button editor-header-button-apply"><i class="material-icons editor-header">done</i></a></li>');
+            this.btnCancel = $('<li><a id="editor-btn-cancel" class="editor-header-button editor-header-button-cancel"><i class="material-icons editor-header">close</i></a></li>');
 
             this.navHeader.find("#editButtons").append(this.btnSave);
             this.navHeader.find("#editButtons").append(this.btnCancel);
@@ -300,11 +300,11 @@ export namespace Controller {
             return null;
         }
 
-        protected validate(data: Interfaces.Model.IModelBase): boolean {
+        protected validate(editModel: Interfaces.Model.IModelBase): boolean {
             return true;
         }
 
-        public Save(data: Interfaces.Model.IModelBase, afterSave: () => void): void {
+        public Save(editModel: Interfaces.Model.IModelBase, afterSave: () => void): void {
             if (afterSave)
                 afterSave();
         }

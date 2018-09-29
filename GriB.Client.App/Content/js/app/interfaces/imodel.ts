@@ -18,6 +18,8 @@
     }
 
     export interface IIdentity extends IModelBase {
+        auth: boolean;
+        token: string;
     }
 
     export interface IOrganizationModel extends IModelBase {

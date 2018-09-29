@@ -18,3 +18,16 @@ begin
   )
 end
 
+if not exists (select * from [sys].[objects] where [object_id] = object_id(N'[t_org_info]') and type in (N'U'))
+begin
+  create table [t_org_info]
+  (
+    [id]    [int]          not null,
+	[phone] [nvarchar](18) not null default (N''),
+	[email] [nvarchar](18) not null default (N''),
+	[site]  [nvarchar](18) not null default (N''),
+    primary key clustered ([id])
+  )
+end
+
+

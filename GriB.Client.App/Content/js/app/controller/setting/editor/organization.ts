@@ -1,12 +1,15 @@
-﻿import vars = require('app/common/variables');
+﻿/// <reference path="../../../services/settingsservice.ts" />
+import vars = require('app/common/variables');
 import utils = require('app/common/utils');
 import base = require('app/common/basecontroller');
+import svc = require('app/services/settingsservice');
 import { _app } from 'app/common/variables';
 
 export namespace Controller.Setting.Editor {
     export class Organization extends base.Controller.BaseEditor {
         constructor() {
             super();
+            this.settingService = new svc.Services.SettingsService();
         }
 
         protected createOptions(): Interfaces.IControllerOptions {
@@ -15,24 +18,36 @@ export namespace Controller.Setting.Editor {
 
         protected createModel(): kendo.data.ObservableObject {
             return new kendo.data.ObservableObject({
-                "Header": "",
+                "Header": vars._statres("label$organization"),
+                "editModel": {}
             });
         }
 
-        private dataOrg: Interfaces.Model.IOrganizationModel;
+        private settingService: svc.Services.SettingsService;
+        private editModel: Interfaces.Model.IOrganizationModel;
 
         protected loadData(afterLoad: () => void): boolean {
-            if (afterLoad)
-                afterLoad();
-            return true;
+            let controller = this;
+            this.settingService.GetOrganization((responseData) => {
+                controller.editModel = responseData;
+                controller.Model.set("editModel", controller.editModel);
+                if (afterLoad)
+                    afterLoad();
+            });
+            return false;
         }
 
-        public Save(data: Interfaces.Model.IOrganizationModel,  afterSave: () => void): void {
-            super.Save(data, afterSave);
+        public Save(data: Interfaces.Model.IOrganizationModel, afterSave: () => void): void {
+            let controller = this;
+            this.settingService.GetOrganization((responseData) => {
+                controller.editModel = responseData;
+                if (afterSave)
+                    afterSave();
+            });
         }
 
         protected getDataToSave(): Interfaces.Model.IOrganizationModel {
-            let result: Interfaces.Model.IOrganizationModel = null;
+            let result: Interfaces.Model.IOrganizationModel = this.editModel;
 
             return result;
         }

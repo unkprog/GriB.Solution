@@ -2,9 +2,7 @@
 using System.Net;
 using System.Net.Http;
 using System.Security.Principal;
-using System.Threading;
 using System.Threading.Tasks;
-using System.Web;
 using GriB.Common.Diagnostics;
 using Newtonsoft.Json.Linq;
 
@@ -21,11 +19,11 @@ namespace GriB.Common.Web.Http
 
         protected void SetPrincipal(IPrincipal principal)
         {
-            Thread.CurrentPrincipal = principal;
-            if (HttpContext.Current != null)
-            {
-                HttpContext.Current.User = principal;
-            }
+            //Thread.CurrentPrincipal = principal;
+            //if (HttpContext.Current != null)
+            //{
+            //    HttpContext.Current.User = principal;
+            //}
         }
 
         public HttpResponseMessage TryCatchResponse(Func<HttpResponseMessage> func)

@@ -117,8 +117,11 @@ namespace GriB.General.App.Controllers
                     throw new ApiException("Пользователь не найден.");
 
                 user_person user_person = Managers.pos.Users.GetPerson(_query, user.id);
+                user_db user_db = Managers.pos.Users.GetDatabase(_query, user.id);
+                sqldb database = Managers.pos.Server.GetServerDatabase(_query, user_db.id);
+                sqlsrv server = Managers.pos.Server.GetServer(_query, database.server);
 
-                return Request.CreateResponse(HttpStatusCode.OK, new PrincipalData { User = user, Person = user_person });
+                return Request.CreateResponse(HttpStatusCode.OK, new PrincipalData() { User = user, Person = user_person, Server = server, Database = database });
             });
         }
 

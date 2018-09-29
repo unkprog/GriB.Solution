@@ -1,5 +1,4 @@
 ﻿import base = require("app/common/baseservice");
-//import int = require('app/interfaces/iservice');
 
 export module Services {
     export class SettingsService extends base.Services.BaseService {
@@ -18,6 +17,10 @@ export module Services {
 
         public GetOrganization(Callback: (responseData: any) => void) {
             this.GetApi({ Action: "/get_organization", Callback: Callback });
+        }
+
+        public SetOrganization(model: Interfaces.Model.IOrganizationModel, Callback: (responseData: any) => void) {
+            this.GetApi({ Action: "/get_organization", RequestData: JSON.stringify(model), Callback: Callback });
         }
     }
 }

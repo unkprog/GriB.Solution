@@ -35,13 +35,25 @@ export module App {
                 this._controller.ViewResize(e);
         }
 
+        public GlobalAjaxSetup() {
+            $.ajaxPrefilter(function (options, originalOptions, jqXHR) {
+                //jqXHR.setRequestHeader("X-Application-Language", _config.Language);
+
+                if (vars._identity && vars._identity.auth && vars._identity.token) {
+                    jqXHR.setRequestHeader("Authorization", "POSCloud-ApiKey " + vars._identity.token);
+                }
+            });
+
+            // $(document).ajaxError(this.GlobalAjaxErrorHandler);
+        }
+
         private progressControl: JQuery;
         private navbarControl: JQuery;
         private contentControl: JQuery;
         public Initailize(): void {
             let app = this;
 
-            $.support.cors = true;
+            app.GlobalAjaxSetup();
           
             app.progressControl = $("#progress-container");
             app.contentControl = $("#app-content");
@@ -149,7 +161,7 @@ export module App {
         }
 
         public HandleError(e: any): void {
-            this.ShowError(e.responseJSON && e.responseJSON.error ? e.responseJSON.error : e);
+            this.ShowError(e.responseJSON ? (e.responseJSON.error ? e.responseJSON.error : (e.responseJSON.Message ? e.responseJSON.Message : e)) : e);
         }
 
         public ShowError(e: string): void {

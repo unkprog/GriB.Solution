@@ -45,10 +45,8 @@ namespace GriB.Common.Models.pos
     {
         public model_reference()
         {
-            properties = new List<model_property_value>();
         }
 
         public string name { get; set; }
-        public List<model_property_value> properties { get; set; }
     }
 }

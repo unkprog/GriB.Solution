@@ -11,7 +11,7 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-define(["require", "exports", "app/common/basecontroller"], function (require, exports, base) {
+define(["require", "exports", "app/common/variables", "app/common/basecontroller", "app/services/settingsservice"], function (require, exports, vars, base, svc) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var Controller;
@@ -23,26 +23,39 @@ define(["require", "exports", "app/common/basecontroller"], function (require, e
                 var Organization = /** @class */ (function (_super) {
                     __extends(Organization, _super);
                     function Organization() {
-                        return _super.call(this) || this;
+                        var _this = _super.call(this) || this;
+                        _this.settingService = new svc.Services.SettingsService();
+                        return _this;
                     }
                     Organization.prototype.createOptions = function () {
                         return { Url: "/Content/view/setting/editor/organization.html", Id: "editor-view-organization" };
                     };
                     Organization.prototype.createModel = function () {
                         return new kendo.data.ObservableObject({
-                            "Header": "",
+                            "Header": vars._statres("label$organization"),
+                            "editModel": {}
                         });
                     };
                     Organization.prototype.loadData = function (afterLoad) {
-                        if (afterLoad)
-                            afterLoad();
-                        return true;
+                        var controller = this;
+                        this.settingService.GetOrganization(function (responseData) {
+                            controller.editModel = responseData;
+                            controller.Model.set("editModel", controller.editModel);
+                            if (afterLoad)
+                                afterLoad();
+                        });
+                        return false;
                     };
                     Organization.prototype.Save = function (data, afterSave) {
-                        _super.prototype.Save.call(this, data, afterSave);
+                        var controller = this;
+                        this.settingService.GetOrganization(function (responseData) {
+                            controller.editModel = responseData;
+                            if (afterSave)
+                                afterSave();
+                        });
                     };
                     Organization.prototype.getDataToSave = function () {
-                        var result = null;
+                        var result = this.editModel;
                         return result;
                     };
                     Organization.prototype.validate = function (data) {

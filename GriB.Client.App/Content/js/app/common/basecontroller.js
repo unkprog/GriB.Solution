@@ -225,16 +225,16 @@ define(["require", "exports", "app/common/utils", "./variables"], function (requ
             }
             BaseEditor.prototype.ViewInit = function (view) {
                 var navbarHeader = '<div class="navbar-fixed">';
-                navbarHeader += '        <nav style="height: auto;">';
-                navbarHeader += '            <div class="nav-wrapper editor-header editor-header-bg">';
-                navbarHeader += '                <a class="editor-header-title">Редактор организации</a>';
+                navbarHeader += '        <nav class="editor-header-nav">';
+                navbarHeader += '            <div class="nav-wrapper editor-header">';
+                navbarHeader += '                <a class="editor-header-title">' + this.Header + '</a>';
                 navbarHeader += '                <ul id="editButtons" class="right"></ul>';
                 navbarHeader += '            </div>';
                 navbarHeader += '        </nav>';
                 navbarHeader += '    </div>';
                 this.navHeader = $(navbarHeader);
-                this.btnSave = $('<li><a id="editor-btn-save" class="editor-header-button"><i class="material-icons editor-header">done</i></a></li>');
-                this.btnCancel = $('<li><a id="editor-btn-cancel" class="editor-header-button"><i class="material-icons editor-header">close</i></a></li>');
+                this.btnSave = $('<li><a id="editor-btn-save" class="editor-header-button editor-header-button-apply"><i class="material-icons editor-header">done</i></a></li>');
+                this.btnCancel = $('<li><a id="editor-btn-cancel" class="editor-header-button editor-header-button-cancel"><i class="material-icons editor-header">close</i></a></li>');
                 this.navHeader.find("#editButtons").append(this.btnSave);
                 this.navHeader.find("#editButtons").append(this.btnCancel);
                 view.prepend(this.navHeader);
@@ -278,10 +278,10 @@ define(["require", "exports", "app/common/utils", "./variables"], function (requ
             BaseEditor.prototype.getDataToSave = function () {
                 return null;
             };
-            BaseEditor.prototype.validate = function (data) {
+            BaseEditor.prototype.validate = function (editModel) {
                 return true;
             };
-            BaseEditor.prototype.Save = function (data, afterSave) {
+            BaseEditor.prototype.Save = function (editModel, afterSave) {
                 if (afterSave)
                     afterSave();
             };

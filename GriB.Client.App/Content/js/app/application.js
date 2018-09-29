@@ -30,9 +30,18 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
                 if (this._controller)
                     this._controller.ViewResize(e);
             };
+            Application.prototype.GlobalAjaxSetup = function () {
+                $.ajaxPrefilter(function (options, originalOptions, jqXHR) {
+                    //jqXHR.setRequestHeader("X-Application-Language", _config.Language);
+                    if (vars._identity && vars._identity.auth && vars._identity.token) {
+                        jqXHR.setRequestHeader("Authorization", "POSCloud-ApiKey " + vars._identity.token);
+                    }
+                });
+                // $(document).ajaxError(this.GlobalAjaxErrorHandler);
+            };
             Application.prototype.Initailize = function () {
                 var app = this;
-                $.support.cors = true;
+                app.GlobalAjaxSetup();
                 app.progressControl = $("#progress-container");
                 app.contentControl = $("#app-content");
                 app.Resize = $.proxy(app.resize, app);
@@ -123,7 +132,7 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
                 this.login();
             };
             Application.prototype.HandleError = function (e) {
-                this.ShowError(e.responseJSON && e.responseJSON.error ? e.responseJSON.error : e);
+                this.ShowError(e.responseJSON ? (e.responseJSON.error ? e.responseJSON.error : (e.responseJSON.Message ? e.responseJSON.Message : e)) : e);
             };
             Application.prototype.ShowError = function (e) {
                 this.ShowMessage(vars._statres("label$error"), e);

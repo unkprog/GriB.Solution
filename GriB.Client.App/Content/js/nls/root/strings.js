@@ -39,7 +39,7 @@ define({
     "label$about": "О программе",
     "label$exit": "Выход",
 
-    "label$organization": "Организация",
+    "label$organization": "Компания",
     "label$salesPoints": "Точки продаж",
     "label$employees": "Сотрудники",
     "label$currencies": "Валюты",

@@ -52,8 +52,10 @@ export namespace Controller.Security {
 
             if (this.validate(model)) {
                 controller.AccountService.Login(model, (responseData) => {
-                    if (responseData.result == "Ok")
+                    if (responseData.result == "Ok") {
+                        vars._identity = responseData.indetity;
                         _app.OpenController("main");
+                    }
                     else
                         _app.ShowError(responseData.error);
                 });

@@ -26,21 +26,42 @@ namespace GriB.Client.App.Managers.Editors
             return result;
         }
 
-        private const string cmdGetInfo = @"Organization\Info\[get]";
-
-        public static t_org GetOrganizationInfo(this Query query, t_org org)
+        private const string cmdSet = @"Organization\[set]";
+        public static t_org SetOrganization(this Query query, t_org org)
         {
             t_org result = org;
-            if (result.properties == null)
-                result.properties = new List<model_property_value>();
-
-            query.Execute(cmdGet, new SqlParameter[] { new SqlParameter("@id", org.id) }
+            query.Execute(cmdSet, new SqlParameter[] { new SqlParameter("@cu", org.cu), new SqlParameter("@uu", org.uu), new SqlParameter("@name", org.name), new SqlParameter("@type", org.type) }
             , (values) =>
             {
-                result.properties.Add(new model_property_value() { id = (int)values[0], value = (string)values[1], property = new model_property() { id = (int)values[2], typeval = (int)values[3], name = (string)values[4] } });
+                org.id = (int)values[0];
             });
 
             return result;
         }
+
+        private const string cmdGetInfo = @"Organization\Info\[get]";
+        public static t_org GetOrganizationInfo(this Query query, t_org org)
+        {
+            t_org result = org;
+
+            query.Execute(cmdGet, new SqlParameter[] { new SqlParameter("@id", org.id) }
+            , (values) =>
+            {
+                org.info = new t_org_info() { phone = (string)values[1], email = (string)values[2], site = (string)values[3] };
+            });
+
+            return result;
+        }
+
+        private const string cmdSetInfo = @"Organization\Info\[set]";
+        public static t_org SetOrganizationInfo(this Query query, t_org org)
+        {
+            t_org result = org;
+            query.Execute(cmdSetInfo, new SqlParameter[] { new SqlParameter("@id", org.id), new SqlParameter("@phone", org.info.phone), new SqlParameter("@email", org.info.email), new SqlParameter("@site", org.info.site) }
+            , (values) => { });
+
+            return result;
+        }
+
     }
 }

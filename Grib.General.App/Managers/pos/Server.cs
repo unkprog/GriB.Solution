@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Linq;
+using System.Collections.Generic;
 using System.Data.SqlClient;
 using GriB.Common.Models.pos;
 using GriB.Common.Sql;
@@ -22,7 +23,29 @@ namespace GriB.General.App.Managers.pos
             return result;
         }
 
+        public static sqlsrv GetServer(this Query query, int id)
+        {
+            sqlsrv result;
+            List<sqlsrv> servers = GetServers(query);
+
+            result = servers.FirstOrDefault(f => f.id == id);
+
+            return result;
+        }
+
         private const string cmdDbGet = @"server\db\[get]";
+        public static sqldb GetServerDatabase(this Query query, int id)
+        {
+            sqldb result = null;
+            query.Execute(cmdDbGet, sqlParameters: new SqlParameter[] { new SqlParameter("@field", "id"), new SqlParameter("@id", id), new SqlParameter() { ParameterName = "@server", Value = 0 }, new SqlParameter() { ParameterName = "@catalog", Value = string.Empty } }
+            , action: (values) =>
+            {
+                result = new sqldb() { id = (int)values[0], server = (int)values[1], catalog = (string)values[2], user = (string)values[3], pass = (string)values[4] };
+            });
+
+            return result;
+        }
+
         public static List<sqldb> GetServerDatabases(this Query query, sqlsrv server)
         {
             List<sqldb> result = new List<sqldb>();

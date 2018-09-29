@@ -12,6 +12,8 @@ namespace GriB.Client.App
         protected void Application_Start()
         {
             GlobalConfiguration.Configure(WebApiConfig.Register);
+
+           
         }
     }
 }

@@ -14,7 +14,6 @@ var __extends = (this && this.__extends) || (function () {
 define(["require", "exports", "app/common/baseservice"], function (require, exports, base) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    //import int = require('app/interfaces/iservice');
     var Services;
     (function (Services) {
         var SettingsService = /** @class */ (function (_super) {
@@ -34,6 +33,9 @@ define(["require", "exports", "app/common/baseservice"], function (require, expo
             };
             SettingsService.prototype.GetOrganization = function (Callback) {
                 this.GetApi({ Action: "/get_organization", Callback: Callback });
+            };
+            SettingsService.prototype.SetOrganization = function (model, Callback) {
+                this.GetApi({ Action: "/get_organization", RequestData: JSON.stringify(model), Callback: Callback });
             };
             return SettingsService;
         }(base.Services.BaseService));

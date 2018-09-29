@@ -59,13 +59,22 @@
   height: 40px !important;
   line-height: 40px !important; }
 
-.editor-header-bg {
-  background: rgba(0, 0, 0, 0.35); }
+.editor-header-nav {
+  height: auto;
+  background-color: rgba(0, 0, 0, 0.1);
+  box-shadow: none; }
 
 .editor-header-title {
   font-size: 1rem;
   font-weight: bold;
-  margin-left: 0.5em; }
+  margin-left: 0.5em;
+  color: black; }
 
 .editor-header-button {
   padding: 0 10px !important; }
+
+.editor-header-button-apply {
+  color: green; }
+
+.editor-header-button-cancel {
+  color: red; }

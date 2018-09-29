@@ -58,8 +58,10 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                     };
                     if (this.validate(model)) {
                         controller.AccountService.Login(model, function (responseData) {
-                            if (responseData.result == "Ok")
+                            if (responseData.result == "Ok") {
+                                vars._identity = responseData.indetity;
                                 variables_1._app.OpenController("main");
+                            }
                             else
                                 variables_1._app.ShowError(responseData.error);
                         });

@@ -53,9 +53,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Collections\DictionaryTwoKeys.cs" />
     <Compile Include="Diagnostics\ILogger.cs" />
     <Compile Include="Disposable.cs" />
     <Compile Include="IO\Helper.cs" />
+    <Compile Include="Models\pos\constants.cs" />
     <Compile Include="Models\pos\sqldb.cs" />
     <Compile Include="Models\pos\sqlsrv.cs" />
     <Compile Include="Models\Security\Identity.cs" />

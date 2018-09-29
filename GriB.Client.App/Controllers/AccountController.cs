@@ -46,8 +46,9 @@ namespace GriB.Client.App.Controllers
                         if (principalData.User == null)
                             throw new ApiException("Невозможно произвести авторизацию!");
                         //// TODO: Добавить проверку Expires!!!
-                        SetPrincipal(new Principal(principalData));
-                        return Request.CreateResponse(HttpStatusCode.OK, new { result = "Ok", principal = principalData });
+                        Principal principal = new Principal(principalData);
+                        AuthUser.LogIn(principal);
+                        return Request.CreateResponse(HttpStatusCode.OK, new { result = "Ok", indetity = new { auth = true, token = principal.GetKey() } });
                     });
         });
 
