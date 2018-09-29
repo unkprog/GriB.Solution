@@ -128,6 +128,7 @@
     <Content Include="Content\view\security\register.html" />
     <Content Include="Content\view\security\login.html" />
     <Content Include="Content\view\app.html" />
+    <Content Include="Content\view\setting\card\salepoint.html" />
     <Content Include="Content\view\setting\editor\employee.html" />
     <Content Include="Content\view\setting\editor\salepoint.html" />
     <Content Include="Content\view\setting\editor\organization.html" />
@@ -239,6 +240,7 @@
     <TypeScriptCompile Include="Content\js\app\controller\security\recovery.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\security\register.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\security\login.ts" />
+    <TypeScriptCompile Include="Content\js\app\controller\setting\card\salepoint.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\setting\editor\employee.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\setting\editor\salepoint.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\setting\editor\organization.ts" />

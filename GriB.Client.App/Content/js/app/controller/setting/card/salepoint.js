@@ -18,15 +18,15 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
     (function (Controller) {
         var Setting;
         (function (Setting) {
-            var Editor;
-            (function (Editor) {
+            var Card;
+            (function (Card) {
                 var SalePoint = /** @class */ (function (_super) {
                     __extends(SalePoint, _super);
                     function SalePoint() {
                         return _super.call(this) || this;
                     }
                     SalePoint.prototype.createOptions = function () {
-                        return { Url: "/Content/view/setting/editor/salepoint.html", Id: "editor-view-salepoint" };
+                        return { Url: "/Content/view/setting/editor/salepoint.html", Id: "card-view-salepoint" };
                     };
                     SalePoint.prototype.createModel = function () {
                         return new kendo.data.ObservableObject({
@@ -34,9 +34,9 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
                         });
                     };
                     return SalePoint;
-                }(base.Controller.BaseEditor));
-                Editor.SalePoint = SalePoint;
-            })(Editor = Setting.Editor || (Setting.Editor = {}));
+                }(base.Controller.BaseCard));
+                Card.SalePoint = SalePoint;
+            })(Card = Setting.Card || (Setting.Card = {}));
         })(Setting = Controller.Setting || (Controller.Setting = {}));
     })(Controller = exports.Controller || (exports.Controller = {}));
 });

@@ -240,8 +240,8 @@ export namespace Controller {
 
             this.navHeader = $(navbarHeader);
 
-            this.btnSave = $('<li><a id="editor-btn-save" class="editor-header-button editor-header-button-apply"><i class="material-icons editor-header">done</i></a></li>');
-            this.btnCancel = $('<li><a id="editor-btn-cancel" class="editor-header-button editor-header-button-cancel"><i class="material-icons editor-header">close</i></a></li>');
+            this.btnSave = $('<li><a id="editor-btn-save" class="editor-header-button"><i class="material-icons editor-header">done</i></a></li>');
+            this.btnCancel = $('<li><a id="editor-btn-cancel" class="editor-header-button"><i class="material-icons editor-header">close</i></a></li>');
 
             this.navHeader.find("#editButtons").append(this.btnSave);
             this.navHeader.find("#editButtons").append(this.btnCancel);
@@ -250,9 +250,7 @@ export namespace Controller {
 
             super.ViewInit(view);
 
-            return this.loadData(function () {
-                _app.HideLoading();
-            });
+            return this.loadData();
         }
 
         public ViewHide(e) {
@@ -273,45 +271,142 @@ export namespace Controller {
             this.destroyClickEvent(this.btnSave, this.CancelButtonClick);
         }
 
-        public SaveButtonClick: { (e: any): void; };
-        private saveButtonClick(e): void  {
-            let data: Interfaces.Model.IModelBase = this.getDataToSave();
+        public get EditorModel(): Interfaces.Model.IModelBase {
+            return null;
+        }
 
-            if (this.validate(data)) {
-                this.Save(data, function () {
-                    _main.ControllerBack(e);
-                });
+        public SaveButtonClick: { (e: any): void; };
+        private saveButtonClick(e): void {
+            if (this.validate()) {
+                this.Save();
             }
         }
 
         public CancelButtonClick: { (e: any): void; };
         private cancelButtonClick(e): void {
-            this.Cancel(e);
+            this.Cancel();
             _main.ControllerBack(e);
         }
 
-        protected loadData(afterLoad: () => void): boolean {
-            if (afterLoad)
-                afterLoad();
+        protected loadData(): boolean {
+            this.afterLoad();
             return true;
         }
 
-        protected getDataToSave(): Interfaces.Model.IModelBase {
-            return null;
+        protected afterLoad(): void {
+            M.updateTextFields();
+            _app.HideLoading();
         }
 
-        protected validate(editModel: Interfaces.Model.IModelBase): boolean {
+        protected validate(): boolean {
             return true;
         }
 
-        public Save(editModel: Interfaces.Model.IModelBase, afterSave: () => void): void {
-            if (afterSave)
-                afterSave();
+        protected afterSave(): void {
+            _main.ControllerBack(this);
         }
 
-        public Cancel(e: any): void {
+        public Save(): void {
+            this.afterSave();
         }
 
+        public Cancel(): void {
+        }
+    }
 
+    export class BaseCard extends Base implements Interfaces.IControllerCard {
+
+        constructor() {
+            super();
+        }
+
+        private navHeader: JQuery;
+        private btnAdd: JQuery;
+        private btnDelete: JQuery;
+        private btnEdit: JQuery;
+        public ViewInit(view: JQuery): boolean {
+
+            let navbarHeader: string = '<div class="navbar-fixed">';
+            navbarHeader += '        <nav class="editor-header-nav">';
+            navbarHeader += '            <div class="nav-wrapper editor-header">';
+            navbarHeader += '                <a class="editor-header-title">' + this.Header + '</a>';
+            navbarHeader += '                <ul id="cardButtons" class="right"></ul>';
+            navbarHeader += '            </div>';
+            navbarHeader += '        </nav>';
+            navbarHeader += '    </div>';
+
+            this.navHeader = $(navbarHeader);
+
+            this.btnEdit = $('<li><a id="card-btn-edit" class="editor-header-button"><i class="material-icons editor-header">edit</i></a></li>');
+            this.btnAdd = $('<li><a id="card-btn-add" class="editor-header-button"><i class="material-icons editor-header">add</i></a></li>');
+            this.btnDelete = $('<li><a id="card-btn-delete" class="editor-header-button"><i class="material-icons editor-header">remove</i></a></li>');
+
+            this.navHeader.find("#cardButtons").append(this.btnEdit);
+            this.navHeader.find("#cardButtons").append(this.btnAdd);
+            this.navHeader.find("#cardButtons").append(this.btnDelete);
+
+            view.prepend(this.navHeader);
+
+            super.ViewInit(view);
+
+            return this.loadData();
+        }
+
+        public ViewHide(e) {
+            super.ViewHide(e);
+            if (this.btnEdit)
+                this.btnEdit.remove();
+            if (this.btnAdd)
+                this.btnAdd.remove();
+            if (this.btnDelete)
+                this.btnDelete.remove();
+        }
+
+        protected createEvents(): void {
+            this.EditButtonClick = this.createClickEvent(this.btnEdit, this.editButtonClick);
+            this.AddButtonClick = this.createClickEvent(this.btnAdd, this.addButtonClick);
+            this.DeleteButtonClick = this.createClickEvent(this.btnDelete, this.deleteButtonClick);
+        }
+
+        protected destroyEvents(): void {
+            this.destroyClickEvent(this.btnEdit, this.EditButtonClick);
+            this.destroyClickEvent(this.btnAdd, this.AddButtonClick);
+            this.destroyClickEvent(this.btnDelete, this.DeleteButtonClick);
+        }
+
+        protected loadData(): boolean {
+            this.afterLoad();
+            return true;
+        }
+
+        protected afterLoad(): void {
+            M.updateTextFields();
+            _app.HideLoading();
+        }
+
+        public EditButtonClick: { (e: any): void; };
+        private editButtonClick(e): void {
+            this.Edit();
+        }
+
+        public AddButtonClick: { (e: any): void; };
+        private addButtonClick(e): void {
+            this.Add();
+        }
+
+        public DeleteButtonClick: { (e: any): void; };
+        private deleteButtonClick(e): void {
+            this.Delete();
+        }
+
+        public Edit(): void {
+           
+        }
+
+        public Add(): void {
+        }
+
+        public Delete(): void {
+        }
     }
 }

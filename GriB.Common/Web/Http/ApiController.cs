@@ -3,7 +3,9 @@ using System.Net;
 using System.Net.Http;
 using System.Security.Principal;
 using System.Threading.Tasks;
+using System.Web;
 using GriB.Common.Diagnostics;
+using GriB.Common.Sql;
 using Newtonsoft.Json.Linq;
 
 namespace GriB.Common.Web.Http
@@ -17,13 +19,10 @@ namespace GriB.Common.Web.Http
             logger = new Logger();
         }
 
-        protected void SetPrincipal(IPrincipal principal)
+
+        protected Query CreateQuery(string connectionString, string path)
         {
-            //Thread.CurrentPrincipal = principal;
-            //if (HttpContext.Current != null)
-            //{
-            //    HttpContext.Current.User = principal;
-            //}
+            return new Query(connectionString, string.Concat(HttpContext.Current.Request.PhysicalApplicationPath, path), logger);
         }
 
         public HttpResponseMessage TryCatchResponse(Func<HttpResponseMessage> func)

@@ -46,7 +46,7 @@ namespace GriB.Client.App.Controllers
             {
                 Principal principal = (Principal)HttpContext.Current.User;
 
-                using (Query query = new Query(principal.Data.Database.ConnectionString(principal.Data.Server), AppSettings.Database.Path.Query, this.logger))
+                using (Query query = CreateQuery(principal.Data.Database.ConnectionString(principal.Data.Server), AppSettings.Database.Path.Query))
                 {
                     List<t_org> orgs = Organization.GetOrganizations(query);
 
@@ -65,9 +65,11 @@ namespace GriB.Client.App.Controllers
             {
                 Principal principal = (Principal)HttpContext.Current.User;
 
-                using (Query query = new Query(principal.Data.Database.ConnectionString(principal.Data.Server), AppSettings.Database.Path.Query, this.logger))
+                using (Query query = CreateQuery(principal.Data.Database.ConnectionString(principal.Data.Server), AppSettings.Database.Path.Query))
                 {
                     t_org _org = org;
+                    _org.cu = principal.Data.User.id;
+                    _org.uu = principal.Data.User.id;
                     Organization.SetOrganization(query, _org);
                     Organization.SetOrganizationInfo(query, _org);
                     return Request.CreateResponse(HttpStatusCode.OK, "Ok");

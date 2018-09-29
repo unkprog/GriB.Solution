@@ -24,37 +24,41 @@ export namespace Controller.Setting.Editor {
         }
 
         private settingService: svc.Services.SettingsService;
-        private editModel: Interfaces.Model.IOrganizationModel;
+        public get EditorModel(): Interfaces.Model.IOrganizationModel {
+            return this.Model.get("editModel");
+        }
 
-        protected loadData(afterLoad: () => void): boolean {
+        protected loadData(): boolean {
             let controller = this;
             this.settingService.GetOrganization((responseData) => {
-                controller.editModel = responseData;
-                controller.Model.set("editModel", controller.editModel);
-                if (afterLoad)
-                    afterLoad();
+                controller.Model.set("editModel", responseData);
+                controller.afterLoad();
             });
             return false;
         }
 
-        public Save(data: Interfaces.Model.IOrganizationModel, afterSave: () => void): void {
+        public Save(): void {
             let controller = this;
-            this.settingService.GetOrganization((responseData) => {
-                controller.editModel = responseData;
-                if (afterSave)
-                    afterSave();
+            this.settingService.SetOrganization(controller.EditorModel, (responseData) => {
+                controller.afterSave();
             });
         }
 
-        protected getDataToSave(): Interfaces.Model.IOrganizationModel {
-            let result: Interfaces.Model.IOrganizationModel = this.editModel;
-
-            return result;
-        }
-
-        protected validate(data: Interfaces.Model.IOrganizationModel): boolean {
+        protected validate(): boolean {
             let result: boolean = true;
+            let errMessage: string = '';
+            let model: Interfaces.Model.IOrganizationModel = this.EditorModel;
 
+            if (utils.isNullOrEmpty(model.name)) {
+                M.toast({ html: vars._statres("msg$error$invalidCompanyName") });
+                //errMessage += vars._statres("msg$error$invalidCompanyName") + '<br/>';
+                result = false;
+            }
+
+            //result = utils.isNullOrEmpty(errMessage);
+
+            //if (!result)
+            //    _app.ShowError(errMessage);
 
             return result;
         }

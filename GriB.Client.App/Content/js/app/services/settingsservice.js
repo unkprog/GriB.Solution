@@ -35,7 +35,7 @@ define(["require", "exports", "app/common/baseservice"], function (require, expo
                 this.GetApi({ Action: "/get_organization", Callback: Callback });
             };
             SettingsService.prototype.SetOrganization = function (model, Callback) {
-                this.GetApi({ Action: "/get_organization", RequestData: JSON.stringify(model), Callback: Callback });
+                this.PostApi({ Action: "/post_organization", RequestData: JSON.stringify(model), Callback: Callback });
             };
             return SettingsService;
         }(base.Services.BaseService));

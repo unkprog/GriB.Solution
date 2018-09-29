@@ -20,7 +20,7 @@ export module Services {
         }
 
         public SetOrganization(model: Interfaces.Model.IOrganizationModel, Callback: (responseData: any) => void) {
-            this.GetApi({ Action: "/get_organization", RequestData: JSON.stringify(model), Callback: Callback });
+            this.PostApi({ Action: "/post_organization", RequestData: JSON.stringify(model), Callback: Callback });
         }
     }
 }

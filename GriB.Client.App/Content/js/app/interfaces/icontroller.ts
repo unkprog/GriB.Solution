@@ -31,8 +31,15 @@
     }
 
     export interface IControllerEditor extends IController {
-        Save(data: Interfaces.Model.IModelBase, afterSave: () => void): void;
-        Cancel(e: any): void;
+        EditorModel: Interfaces.Model.IModelBase;
+        Save(): void;
+        Cancel(): void;
+    }
+
+    export interface IControllerCard extends IController {
+        Add(): void;
+        Delete(): void;
+        Edit(): void;
     }
 
     export interface IDialog extends IController {

@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
-using System.Web;
 using GriB.Client.App.Models;
-using GriB.Common.Models.pos;
 using GriB.Common.Sql;
 
 namespace GriB.Client.App.Managers.Editors
@@ -17,10 +16,22 @@ namespace GriB.Client.App.Managers.Editors
         public static List<t_org> GetOrganizations(this Query query)
         {
             List<t_org> result = new List<t_org>();
-            query.Execute(cmdGet, new SqlParameter[] { }
+            query.Execute(cmdGet, new SqlParameter[] { new SqlParameter() { ParameterName = "@field", Value = string.Empty }, new SqlParameter() { ParameterName = "@id", Value = 0 } }
             , (values) =>
             {
                 result.Add(readFromValues(values));
+            });
+
+            return result;
+        }
+
+        public static t_org GetOrganization(this Query query, int id)
+        {
+            t_org result = new t_org();
+            query.Execute(cmdGet, new SqlParameter[] { new SqlParameter() { ParameterName = "@field", Value = "id" }, new SqlParameter() { ParameterName = "@id", Value = id } }
+            , (values) =>
+            {
+                result = readFromValues(values);
             });
 
             return result;
@@ -30,13 +41,13 @@ namespace GriB.Client.App.Managers.Editors
         public static t_org SetOrganization(this Query query, t_org org)
         {
             t_org result = org;
-            query.Execute(cmdSet, new SqlParameter[] { new SqlParameter("@cu", org.cu), new SqlParameter("@uu", org.uu), new SqlParameter("@name", org.name), new SqlParameter("@type", org.type) }
+            query.Execute(cmdSet, new SqlParameter[] { new SqlParameter("@id", org.id), new SqlParameter("@cu", org.cu), new SqlParameter("@uu", org.uu), new SqlParameter("@name", org.name), new SqlParameter("@type", org.type) }
             , (values) =>
             {
-                org.id = (int)values[0];
+                result.id = (int)values[0];
             });
 
-            return result;
+            return GetOrganization(query, result.id);
         }
 
         private const string cmdGetInfo = @"Organization\Info\[get]";
@@ -44,7 +55,7 @@ namespace GriB.Client.App.Managers.Editors
         {
             t_org result = org;
 
-            query.Execute(cmdGet, new SqlParameter[] { new SqlParameter("@id", org.id) }
+            query.Execute(cmdGetInfo, new SqlParameter[] { new SqlParameter("@id", org.id) }
             , (values) =>
             {
                 org.info = new t_org_info() { phone = (string)values[1], email = (string)values[2], site = (string)values[3] };

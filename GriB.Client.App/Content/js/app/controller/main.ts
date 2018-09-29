@@ -48,6 +48,7 @@ export namespace Controller {
             this.buttonMenu = this.menu.find("#app-btn-menu");
             this.content = view.find("#main-view-content");
             super.ViewInit(view);
+            this.MenuSettingsButtonClick({});
             return true;
         }
 

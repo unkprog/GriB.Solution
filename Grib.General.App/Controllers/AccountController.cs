@@ -18,7 +18,7 @@ namespace GriB.General.App.Controllers
 
         public AccountController() : base()
         {
-            _query = new Query(AppSettings.Database.ConnectionString, string.Concat(HttpContext.Current.Request.PhysicalApplicationPath, AppSettings.Database.Path.Query), logger);
+            _query = CreateQuery(AppSettings.Database.ConnectionString, AppSettings.Database.Path.Query);
         }
 
         private user_sec setPassword(user user, string subject)

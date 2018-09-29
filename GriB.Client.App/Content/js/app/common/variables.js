@@ -31,5 +31,7 @@ define(["require", "exports", "i18n!nls/strings"], function (require, exports) {
     exports._maincontrollers["setting/editor/organization"] = function (module) { return new module.Controller.Setting.Editor.Organization(); };
     exports._maincontrollers["setting/editor/salepoint"] = function (module) { return new module.Controller.Setting.Editor.SalePoint(); };
     exports._maincontrollers["setting/editor/employee"] = function (module) { return new module.Controller.Setting.Editor.Employee(); };
+    exports._maincontrollers["setting/card/salepoint"] = function (module) { return new module.Controller.Setting.Card.SalePoint(); };
+    exports._maincontrollers["setting/card/employee"] = function (module) { return new module.Controller.Setting.Card.Employee(); };
 });
 //# sourceMappingURL=variables.js.map

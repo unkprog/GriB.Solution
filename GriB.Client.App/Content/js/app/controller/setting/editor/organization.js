@@ -11,7 +11,7 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-define(["require", "exports", "app/common/variables", "app/common/basecontroller", "app/services/settingsservice"], function (require, exports, vars, base, svc) {
+define(["require", "exports", "app/common/variables", "app/common/utils", "app/common/basecontroller", "app/services/settingsservice"], function (require, exports, vars, utils, base, svc) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var Controller;
@@ -36,30 +36,39 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
                             "editModel": {}
                         });
                     };
-                    Organization.prototype.loadData = function (afterLoad) {
+                    Object.defineProperty(Organization.prototype, "EditorModel", {
+                        get: function () {
+                            return this.Model.get("editModel");
+                        },
+                        enumerable: true,
+                        configurable: true
+                    });
+                    Organization.prototype.loadData = function () {
                         var controller = this;
                         this.settingService.GetOrganization(function (responseData) {
-                            controller.editModel = responseData;
-                            controller.Model.set("editModel", controller.editModel);
-                            if (afterLoad)
-                                afterLoad();
+                            controller.Model.set("editModel", responseData);
+                            controller.afterLoad();
                         });
                         return false;
                     };
-                    Organization.prototype.Save = function (data, afterSave) {
+                    Organization.prototype.Save = function () {
                         var controller = this;
-                        this.settingService.GetOrganization(function (responseData) {
-                            controller.editModel = responseData;
-                            if (afterSave)
-                                afterSave();
+                        this.settingService.SetOrganization(controller.EditorModel, function (responseData) {
+                            controller.afterSave();
                         });
                     };
-                    Organization.prototype.getDataToSave = function () {
-                        var result = this.editModel;
-                        return result;
-                    };
-                    Organization.prototype.validate = function (data) {
+                    Organization.prototype.validate = function () {
                         var result = true;
+                        var errMessage = '';
+                        var model = this.EditorModel;
+                        if (utils.isNullOrEmpty(model.name)) {
+                            M.toast({ html: vars._statres("msg$error$invalidCompanyName") });
+                            //errMessage += vars._statres("msg$error$invalidCompanyName") + '<br/>';
+                            result = false;
+                        }
+                        //result = utils.isNullOrEmpty(errMessage);
+                        //if (!result)
+                        //    _app.ShowError(errMessage);
                         return result;
                     };
                     return Organization;

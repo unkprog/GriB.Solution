@@ -54,3 +54,5 @@ _maincontrollers["setting/editor/organization"] = function (module: any): Interf
 _maincontrollers["setting/editor/salepoint"] = function (module: any): Interfaces.IController { return new module.Controller.Setting.Editor.SalePoint(); };
 _maincontrollers["setting/editor/employee"] = function (module: any): Interfaces.IController { return new module.Controller.Setting.Editor.Employee(); };
 
+_maincontrollers["setting/card/salepoint"] = function (module: any): Interfaces.IController { return new module.Controller.Setting.Card.SalePoint(); };
+_maincontrollers["setting/card/employee"] = function (module: any): Interfaces.IController { return new module.Controller.Setting.Card.Employee(); };

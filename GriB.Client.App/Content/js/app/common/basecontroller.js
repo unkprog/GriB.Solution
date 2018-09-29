@@ -233,15 +233,13 @@ define(["require", "exports", "app/common/utils", "./variables"], function (requ
                 navbarHeader += '        </nav>';
                 navbarHeader += '    </div>';
                 this.navHeader = $(navbarHeader);
-                this.btnSave = $('<li><a id="editor-btn-save" class="editor-header-button editor-header-button-apply"><i class="material-icons editor-header">done</i></a></li>');
-                this.btnCancel = $('<li><a id="editor-btn-cancel" class="editor-header-button editor-header-button-cancel"><i class="material-icons editor-header">close</i></a></li>');
+                this.btnSave = $('<li><a id="editor-btn-save" class="editor-header-button"><i class="material-icons editor-header">done</i></a></li>');
+                this.btnCancel = $('<li><a id="editor-btn-cancel" class="editor-header-button"><i class="material-icons editor-header">close</i></a></li>');
                 this.navHeader.find("#editButtons").append(this.btnSave);
                 this.navHeader.find("#editButtons").append(this.btnCancel);
                 view.prepend(this.navHeader);
                 _super.prototype.ViewInit.call(this, view);
-                return this.loadData(function () {
-                    variables_1._app.HideLoading();
-                });
+                return this.loadData();
             };
             BaseEditor.prototype.ViewHide = function (e) {
                 _super.prototype.ViewHide.call(this, e);
@@ -258,38 +256,114 @@ define(["require", "exports", "app/common/utils", "./variables"], function (requ
                 this.destroyClickEvent(this.btnSave, this.SaveButtonClick);
                 this.destroyClickEvent(this.btnSave, this.CancelButtonClick);
             };
+            Object.defineProperty(BaseEditor.prototype, "EditorModel", {
+                get: function () {
+                    return null;
+                },
+                enumerable: true,
+                configurable: true
+            });
             BaseEditor.prototype.saveButtonClick = function (e) {
-                var data = this.getDataToSave();
-                if (this.validate(data)) {
-                    this.Save(data, function () {
-                        variables_1._main.ControllerBack(e);
-                    });
+                if (this.validate()) {
+                    this.Save();
                 }
             };
             BaseEditor.prototype.cancelButtonClick = function (e) {
-                this.Cancel(e);
+                this.Cancel();
                 variables_1._main.ControllerBack(e);
             };
-            BaseEditor.prototype.loadData = function (afterLoad) {
-                if (afterLoad)
-                    afterLoad();
+            BaseEditor.prototype.loadData = function () {
+                this.afterLoad();
                 return true;
             };
-            BaseEditor.prototype.getDataToSave = function () {
-                return null;
+            BaseEditor.prototype.afterLoad = function () {
+                M.updateTextFields();
+                variables_1._app.HideLoading();
             };
-            BaseEditor.prototype.validate = function (editModel) {
+            BaseEditor.prototype.validate = function () {
                 return true;
             };
-            BaseEditor.prototype.Save = function (editModel, afterSave) {
-                if (afterSave)
-                    afterSave();
+            BaseEditor.prototype.afterSave = function () {
+                variables_1._main.ControllerBack(this);
             };
-            BaseEditor.prototype.Cancel = function (e) {
+            BaseEditor.prototype.Save = function () {
+                this.afterSave();
+            };
+            BaseEditor.prototype.Cancel = function () {
             };
             return BaseEditor;
         }(Base));
         Controller.BaseEditor = BaseEditor;
+        var BaseCard = /** @class */ (function (_super) {
+            __extends(BaseCard, _super);
+            function BaseCard() {
+                return _super.call(this) || this;
+            }
+            BaseCard.prototype.ViewInit = function (view) {
+                var navbarHeader = '<div class="navbar-fixed">';
+                navbarHeader += '        <nav class="editor-header-nav">';
+                navbarHeader += '            <div class="nav-wrapper editor-header">';
+                navbarHeader += '                <a class="editor-header-title">' + this.Header + '</a>';
+                navbarHeader += '                <ul id="cardButtons" class="right"></ul>';
+                navbarHeader += '            </div>';
+                navbarHeader += '        </nav>';
+                navbarHeader += '    </div>';
+                this.navHeader = $(navbarHeader);
+                this.btnEdit = $('<li><a id="card-btn-edit" class="editor-header-button"><i class="material-icons editor-header">edit</i></a></li>');
+                this.btnAdd = $('<li><a id="card-btn-add" class="editor-header-button"><i class="material-icons editor-header">add</i></a></li>');
+                this.btnDelete = $('<li><a id="card-btn-delete" class="editor-header-button"><i class="material-icons editor-header">remove</i></a></li>');
+                this.navHeader.find("#cardButtons").append(this.btnEdit);
+                this.navHeader.find("#cardButtons").append(this.btnAdd);
+                this.navHeader.find("#cardButtons").append(this.btnDelete);
+                view.prepend(this.navHeader);
+                _super.prototype.ViewInit.call(this, view);
+                return this.loadData();
+            };
+            BaseCard.prototype.ViewHide = function (e) {
+                _super.prototype.ViewHide.call(this, e);
+                if (this.btnEdit)
+                    this.btnEdit.remove();
+                if (this.btnAdd)
+                    this.btnAdd.remove();
+                if (this.btnDelete)
+                    this.btnDelete.remove();
+            };
+            BaseCard.prototype.createEvents = function () {
+                this.EditButtonClick = this.createClickEvent(this.btnEdit, this.editButtonClick);
+                this.AddButtonClick = this.createClickEvent(this.btnAdd, this.addButtonClick);
+                this.DeleteButtonClick = this.createClickEvent(this.btnDelete, this.deleteButtonClick);
+            };
+            BaseCard.prototype.destroyEvents = function () {
+                this.destroyClickEvent(this.btnEdit, this.EditButtonClick);
+                this.destroyClickEvent(this.btnAdd, this.AddButtonClick);
+                this.destroyClickEvent(this.btnDelete, this.DeleteButtonClick);
+            };
+            BaseCard.prototype.loadData = function () {
+                this.afterLoad();
+                return true;
+            };
+            BaseCard.prototype.afterLoad = function () {
+                M.updateTextFields();
+                variables_1._app.HideLoading();
+            };
+            BaseCard.prototype.editButtonClick = function (e) {
+                this.Edit();
+            };
+            BaseCard.prototype.addButtonClick = function (e) {
+                this.Add();
+            };
+            BaseCard.prototype.deleteButtonClick = function (e) {
+                this.Delete();
+            };
+            BaseCard.prototype.Edit = function () {
+            };
+            BaseCard.prototype.Add = function () {
+            };
+            BaseCard.prototype.Delete = function () {
+            };
+            return BaseCard;
+        }(Base));
+        Controller.BaseCard = BaseCard;
     })(Controller = exports.Controller || (exports.Controller = {}));
 });
 //# sourceMappingURL=basecontroller.js.map

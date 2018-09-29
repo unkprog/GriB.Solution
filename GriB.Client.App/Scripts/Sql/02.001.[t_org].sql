@@ -23,9 +23,9 @@ begin
   create table [t_org_info]
   (
     [id]    [int]          not null,
-	[phone] [nvarchar](18) not null default (N''),
-	[email] [nvarchar](18) not null default (N''),
-	[site]  [nvarchar](18) not null default (N''),
+	[phone] [nvarchar](16) not null default (N''),
+	[email] [nvarchar](55) not null default (N''),
+	[site]  [nvarchar](55) not null default (N''),
     primary key clustered ([id])
   )
 end

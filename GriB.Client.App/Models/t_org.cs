@@ -14,6 +14,12 @@ namespace GriB.Client.App.Models
 
     public class t_org_info 
     {
+        public t_org_info()
+        {
+            phone = string.Empty;
+            email = string.Empty;
+            site = string.Empty;
+        }
         public string phone { get; set; }
         public string email { get; set; }
         public string site  { get; set; }

@@ -52,6 +52,7 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
                 this.buttonMenu = this.menu.find("#app-btn-menu");
                 this.content = view.find("#main-view-content");
                 _super.prototype.ViewInit.call(this, view);
+                this.MenuSettingsButtonClick({});
                 return true;
             };
             Main.prototype.ViewHide = function (e) {
