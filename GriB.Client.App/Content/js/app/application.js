@@ -66,6 +66,7 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
                         $('.sidenav').sidenav();
                         self.resize(undefined);
                         self.initAfterLoaded();
+                        self.SetControlNavigation(_this);
                     }
                     finally {
                     }
@@ -74,13 +75,25 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
                     alert(e.responseText);
                 });
             };
+            Application.prototype.SetControlNavigation = function (controlNavigation) {
+                if (controlNavigation)
+                    this._controllerNavigation = controlNavigation;
+            };
             Application.prototype.controllerBack = function (e) {
-                this._controllersStack.Pop();
-                this.RestoreController();
+                if (this._controllerNavigation === this) {
+                    this._controllersStack.Pop();
+                    this.RestoreController();
+                }
+                else
+                    this._controllerNavigation.ControllerBack(e);
             };
             Application.prototype.RestoreController = function () {
-                if (this._controllersStack.Current)
-                    this.OpenView(this._controllersStack.Current);
+                if (this._controllerNavigation === this) {
+                    if (this._controllersStack.Current)
+                        this.OpenView(this._controllersStack.Current);
+                }
+                else
+                    this._controllerNavigation.RestoreController();
             };
             Application.prototype.OpenController = function (urlController, backController) {
                 var self = this;
@@ -93,28 +106,41 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
                     });
                 }
             };
-            Application.prototype.OpenView = function (controller, backController) {
+            Application.prototype.SetHeader = function (controller) {
+                var header = controller.Header;
+                if (header)
+                    this._model.set("AppHeader", header); // + ' ' + self.contentControl.width()
+                else if ("POS Cloud" !== this._model.get("AppHeader"))
+                    this._model.set("AppHeader", "POS Cloud");
+            };
+            Application.prototype.OpenView = function (controller, backController, isRestore) {
                 var _this = this;
+                if (isRestore === void 0) { isRestore = false; }
                 var self = this;
+                if (self._controllerNavigation !== self) {
+                    self._controllerNavigation.OpenView(controller, backController);
+                    return;
+                }
                 if ($("#" + controller.Options.Id).length > 0)
                     return; //Already loaded and current
                 self.ShowLoading();
+                if (self._controller && self._controller.View)
+                    self._controller.View.hide();
                 $.when($.ajax({ url: controller.Options.Url, cache: false })).done(function (template) {
                     var isInit = false;
                     try {
                         if (self._controller)
                             self._controller.ViewHide(_this);
                         self._controller = controller;
-                        self._controllersStack.Push(backController);
-                        var header = controller.Header;
-                        if (header)
-                            self._model.set("AppHeader", header); // + ' ' + self.contentControl.width()
-                        else if ("POS Cloud" !== self._model.get("AppHeader"))
-                            self._model.set("AppHeader", "POS Cloud");
+                        if (!isRestore)
+                            self._controllersStack.Push(backController);
+                        self.SetHeader(self._controller);
                         var view = $(template);
+                        view.hide();
                         isInit = self._controller.ViewInit(view);
                         self.contentControl.html(view[0]);
-                        self._controller.ViewShow(_this);
+                        if (self._controller.ViewShow(_this) === true)
+                            view.show();
                         self._controller.ViewResize(_this);
                     }
                     finally {

@@ -11,7 +11,7 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-define(["require", "exports", "app/common/variables", "app/common/utils", "app/common/basecontroller", "app/services/settingsservice"], function (require, exports, vars, utils, base, svc) {
+define(["require", "exports", "app/common/variables", "app/common/utils", "app/controller/setting/editor/editor"], function (require, exports, vars, utils, edit) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var Controller;
@@ -23,9 +23,7 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                 var Organization = /** @class */ (function (_super) {
                     __extends(Organization, _super);
                     function Organization() {
-                        var _this = _super.call(this) || this;
-                        _this.settingService = new svc.Services.SettingsService();
-                        return _this;
+                        return _super.call(this) || this;
                     }
                     Organization.prototype.createOptions = function () {
                         return { Url: "/Content/view/setting/editor/organization.html", Id: "editor-view-organization" };
@@ -33,7 +31,11 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                     Organization.prototype.createModel = function () {
                         return new kendo.data.ObservableObject({
                             "Header": vars._statres("label$organization"),
-                            "editModel": {}
+                            "editModel": {},
+                            "labelCompanyName": vars._statres("label$companyName"),
+                            "labelWebSite": vars._statres("label$website"),
+                            "labelEmail": vars._statres("label$email"),
+                            "labelPhone": vars._statres("label$phone"),
                         });
                     };
                     Object.defineProperty(Organization.prototype, "EditorModel", {
@@ -43,9 +45,10 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                         enumerable: true,
                         configurable: true
                     });
+                    // $('input#input_text, textarea#textarea2').characterCounter();
                     Organization.prototype.loadData = function () {
                         var controller = this;
-                        this.settingService.GetOrganization(function (responseData) {
+                        this.Service.GetOrganization(function (responseData) {
                             controller.Model.set("editModel", responseData);
                             controller.afterLoad();
                         });
@@ -53,26 +56,21 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                     };
                     Organization.prototype.Save = function () {
                         var controller = this;
-                        this.settingService.SetOrganization(controller.EditorModel, function (responseData) {
+                        this.Service.SetOrganization(controller.EditorModel, function (responseData) {
                             controller.afterSave();
                         });
                     };
                     Organization.prototype.validate = function () {
                         var result = true;
-                        var errMessage = '';
                         var model = this.EditorModel;
                         if (utils.isNullOrEmpty(model.name)) {
                             M.toast({ html: vars._statres("msg$error$invalidCompanyName") });
-                            //errMessage += vars._statres("msg$error$invalidCompanyName") + '<br/>';
                             result = false;
                         }
-                        //result = utils.isNullOrEmpty(errMessage);
-                        //if (!result)
-                        //    _app.ShowError(errMessage);
                         return result;
                     };
                     return Organization;
-                }(base.Controller.BaseEditor));
+                }(edit.Controller.Setting.Editor.Editor));
                 Editor.Organization = Organization;
             })(Editor = Setting.Editor || (Setting.Editor = {}));
         })(Setting = Controller.Setting || (Controller.Setting = {}));

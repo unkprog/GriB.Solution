@@ -15,7 +15,7 @@ using GriB.Common.Web.Http;
 namespace GriB.Client.App.Controllers
 {
     [Authorize]
-    public class SettingsController : BaseApiController
+    public class SettingsController : BaseController
     {
         [AllowAnonymous]
         [HttpGet]
@@ -42,18 +42,11 @@ namespace GriB.Client.App.Controllers
         [ActionName("get_organization")]
         public HttpResponseMessage GetOrganization()
         {
-            return TryCatchResponse(() =>
+            return TryCatchResponseQuery((query) =>
             {
-                Principal principal = (Principal)HttpContext.Current.User;
-
-                using (Query query = CreateQuery(principal.Data.Database.ConnectionString(principal.Data.Server), AppSettings.Database.Path.Query))
-                {
-                    List<t_org> orgs = Organization.GetOrganizations(query);
-
-                    t_org org = Organization.GetOrganizationInfo(query, (orgs != null && orgs.Count > 0 ? orgs[0] : new t_org() { type = 1 }));
-
-                    return Request.CreateResponse(HttpStatusCode.OK, org);
-                }
+                List<t_org> orgs = Organization.GetOrganizations(query, 1);
+                t_org org = Organization.GetOrganizationInfo(query, (orgs != null && orgs.Count > 0 ? orgs[0] : new t_org() { type = 1 }));
+                return Request.CreateResponse(HttpStatusCode.OK, org);
             });
         }
 
@@ -61,20 +54,50 @@ namespace GriB.Client.App.Controllers
         [ActionName("post_organization")]
         public HttpResponseMessage PostOrganization(t_org org)
         {
-            return TryCatchResponse(() =>
+            return TryCatchResponseQuery((query) =>
             {
+                t_org _org = org;
                 Principal principal = (Principal)HttpContext.Current.User;
-
-                using (Query query = CreateQuery(principal.Data.Database.ConnectionString(principal.Data.Server), AppSettings.Database.Path.Query))
-                {
-                    t_org _org = org;
-                    _org.cu = principal.Data.User.id;
-                    _org.uu = principal.Data.User.id;
-                    Organization.SetOrganization(query, _org);
-                    Organization.SetOrganizationInfo(query, _org);
-                    return Request.CreateResponse(HttpStatusCode.OK, "Ok");
-                }
+                _org.cu = principal.Data.User.id;
+                _org.uu = principal.Data.User.id;
+                Organization.SetOrganization(query, _org);
+                Organization.SetOrganizationInfo(query, _org);
+                return Request.CreateResponse(HttpStatusCode.OK, "Ok");
             });
         }
+
+        [HttpGet]
+        [ActionName("get_salepoint")]
+        public HttpResponseMessage GetSalePoint(int id)
+        {
+            return TryCatchResponseQuery((query) =>
+            {
+                List<t_org> orgs = Organization.GetOrganizations(query, 1);
+                t_org org = Organization.GetOrganization(query, id);
+                if (org == null || org.id == 0)
+                    org = new t_org() { type = 2 };
+                org = Organization.GetOrganizationInfo1(query, (org != null ? org : new t_org() { type = 2 }));
+                org.parent = Organization.GetOrganization(query, org.pid);
+                return Request.CreateResponse(HttpStatusCode.OK, new { companies = orgs, salepoint = org });
+
+            });
+        }
+
+        [HttpPost]
+        [ActionName("post_salepoint")]
+        public HttpResponseMessage PostSalepoint(t_org org)
+        {
+            return TryCatchResponseQuery((query) =>
+            {
+                t_org _org = org;
+                Principal principal = (Principal)HttpContext.Current.User;
+                _org.cu = principal.Data.User.id;
+                _org.uu = principal.Data.User.id;
+                Organization.SetOrganization(query, _org);
+                Organization.SetOrganizationInfo1(query, _org);
+                return Request.CreateResponse(HttpStatusCode.OK, "Ok");
+            });
+        }
+
     }
 }

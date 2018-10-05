@@ -2,7 +2,7 @@
     baseUrl: "/Content/js",
     paths: {
         "jquery": "lib/jquery-3.3.1.min",
-        "materialize": "lib/materialize.min",
+        "materialize": "lib/materialize",
         "kendo.core": "lib/kendo/kendo.core",
         "kendo.data": "lib/kendo/kendo.data",
         "kendo.data.odata": "lib/kendo/kendo.data.odata",

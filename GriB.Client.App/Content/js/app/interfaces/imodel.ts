@@ -24,8 +24,11 @@
 
     export interface IOrganizationModel extends IModelBase {
         name: string;
-        website: string;
-        email: string;
-        phone: string;
     }
+
+    export interface ISalepointModel extends IModelBase {
+        name: string;
+        city: string;
+    }
+
 }

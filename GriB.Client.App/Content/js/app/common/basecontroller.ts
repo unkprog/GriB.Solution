@@ -50,8 +50,9 @@ export namespace Controller {
         protected createEvents(): void {
         }
 
-        public ViewShow(e: any): void {
+        public ViewShow(e: any): boolean {
             M.updateTextFields();
+            return true;
         }
 
         public ViewHide(e: any): void {
@@ -165,25 +166,19 @@ export namespace Controller {
 
         public RestoreController() {
             if (this._controllersStack.Current)
-                this.OpenView(this._controllersStack.Current);
+                this.OpenView(this._controllersStack.Current, undefined, true);
         }
 
         public OpenController(urlController: string, backController?: Interfaces.IController) {
-            var self = this;
-            let ctrlCreate: any = this._controllers[urlController]
-            if (ctrlCreate) {
-                let url: string = "/Content/js/app/controller/" + urlController + ".js";
-                require([url], function (module) {
-                    let controller: Interfaces.IController = ctrlCreate(module);
-                    self.OpenView(controller, backController);
-                });
-            }
+            _app.OpenController(urlController, backController);
         }
 
-        public OpenView(controller: Interfaces.IController, backController?: Interfaces.IController) {
+        public OpenView(controller: Interfaces.IController, backController?: Interfaces.IController, isRestore: boolean = false) {
             var self = this;
             if ($("#" + controller.Options.Id).length > 0) return;     //Already loaded and current
             _app.ShowLoading();
+            if (self._controller && self._controller.View)
+                self._controller.View.hide();
 
             $.when($.ajax({ url: controller.Options.Url, cache: false })).done((template) => {
                 let isInit: boolean = false;
@@ -192,22 +187,22 @@ export namespace Controller {
                         self._controller.ViewHide(this);
 
                     self._controller = controller;
-                    self._controllersStack.Push(backController);
+                    if (!isRestore)
+                        self._controllersStack.Push(backController);
 
-                    //TODO: Пока не заморачиваемся с заголовком
-                    //let header = controller.Header;
-                    //if (header)
-                    //    self._model.set("AppHeader", header); // + ' ' + self.contentControl.width()
-                    //else
-                    //    if ("POS Cloud" !== self._model.get("AppHeader"))
-                    //        self._model.set("AppHeader", "POS Cloud");
-
-                    let view = $(template);
-                    isInit = self._controller.ViewInit(view);
-                    self._content.html(view[0]);
-
-                    self._controller.ViewShow(this);
-                    self._controller.ViewResize(this);
+                    self.SetHeader(self._controller);
+                    try {
+                        let view = $(template);
+                        view.hide();
+                        isInit = self._controller.ViewInit(view);
+                        self._content.html(view[0]);
+                        if (self._controller.ViewShow(this) === true)
+                            view.show();
+                        self._controller.ViewResize(this);
+                    }
+                    catch (ex) {
+                        console.log(ex);
+                    }
                 } finally {
                     if (isInit)
                         _app.HideLoading();
@@ -215,6 +210,16 @@ export namespace Controller {
             }).fail((e) => {
                 _app.HideLoading();
             });
+        }
+
+        protected SetHeader(controller: Interfaces.IController) {
+             //TODO: Пока не заморачиваемся с заголовком
+                    //let header = controller.Header;
+                    //if (header)
+                    //    self._model.set("AppHeader", header); // + ' ' + self.contentControl.width()
+                    //else
+                    //    if ("POS Cloud" !== self._model.get("AppHeader"))
+                    //        self._model.set("AppHeader", "POS Cloud");
         }
     }
 
@@ -296,6 +301,7 @@ export namespace Controller {
         protected afterLoad(): void {
             M.updateTextFields();
             _app.HideLoading();
+            this.View.show();
         }
 
         protected validate(): boolean {
@@ -324,6 +330,7 @@ export namespace Controller {
         private btnAdd: JQuery;
         private btnDelete: JQuery;
         private btnEdit: JQuery;
+        private btnClose: JQuery;
         public ViewInit(view: JQuery): boolean {
 
             let navbarHeader: string = '<div class="navbar-fixed">';
@@ -340,10 +347,10 @@ export namespace Controller {
             this.btnEdit = $('<li><a id="card-btn-edit" class="editor-header-button"><i class="material-icons editor-header">edit</i></a></li>');
             this.btnAdd = $('<li><a id="card-btn-add" class="editor-header-button"><i class="material-icons editor-header">add</i></a></li>');
             this.btnDelete = $('<li><a id="card-btn-delete" class="editor-header-button"><i class="material-icons editor-header">remove</i></a></li>');
+            this.btnClose = $('<li><a id="card-btn-close" class="editor-header-button"><i class="material-icons editor-header">close</i></a></li>');
 
-            this.navHeader.find("#cardButtons").append(this.btnEdit);
-            this.navHeader.find("#cardButtons").append(this.btnAdd);
-            this.navHeader.find("#cardButtons").append(this.btnDelete);
+            let cardButtons: JQuery = this.navHeader.find("#cardButtons");
+            cardButtons.append(this.btnEdit).append(this.btnAdd).append(this.btnDelete).append(this.btnClose);
 
             view.prepend(this.navHeader);
 
@@ -360,18 +367,22 @@ export namespace Controller {
                 this.btnAdd.remove();
             if (this.btnDelete)
                 this.btnDelete.remove();
+            if (this.btnClose)
+                this.btnClose.remove();
         }
 
         protected createEvents(): void {
             this.EditButtonClick = this.createClickEvent(this.btnEdit, this.editButtonClick);
             this.AddButtonClick = this.createClickEvent(this.btnAdd, this.addButtonClick);
             this.DeleteButtonClick = this.createClickEvent(this.btnDelete, this.deleteButtonClick);
+            this.CloseButtonClick = this.createClickEvent(this.btnClose, this.closeButtonClick);
         }
 
         protected destroyEvents(): void {
             this.destroyClickEvent(this.btnEdit, this.EditButtonClick);
             this.destroyClickEvent(this.btnAdd, this.AddButtonClick);
             this.destroyClickEvent(this.btnDelete, this.DeleteButtonClick);
+            this.destroyClickEvent(this.btnClose, this.CloseButtonClick);
         }
 
         protected loadData(): boolean {
@@ -399,6 +410,13 @@ export namespace Controller {
             this.Delete();
         }
 
+        public CloseButtonClick: { (e: any): void; };
+        private closeButtonClick(e): void {
+            this.Close();
+            _main.ControllerBack(e);
+
+        }
+
         public Edit(): void {
            
         }
@@ -407,6 +425,9 @@ export namespace Controller {
         }
 
         public Delete(): void {
+        }
+
+        public Close(): void {
         }
     }
 }

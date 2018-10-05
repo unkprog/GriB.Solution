@@ -47,9 +47,6 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                     this.destroyClickEvent("btn-register", this.RegisterButtonClick);
                     this.destroyClickEvent("btn-forgot", this.ForgotButtonClick);
                 };
-                Login.prototype.ViewShow = function (e) {
-                    _super.prototype.ViewShow.call(this, e);
-                };
                 Login.prototype.loginButtonClick = function (e) {
                     var controller = this;
                     var model = {

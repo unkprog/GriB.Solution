@@ -12,7 +12,7 @@
 
         Header: string;
         ViewInit(view: JQuery): boolean;
-        ViewShow(e: any): void;
+        ViewShow(e: any): boolean;
         ViewHide(e: any): void;
         ViewResize(e?: any): void;
     }
@@ -27,7 +27,7 @@
         ControllerBack(e: any): void;
         RestoreController(): void;
         OpenController(urlController: string, backController?: Interfaces.IController): void;
-        OpenView(controller: Interfaces.IController, backController?: Interfaces.IController): void;
+        OpenView(controller: Interfaces.IController, backController?: Interfaces.IController, isRestore?: boolean): void;
     }
 
     export interface IControllerEditor extends IController {
@@ -40,6 +40,7 @@
         Add(): void;
         Delete(): void;
         Edit(): void;
+        Close(): void;
     }
 
     export interface IDialog extends IController {

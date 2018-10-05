@@ -114,6 +114,7 @@
     <Content Include="Content\js\lib\kendo\kendo.data.js" />
     <Content Include="Content\js\lib\kendo\kendo.data.odata.js" />
     <Content Include="Content\js\lib\kendo\kendo.data.xml.js" />
+    <Content Include="Content\js\lib\materialize.js" />
     <Content Include="Content\js\lib\materialize.min.js" />
     <Content Include="Content\js\lib\require\domReady.js" />
     <Content Include="Content\js\lib\require\require.js" />
@@ -121,6 +122,7 @@
     <Content Include="Content\js\nls\root\strings.js" />
     <Content Include="Content\js\nls\strings.js" />
     <Content Include="Content\view\about\index.html" />
+    <Content Include="Content\view\index - Копировать.html" />
     <Content Include="Content\view\index.html" />
     <Content Include="Content\view\main.html" />
     <Content Include="Content\view\report\index.html" />
@@ -148,6 +150,7 @@
   <ItemGroup>
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\SettingsController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -223,6 +226,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Content\js\lib\materialize\" />
     <Folder Include="Scripts\Sql\Data\" />
   </ItemGroup>
   <ItemGroup>
@@ -241,6 +245,7 @@
     <TypeScriptCompile Include="Content\js\app\controller\security\register.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\security\login.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\setting\card\salepoint.ts" />
+    <TypeScriptCompile Include="Content\js\app\controller\setting\editor\editor.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\setting\editor\employee.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\setting\editor\salepoint.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\setting\editor\organization.ts" />

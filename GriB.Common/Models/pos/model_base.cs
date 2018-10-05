@@ -47,6 +47,10 @@ namespace GriB.Common.Models.pos
         {
         }
 
+        public int pid { get; set; }
+
         public string name { get; set; }
+
+        public model_reference parent { get; set; }
     }
 }

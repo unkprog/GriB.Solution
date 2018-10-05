@@ -26,12 +26,16 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
                         return _super.call(this) || this;
                     }
                     SalePoint.prototype.createOptions = function () {
-                        return { Url: "/Content/view/setting/editor/salepoint.html", Id: "card-view-salepoint" };
+                        return { Url: "/Content/view/setting/card/salepoint.html", Id: "card-view-salepoint" };
                     };
                     SalePoint.prototype.createModel = function () {
                         return new kendo.data.ObservableObject({
                             "Header": vars._statres("label$salesPoints"),
                         });
+                    };
+                    SalePoint.prototype.Add = function () {
+                        vars._editorData["id_salepoint"] = 0;
+                        vars._app.OpenController("setting/editor/salepoint", this);
                     };
                     return SalePoint;
                 }(base.Controller.BaseCard));

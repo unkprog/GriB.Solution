@@ -1,15 +1,13 @@
 ﻿<div id="editor-view-organization">
 
-
     <div class="row">
-
     </div>
 
     <div class="row">
         <div class="col s12 m12 l12 xl12">
             <div class="input-field">
                 <input id="editor-view-organization-name" class="validate" type="text" data-bind="value:editModel.name">
-                <label for="editor-view-organization-name">Наименование компании</label>
+                <label for="editor-view-organization-name" data-bind="text:labelCompanyName">Наименование компании</label>
             </div>
         </div>
     </div>
@@ -18,21 +16,21 @@
             <div class="input-field">
                 <i class="material-icons prefix">language</i>
                 <input id="editor-view-organization-website" class="validate" type="url" data-length="54" data-bind="value:editModel.info.site">
-                <label for="editor-view-organization-website">Веб-сайт</label>
+                <label for="editor-view-organization-website" data-bind="text:labelWebSite">Веб-сайт</label>
             </div>
         </div>
         <div class="col s12 m6 l4 xl3">
             <div class="input-field">
                 <i class="material-icons prefix">email</i>
                 <input id="editor-view-organization-email" class="validate" type="email" data-length="54" data-bind="value:editModel.info.email">
-                <label for="editor-view-organization-email">E-mail</label>
+                <label for="editor-view-organization-email" data-bind="text:labelEmail">E-mail</label>
             </div>
         </div>
         <div class="col s12 m6 l4 xl3">
             <div class="input-field">
                 <i class="material-icons prefix">phone</i>
                 <input id="editor-view-organization-phone" class="validate" type="tel" data-length="18" data-bind="value:editModel.info.phone">
-                <label for="editor-view-organization-phone">Телефон</label>
+                <label for="editor-view-organization-phone" data-bind="text:labelPhone">Телефон</label>
             </div>
         </div>
     </div>

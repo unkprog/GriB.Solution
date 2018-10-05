@@ -29,7 +29,8 @@ export namespace Controller {
         }
 
         protected ControllersInit(): any {
-            return vars._maincontrollers;
+            //return vars._maincontrollers;
+            return vars._controllers;
         }
 
         private content: JQuery;
@@ -41,6 +42,7 @@ export namespace Controller {
         private sideNav: JQuery;
         private buttonMenu: JQuery;
         public ViewInit(view: JQuery): boolean {
+            _app.SetControlNavigation(this);
             this.menu = $('<li><a id="app-btn-menu"><i class="material-icons">menu</i></a></li>');
             this.sideNav = view.find('.sidenav');
             this.sideNav.sidenav();

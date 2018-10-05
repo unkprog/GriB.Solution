@@ -70,6 +70,7 @@ define(["require", "exports", "app/common/utils", "./variables"], function (requ
             };
             Base.prototype.ViewShow = function (e) {
                 M.updateTextFields();
+                return true;
             };
             Base.prototype.ViewHide = function (e) {
                 this.destroyEvents();
@@ -168,44 +169,41 @@ define(["require", "exports", "app/common/utils", "./variables"], function (requ
             };
             BaseContent.prototype.RestoreController = function () {
                 if (this._controllersStack.Current)
-                    this.OpenView(this._controllersStack.Current);
+                    this.OpenView(this._controllersStack.Current, undefined, true);
             };
             BaseContent.prototype.OpenController = function (urlController, backController) {
-                var self = this;
-                var ctrlCreate = this._controllers[urlController];
-                if (ctrlCreate) {
-                    var url = "/Content/js/app/controller/" + urlController + ".js";
-                    require([url], function (module) {
-                        var controller = ctrlCreate(module);
-                        self.OpenView(controller, backController);
-                    });
-                }
+                variables_1._app.OpenController(urlController, backController);
             };
-            BaseContent.prototype.OpenView = function (controller, backController) {
+            BaseContent.prototype.OpenView = function (controller, backController, isRestore) {
                 var _this = this;
+                if (isRestore === void 0) { isRestore = false; }
                 var self = this;
                 if ($("#" + controller.Options.Id).length > 0)
                     return; //Already loaded and current
                 variables_1._app.ShowLoading();
+                if (self._controller && self._controller.View)
+                    self._controller.View.hide();
                 $.when($.ajax({ url: controller.Options.Url, cache: false })).done(function (template) {
                     var isInit = false;
                     try {
                         if (self._controller)
                             self._controller.ViewHide(_this);
                         self._controller = controller;
-                        self._controllersStack.Push(backController);
-                        //TODO: Пока не заморачиваемся с заголовком
-                        //let header = controller.Header;
-                        //if (header)
-                        //    self._model.set("AppHeader", header); // + ' ' + self.contentControl.width()
-                        //else
-                        //    if ("POS Cloud" !== self._model.get("AppHeader"))
-                        //        self._model.set("AppHeader", "POS Cloud");
-                        var view = $(template);
-                        isInit = self._controller.ViewInit(view);
-                        self._content.html(view[0]);
-                        self._controller.ViewShow(_this);
-                        self._controller.ViewResize(_this);
+                        if (!isRestore)
+                            self._controllersStack.Push(backController);
+                        self.SetHeader(self._controller);
+                        try {
+                            var view = $(template);
+                            view.hide();
+                            isInit = self._controller.ViewInit(view);
+                            self._content.html(view[0]);
+                            if (self._controller.ViewShow(_this) === true)
+                                view.show();
+                            self._controller.ViewResize(_this);
+                        }
+                        catch (ex) {
+                            console.log(ex);
+                        }
                     }
                     finally {
                         if (isInit)
@@ -214,6 +212,15 @@ define(["require", "exports", "app/common/utils", "./variables"], function (requ
                 }).fail(function (e) {
                     variables_1._app.HideLoading();
                 });
+            };
+            BaseContent.prototype.SetHeader = function (controller) {
+                //TODO: Пока не заморачиваемся с заголовком
+                //let header = controller.Header;
+                //if (header)
+                //    self._model.set("AppHeader", header); // + ' ' + self.contentControl.width()
+                //else
+                //    if ("POS Cloud" !== self._model.get("AppHeader"))
+                //        self._model.set("AppHeader", "POS Cloud");
             };
             return BaseContent;
         }(Base));
@@ -279,6 +286,7 @@ define(["require", "exports", "app/common/utils", "./variables"], function (requ
             BaseEditor.prototype.afterLoad = function () {
                 M.updateTextFields();
                 variables_1._app.HideLoading();
+                this.View.show();
             };
             BaseEditor.prototype.validate = function () {
                 return true;
@@ -312,9 +320,9 @@ define(["require", "exports", "app/common/utils", "./variables"], function (requ
                 this.btnEdit = $('<li><a id="card-btn-edit" class="editor-header-button"><i class="material-icons editor-header">edit</i></a></li>');
                 this.btnAdd = $('<li><a id="card-btn-add" class="editor-header-button"><i class="material-icons editor-header">add</i></a></li>');
                 this.btnDelete = $('<li><a id="card-btn-delete" class="editor-header-button"><i class="material-icons editor-header">remove</i></a></li>');
-                this.navHeader.find("#cardButtons").append(this.btnEdit);
-                this.navHeader.find("#cardButtons").append(this.btnAdd);
-                this.navHeader.find("#cardButtons").append(this.btnDelete);
+                this.btnClose = $('<li><a id="card-btn-close" class="editor-header-button"><i class="material-icons editor-header">close</i></a></li>');
+                var cardButtons = this.navHeader.find("#cardButtons");
+                cardButtons.append(this.btnEdit).append(this.btnAdd).append(this.btnDelete).append(this.btnClose);
                 view.prepend(this.navHeader);
                 _super.prototype.ViewInit.call(this, view);
                 return this.loadData();
@@ -327,16 +335,20 @@ define(["require", "exports", "app/common/utils", "./variables"], function (requ
                     this.btnAdd.remove();
                 if (this.btnDelete)
                     this.btnDelete.remove();
+                if (this.btnClose)
+                    this.btnClose.remove();
             };
             BaseCard.prototype.createEvents = function () {
                 this.EditButtonClick = this.createClickEvent(this.btnEdit, this.editButtonClick);
                 this.AddButtonClick = this.createClickEvent(this.btnAdd, this.addButtonClick);
                 this.DeleteButtonClick = this.createClickEvent(this.btnDelete, this.deleteButtonClick);
+                this.CloseButtonClick = this.createClickEvent(this.btnClose, this.closeButtonClick);
             };
             BaseCard.prototype.destroyEvents = function () {
                 this.destroyClickEvent(this.btnEdit, this.EditButtonClick);
                 this.destroyClickEvent(this.btnAdd, this.AddButtonClick);
                 this.destroyClickEvent(this.btnDelete, this.DeleteButtonClick);
+                this.destroyClickEvent(this.btnClose, this.CloseButtonClick);
             };
             BaseCard.prototype.loadData = function () {
                 this.afterLoad();
@@ -355,11 +367,17 @@ define(["require", "exports", "app/common/utils", "./variables"], function (requ
             BaseCard.prototype.deleteButtonClick = function (e) {
                 this.Delete();
             };
+            BaseCard.prototype.closeButtonClick = function (e) {
+                this.Close();
+                variables_1._main.ControllerBack(e);
+            };
             BaseCard.prototype.Edit = function () {
             };
             BaseCard.prototype.Add = function () {
             };
             BaseCard.prototype.Delete = function () {
+            };
+            BaseCard.prototype.Close = function () {
             };
             return BaseCard;
         }(Base));

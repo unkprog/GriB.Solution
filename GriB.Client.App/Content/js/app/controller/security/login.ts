@@ -38,10 +38,6 @@ export namespace Controller.Security {
             this.destroyClickEvent("btn-forgot", this.ForgotButtonClick);
         }
 
-        public ViewShow(e: any): void {
-            super.ViewShow(e);
-        }
-
         public LoginButtonClick: { (e: any): void; };
         private loginButtonClick(e) {
             let controller = this;

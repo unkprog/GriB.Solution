@@ -5,6 +5,7 @@ export module App {
     export class Application implements Interfaces.IApplication {
 
         private _model: kendo.data.ObservableObject;
+        private _controllerNavigation: Interfaces.IControllerNavigation;
         constructor() {
             vars._app = this;
             this._controllersStack = new base.Controller.ControllersStack();
@@ -84,6 +85,7 @@ export module App {
                     $('.sidenav').sidenav();
                     self.resize(undefined);
                     self.initAfterLoaded();
+                    self.SetControlNavigation(this);
                 } finally {
                    
                 }
@@ -93,15 +95,28 @@ export module App {
             });
         }
 
+        public SetControlNavigation(controlNavigation: Interfaces.IControllerNavigation): void {
+            if (controlNavigation)
+                this._controllerNavigation = controlNavigation;
+        }
+
         public ControllerBack: { (e: any): void; };
         private controllerBack(e): void {
-            this._controllersStack.Pop();
-            this.RestoreController();
+            if (this._controllerNavigation === this) {
+                this._controllersStack.Pop();
+                this.RestoreController();
+            }
+            else
+                this._controllerNavigation.ControllerBack(e);
         }
 
         public RestoreController() {
-            if (this._controllersStack.Current)
-                this.OpenView(this._controllersStack.Current);
+            if (this._controllerNavigation === this) {
+                if (this._controllersStack.Current)
+                    this.OpenView(this._controllersStack.Current);
+            }
+            else
+                this._controllerNavigation.RestoreController();
         }
 
         public OpenController(urlController: string, backController?: Interfaces.IController) {
@@ -116,10 +131,27 @@ export module App {
             }
         }
 
-        public OpenView(controller: Interfaces.IController, backController?: Interfaces.IController) {
-            var self = this;
+        protected SetHeader(controller: Interfaces.IController) {
+            let header = controller.Header;
+            if (header)
+                this._model.set("AppHeader", header); // + ' ' + self.contentControl.width()
+            else
+                if ("POS Cloud" !== this._model.get("AppHeader"))
+                    this._model.set("AppHeader", "POS Cloud");
+        }
+
+        public OpenView(controller: Interfaces.IController, backController?: Interfaces.IController, isRestore: boolean = false) {
+            let self = this;
+
+            if (self._controllerNavigation !== self) {
+                self._controllerNavigation.OpenView(controller, backController);
+                return;
+            }
+
             if ($("#" + controller.Options.Id).length > 0) return;     //Already loaded and current
             self.ShowLoading();
+            if (self._controller && self._controller.View)
+                self._controller.View.hide();
 
             $.when($.ajax({ url: controller.Options.Url, cache: false })).done((template) => {
                 let isInit: boolean = false;
@@ -128,20 +160,19 @@ export module App {
                         self._controller.ViewHide(this);
 
                     self._controller = controller;
-                    self._controllersStack.Push(backController);
+                    if (!isRestore)
+                        self._controllersStack.Push(backController);
 
-                    let header = controller.Header;
-                    if (header)
-                        self._model.set("AppHeader", header); // + ' ' + self.contentControl.width()
-                    else
-                        if ("POS Cloud" !== self._model.get("AppHeader"))
-                            self._model.set("AppHeader", "POS Cloud");
+                    self.SetHeader(self._controller);
 
                     let view = $(template);
+                    view.hide();
                     isInit = self._controller.ViewInit(view);
                     self.contentControl.html(view[0]);
                     
-                    self._controller.ViewShow(this);
+                    if (self._controller.ViewShow(this) === true)
+                        view.show();
+
                     self._controller.ViewResize(this);
                 } finally {
                     if (isInit)

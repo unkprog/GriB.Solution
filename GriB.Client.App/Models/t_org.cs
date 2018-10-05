@@ -7,9 +7,11 @@ namespace GriB.Client.App.Models
         public t_org()
         {
             info = new t_org_info();
+            info1 = new t_org_info1();
         }
         public int type { get; set; }
-        public t_org_info info { get; set; }
+        public t_org_info  info  { get; set; }
+        public t_org_info1 info1 { get; set; }
     }
 
     public class t_org_info 
@@ -23,6 +25,20 @@ namespace GriB.Client.App.Models
         public string phone { get; set; }
         public string email { get; set; }
         public string site  { get; set; }
+    }
+
+    public class t_org_info1
+    {
+        public t_org_info1()
+        {
+            city = string.Empty;
+            address = string.Empty;
+            schedule = string.Empty;
+        }
+        public string city     { get; set; }
+        public string address  { get; set; }
+        public string schedule { get; set; }
 
     }
+
 }

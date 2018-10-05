@@ -31,3 +31,14 @@ begin
 end
 
 
+if not exists (select * from [sys].[objects] where [object_id] = object_id(N'[t_org_info1]') and type in (N'U'))
+begin
+  create table [t_org_info1]
+  (
+    [id]       [int]          not null,
+	[address]  [nvarchar](63) not null default (N''),
+	[schedule] [nvarchar](63) not null default (N''),
+    primary key clustered ([id])
+  )
+end
+

@@ -30,6 +30,7 @@ export namespace Services {
                 url: action,
                 type: "get",
                 dataType: "json",
+                processData: true,
                 crossDomain: options.CrossDomain,
                 data: options.RequestData,
                 success: function (responseData, textStatus, jqXHR) {

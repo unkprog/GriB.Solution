@@ -8,6 +8,7 @@
     export interface IApplication extends IControllerNavigation {
         ShowLoading(): void;
         HideLoading(): void;
+        SetControlNavigation(controlNavigation: IControllerNavigation): void;
         HandleError(e: any): void;
         ShowError(e: string): void;
         ShowMessage(header: string, message: string, onClose?: () => void): void;

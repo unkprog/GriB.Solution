@@ -39,12 +39,14 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
                 });
             };
             Main.prototype.ControllersInit = function () {
-                return vars._maincontrollers;
+                //return vars._maincontrollers;
+                return vars._controllers;
             };
             Main.prototype.GetContent = function () {
                 return this.content;
             };
             Main.prototype.ViewInit = function (view) {
+                variables_1._app.SetControlNavigation(this);
                 this.menu = $('<li><a id="app-btn-menu"><i class="material-icons">menu</i></a></li>');
                 this.sideNav = view.find('.sidenav');
                 this.sideNav.sidenav();

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Net;
 using System.Net.Http;
-using System.Security.Principal;
 using System.Threading.Tasks;
 using System.Web;
 using GriB.Common.Diagnostics;
@@ -41,6 +40,7 @@ namespace GriB.Common.Web.Http
                 });
             }
         }
+
 
         public async Task<HttpResponseMessage> TryCatchResponseAsync(Func<Task<HttpResponseMessage>> func)
         {
