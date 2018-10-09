@@ -50,9 +50,14 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
             };
             Application.prototype.ShowLoading = function () {
                 this.progressControl.show();
+                if (this.contentControl)
+                    this.contentControl.hide();
             };
             Application.prototype.HideLoading = function () {
                 this.progressControl.hide();
+                if (this.contentControl)
+                    this.contentControl.show();
+                this.resize({});
             };
             Application.prototype.loadAppView = function () {
                 var _this = this;
@@ -124,8 +129,6 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
                 if ($("#" + controller.Options.Id).length > 0)
                     return; //Already loaded and current
                 self.ShowLoading();
-                if (self._controller && self._controller.View)
-                    self._controller.View.hide();
                 $.when($.ajax({ url: controller.Options.Url, cache: false })).done(function (template) {
                     var isInit = false;
                     try {
@@ -136,12 +139,10 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
                             self._controllersStack.Push(backController);
                         self.SetHeader(self._controller);
                         var view = $(template);
-                        view.hide();
                         isInit = self._controller.ViewInit(view);
                         self.contentControl.html(view[0]);
-                        if (self._controller.ViewShow(_this) === true)
-                            view.show();
-                        self._controller.ViewResize(_this);
+                        isInit = isInit && self._controller.ViewShow(_this);
+                        //self._controller.ViewResize(this);
                     }
                     finally {
                         if (isInit)

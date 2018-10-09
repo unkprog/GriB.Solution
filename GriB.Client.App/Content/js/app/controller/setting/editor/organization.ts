@@ -25,8 +25,8 @@ export namespace Controller.Setting.Editor {
         }
 
        
-        public get EditorModel(): Interfaces.Model.IOrganizationModel {
-            return this.Model.get("editModel");
+        public get EditorModel(): Interfaces.Model.ICompanyModel {
+            return this.Model.get("editModel").toJSON();
         }
 
        // $('input#input_text, textarea#textarea2').characterCounter();
@@ -49,7 +49,7 @@ export namespace Controller.Setting.Editor {
 
         protected validate(): boolean {
             let result: boolean = true;
-            let model: Interfaces.Model.IOrganizationModel = this.EditorModel;
+            let model: Interfaces.Model.ICompanyModel = this.EditorModel;
 
             if (utils.isNullOrEmpty(model.name)) {
                 M.toast({ html: vars._statres("msg$error$invalidCompanyName") });

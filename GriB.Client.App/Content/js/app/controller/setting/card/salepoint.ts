@@ -19,7 +19,7 @@ export namespace Controller.Setting.Card {
         }
 
         public Add() {
-            vars._editorData["id_salepoint"] = 0;
+            vars._editorData["id_salepoint"] = 100;
             vars._app.OpenController("setting/editor/salepoint", this);
         }
     }

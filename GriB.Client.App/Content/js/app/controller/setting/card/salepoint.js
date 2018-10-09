@@ -34,7 +34,7 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
                         });
                     };
                     SalePoint.prototype.Add = function () {
-                        vars._editorData["id_salepoint"] = 0;
+                        vars._editorData["id_salepoint"] = 100;
                         vars._app.OpenController("setting/editor/salepoint", this);
                     };
                     return SalePoint;

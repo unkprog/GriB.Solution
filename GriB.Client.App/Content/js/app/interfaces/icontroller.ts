@@ -31,7 +31,7 @@
     }
 
     export interface IControllerEditor extends IController {
-        EditorModel: Interfaces.Model.IModelBase;
+        EditorModel: Interfaces.Model.IBaseModel;
         Save(): void;
         Cancel(): void;
     }

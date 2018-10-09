@@ -27,7 +27,7 @@ export namespace Controller.Setting.Editor {
 
 
         public get EditorModel(): Interfaces.Model.ISalepointModel {
-            return this.Model.get("editModel");
+            return this.Model.get("editModel").toJSON();
         }
 
         public ViewInit(view: JQuery): boolean {
@@ -44,7 +44,7 @@ export namespace Controller.Setting.Editor {
             let controller = this;
             let id: number = (vars._editorData["id_salepoint"] ? vars._editorData["id_salepoint"] : 0);
             this.Service.GetSalePoint(id, (responseData) => {
-                controller.Model.set("editModel", responseData);
+                controller.Model.set("editModel", responseData.salepoint);
                 this.setupListCompany(responseData);
                 controller.afterLoad();
             });
@@ -67,7 +67,12 @@ export namespace Controller.Setting.Editor {
 
         public Save(): void {
             let controller = this;
-            this.Service.SetSalePoint(controller.EditorModel, (responseData) => {
+            let comp = $("#editor-view-company-list").formSelect("getSelectedValues");
+            let model : Interfaces.Model.ISalepointModel = this.EditorModel;
+
+            model.company_id = (comp && comp.length > 0 ? +comp[0] : 0);
+
+            this.Service.SetSalePoint(model, (responseData) => {
                 controller.afterSave();
             });
         }
@@ -81,10 +86,10 @@ export namespace Controller.Setting.Editor {
                 result = false;
             }
 
-            if (utils.isNullOrEmpty(model.city)) {
-                M.toast({ html: vars._statres("msg$error$invalidCity") });
-                result = false;
-            }
+            //if (utils.isNullOrEmpty(model.city)) {
+            //    M.toast({ html: vars._statres("msg$error$invalidCity") });
+            //    result = false;
+            //}
 
 
             return result;

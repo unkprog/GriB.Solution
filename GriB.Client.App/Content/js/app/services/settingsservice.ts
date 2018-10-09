@@ -19,8 +19,8 @@ export module Services {
             this.GetApi({ Action: "/get_organization", Callback: Callback });
         }
 
-        public SetOrganization(model: Interfaces.Model.IOrganizationModel, Callback: (responseData: any) => void) {
-            this.PostApi({ Action: "/post_organization", RequestData: model, Callback: Callback });
+        public SetOrganization(model: Interfaces.Model.ICompanyModel, Callback: (responseData: any) => void) {
+            this.PostApi({ Action: "/post_organization", RequestData: JSON.stringify(model), Callback: Callback });
         }
 
         public GetSalePoint(id:number, Callback: (responseData: any) => void) {
@@ -28,7 +28,7 @@ export module Services {
         }
 
         public SetSalePoint(model: Interfaces.Model.ISalepointModel, Callback: (responseData: any) => void) {
-            this.PostApi({ Action: "/post_salepoint", RequestData: model, Callback: Callback });
+            this.PostApi({ Action: "/post_salepoint", RequestData: JSON.stringify(model), Callback: Callback });
         }
     }
 }

@@ -181,8 +181,6 @@ define(["require", "exports", "app/common/utils", "./variables"], function (requ
                 if ($("#" + controller.Options.Id).length > 0)
                     return; //Already loaded and current
                 variables_1._app.ShowLoading();
-                if (self._controller && self._controller.View)
-                    self._controller.View.hide();
                 $.when($.ajax({ url: controller.Options.Url, cache: false })).done(function (template) {
                     var isInit = false;
                     try {
@@ -194,11 +192,9 @@ define(["require", "exports", "app/common/utils", "./variables"], function (requ
                         self.SetHeader(self._controller);
                         try {
                             var view = $(template);
-                            view.hide();
                             isInit = self._controller.ViewInit(view);
                             self._content.html(view[0]);
-                            if (self._controller.ViewShow(_this) === true)
-                                view.show();
+                            isInit = isInit && self._controller.ViewShow(_this);
                             self._controller.ViewResize(_this);
                         }
                         catch (ex) {

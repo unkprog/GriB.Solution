@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Data.SqlClient;
-using System.Linq;
 using GriB.Client.App.Models;
 using GriB.Common.Sql;
 
@@ -10,13 +8,18 @@ namespace GriB.Client.App.Managers.Editors
 {
     public static class Organization
     {
+        public const int typeCompany = 1;
+        public const int typeCity = 2;
+        public const int typeDivision = 3;
+        public const int typeDepartment = 4;
+
         private const string cmdGet = @"Organization\[get]";
         private static t_org readFromValues(object[] values) => new t_org() { id = (int)values[0], d = (int)values[1], cd = (DateTime)values[2], cu = (int)values[3], ud = (DateTime)values[4], uu = (int)values[5], name = (string)values[6], type = (int)values[7], pid = (int)values[8] };
 
         public static List<t_org> GetOrganizations(this Query query, int type)
         {
             List<t_org> result = new List<t_org>();
-            query.Execute(cmdGet, new SqlParameter[] { new SqlParameter() { ParameterName = "@field", Value = string.Empty }, new SqlParameter() { ParameterName = "@id", Value = 0 }, new SqlParameter() { ParameterName = "@type", Value = type } }
+            query.Execute(cmdGet, new SqlParameter[] { new SqlParameter() { ParameterName = "@field", Value = string.Empty }, new SqlParameter() { ParameterName = "@id", Value = 0 }, new SqlParameter() { ParameterName = "@name", Value = string.Empty }, new SqlParameter() { ParameterName = "@type", Value = type } }
             , (values) =>
             {
                 result.Add(readFromValues(values));
@@ -28,7 +31,19 @@ namespace GriB.Client.App.Managers.Editors
         public static t_org GetOrganization(this Query query, int id)
         {
             t_org result = new t_org();
-            query.Execute(cmdGet, new SqlParameter[] { new SqlParameter() { ParameterName = "@field", Value = "id" }, new SqlParameter() { ParameterName = "@id", Value = id }, new SqlParameter() { ParameterName = "@type", Value = 0 } }
+            query.Execute(cmdGet, new SqlParameter[] { new SqlParameter() { ParameterName = "@field", Value = "id" }, new SqlParameter() { ParameterName = "@id", Value = id }, new SqlParameter() { ParameterName = "@name", Value = string.Empty }, new SqlParameter() { ParameterName = "@type", Value = 0 } }
+            , (values) =>
+            {
+                result = readFromValues(values);
+            });
+
+            return result;
+        }
+
+        public static t_org GetOrganization(this Query query, string name, int type)
+        {
+            t_org result = new t_org();
+            query.Execute(cmdGet, new SqlParameter[] { new SqlParameter() { ParameterName = "@field", Value = "name" }, new SqlParameter() { ParameterName = "@id", Value = 0 }, new SqlParameter() { ParameterName = "@name", Value = name }, new SqlParameter() { ParameterName = "@type", Value = type } }
             , (values) =>
             {
                 result = readFromValues(values);

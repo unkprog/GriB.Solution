@@ -66,10 +66,15 @@ export module App {
 
         public ShowLoading() {
             this.progressControl.show();
+            if (this.contentControl)
+                this.contentControl.hide();
         }
 
         public HideLoading() {
             this.progressControl.hide();
+            if (this.contentControl)
+                this.contentControl.show();
+            this.resize({});
         }
 
       
@@ -150,8 +155,6 @@ export module App {
 
             if ($("#" + controller.Options.Id).length > 0) return;     //Already loaded and current
             self.ShowLoading();
-            if (self._controller && self._controller.View)
-                self._controller.View.hide();
 
             $.when($.ajax({ url: controller.Options.Url, cache: false })).done((template) => {
                 let isInit: boolean = false;
@@ -166,14 +169,11 @@ export module App {
                     self.SetHeader(self._controller);
 
                     let view = $(template);
-                    view.hide();
                     isInit = self._controller.ViewInit(view);
                     self.contentControl.html(view[0]);
-                    
-                    if (self._controller.ViewShow(this) === true)
-                        view.show();
+                    isInit = isInit && self._controller.ViewShow(this);
 
-                    self._controller.ViewResize(this);
+                    //self._controller.ViewResize(this);
                 } finally {
                     if (isInit)
                         self.HideLoading();

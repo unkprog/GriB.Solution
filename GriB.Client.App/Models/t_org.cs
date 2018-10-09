@@ -31,11 +31,9 @@ namespace GriB.Client.App.Models
     {
         public t_org_info1()
         {
-            city = string.Empty;
             address = string.Empty;
             schedule = string.Empty;
         }
-        public string city     { get; set; }
         public string address  { get; set; }
         public string schedule { get; set; }
 

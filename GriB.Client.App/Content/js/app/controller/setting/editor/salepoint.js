@@ -41,7 +41,7 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                     };
                     Object.defineProperty(SalePoint.prototype, "EditorModel", {
                         get: function () {
-                            return this.Model.get("editModel");
+                            return this.Model.get("editModel").toJSON();
                         },
                         enumerable: true,
                         configurable: true
@@ -59,7 +59,7 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                         var controller = this;
                         var id = (vars._editorData["id_salepoint"] ? vars._editorData["id_salepoint"] : 0);
                         this.Service.GetSalePoint(id, function (responseData) {
-                            controller.Model.set("editModel", responseData);
+                            controller.Model.set("editModel", responseData.salepoint);
                             _this.setupListCompany(responseData);
                             controller.afterLoad();
                         });
@@ -80,7 +80,10 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                     };
                     SalePoint.prototype.Save = function () {
                         var controller = this;
-                        this.Service.SetSalePoint(controller.EditorModel, function (responseData) {
+                        var comp = $("#editor-view-company-list").formSelect("getSelectedValues");
+                        var model = this.EditorModel;
+                        model.company_id = (comp && comp.length > 0 ? +comp[0] : 0);
+                        this.Service.SetSalePoint(model, function (responseData) {
                             controller.afterSave();
                         });
                     };
@@ -91,10 +94,10 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                             M.toast({ html: vars._statres("msg$error$invalidSalePointName") });
                             result = false;
                         }
-                        if (utils.isNullOrEmpty(model.city)) {
-                            M.toast({ html: vars._statres("msg$error$invalidCity") });
-                            result = false;
-                        }
+                        //if (utils.isNullOrEmpty(model.city)) {
+                        //    M.toast({ html: vars._statres("msg$error$invalidCity") });
+                        //    result = false;
+                        //}
                         return result;
                     };
                     return SalePoint;

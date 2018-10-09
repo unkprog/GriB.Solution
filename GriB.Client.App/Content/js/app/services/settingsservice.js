@@ -35,13 +35,13 @@ define(["require", "exports", "app/common/baseservice"], function (require, expo
                 this.GetApi({ Action: "/get_organization", Callback: Callback });
             };
             SettingsService.prototype.SetOrganization = function (model, Callback) {
-                this.PostApi({ Action: "/post_organization", RequestData: model, Callback: Callback });
+                this.PostApi({ Action: "/post_organization", RequestData: JSON.stringify(model), Callback: Callback });
             };
             SettingsService.prototype.GetSalePoint = function (id, Callback) {
                 this.GetApi({ Action: "/get_salepoint", RequestData: { id: id }, Callback: Callback });
             };
             SettingsService.prototype.SetSalePoint = function (model, Callback) {
-                this.PostApi({ Action: "/post_salepoint", RequestData: model, Callback: Callback });
+                this.PostApi({ Action: "/post_salepoint", RequestData: JSON.stringify(model), Callback: Callback });
             };
             return SettingsService;
         }(base.Services.BaseService));

@@ -177,8 +177,6 @@ export namespace Controller {
             var self = this;
             if ($("#" + controller.Options.Id).length > 0) return;     //Already loaded and current
             _app.ShowLoading();
-            if (self._controller && self._controller.View)
-                self._controller.View.hide();
 
             $.when($.ajax({ url: controller.Options.Url, cache: false })).done((template) => {
                 let isInit: boolean = false;
@@ -193,11 +191,9 @@ export namespace Controller {
                     self.SetHeader(self._controller);
                     try {
                         let view = $(template);
-                        view.hide();
                         isInit = self._controller.ViewInit(view);
                         self._content.html(view[0]);
-                        if (self._controller.ViewShow(this) === true)
-                            view.show();
+                        isInit = isInit && self._controller.ViewShow(this);
                         self._controller.ViewResize(this);
                     }
                     catch (ex) {
@@ -276,7 +272,7 @@ export namespace Controller {
             this.destroyClickEvent(this.btnSave, this.CancelButtonClick);
         }
 
-        public get EditorModel(): Interfaces.Model.IModelBase {
+        public get EditorModel(): Interfaces.Model.IBaseModel {
             return null;
         }
 

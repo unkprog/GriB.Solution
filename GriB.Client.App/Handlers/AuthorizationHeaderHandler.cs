@@ -25,7 +25,6 @@ namespace GriB.Client.App.Handlers
         protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
             // Initialization.   
-            IEnumerable<string> apiKeyHeaderValues = null;
             AuthenticationHeaderValue authorization = request.Headers.Authorization;
             // Verification.   
             if (authorization!= null && authorization.Scheme == API_KEY_HEADER && !string.IsNullOrEmpty(authorization.Parameter))

@@ -1,9 +1,13 @@
 ﻿namespace Interfaces.Model {
-    export interface IModelBase {
+    export interface IBaseModel {
         id: number;
     }
 
-    export interface IIdentityModel extends IModelBase {
+    export interface IReferenceModel extends IBaseModel {
+        name: string;
+    }
+
+    export interface IIdentityModel extends IBaseModel {
         phone: string;
         role: number;
     }
@@ -17,18 +21,27 @@
         pass: string;
     }
 
-    export interface IIdentity extends IModelBase {
+    export interface IIdentity extends IBaseModel {
         auth: boolean;
         token: string;
     }
 
-    export interface IOrganizationModel extends IModelBase {
-        name: string;
+    export interface IEditorModel {
+        
     }
 
-    export interface ISalepointModel extends IModelBase {
-        name: string;
+    export interface ICompanyModel extends IReferenceModel, IEditorModel {
+        site: string;
+        email: string;
+        phone: string;
+    }
+ 
+
+    export interface ISalepointModel extends IReferenceModel {
+        company_id: number;
         city: string;
+        address: string;
+        schedule: string;
     }
 
 }

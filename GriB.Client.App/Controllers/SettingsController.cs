@@ -4,13 +4,11 @@ using System.Net;
 using System.Net.Http;
 using System.Web;
 using System.Web.Http;
-using GriB.Client.App.Managers;
 using GriB.Client.App.Managers.Editors;
 using GriB.Client.App.Models;
+using GriB.Client.App.Models.Editor;
 using GriB.Common.Models.pos;
 using GriB.Common.Models.Security;
-using GriB.Common.Sql;
-using GriB.Common.Web.Http;
 
 namespace GriB.Client.App.Controllers
 {
@@ -44,22 +42,20 @@ namespace GriB.Client.App.Controllers
         {
             return TryCatchResponseQuery((query) =>
             {
-                List<t_org> orgs = Organization.GetOrganizations(query, 1);
-                t_org org = Organization.GetOrganizationInfo(query, (orgs != null && orgs.Count > 0 ? orgs[0] : new t_org() { type = 1 }));
-                return Request.CreateResponse(HttpStatusCode.OK, org);
+                List<t_org> orgs = Organization.GetOrganizations(query, Organization.typeCompany);
+                t_org org = Organization.GetOrganizationInfo(query, (orgs != null && orgs.Count > 0 ? orgs[0] : new t_org() { type = Organization.typeCompany }));
+                return Request.CreateResponse(HttpStatusCode.OK, new company() { id = org.id, name= org.name, site = org.info?.site, email = org.info?.email, phone = org.info?.phone });
             });
         }
 
         [HttpPost]
         [ActionName("post_organization")]
-        public HttpResponseMessage PostOrganization(t_org org)
+        public HttpResponseMessage PostOrganization(company company)
         {
             return TryCatchResponseQuery((query) =>
             {
-                t_org _org = org;
                 Principal principal = (Principal)HttpContext.Current.User;
-                _org.cu = principal.Data.User.id;
-                _org.uu = principal.Data.User.id;
+                t_org _org = new t_org() { id = company.id, type = Organization.typeCompany, cu = principal.Data.User.id, uu = principal.Data.User.id, name = company.name, info = new t_org_info() { site = company.site, email = company.email, phone = company.phone } };
                 Organization.SetOrganization(query, _org);
                 Organization.SetOrganizationInfo(query, _org);
                 return Request.CreateResponse(HttpStatusCode.OK, "Ok");
@@ -72,29 +68,36 @@ namespace GriB.Client.App.Controllers
         {
             return TryCatchResponseQuery((query) =>
             {
-                List<t_org> orgs = Organization.GetOrganizations(query, 1);
+                List<t_org> orgs = Organization.GetOrganizations(query, Organization.typeCompany);
                 t_org org = Organization.GetOrganization(query, id);
                 if (org == null || org.id == 0)
-                    org = new t_org() { type = 2 };
-                org = Organization.GetOrganizationInfo1(query, (org != null ? org : new t_org() { type = 2 }));
+                    org = new t_org() { type = Organization.typeDivision };
+                org = Organization.GetOrganizationInfo1(query, org);
                 org.parent = Organization.GetOrganization(query, org.pid);
-                return Request.CreateResponse(HttpStatusCode.OK, new { companies = orgs, salepoint = org });
+
+                salepoint result = new salepoint() { id = org.id, name = org.name, company_id = (int)org.parent?.pid, city = org.parent?.name, address = org.info1?.address, schedule = org.info1?.schedule };
+                return Request.CreateResponse(HttpStatusCode.OK, new { companies = orgs, salepoint = result });
 
             });
         }
 
         [HttpPost]
         [ActionName("post_salepoint")]
-        public HttpResponseMessage PostSalepoint(t_org org)
+        public HttpResponseMessage PostSalepoint(salepoint salepoint)
         {
             return TryCatchResponseQuery((query) =>
             {
-                t_org _org = org;
                 Principal principal = (Principal)HttpContext.Current.User;
-                _org.cu = principal.Data.User.id;
-                _org.uu = principal.Data.User.id;
-                Organization.SetOrganization(query, _org);
-                Organization.SetOrganizationInfo1(query, _org);
+
+                t_org org = new t_org() { id = salepoint.id, type = Organization.typeDivision, cu = principal.Data.User.id, uu = principal.Data.User.id, name = salepoint.name, info1 = new t_org_info1() { address = salepoint.address, schedule = salepoint.schedule } };
+
+
+                t_org _city = new t_org() { type = Organization.typeCity, cu = principal.Data.User.id, uu = principal.Data.User.id, pid = salepoint.company_id, name = salepoint.city };
+                Organization.SetOrganization(query, _city);
+
+                org.pid = _city.id;
+                Organization.SetOrganization(query, org);
+                Organization.SetOrganizationInfo1(query, org);
                 return Request.CreateResponse(HttpStatusCode.OK, "Ok");
             });
         }

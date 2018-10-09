@@ -40,7 +40,7 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                     };
                     Object.defineProperty(Organization.prototype, "EditorModel", {
                         get: function () {
-                            return this.Model.get("editModel");
+                            return this.Model.get("editModel").toJSON();
                         },
                         enumerable: true,
                         configurable: true

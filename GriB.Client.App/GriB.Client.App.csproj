@@ -137,6 +137,8 @@
     <Content Include="Content\view\setting\index.html" />
     <Content Include="Content\view\terminal\index.html" />
     <Content Include="Global.asax" />
+    <Content Include="Scripts\Query\Organization\Info1\[get].sql" />
+    <Content Include="Scripts\Query\Organization\Info1\[set].sql" />
     <Content Include="Scripts\Query\Organization\Info\[set].sql" />
     <Content Include="Scripts\Query\Organization\Info\[get].sql" />
     <Content Include="Scripts\Query\Organization\[set].sql" />
@@ -159,6 +161,7 @@
     <Compile Include="Managers\AppSettings.cs" />
     <Compile Include="Managers\AuthUser.cs" />
     <Compile Include="Managers\Editors\Organization.cs" />
+    <Compile Include="Models\Editor\References.cs" />
     <Compile Include="Models\t_org.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
