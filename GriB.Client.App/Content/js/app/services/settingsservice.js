@@ -37,6 +37,9 @@ define(["require", "exports", "app/common/baseservice"], function (require, expo
             SettingsService.prototype.SetOrganization = function (model, Callback) {
                 this.PostApi({ Action: "/post_organization", RequestData: JSON.stringify(model), Callback: Callback });
             };
+            SettingsService.prototype.GetSalePoints = function (Callback) {
+                this.GetApi({ Action: "/get_salepoints", Callback: Callback });
+            };
             SettingsService.prototype.GetSalePoint = function (id, Callback) {
                 this.GetApi({ Action: "/get_salepoint", RequestData: { id: id }, Callback: Callback });
             };

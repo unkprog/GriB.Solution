@@ -141,6 +141,7 @@
     <Content Include="Scripts\Query\Organization\Info1\[set].sql" />
     <Content Include="Scripts\Query\Organization\Info\[set].sql" />
     <Content Include="Scripts\Query\Organization\Info\[get].sql" />
+    <Content Include="Scripts\Query\Organization\Get\[salepoints].sql" />
     <Content Include="Scripts\Query\Organization\[set].sql" />
     <Content Include="Scripts\Query\Organization\[get].sql" />
     <Content Include="Scripts\Sql\01.001.[t_orgtype].sql" />
@@ -247,6 +248,7 @@
     <TypeScriptCompile Include="Content\js\app\controller\security\recovery.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\security\register.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\security\login.ts" />
+    <TypeScriptCompile Include="Content\js\app\controller\setting\card\card.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\setting\card\salepoint.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\setting\editor\editor.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\setting\editor\employee.ts" />

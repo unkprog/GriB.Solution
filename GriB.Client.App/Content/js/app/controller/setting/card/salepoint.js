@@ -11,7 +11,7 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-define(["require", "exports", "app/common/variables", "app/common/basecontroller"], function (require, exports, vars, base) {
+define(["require", "exports", "app/common/variables", "app/controller/setting/card/card"], function (require, exports, vars, card) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var Controller;
@@ -33,12 +33,36 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
                             "Header": vars._statres("label$salesPoints"),
                         });
                     };
+                    SalePoint.prototype.loadData = function () {
+                        var _this = this;
+                        var controller = this;
+                        this.Service.GetSalePoints(function (responseData) {
+                            controller.Model.set("editModel", responseData);
+                            _this.setupRows(responseData);
+                            controller.afterLoad();
+                        });
+                        return false;
+                    };
+                    SalePoint.prototype.setupRows = function (data) {
+                        var html = '';
+                        var rows = this.View.find("#card-view-salepoint-rows");
+                        if (data && data.length > 0) {
+                            var item = void 0;
+                            for (var i = 0, icount = data.length; i < icount; i++) {
+                                item = data[i];
+                                html += ' <tr><td>' + item.name + '</td><td>' + item.city + '</td><td>' + item.address + '</td><td>' + item.schedule + '</td></tr>';
+                            }
+                            rows.html(html);
+                        }
+                        else
+                            rows.html('');
+                    };
                     SalePoint.prototype.Add = function () {
                         vars._editorData["id_salepoint"] = 100;
                         vars._app.OpenController("setting/editor/salepoint", this);
                     };
                     return SalePoint;
-                }(base.Controller.BaseCard));
+                }(card.Controller.Setting.Card.Card));
                 Card.SalePoint = SalePoint;
             })(Card = Setting.Card || (Setting.Card = {}));
         })(Setting = Controller.Setting || (Controller.Setting = {}));

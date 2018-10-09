@@ -62,6 +62,19 @@ namespace GriB.Client.App.Controllers
             });
         }
 
+
+        [HttpGet]
+        [ActionName("get_salepoints")]
+        public HttpResponseMessage GetSalePoints()
+        {
+            return TryCatchResponseQuery((query) =>
+            {
+                return Request.CreateResponse(HttpStatusCode.OK, Organization.GetSalepoints(query));
+
+            });
+        }
+
+
         [HttpGet]
         [ActionName("get_salepoint")]
         public HttpResponseMessage GetSalePoint(int id)

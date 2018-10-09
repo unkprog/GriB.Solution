@@ -23,6 +23,10 @@ export module Services {
             this.PostApi({ Action: "/post_organization", RequestData: JSON.stringify(model), Callback: Callback });
         }
 
+        public GetSalePoints(Callback: (responseData: any) => void) {
+            this.GetApi({ Action: "/get_salepoints", Callback: Callback });
+        }
+
         public GetSalePoint(id:number, Callback: (responseData: any) => void) {
             this.GetApi({ Action: "/get_salepoint", RequestData: { id: id }, Callback: Callback });
         }
