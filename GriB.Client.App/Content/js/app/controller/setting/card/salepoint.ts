@@ -35,17 +35,34 @@ export namespace Controller.Setting.Card {
                 let item: Interfaces.Model.ISalepointModel;
                 for (let i = 0, icount = data.length; i < icount; i++) {
                     item = data[i];
-                    html += ' <tr><td>' + item.name + '</td><td>' + item.city + '</td><td>' + item.address + '</td><td>' + item.schedule + '</td></tr>';
+                    html += ' <tr><td>' + item.name + '</td><td>' + item.city + '</td><td class="hide-on-small-only">' + item.address + '</td><td class="hide-on-small-only">' + item.schedule + '</td></tr>';
                 }
                 rows.html(html);
             }
             else
                 rows.html('');
+
+            $('#card-view-salepoint-table').tablePagination({
+                pagerSelector: '#card-view-salepoint-table-pager',
+                activeColor: 'green',
+                prevText: 'Anterior',
+                nextText: 'Siguiente',
+                showPrevNext: true,
+                hidePageNumbers: false,
+                perPage: 30
+            });
         }
 
         public Add() {
             vars._editorData["id_salepoint"] = 100;
             vars._app.OpenController("setting/editor/salepoint", this);
+        }
+
+        public ViewResize(e: any): void {
+            let tbody: JQuery = $('#card-view-salepoint-table').find('tbody');
+            if (tbody && tbody.length > 0) {
+                tbody.height($(window).height() - tbody.offset().top - (0.2 * parseFloat(getComputedStyle(tbody[0]).fontSize)) - 1);
+            }
         }
     }
 }

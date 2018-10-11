@@ -79,3 +79,30 @@
 
 .editor-header-button-cancel {
   color: red; }
+
+table {
+  border-spacing: 0;
+  border: 1px solid rgba(0, 0, 0, 0.12); }
+
+table.striped tr {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.12) !important; }
+
+tbody {
+  display: block;
+  height: 120px;
+  overflow: auto; }
+
+thead, tbody tr {
+  display: table;
+  width: 100%;
+  table-layout: fixed; }
+
+thead {
+  background-color: rgba(0, 0, 0, 0.1); }
+
+.row-table {
+  padding: 0.2em;
+  margin: 0; }
+
+.col-table {
+  padding: 0 !important; }

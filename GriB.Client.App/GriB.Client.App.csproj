@@ -109,13 +109,49 @@
     <Content Include="Content\index.html" />
     <Content Include="Content\js\lib\i18n.js" />
     <Content Include="Content\js\lib\jquery-3.3.1.min.js" />
+    <Content Include="Content\js\lib\kendo\kendo.binder.es5.js">
+      <DependentUpon>kendo.binder.js</DependentUpon>
+    </Content>
+    <Content Include="Content\js\lib\kendo\kendo.binder.es5.min.js">
+      <DependentUpon>kendo.binder.es5.js</DependentUpon>
+    </Content>
     <Content Include="Content\js\lib\kendo\kendo.binder.js" />
+    <Content Include="Content\js\lib\kendo\kendo.core.es5.js">
+      <DependentUpon>kendo.core.js</DependentUpon>
+    </Content>
+    <Content Include="Content\js\lib\kendo\kendo.core.es5.min.js">
+      <DependentUpon>kendo.core.es5.js</DependentUpon>
+    </Content>
     <Content Include="Content\js\lib\kendo\kendo.core.js" />
+    <Content Include="Content\js\lib\kendo\kendo.data.es5.js">
+      <DependentUpon>kendo.data.js</DependentUpon>
+    </Content>
+    <Content Include="Content\js\lib\kendo\kendo.data.es5.min.js">
+      <DependentUpon>kendo.data.es5.js</DependentUpon>
+    </Content>
     <Content Include="Content\js\lib\kendo\kendo.data.js" />
+    <Content Include="Content\js\lib\kendo\kendo.data.odata.es5.js">
+      <DependentUpon>kendo.data.odata.js</DependentUpon>
+    </Content>
+    <Content Include="Content\js\lib\kendo\kendo.data.odata.es5.min.js">
+      <DependentUpon>kendo.data.odata.es5.js</DependentUpon>
+    </Content>
     <Content Include="Content\js\lib\kendo\kendo.data.odata.js" />
+    <Content Include="Content\js\lib\kendo\kendo.data.xml.es5.js">
+      <DependentUpon>kendo.data.xml.js</DependentUpon>
+    </Content>
+    <Content Include="Content\js\lib\kendo\kendo.data.xml.es5.min.js">
+      <DependentUpon>kendo.data.xml.es5.js</DependentUpon>
+    </Content>
     <Content Include="Content\js\lib\kendo\kendo.data.xml.js" />
-    <Content Include="Content\js\lib\materialize.js" />
-    <Content Include="Content\js\lib\materialize.min.js" />
+    <Content Include="Content\js\lib\materialize\materialize.es5.js">
+      <DependentUpon>materialize.js</DependentUpon>
+    </Content>
+    <Content Include="Content\js\lib\materialize\materialize.es5.min.js">
+      <DependentUpon>materialize.es5.js</DependentUpon>
+    </Content>
+    <Content Include="Content\js\lib\materialize\materialize.js" />
+    <Content Include="Content\js\lib\materialize\materialize.min.js" />
     <Content Include="Content\js\lib\require\domReady.js" />
     <Content Include="Content\js\lib\require\require.js" />
     <Content Include="Content\js\nls\en\strings.js" />
@@ -177,6 +213,7 @@
     <Content Include="Content\css\material-icons\MaterialIcons-Regular.ttf" />
     <Content Include="Content\css\material-icons\MaterialIcons-Regular.woff" />
     <Content Include="Content\css\material-icons\MaterialIcons-Regular.woff2" />
+    <Content Include="Content\js\lib\materialize\materialize.pagination.js" />
     <None Include="packages.config" />
     <Content Include="Scss\components\forms\_checkboxes.scss" />
     <Content Include="Scss\components\forms\_file-input.scss" />
@@ -230,7 +267,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Content\js\lib\materialize\" />
     <Folder Include="Scripts\Sql\Data\" />
   </ItemGroup>
   <ItemGroup>
@@ -265,7 +301,7 @@
     <TypeScriptCompile Include="Content\js\app\services\accountservice.ts" />
     <TypeScriptCompile Include="Content\js\lib\jquery.d.ts" />
     <TypeScriptCompile Include="Content\js\lib\kendo\kendo.d.ts" />
-    <TypeScriptCompile Include="Content\js\lib\materialize.d.ts" />
+    <TypeScriptCompile Include="Content\js\lib\materialize\materialize.d.ts" />
     <TypeScriptCompile Include="Content\js\lib\require\require.d.ts" />
   </ItemGroup>
   <ItemGroup>

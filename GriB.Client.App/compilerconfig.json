@@ -10,5 +10,29 @@
   {
     "outputFile": "Content/js/lib/materialize.es5.js",
     "inputFile": "Content/js/lib/materialize.js"
+  },
+  {
+    "outputFile": "Content/js/lib/kendo/kendo.binder.es5.js",
+    "inputFile": "Content/js/lib/kendo/kendo.binder.js"
+  },
+  {
+    "outputFile": "Content/js/lib/kendo/kendo.core.es5.js",
+    "inputFile": "Content/js/lib/kendo/kendo.core.js"
+  },
+  {
+    "outputFile": "Content/js/lib/kendo/kendo.data.es5.js",
+    "inputFile": "Content/js/lib/kendo/kendo.data.js"
+  },
+  {
+    "outputFile": "Content/js/lib/kendo/kendo.data.odata.es5.js",
+    "inputFile": "Content/js/lib/kendo/kendo.data.odata.js"
+  },
+  {
+    "outputFile": "Content/js/lib/kendo/kendo.data.xml.es5.js",
+    "inputFile": "Content/js/lib/kendo/kendo.data.xml.js"
+  },
+  {
+    "outputFile": "Content/js/lib/materialize/materialize.es5.js",
+    "inputFile": "Content/js/lib/materialize/materialize.js"
   }
 ]

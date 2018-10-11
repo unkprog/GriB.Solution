@@ -2,6 +2,7 @@
     sidenav(methodName?: any, paramName?: any): JQuery;
     modal(methodName?: any, paramName?: any): JQuery;
     formSelect(methodName?: any, paramName?: any): JQuery;
+    tablePagination(options: any): JQuery;
 }
 
 

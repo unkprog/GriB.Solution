@@ -2,14 +2,15 @@
     baseUrl: "/Content/js",
     paths: {
         "jquery": "lib/jquery-3.3.1.min",
-        "materialize": "lib/materialize",
-        "kendo.core": "lib/kendo/kendo.core",
-        "kendo.data": "lib/kendo/kendo.data",
-        "kendo.data.odata": "lib/kendo/kendo.data.odata",
-        "kendo.data.xml": "lib/kendo/kendo.data.xml",
-        "kendo.binder": "lib/kendo/kendo.binder",
+        "materialize": "lib/materialize/materialize.min",
+        "materialize.pagination": "lib/materialize/materialize.pagination",
+        "kendo.core": "lib/kendo/kendo.core.es5.min",
+        "kendo.data": "lib/kendo/kendo.data.es5.min",
+        "kendo.data.odata": "lib/kendo/kendo.data.odata.es5.min",
+        "kendo.data.xml": "lib/kendo/kendo.data.xml.es5.min",
+        "kendo.binder": "lib/kendo/kendo.binder.es5.min",
         "i18n": "lib/i18n",
-        "domReady": "lib/require/domReady",
+        "domReady": "lib/require/domReady"
     },
     waitSeconds: 20
 });
@@ -25,7 +26,7 @@
 
 require(["domReady", "jquery"], function (domReady, jquery) {
     $("#progress-container").show();
-    require(["materialize", "kendo.binder"], function (materialize, kendoBinder) {
+    require(["materialize", "materialize.pagination", "kendo.binder"], function (materialize, materializePager, kendoBinder) {
         domReady(function () {
             require(["app/application"], function (app) {
                 var _app = new app.App.Application();

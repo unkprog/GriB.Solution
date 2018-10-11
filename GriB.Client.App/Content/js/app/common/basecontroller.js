@@ -227,7 +227,7 @@ define(["require", "exports", "app/common/utils", "./variables"], function (requ
                 return _super.call(this) || this;
             }
             BaseEditor.prototype.ViewInit = function (view) {
-                var navbarHeader = '<div class="navbar-fixed">';
+                var navbarHeader = '<div class="navbar-fixed editor-header">';
                 navbarHeader += '        <nav class="editor-header-nav">';
                 navbarHeader += '            <div class="nav-wrapper editor-header">';
                 navbarHeader += '                <a class="editor-header-title">' + this.Header + '</a>';
@@ -304,13 +304,17 @@ define(["require", "exports", "app/common/utils", "./variables"], function (requ
                 return _super.call(this) || this;
             }
             BaseCard.prototype.ViewInit = function (view) {
-                var navbarHeader = '<div class="navbar-fixed">';
+                var navbarHeader = '<div class="navbar-fixed editor-header">';
                 navbarHeader += '        <nav class="editor-header-nav">';
                 navbarHeader += '            <div class="nav-wrapper editor-header">';
                 navbarHeader += '                <a class="editor-header-title">' + this.Header + '</a>';
                 navbarHeader += '                <ul id="cardButtons" class="right"></ul>';
                 navbarHeader += '            </div>';
                 navbarHeader += '        </nav>';
+                //navbarHeader += '        <nav class="editor-header-nav">';
+                //navbarHeader += '           <span class="left" id="total_reg"></span>';
+                //navbarHeader += '           <ul class="pagination pager" style="margin:0" id="card-view-salepoint-table-pager"></ul>';
+                //navbarHeader += '        </nav>';
                 navbarHeader += '    </div>';
                 this.navHeader = $(navbarHeader);
                 this.btnEdit = $('<li><a id="card-btn-edit" class="editor-header-button"><i class="material-icons editor-header">edit</i></a></li>');
