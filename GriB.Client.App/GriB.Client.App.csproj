@@ -101,6 +101,9 @@
     </Content>
     <Content Include="Content\css\material-icons\MaterialIcons-Regular.svg" />
     <Content Include="Content\css\material-icons\MaterialIcons.css" />
+    <Content Include="Content\css\material-icons\MaterialIcons.min.css">
+      <DependentUpon>MaterialIcons.css</DependentUpon>
+    </Content>
     <Content Include="Content\css\materialize.css" />
     <Content Include="Content\css\materialize.min.css">
       <DependentUpon>materialize.css</DependentUpon>
@@ -258,6 +261,7 @@
     <Content Include="Scss\materialize.scss" />
     <Content Include="Scss\_style.scss" />
     <Content Include="Scss\app.scss" />
+    <Content Include="Scss\MaterialIcons.scss" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

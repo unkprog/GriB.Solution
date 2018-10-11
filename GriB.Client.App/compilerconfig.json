@@ -1,11 +1,36 @@
 ﻿[
   {
+    "outputFile": "Content/css/material-icons/MaterialIcons.css",
+    "inputFile": "Scss/MaterialIcons.scss",
+    "minify": {
+      "termSemicolons": true
+    },
+    "options": {
+      "relativeUrls": false,
+      "lineFeed": "crlf"
+    }
+  },
+  {
     "outputFile": "Content/css/materialize.css",
-    "inputFile": "Scss/materialize.scss"
+    "inputFile": "Scss/materialize.scss",
+    "minify": {
+      "termSemicolons": true
+    },
+    "options": {
+      "relativeUrls": false,
+      "lineFeed": "crlf"
+    }
   },
   {
     "outputFile": "Content/css/app.css",
-    "inputFile": "Scss/app.scss"
+    "inputFile": "Scss/app.scss",
+    "minify": {
+      "termSemicolons": true
+    },
+    "options": {
+      "relativeUrls": false,
+      "lineFeed": "crlf"
+    }
   },
   {
     "outputFile": "Content/js/lib/materialize.es5.js",
