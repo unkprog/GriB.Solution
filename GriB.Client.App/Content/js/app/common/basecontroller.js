@@ -227,7 +227,7 @@ define(["require", "exports", "app/common/utils", "./variables"], function (requ
                 return _super.call(this) || this;
             }
             BaseEditor.prototype.ViewInit = function (view) {
-                var navbarHeader = '<div class="navbar-fixed editor-header">';
+                var navbarHeader = '<div class="navbar-fixed editor-header z-depth-1">';
                 navbarHeader += '        <nav class="editor-header-nav">';
                 navbarHeader += '            <div class="nav-wrapper editor-header">';
                 navbarHeader += '                <a class="editor-header-title">' + this.Header + '</a>';
@@ -304,17 +304,13 @@ define(["require", "exports", "app/common/utils", "./variables"], function (requ
                 return _super.call(this) || this;
             }
             BaseCard.prototype.ViewInit = function (view) {
-                var navbarHeader = '<div class="navbar-fixed editor-header">';
+                var navbarHeader = '<div class="navbar-fixed editor-header z-depth-1">';
                 navbarHeader += '        <nav class="editor-header-nav">';
                 navbarHeader += '            <div class="nav-wrapper editor-header">';
                 navbarHeader += '                <a class="editor-header-title">' + this.Header + '</a>';
                 navbarHeader += '                <ul id="cardButtons" class="right"></ul>';
                 navbarHeader += '            </div>';
                 navbarHeader += '        </nav>';
-                //navbarHeader += '        <nav class="editor-header-nav">';
-                //navbarHeader += '           <span class="left" id="total_reg"></span>';
-                //navbarHeader += '           <ul class="pagination pager" style="margin:0" id="card-view-salepoint-table-pager"></ul>';
-                //navbarHeader += '        </nav>';
                 navbarHeader += '    </div>';
                 this.navHeader = $(navbarHeader);
                 this.btnEdit = $('<li><a id="card-btn-edit" class="editor-header-button"><i class="material-icons editor-header">edit</i></a></li>');
@@ -323,9 +319,40 @@ define(["require", "exports", "app/common/utils", "./variables"], function (requ
                 this.btnClose = $('<li><a id="card-btn-close" class="editor-header-button"><i class="material-icons editor-header">close</i></a></li>');
                 var cardButtons = this.navHeader.find("#cardButtons");
                 cardButtons.append(this.btnEdit).append(this.btnAdd).append(this.btnDelete).append(this.btnClose);
-                view.prepend(this.navHeader);
+                navbarHeader = '<nav class="card-search-nav editor-header z-depth-1">';
+                navbarHeader += '   <div class="nav-wrapper">';
+                navbarHeader += '       <form>';
+                navbarHeader += '           <div class="input-field">';
+                navbarHeader += '               <input id="card-view-search" type="search" required>';
+                navbarHeader += '               <label class="label-icon" for="search"><i class="material-icons editor-header">search</i></label>';
+                navbarHeader += '               <i class="material-icons editor-header">close</i>';
+                navbarHeader += '           </div>';
+                navbarHeader += '       </form>';
+                navbarHeader += '   </div>';
+                navbarHeader += '</nav>';
+                this.navSearch = $(navbarHeader);
+                this.inputSearch = this.navSearch.find('card-view-search');
+                navbarHeader = '<div class="row row-table">';
+                navbarHeader += '    <div class="col s12 m12 l12 xl12 col-table">';
+                navbarHeader += '        <table class="highlight striped z-depth-1">';
+                navbarHeader += '            <thead></thead>';
+                navbarHeader += '            <tbody></tbody>';
+                navbarHeader += '        </table>';
+                navbarHeader += '    </div>';
+                navbarHeader += '</div>';
+                this.tableRow = $(navbarHeader);
+                this.tableHead = this.tableRow.find('thead');
+                this.tableBody = this.tableRow.find('tbody');
+                view.append([this.navHeader, this.navSearch, this.tableRow]);
                 _super.prototype.ViewInit.call(this, view);
                 return this.loadData();
+            };
+            BaseCard.prototype.ViewResize = function (e) {
+                _super.prototype.ViewResize.call(this, e);
+                var tbody = this.tableBody;
+                if (tbody && tbody.length > 0) {
+                    tbody.height($(window).height() - tbody.offset().top - (0.2 * parseFloat(getComputedStyle(tbody[0]).fontSize)) - 1);
+                }
             };
             BaseCard.prototype.ViewHide = function (e) {
                 _super.prototype.ViewHide.call(this, e);
@@ -355,8 +382,16 @@ define(["require", "exports", "app/common/utils", "./variables"], function (requ
                 return true;
             };
             BaseCard.prototype.afterLoad = function () {
+                this.tableHead.html(this.getTableHeaderHtml());
+                this.tableBody.html(this.getTableBodyHtml());
                 M.updateTextFields();
                 variables_1._app.HideLoading();
+            };
+            BaseCard.prototype.getTableHeaderHtml = function () {
+                return '';
+            };
+            BaseCard.prototype.getTableBodyHtml = function () {
+                return '';
             };
             BaseCard.prototype.editButtonClick = function (e) {
                 this.Edit();

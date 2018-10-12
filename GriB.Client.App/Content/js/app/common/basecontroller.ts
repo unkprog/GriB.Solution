@@ -230,7 +230,7 @@ export namespace Controller {
         private btnCancel: JQuery;
         public ViewInit(view: JQuery): boolean {
 
-            let navbarHeader: string = '<div class="navbar-fixed editor-header">';
+            let navbarHeader: string = '<div class="navbar-fixed editor-header z-depth-1">';
             navbarHeader += '        <nav class="editor-header-nav">';
             navbarHeader += '            <div class="nav-wrapper editor-header">';
             navbarHeader += '                <a class="editor-header-title">' + this.Header + '</a>';
@@ -327,24 +327,27 @@ export namespace Controller {
         private btnDelete: JQuery;
         private btnEdit: JQuery;
         private btnClose: JQuery;
+
+        private navSearch: JQuery;
+        private inputSearch: JQuery;
+
+        private tableRow: JQuery;
+        private tableHead: JQuery;
+        private tableBody: JQuery;
+
         public ViewInit(view: JQuery): boolean {
 
-            let navbarHeader: string = '<div class="navbar-fixed editor-header">';
+            let navbarHeader: string = '<div class="navbar-fixed editor-header z-depth-1">';
             navbarHeader += '        <nav class="editor-header-nav">';
             navbarHeader += '            <div class="nav-wrapper editor-header">';
             navbarHeader += '                <a class="editor-header-title">' + this.Header + '</a>';
             navbarHeader += '                <ul id="cardButtons" class="right"></ul>';
             navbarHeader += '            </div>';
             navbarHeader += '        </nav>';
-            //navbarHeader += '        <nav class="editor-header-nav">';
-            //navbarHeader += '           <span class="left" id="total_reg"></span>';
-            //navbarHeader += '           <ul class="pagination pager" style="margin:0" id="card-view-salepoint-table-pager"></ul>';
-            //navbarHeader += '        </nav>';
             navbarHeader += '    </div>';
 
             this.navHeader = $(navbarHeader);
 
-            
             this.btnEdit = $('<li><a id="card-btn-edit" class="editor-header-button"><i class="material-icons editor-header">edit</i></a></li>');
             this.btnAdd = $('<li><a id="card-btn-add" class="editor-header-button"><i class="material-icons editor-header">add</i></a></li>');
             this.btnDelete = $('<li><a id="card-btn-delete" class="editor-header-button"><i class="material-icons editor-header">remove</i></a></li>');
@@ -353,11 +356,48 @@ export namespace Controller {
             let cardButtons: JQuery = this.navHeader.find("#cardButtons");
             cardButtons.append(this.btnEdit).append(this.btnAdd).append(this.btnDelete).append(this.btnClose);
 
-            view.prepend(this.navHeader);
+            navbarHeader = '<nav class="card-search-nav editor-header z-depth-1">';
+            navbarHeader += '   <div class="nav-wrapper">';
+            navbarHeader += '       <form>';
+            navbarHeader += '           <div class="input-field">';
+            navbarHeader += '               <input id="card-view-search" type="search" required>';
+            navbarHeader += '               <label class="label-icon" for="search"><i class="material-icons editor-header">search</i></label>';
+            navbarHeader += '               <i class="material-icons editor-header">close</i>';
+            navbarHeader += '           </div>';
+            navbarHeader += '       </form>';
+            navbarHeader += '   </div>';
+            navbarHeader += '</nav>';
+            this.navSearch = $(navbarHeader);
+            this.inputSearch = this.navSearch.find('card-view-search');
+
+
+
+            navbarHeader  = '<div class="row row-table">';
+            navbarHeader += '    <div class="col s12 m12 l12 xl12 col-table">';
+            navbarHeader += '        <table class="highlight striped z-depth-1">';
+            navbarHeader += '            <thead></thead>';
+            navbarHeader += '            <tbody></tbody>';
+            navbarHeader += '        </table>';
+            navbarHeader += '    </div>';
+            navbarHeader += '</div>';
+            this.tableRow = $(navbarHeader);
+            this.tableHead = this.tableRow.find('thead');
+            this.tableBody = this.tableRow.find('tbody');
+
+            view.append([this.navHeader, this.navSearch, this.tableRow]);
 
             super.ViewInit(view);
 
             return this.loadData();
+        }
+
+        public ViewResize(e: any): void {
+            super.ViewResize(e);
+
+            let tbody: JQuery = this.tableBody;
+            if (tbody && tbody.length > 0) {
+                tbody.height($(window).height() - tbody.offset().top - (0.2 * parseFloat(getComputedStyle(tbody[0]).fontSize)) - 1);
+            }
         }
 
         public ViewHide(e) {
@@ -392,8 +432,17 @@ export namespace Controller {
         }
 
         protected afterLoad(): void {
+            this.tableHead.html(this.getTableHeaderHtml());
+            this.tableBody.html(this.getTableBodyHtml());
             M.updateTextFields();
             _app.HideLoading();
+        }
+
+        protected getTableHeaderHtml(): string {
+            return '';
+        }
+        protected getTableBodyHtml(): string {
+            return '';
         }
 
         public EditButtonClick: { (e: any): void; };

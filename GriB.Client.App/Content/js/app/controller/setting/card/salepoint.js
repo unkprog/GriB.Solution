@@ -34,47 +34,65 @@ define(["require", "exports", "app/common/variables", "app/controller/setting/ca
                         });
                     };
                     SalePoint.prototype.loadData = function () {
-                        var _this = this;
                         var controller = this;
                         this.Service.GetSalePoints(function (responseData) {
                             controller.Model.set("editModel", responseData);
-                            _this.setupRows(responseData);
+                            //this.setupRows(responseData);
                             controller.afterLoad();
                         });
                         return false;
                     };
-                    SalePoint.prototype.setupRows = function (data) {
+                    SalePoint.prototype.getTableHeaderHtml = function () {
                         var html = '';
-                        var rows = this.View.find("#card-view-salepoint-rows");
+                        html += '<tr>';
+                        html += '   <th>Наименование</th>';
+                        html += '   <th>Город</th>';
+                        html += '   <th class="hide-on-small-only">Адрес</th>';
+                        html += '   <th class="hide-on-small-only">Расписание</th>';
+                        html += '</tr>';
+                        return html;
+                    };
+                    SalePoint.prototype.getTableBodyHtml = function () {
+                        var html = '';
+                        var data = this.Model.get("editModel");
                         if (data && data.length > 0) {
                             var item = void 0;
                             for (var i = 0, icount = data.length; i < icount; i++) {
                                 item = data[i];
-                                html += ' <tr><td>' + item.name + '</td><td>' + item.city + '</td><td class="hide-on-small-only">' + item.address + '</td><td class="hide-on-small-only">' + item.schedule + '</td></tr>';
+                                html += '<tr><td>' + item.name + '</td>';
+                                html += '<td>' + item.city + ' </td>';
+                                html += '<td class="hide-on-small-only"> ' + item.address + '</td>';
+                                html += '<td class="hide-on-small-only"> ' + item.schedule + '</td></tr>';
                             }
-                            rows.html(html);
                         }
-                        else
-                            rows.html('');
-                        $('#card-view-salepoint-table').tablePagination({
-                            pagerSelector: '#card-view-salepoint-table-pager',
-                            activeColor: 'green',
-                            prevText: 'Anterior',
-                            nextText: 'Siguiente',
-                            showPrevNext: true,
-                            hidePageNumbers: false,
-                            perPage: 30
-                        });
+                        return html;
                     };
+                    //private setupRows(data: any) {
+                    //    let html: string = '';
+                    //    let rows: JQuery = this.View.find("#card-view-salepoint-rows");
+                    //    if (data && data.length > 0) {
+                    //        let item: Interfaces.Model.ISalepointModel;
+                    //        for (let i = 0, icount = data.length; i < icount; i++) {
+                    //            item = data[i];
+                    //            html += ' <tr><td>' + item.name + '</td><td>' + item.city + '</td><td class="hide-on-small-only">' + item.address + '</td><td class="hide-on-small-only">' + item.schedule + '</td></tr>';
+                    //        }
+                    //        rows.html(html);
+                    //    }
+                    //    else
+                    //        rows.html('');
+                    //    //$('#card-view-salepoint-table').tablePagination({
+                    //    //    pagerSelector: '#card-view-salepoint-table-pager',
+                    //    //    activeColor: 'green',
+                    //    //    prevText: 'Anterior',
+                    //    //    nextText: 'Siguiente',
+                    //    //    showPrevNext: true,
+                    //    //    hidePageNumbers: false,
+                    //    //    perPage: 30
+                    //    //});
+                    //}
                     SalePoint.prototype.Add = function () {
                         vars._editorData["id_salepoint"] = 100;
                         vars._app.OpenController("setting/editor/salepoint", this);
-                    };
-                    SalePoint.prototype.ViewResize = function (e) {
-                        var tbody = $('#card-view-salepoint-table').find('tbody');
-                        if (tbody && tbody.length > 0) {
-                            tbody.height($(window).height() - tbody.offset().top - (0.2 * parseFloat(getComputedStyle(tbody[0]).fontSize)) - 1);
-                        }
                     };
                     return SalePoint;
                 }(card.Controller.Setting.Card.Card));
