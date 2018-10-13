@@ -33,39 +33,24 @@ define(["require", "exports", "app/common/variables", "app/controller/setting/ca
                             "Header": vars._statres("label$salesPoints"),
                         });
                     };
+                    SalePoint.prototype.getCardSettings = function () {
+                        return {
+                            FieldId: "id",
+                            Columns: [
+                                { Header: "Наименование", Field: "name" },
+                                { Header: "Город", Field: "city" },
+                                { Header: "Адрес", HeaderStyle: "hide-on-small-only", Field: "address", FieldStyle: "hide-on-small-only" },
+                                { Header: "Расписание", HeaderStyle: "hide-on-small-only", Field: "schedule", FieldStyle: "hide-on-small-only" },
+                            ]
+                        };
+                    };
                     SalePoint.prototype.loadData = function () {
                         var controller = this;
                         this.Service.GetSalePoints(function (responseData) {
                             controller.Model.set("editModel", responseData);
-                            //this.setupRows(responseData);
                             controller.afterLoad();
                         });
                         return false;
-                    };
-                    SalePoint.prototype.getTableHeaderHtml = function () {
-                        var html = '';
-                        html += '<tr>';
-                        html += '   <th>Наименование</th>';
-                        html += '   <th>Город</th>';
-                        html += '   <th class="hide-on-small-only">Адрес</th>';
-                        html += '   <th class="hide-on-small-only">Расписание</th>';
-                        html += '</tr>';
-                        return html;
-                    };
-                    SalePoint.prototype.getTableBodyHtml = function () {
-                        var html = '';
-                        var data = this.Model.get("editModel");
-                        if (data && data.length > 0) {
-                            var item = void 0;
-                            for (var i = 0, icount = data.length; i < icount; i++) {
-                                item = data[i];
-                                html += '<tr><td>' + item.name + '</td>';
-                                html += '<td>' + item.city + ' </td>';
-                                html += '<td class="hide-on-small-only"> ' + item.address + '</td>';
-                                html += '<td class="hide-on-small-only"> ' + item.schedule + '</td></tr>';
-                            }
-                        }
-                        return html;
                     };
                     //private setupRows(data: any) {
                     //    let html: string = '';
@@ -91,8 +76,18 @@ define(["require", "exports", "app/common/variables", "app/controller/setting/ca
                     //    //});
                     //}
                     SalePoint.prototype.Add = function () {
-                        vars._editorData["id_salepoint"] = 100;
+                        vars._editorData["id_salepoint"] = 0;
                         vars._app.OpenController("setting/editor/salepoint", this);
+                    };
+                    SalePoint.prototype.Edit = function () {
+                        var id = this.getSelectedRowId();
+                        if (id) {
+                            var _id = +id;
+                            if (_id > 0) {
+                                vars._editorData["id_salepoint"] = _id;
+                                vars._app.OpenController("setting/editor/salepoint", this);
+                            }
+                        }
                     };
                     return SalePoint;
                 }(card.Controller.Setting.Card.Card));

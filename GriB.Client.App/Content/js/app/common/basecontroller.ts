@@ -374,7 +374,7 @@ export namespace Controller {
 
             navbarHeader  = '<div class="row row-table">';
             navbarHeader += '    <div class="col s12 m12 l12 xl12 col-table">';
-            navbarHeader += '        <table class="highlight striped z-depth-1">';
+            navbarHeader += '        <table class="highlight z-depth-1">';
             navbarHeader += '            <thead></thead>';
             navbarHeader += '            <tbody></tbody>';
             navbarHeader += '        </table>';
@@ -420,6 +420,7 @@ export namespace Controller {
         }
 
         protected destroyEvents(): void {
+            this.destroyClickEvent(this.rows, this.rowClick);
             this.destroyClickEvent(this.btnEdit, this.EditButtonClick);
             this.destroyClickEvent(this.btnAdd, this.AddButtonClick);
             this.destroyClickEvent(this.btnDelete, this.DeleteButtonClick);
@@ -432,22 +433,120 @@ export namespace Controller {
         }
 
         protected afterLoad(): void {
-            this.tableHead.html(this.getTableHeaderHtml());
-            this.tableBody.html(this.getTableBodyHtml());
+            this.setupTable();
             M.updateTextFields();
             _app.HideLoading();
         }
 
+        protected getCardSettings(): Interfaces.ICardSettings  {
+            return {
+                FieldId: "",
+                Columns: []
+            };
+        }
+
+        private rows: JQuery;
+        private setupTable(): void {
+            this.tableHead.html(this.getTableHeaderHtml());
+            this.tableBody.html(this.getTableBodyHtml());
+            this.rows = this.tableBody.find('tr');
+            this.createClickEvent(this.rows, this.rowClick);
+        }
+
         protected getTableHeaderHtml(): string {
-            return '';
+            let columns: Interfaces.ICardColumn[] = this.getCardSettings().Columns;
+            let html: string = '';
+
+            html += '<tr>';
+            for (let i = 0, icount = columns && columns.length ? columns.length : 0; i < icount; i++) {
+                html += '   <th';
+                if (columns[i].HeaderStyle) {
+                    html += ' class="';
+                    html += columns[i].HeaderStyle;
+                    html += '"';
+                }
+                html += '>';
+                html += (columns[i].HeaderTemplate ? columns[i].HeaderTemplate : columns[i].Header);
+                html += '</th>';
+            }
+            html += '</tr>';
+
+            return html;
         }
+
+        private templateRow: Function;
+        protected getTableRowTemplate(): string {
+            let setting: Interfaces.ICardSettings = this.getCardSettings();
+            let columns: Interfaces.ICardColumn[] = setting.Columns;
+            let html: string = '';
+
+            html += '<tr';
+            if (setting.FieldId) {
+                html += ' id="table-row-#=';
+                html += setting.FieldId;
+                html += '#"';
+            }
+            html += '>';
+
+            for (let i = 0, icount = (columns && columns.length ? columns.length : 0); i < icount; i++) {
+                html += '   <td';
+                if (columns[i].FieldStyle) {
+                    html += ' class="';
+                    html += columns[i].FieldStyle;
+                    html += '"';
+                }
+                html += '>';
+                if (columns[i].FieldTemplate)
+                    html += columns[i].FieldTemplate;
+                else {
+                    html += '#=';
+                    html += columns[i].Field;
+                    html += '#';
+                }
+                html += '</td>';
+            }
+            html += '</tr>';
+
+            return html;
+        }
+
+
         protected getTableBodyHtml(): string {
-            return '';
+            let html: string = '';
+            let data = this.Model.get("editModel");
+            if (data && data.length > 0) {
+                let item: Interfaces.Model.ISalepointModel;
+                if (!this.templateRow)
+                    this.templateRow = kendo.template(this.getTableRowTemplate());
+                for (let i = 0, icount = (data && data.length ? data.length : 0); i < icount; i++) {
+                    item = data[i];
+                    html += this.templateRow(item);
+                }
+            }
+            return html;
         }
+
+        private selectedRow: JQuery;
+        private rowClick(e): void {
+            if (this.selectedRow)
+                this.selectedRow.removeClass("row-active z-depth-1 grey lighten-5");
+            this.selectedRow = $(e.currentTarget);
+            if (this.selectedRow)
+                this.selectedRow.addClass("row-active z-depth-1 grey lighten-5");
+        }
+
 
         public EditButtonClick: { (e: any): void; };
         private editButtonClick(e): void {
-            this.Edit();
+            if (this.selectedRow) {
+                this.Edit();
+            }
+        }
+
+        protected getSelectedRowId(): any {
+            if (this.selectedRow && this.selectedRow.length > 0 && this.selectedRow[0].id) {
+                return this.selectedRow[0].id.replace("table-row-", "");
+            }
         }
 
         public AddButtonClick: { (e: any): void; };

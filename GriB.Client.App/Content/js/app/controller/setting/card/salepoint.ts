@@ -18,45 +18,28 @@ export namespace Controller.Setting.Card {
             });
         }
 
+        protected getCardSettings(): Interfaces.ICardSettings {
+            return {
+                FieldId: "id",
+                Columns: [
+                    { Header: "Наименование", Field: "name" },
+                    { Header: "Город", Field: "city" },
+                    { Header: "Адрес", HeaderStyle: "hide-on-small-only", Field: "address", FieldStyle: "hide-on-small-only" },
+                    { Header: "Расписание", HeaderStyle: "hide-on-small-only", Field: "schedule", FieldStyle: "hide-on-small-only" },
+                ]
+            };
+        }
+
+
         protected loadData(): boolean {
             let controller = this;
             this.Service.GetSalePoints((responseData) => {
                 controller.Model.set("editModel", responseData);
-                //this.setupRows(responseData);
                 controller.afterLoad();
             });
             return false;
         }
 
-        protected getTableHeaderHtml() : string {
-            let html: string = '';
-
-            html += '<tr>';
-            html += '   <th>Наименование</th>';
-            html += '   <th>Город</th>';
-            html += '   <th class="hide-on-small-only">Адрес</th>';
-            html += '   <th class="hide-on-small-only">Расписание</th>';
-            html += '</tr>';
-
-            return html;
-        }
-
-
-        protected getTableBodyHtml(): string {
-            let html: string = '';
-            let data = this.Model.get("editModel");
-            if (data && data.length > 0) {
-                let item: Interfaces.Model.ISalepointModel;
-                for (let i = 0, icount = data.length; i < icount; i++) {
-                    item = data[i];
-                    html += '<tr><td>' + item.name + '</td>';
-                    html += '<td>' + item.city + ' </td>';
-                    html += '<td class="hide-on-small-only"> ' + item.address + '</td>';
-                    html += '<td class="hide-on-small-only"> ' + item.schedule + '</td></tr>';
-                }
-            }
-            return html;
-        }
 
         //private setupRows(data: any) {
         //    let html: string = '';
@@ -84,10 +67,23 @@ export namespace Controller.Setting.Card {
         //}
 
         public Add() {
-            vars._editorData["id_salepoint"] = 100;
+            
+            vars._editorData["id_salepoint"] = 0;
             vars._app.OpenController("setting/editor/salepoint", this);
         }
 
+        public Edit(): void {
+            let id: any = this.getSelectedRowId();
+            if (id) {
+                let _id: number = +id;
+                if (_id > 0) {
+                    vars._editorData["id_salepoint"] = _id;
+                    vars._app.OpenController("setting/editor/salepoint", this);
+                }
+            }
+        }
+
+       
         //public ViewResize(e: any): void {
         //    let tbody: JQuery = $('#card-view-salepoint-table').find('tbody');
         //    if (tbody && tbody.length > 0) {

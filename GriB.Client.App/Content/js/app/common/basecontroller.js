@@ -334,7 +334,7 @@ define(["require", "exports", "app/common/utils", "./variables"], function (requ
                 this.inputSearch = this.navSearch.find('card-view-search');
                 navbarHeader = '<div class="row row-table">';
                 navbarHeader += '    <div class="col s12 m12 l12 xl12 col-table">';
-                navbarHeader += '        <table class="highlight striped z-depth-1">';
+                navbarHeader += '        <table class="highlight z-depth-1">';
                 navbarHeader += '            <thead></thead>';
                 navbarHeader += '            <tbody></tbody>';
                 navbarHeader += '        </table>';
@@ -372,6 +372,7 @@ define(["require", "exports", "app/common/utils", "./variables"], function (requ
                 this.CloseButtonClick = this.createClickEvent(this.btnClose, this.closeButtonClick);
             };
             BaseCard.prototype.destroyEvents = function () {
+                this.destroyClickEvent(this.rows, this.rowClick);
                 this.destroyClickEvent(this.btnEdit, this.EditButtonClick);
                 this.destroyClickEvent(this.btnAdd, this.AddButtonClick);
                 this.destroyClickEvent(this.btnDelete, this.DeleteButtonClick);
@@ -382,19 +383,101 @@ define(["require", "exports", "app/common/utils", "./variables"], function (requ
                 return true;
             };
             BaseCard.prototype.afterLoad = function () {
-                this.tableHead.html(this.getTableHeaderHtml());
-                this.tableBody.html(this.getTableBodyHtml());
+                this.setupTable();
                 M.updateTextFields();
                 variables_1._app.HideLoading();
             };
+            BaseCard.prototype.getCardSettings = function () {
+                return {
+                    FieldId: "",
+                    Columns: []
+                };
+            };
+            BaseCard.prototype.setupTable = function () {
+                this.tableHead.html(this.getTableHeaderHtml());
+                this.tableBody.html(this.getTableBodyHtml());
+                this.rows = this.tableBody.find('tr');
+                this.createClickEvent(this.rows, this.rowClick);
+            };
             BaseCard.prototype.getTableHeaderHtml = function () {
-                return '';
+                var columns = this.getCardSettings().Columns;
+                var html = '';
+                html += '<tr>';
+                for (var i = 0, icount = columns && columns.length ? columns.length : 0; i < icount; i++) {
+                    html += '   <th';
+                    if (columns[i].HeaderStyle) {
+                        html += ' class="';
+                        html += columns[i].HeaderStyle;
+                        html += '"';
+                    }
+                    html += '>';
+                    html += (columns[i].HeaderTemplate ? columns[i].HeaderTemplate : columns[i].Header);
+                    html += '</th>';
+                }
+                html += '</tr>';
+                return html;
+            };
+            BaseCard.prototype.getTableRowTemplate = function () {
+                var setting = this.getCardSettings();
+                var columns = setting.Columns;
+                var html = '';
+                html += '<tr';
+                if (setting.FieldId) {
+                    html += ' id="table-row-#=';
+                    html += setting.FieldId;
+                    html += '#"';
+                }
+                html += '>';
+                for (var i = 0, icount = (columns && columns.length ? columns.length : 0); i < icount; i++) {
+                    html += '   <td';
+                    if (columns[i].FieldStyle) {
+                        html += ' class="';
+                        html += columns[i].FieldStyle;
+                        html += '"';
+                    }
+                    html += '>';
+                    if (columns[i].FieldTemplate)
+                        html += columns[i].FieldTemplate;
+                    else {
+                        html += '#=';
+                        html += columns[i].Field;
+                        html += '#';
+                    }
+                    html += '</td>';
+                }
+                html += '</tr>';
+                return html;
             };
             BaseCard.prototype.getTableBodyHtml = function () {
-                return '';
+                var html = '';
+                var data = this.Model.get("editModel");
+                if (data && data.length > 0) {
+                    var item = void 0;
+                    if (!this.templateRow)
+                        this.templateRow = kendo.template(this.getTableRowTemplate());
+                    for (var i = 0, icount = (data && data.length ? data.length : 0); i < icount; i++) {
+                        item = data[i];
+                        html += this.templateRow(item);
+                    }
+                }
+                return html;
+            };
+            BaseCard.prototype.rowClick = function (e) {
+                if (this.selectedRow)
+                    this.selectedRow.removeClass("row-active z-depth-1 grey lighten-5");
+                this.selectedRow = $(e.currentTarget);
+                if (this.selectedRow)
+                    this.selectedRow.addClass("row-active z-depth-1 grey lighten-5");
             };
             BaseCard.prototype.editButtonClick = function (e) {
-                this.Edit();
+                if (this.selectedRow) {
+                    this.Edit();
+                }
+            };
+            BaseCard.prototype.getSelectedRowId = function () {
+                if (this.selectedRow && this.selectedRow.length > 0 && this.selectedRow[0].id) {
+                    return this.selectedRow[0].id.replace("table-row-", "");
+                }
             };
             BaseCard.prototype.addButtonClick = function (e) {
                 this.Add();

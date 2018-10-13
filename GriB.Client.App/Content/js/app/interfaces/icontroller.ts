@@ -36,6 +36,20 @@
         Cancel(): void;
     }
 
+    export interface ICardColumn {
+        Header?: string;
+        HeaderStyle?: string;
+        HeaderTemplate?: string;
+        Field?: string;
+        FieldStyle?: string;
+        FieldTemplate?: string;
+    }
+
+    export interface ICardSettings {
+        FieldId?: string;
+        Columns?: ICardColumn[];
+    }
+
     export interface IControllerCard extends IController {
         Add(): void;
         Delete(): void;
