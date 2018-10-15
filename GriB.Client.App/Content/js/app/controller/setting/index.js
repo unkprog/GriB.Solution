@@ -39,16 +39,21 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
                 Index.prototype.createEvents = function () {
                     this.OrganizationButtonClick = this.createClickEvent("btn-organization", this.organizationButtonClick);
                     this.SalePointButtonClick = this.createClickEvent("btn-salepoint", this.salePointButtonClick);
+                    this.EmployeetButtonClick = this.createClickEvent("btn-employee", this.employeetButtonClick);
                 };
                 Index.prototype.destroyEvents = function () {
                     this.destroyClickEvent("btn-organization", this.OrganizationButtonClick);
                     this.destroyClickEvent("btn-salepoint", this.SalePointButtonClick);
+                    this.destroyClickEvent("btn-employee", this.EmployeetButtonClick);
                 };
                 Index.prototype.organizationButtonClick = function (e) {
                     variables_1._main.OpenController("setting/editor/organization", this);
                 };
                 Index.prototype.salePointButtonClick = function (e) {
                     variables_1._main.OpenController("setting/card/salepoint", this);
+                };
+                Index.prototype.employeetButtonClick = function (e) {
+                    variables_1._main.OpenController("setting/card/employee", this);
                 };
                 return Index;
             }(base.Controller.Base));

@@ -23,6 +23,7 @@ export module Services {
             this.PostApi({ Action: "/post_organization", RequestData: JSON.stringify(model), Callback: Callback });
         }
 
+        // Точки продаж
         public GetSalePoints(Callback: (responseData: any) => void) {
             this.GetApi({ Action: "/get_salepoints", Callback: Callback });
         }
@@ -33,6 +34,27 @@ export module Services {
 
         public SetSalePoint(model: Interfaces.Model.ISalepointModel, Callback: (responseData: any) => void) {
             this.PostApi({ Action: "/post_salepoint", RequestData: JSON.stringify(model), Callback: Callback });
+        }
+
+        public DelSalePoint(id: number, Callback: (responseData: any) => void) {
+            this.GetApi({ Action: "/del_salepoint", RequestData: { id: id }, Callback: Callback });
+        }
+
+        // Сотрудники
+        public GetEmployees(Callback: (responseData: any) => void) {
+            this.GetApi({ Action: "/get_emplyees", Callback: Callback });
+        }
+
+        public GetEmployee(id: number, Callback: (responseData: any) => void) {
+            this.GetApi({ Action: "/get_emplyee", RequestData: { id: id }, Callback: Callback });
+        }
+
+        public SetEmployee(model: Interfaces.Model.IEmployeeModel, Callback: (responseData: any) => void) {
+            this.PostApi({ Action: "/post__emplyee", RequestData: JSON.stringify(model), Callback: Callback });
+        }
+
+        public DelEmployee(id: number, Callback: (responseData: any) => void) {
+            this.GetApi({ Action: "/del_emplyee", RequestData: { id: id }, Callback: Callback });
         }
     }
 }

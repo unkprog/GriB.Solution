@@ -27,11 +27,13 @@ export namespace Controller.Setting {
         protected createEvents(): void {
             this.OrganizationButtonClick = this.createClickEvent("btn-organization", this.organizationButtonClick);
             this.SalePointButtonClick = this.createClickEvent("btn-salepoint", this.salePointButtonClick);
+            this.EmployeetButtonClick = this.createClickEvent("btn-employee", this.employeetButtonClick);
         }
 
         protected destroyEvents(): void {
             this.destroyClickEvent("btn-organization", this.OrganizationButtonClick);
             this.destroyClickEvent("btn-salepoint", this.SalePointButtonClick);
+            this.destroyClickEvent("btn-employee", this.EmployeetButtonClick);
         }
 
         public OrganizationButtonClick: { (e: any): void; };
@@ -44,6 +46,9 @@ export namespace Controller.Setting {
             _main.OpenController("setting/card/salepoint", this);
         }
 
-        
+        public EmployeetButtonClick: { (e: any): void; };
+        private employeetButtonClick(e) {
+            _main.OpenController("setting/card/employee", this);
+        }
     }
 }

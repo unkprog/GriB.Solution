@@ -395,6 +395,13 @@ define(["require", "exports", "app/common/utils", "./variables"], function (requ
             };
             BaseCard.prototype.setupTable = function () {
                 this.tableHead.html(this.getTableHeaderHtml());
+                this.setupRows();
+                this.rows = this.tableBody.find('tr');
+                this.createClickEvent(this.rows, this.rowClick);
+            };
+            BaseCard.prototype.setupRows = function () {
+                if (this.rows)
+                    this.destroyClickEvent(this.rows, this.rowClick);
                 this.tableBody.html(this.getTableBodyHtml());
                 this.rows = this.tableBody.find('tr');
                 this.createClickEvent(this.rows, this.rowClick);
@@ -493,7 +500,23 @@ define(["require", "exports", "app/common/utils", "./variables"], function (requ
             };
             BaseCard.prototype.Add = function () {
             };
+            BaseCard.prototype.afterAdd = function () {
+            };
             BaseCard.prototype.Delete = function () {
+                this.afterDelete();
+            };
+            BaseCard.prototype.afterDelete = function () {
+                var id = this.getSelectedRowId();
+                if (id) {
+                    var _id = +id;
+                    var model = this.Model.get("editModel");
+                    for (var i = model.length - 1; i >= 0; i--) {
+                        if (model[i].id === _id) {
+                            model.splice(i, 1);
+                        }
+                    }
+                    this.setupRows();
+                }
             };
             BaseCard.prototype.Close = function () {
             };

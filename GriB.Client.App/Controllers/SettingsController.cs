@@ -115,5 +115,18 @@ namespace GriB.Client.App.Controllers
             });
         }
 
+        [HttpGet]
+        [ActionName("del_salepoint")]
+        public HttpResponseMessage DeleteSalepoint(int id)
+        {
+            return TryCatchResponseQuery((query) =>
+            {
+                Organization.DelOrganization(query, id);
+                return Request.CreateResponse(HttpStatusCode.OK, "Ok");
+            });
+        }
+
+        
+
     }
 }

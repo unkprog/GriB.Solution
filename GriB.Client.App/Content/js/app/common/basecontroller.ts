@@ -448,6 +448,15 @@ export namespace Controller {
         private rows: JQuery;
         private setupTable(): void {
             this.tableHead.html(this.getTableHeaderHtml());
+            this.setupRows();
+            this.rows = this.tableBody.find('tr');
+            this.createClickEvent(this.rows, this.rowClick);
+        }
+
+        private setupRows(): void {
+            if (this.rows)
+                this.destroyClickEvent(this.rows, this.rowClick);
+
             this.tableBody.html(this.getTableBodyHtml());
             this.rows = this.tableBody.find('tr');
             this.createClickEvent(this.rows, this.rowClick);
@@ -573,7 +582,26 @@ export namespace Controller {
         public Add(): void {
         }
 
+        protected afterAdd(): void {
+
+        }
+
         public Delete(): void {
+            this.afterDelete();
+        }
+
+        protected afterDelete(): void {
+            let id: any = this.getSelectedRowId();
+            if (id) {
+                let _id: number = +id;
+                let model: any[] = this.Model.get("editModel");
+                for (let i = model.length - 1; i >= 0; i--) {
+                    if (model[i].id === _id) {
+                        model.splice(i, 1);
+                    }
+                }
+                this.setupRows();
+            }
         }
 
         public Close(): void {

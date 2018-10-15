@@ -30,7 +30,6 @@ export namespace Controller.Setting.Card {
             };
         }
 
-
         protected loadData(): boolean {
             let controller = this;
             this.Service.GetSalePoints((responseData) => {
@@ -83,6 +82,16 @@ export namespace Controller.Setting.Card {
             }
         }
 
+        public Delete(): void {
+            let id: any = this.getSelectedRowId();
+            if (id) {
+                let _id: number = +id;
+                let controller = this;
+                this.Service.DelSalePoint(_id, (responseData) => {
+                    controller.afterDelete();
+                });
+            }
+        }
        
         //public ViewResize(e: any): void {
         //    let tbody: JQuery = $('#card-view-salepoint-table').find('tbody');

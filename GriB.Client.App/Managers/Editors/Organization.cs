@@ -66,6 +66,13 @@ namespace GriB.Client.App.Managers.Editors
             return GetOrganization(query, result.id);
         }
 
+        private const string cmdDel = @"Organization\[del]";
+        public static void DelOrganization(this Query query,int id)
+        {
+            query.Execute(cmdDel, new SqlParameter[] { new SqlParameter("@id", id) }
+            , (values) => { });
+        }
+
         private const string cmdGetInfo = @"Organization\Info\[get]";
         public static t_org GetOrganizationInfo(this Query query, t_org org)
         {

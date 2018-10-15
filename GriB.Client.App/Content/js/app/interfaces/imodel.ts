@@ -37,11 +37,14 @@
     }
  
 
-    export interface ISalepointModel extends IReferenceModel {
+    export interface ISalepointModel extends IReferenceModel, IEditorModel {
         company_id: number;
         city: string;
         address: string;
         schedule: string;
     }
 
+    export interface IEmployeeModel extends IReferenceModel, IEditorModel {
+        state: boolean;
+    }
 }

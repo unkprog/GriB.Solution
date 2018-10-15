@@ -89,6 +89,16 @@ define(["require", "exports", "app/common/variables", "app/controller/setting/ca
                             }
                         }
                     };
+                    SalePoint.prototype.Delete = function () {
+                        var id = this.getSelectedRowId();
+                        if (id) {
+                            var _id = +id;
+                            var controller_1 = this;
+                            this.Service.DelSalePoint(_id, function (responseData) {
+                                controller_1.afterDelete();
+                            });
+                        }
+                    };
                     return SalePoint;
                 }(card.Controller.Setting.Card.Card));
                 Card.SalePoint = SalePoint;

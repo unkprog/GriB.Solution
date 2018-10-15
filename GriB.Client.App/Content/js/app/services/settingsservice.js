@@ -37,6 +37,7 @@ define(["require", "exports", "app/common/baseservice"], function (require, expo
             SettingsService.prototype.SetOrganization = function (model, Callback) {
                 this.PostApi({ Action: "/post_organization", RequestData: JSON.stringify(model), Callback: Callback });
             };
+            // Точки продаж
             SettingsService.prototype.GetSalePoints = function (Callback) {
                 this.GetApi({ Action: "/get_salepoints", Callback: Callback });
             };
@@ -45,6 +46,22 @@ define(["require", "exports", "app/common/baseservice"], function (require, expo
             };
             SettingsService.prototype.SetSalePoint = function (model, Callback) {
                 this.PostApi({ Action: "/post_salepoint", RequestData: JSON.stringify(model), Callback: Callback });
+            };
+            SettingsService.prototype.DelSalePoint = function (id, Callback) {
+                this.GetApi({ Action: "/del_salepoint", RequestData: { id: id }, Callback: Callback });
+            };
+            // Сотрудники
+            SettingsService.prototype.GetEmployees = function (Callback) {
+                this.GetApi({ Action: "/get_emplyees", Callback: Callback });
+            };
+            SettingsService.prototype.GetEmployee = function (id, Callback) {
+                this.GetApi({ Action: "/get_emplyee", RequestData: { id: id }, Callback: Callback });
+            };
+            SettingsService.prototype.SetEmployee = function (model, Callback) {
+                this.PostApi({ Action: "/post__emplyee", RequestData: JSON.stringify(model), Callback: Callback });
+            };
+            SettingsService.prototype.DelEmployee = function (id, Callback) {
+                this.GetApi({ Action: "/del_emplyee", RequestData: { id: id }, Callback: Callback });
             };
             return SettingsService;
         }(base.Services.BaseService));
