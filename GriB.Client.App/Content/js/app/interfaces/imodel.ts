@@ -26,8 +26,8 @@
         token: string;
     }
 
-    export interface IEditorModel {
-        
+    export interface IEditorModel extends IBaseModel {
+
     }
 
     export interface ICompanyModel extends IReferenceModel, IEditorModel {
@@ -35,7 +35,7 @@
         email: string;
         phone: string;
     }
- 
+
 
     export interface ISalepointModel extends IReferenceModel, IEditorModel {
         company_id: number;
@@ -44,7 +44,22 @@
         schedule: string;
     }
 
+    export interface ISalePointAccessModel {
+        salepoint: ISalepointModel; 
+        access: boolean;
+        default: boolean;
+    }
+        
     export interface IEmployeeModel extends IReferenceModel, IEditorModel {
-        state: boolean;
+        phone: string;
+        pass: string;
+        access: boolean;
+        openonlogin: number;
+        fname: string;
+        mname: string;
+        lname: string;
+        sex: number;
+        datebirth: Date;
+        accesssalepoints: ISalePointAccessModel[];
     }
 }

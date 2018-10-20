@@ -2,13 +2,18 @@
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
+using GriB.Client.App.Managers;
 using GriB.Client.App.Managers.Editors;
 using GriB.Client.App.Models;
 using GriB.Client.App.Models.Editor;
 using GriB.Common.Models.pos;
+using GriB.Common.Models.pos.settings;
 using GriB.Common.Models.Security;
+using GriB.Common.Web.Http;
+using Newtonsoft.Json.Linq;
 
 namespace GriB.Client.App.Controllers
 {
@@ -24,7 +29,8 @@ namespace GriB.Client.App.Controllers
             System.Reflection.AssemblyName assemblyName = assembly.GetName();
             Version version = assemblyName.Version;
 
-            return Request.CreateResponse(HttpStatusCode.OK, new {
+            return Request.CreateResponse(HttpStatusCode.OK, new
+            {
                 IsDebug =
 #if DEBUG
                 true,
@@ -44,7 +50,7 @@ namespace GriB.Client.App.Controllers
             {
                 List<t_org> orgs = Organization.GetOrganizations(query, Organization.typeCompany);
                 t_org org = Organization.GetOrganizationInfo(query, (orgs != null && orgs.Count > 0 ? orgs[0] : new t_org() { type = Organization.typeCompany }));
-                return Request.CreateResponse(HttpStatusCode.OK, new company() { id = org.id, name= org.name, site = org.info?.site, email = org.info?.email, phone = org.info?.phone });
+                return Request.CreateResponse(HttpStatusCode.OK, new company() { id = org.id, name = org.name, site = org.info?.site, email = org.info?.email, phone = org.info?.phone });
             });
         }
 
@@ -126,7 +132,29 @@ namespace GriB.Client.App.Controllers
             });
         }
 
-        
+
+        //[HttpPost]
+        //[ActionName("employees")]
+        //public HttpResponseMessage Employees()
+        //{
+        //    return TryCatchResponse(() =>
+        //    {
+        //        List<employee> result = Managers.pos.Settings.Employee.GetEmployees(_query, db);
+        //        return Request.CreateResponse(HttpStatusCode.OK, result);
+        //    });
+        //}
+
+        [HttpGet]
+        [ActionName("get_employees")]
+        public async Task<HttpResponseMessage> Employees()
+        => await TryCatchResponseAsync(async () => await CheckResponseError(
+               async () =>
+                   await Common.Net.Json.GetAsync<JObject>(AppSettings.Server.Register, "api/account/employees?db=1")
+                   , (response) =>
+                   {
+                       HttpEmployeesMessage responseMessage = response.ToObject<HttpEmployeesMessage>();
+                       return Request.CreateResponse(HttpStatusCode.OK, responseMessage.Employees);
+                   }));
 
     }
 }

@@ -19,6 +19,7 @@ export namespace Controller.Setting.Editor {
                 "editModel": {},
                 "labelCompany": vars._statres("label$organization"),
                 "labelSalepointName": vars._statres("label$salePointName"),
+                "labelSalePointInfo": vars._statres("label$contacts"),
                 "labelCity": vars._statres("label$city"),
                 "labelAddress": vars._statres("label$address"),
                 "labelSchedule": vars._statres("label$schedule"),
@@ -30,15 +31,6 @@ export namespace Controller.Setting.Editor {
             return this.Model.get("editModel").toJSON();
         }
 
-        public ViewInit(view: JQuery): boolean {
-            let result: boolean = super.ViewInit(view);
-            return result;
-        }
-
-        public ViewShow(e): boolean {
-            super.ViewShow(e);
-            return false;
-        }
 
         protected loadData(): boolean {
             let controller = this;

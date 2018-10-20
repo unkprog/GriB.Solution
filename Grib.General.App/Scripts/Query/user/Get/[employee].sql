@@ -1,4 +1,4 @@
-﻿select [u].[id], [u].[pid], [u].[phone]
+﻿select [u].[id], [u].[d], [u].[cd], [u].[cu], [u].[ud], [u].[uu], [u].[pid], [u].[phone]
      , [sex] = isnull([up].[sex], 0), [birth] = isnull([up].[birth],'18991230'), [fname]=isnull([up].[fname], ''), [mname]=isnull([up].[mname],''), [lname]=isnull([up].[lname], ''), [email]=isnull([up].[email],'')
      , [pass] = isnull([us].[pass], '')
 from [pos_user] [u] with(nolock)

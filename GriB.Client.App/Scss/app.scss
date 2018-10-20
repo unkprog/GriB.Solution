@@ -30,6 +30,14 @@
     padding-bottom: 0 !important;
 }
 
+.padding-1em {
+    padding: 1em;
+}
+
+.padding-0001em {
+    padding: 0 1em;
+}
+
 #app-content, #main-view-content {
     overflow-y: auto;
     overflow-x: hidden;
@@ -110,6 +118,11 @@ nav.card-search-nav .input-field label i {
     color: red;
 }
 
+.row-inputs {
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
 table {
     border-spacing: 0;
     border: 1px solid rgba(0, 0, 0, 0.12);
@@ -146,4 +159,15 @@ td, th {
 
 .col-table {
     padding: 0 !important;
+}
+
+.cb-state-label {
+    font-size: 1.35em;
+    margin: 1em 2em;
+}
+
+.cb-header-label {
+    position: absolute !important;
+    top: -26px !important;
+    font-size: 0.8rem !important;
 }

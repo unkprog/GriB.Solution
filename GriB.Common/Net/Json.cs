@@ -41,5 +41,32 @@ namespace GriB.Common.Net
 
             return result;
         }
+
+        public static TResult Get<TResult>(string server, string url)
+        {
+            Task<TResult> getResult = GetAsync<TResult>(server, url);
+            getResult.Start();
+            return getResult.Result;
+        }
+
+        public static async Task<TResult> GetAsync<TResult>(string server, string url)
+        {
+            TResult result = default(TResult);
+            HttpResponseMessage response = null;
+            using (HttpClient client = new HttpClient())
+            {
+                client.BaseAddress = new Uri(server);
+                client.DefaultRequestHeaders.Accept.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+                response = await client.GetAsync(url);
+                response.EnsureSuccessStatusCode();
+            }
+
+            if (response != null)
+                result = await response.Content.ReadAsAsync<TResult>();
+
+            return result;
+        }
     }
 }

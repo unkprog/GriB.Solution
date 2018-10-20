@@ -39,7 +39,6 @@ define(["require", "exports", "app/common/variables", "app/controller/setting/ca
                             Columns: [
                                 { Header: "Наименование", Field: "name" },
                                 { Header: "Телефон", Field: "phone" },
-                                { Header: "Статус", Field: "state" }
                             ]
                         };
                     };
@@ -61,7 +60,7 @@ define(["require", "exports", "app/common/variables", "app/controller/setting/ca
                             var _id = +id;
                             if (_id > 0) {
                                 vars._editorData["id_employee"] = _id;
-                                vars._app.OpenController("setting/editor/employe", this);
+                                vars._app.OpenController("setting/editor/employee", this);
                             }
                         }
                     };

@@ -24,7 +24,7 @@ export namespace Controller.Setting.Card {
                 Columns: [
                     { Header: "Наименование", Field: "name" },
                     { Header: "Телефон", Field: "phone" },
-                    { Header: "Статус", Field: "state" }
+                   // { Header: "Статус", Field: "state" }
                 ]
             };
         }
@@ -50,7 +50,7 @@ export namespace Controller.Setting.Card {
                 let _id: number = +id;
                 if (_id > 0) {
                     vars._editorData["id_employee"] = _id;
-                    vars._app.OpenController("setting/editor/employe", this);
+                    vars._app.OpenController("setting/editor/employee", this);
                 }
             }
         }

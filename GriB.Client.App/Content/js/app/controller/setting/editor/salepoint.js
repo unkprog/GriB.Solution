@@ -34,6 +34,7 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                             "editModel": {},
                             "labelCompany": vars._statres("label$organization"),
                             "labelSalepointName": vars._statres("label$salePointName"),
+                            "labelSalePointInfo": vars._statres("label$contacts"),
                             "labelCity": vars._statres("label$city"),
                             "labelAddress": vars._statres("label$address"),
                             "labelSchedule": vars._statres("label$schedule"),
@@ -46,14 +47,6 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                         enumerable: true,
                         configurable: true
                     });
-                    SalePoint.prototype.ViewInit = function (view) {
-                        var result = _super.prototype.ViewInit.call(this, view);
-                        return result;
-                    };
-                    SalePoint.prototype.ViewShow = function (e) {
-                        _super.prototype.ViewShow.call(this, e);
-                        return false;
-                    };
                     SalePoint.prototype.loadData = function () {
                         var _this = this;
                         var controller = this;

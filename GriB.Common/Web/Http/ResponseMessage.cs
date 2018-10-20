@@ -1,4 +1,6 @@
-﻿using GriB.Common.Models.pos;
+﻿using System.Collections.Generic;
+using GriB.Common.Models.pos;
+using GriB.Common.Models.pos.settings;
 
 namespace GriB.Common.Web.Http
 {
@@ -26,5 +28,10 @@ namespace GriB.Common.Web.Http
     {
         public sqlsrv server   { get; set; }
         public sqldb  database { get; set; }
+    }
+
+    public class HttpEmployeesMessage
+    {
+        public List<employee> Employees { get; set; }
     }
 }

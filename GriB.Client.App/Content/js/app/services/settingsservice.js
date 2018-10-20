@@ -52,16 +52,16 @@ define(["require", "exports", "app/common/baseservice"], function (require, expo
             };
             // Сотрудники
             SettingsService.prototype.GetEmployees = function (Callback) {
-                this.GetApi({ Action: "/get_emplyees", Callback: Callback });
+                this.GetApi({ Action: "/get_employees", Callback: Callback });
             };
             SettingsService.prototype.GetEmployee = function (id, Callback) {
-                this.GetApi({ Action: "/get_emplyee", RequestData: { id: id }, Callback: Callback });
+                this.GetApi({ Action: "/get_employee", RequestData: { id: id }, Callback: Callback });
             };
             SettingsService.prototype.SetEmployee = function (model, Callback) {
-                this.PostApi({ Action: "/post__emplyee", RequestData: JSON.stringify(model), Callback: Callback });
+                this.PostApi({ Action: "/post_employee", RequestData: JSON.stringify(model), Callback: Callback });
             };
             SettingsService.prototype.DelEmployee = function (id, Callback) {
-                this.GetApi({ Action: "/del_emplyee", RequestData: { id: id }, Callback: Callback });
+                this.GetApi({ Action: "/del_employee", RequestData: { id: id }, Callback: Callback });
             };
             return SettingsService;
         }(base.Services.BaseService));

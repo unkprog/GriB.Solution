@@ -9,6 +9,7 @@ using GriB.Common.Web.Http;
 using GriB.General.App.Managers;
 using GriB.Common.Models.pos;
 using GriB.Common.Models.Security;
+using GriB.Common.Models.pos.settings;
 
 namespace GriB.General.App.Controllers
 {
@@ -29,7 +30,7 @@ namespace GriB.General.App.Controllers
             if (!string.IsNullOrEmpty(user.phone))
             {
                 string body = string.Concat("Ваш пароль для входа: ", user_sec.pass);
-                //var resultSMS = Common.Net.SMS.SendSMS(user.phone, body);
+                var resultSMS = Common.Net.SMS.SendSMS(user.phone, body);
             }
 
             //if (!string.IsNullOrEmpty(user.email))
@@ -48,7 +49,7 @@ namespace GriB.General.App.Controllers
             {
                 if (register == null)
                     throw new ApiException("Неверные параметры авторизации.");
-               
+
                 List<user> users = Managers.pos.Users.GetUsers(_query, register.phone);
 
                 if (users != null && users.Count > 0)
@@ -106,7 +107,7 @@ namespace GriB.General.App.Controllers
                     throw new ApiException("Пользователь не найден.");
 
                 user user = null;
-                for(int i = 0, icount = users.Count; user == null && i < icount; i++)
+                for (int i = 0, icount = users.Count; user == null && i < icount; i++)
                 {
                     user_sec sec = Managers.pos.Users.GetPassword(_query, users[i].id);
                     if (sec.pass == login.pass)
@@ -125,5 +126,16 @@ namespace GriB.General.App.Controllers
             });
         }
 
+
+        [HttpGet]
+        [ActionName("employees")]
+        public HttpResponseMessage Employees(int db)
+        {
+            return TryCatchResponse(() =>
+            {
+                List<employee> result = Managers.pos.Settings.Employee.GetEmployees(_query, db);
+                return Request.CreateResponse(HttpStatusCode.OK, new HttpEmployeesMessage() { Employees = result });
+            });
+        }
     }
 }

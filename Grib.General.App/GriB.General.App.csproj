@@ -81,6 +81,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\index.html" />
+    <Content Include="Content\js\lib\jquery-3.3.1.min.js" />
+    <Content Include="Content\Test.html" />
     <Content Include="Global.asax" />
     <Content Include="Scripts\Query\server\db\[get].sql" />
     <Content Include="Scripts\Query\server\db\[ins].sql" />
@@ -111,6 +113,7 @@
     </Compile>
     <Compile Include="Managers\AppSettings.cs" />
     <Compile Include="Managers\pos\Server.cs" />
+    <Compile Include="Managers\pos\Settings\Employee.cs" />
     <Compile Include="Managers\pos\Users.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

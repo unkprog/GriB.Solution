@@ -42,19 +42,19 @@ export module Services {
 
         // Сотрудники
         public GetEmployees(Callback: (responseData: any) => void) {
-            this.GetApi({ Action: "/get_emplyees", Callback: Callback });
+            this.GetApi({ Action: "/get_employees", Callback: Callback });
         }
 
         public GetEmployee(id: number, Callback: (responseData: any) => void) {
-            this.GetApi({ Action: "/get_emplyee", RequestData: { id: id }, Callback: Callback });
+            this.GetApi({ Action: "/get_employee", RequestData: { id: id }, Callback: Callback });
         }
 
         public SetEmployee(model: Interfaces.Model.IEmployeeModel, Callback: (responseData: any) => void) {
-            this.PostApi({ Action: "/post__emplyee", RequestData: JSON.stringify(model), Callback: Callback });
+            this.PostApi({ Action: "/post_employee", RequestData: JSON.stringify(model), Callback: Callback });
         }
 
         public DelEmployee(id: number, Callback: (responseData: any) => void) {
-            this.GetApi({ Action: "/del_emplyee", RequestData: { id: id }, Callback: Callback });
+            this.GetApi({ Action: "/del_employee", RequestData: { id: id }, Callback: Callback });
         }
     }
 }
