@@ -42,6 +42,7 @@ namespace GriB.Client.App.Controllers
             });
         }
 
+        #region Компания
         [HttpGet]
         [ActionName("get_organization")]
         public HttpResponseMessage GetOrganization()
@@ -67,8 +68,9 @@ namespace GriB.Client.App.Controllers
                 return Request.CreateResponse(HttpStatusCode.OK, "Ok");
             });
         }
+        #endregion
 
-
+        #region Торговая точка
         [HttpGet]
         [ActionName("get_salepoints")]
         public HttpResponseMessage GetSalePoints()
@@ -79,7 +81,6 @@ namespace GriB.Client.App.Controllers
 
             });
         }
-
 
         [HttpGet]
         [ActionName("get_salepoint")]
@@ -131,30 +132,41 @@ namespace GriB.Client.App.Controllers
                 return Request.CreateResponse(HttpStatusCode.OK, "Ok");
             });
         }
+        #endregion
 
-
-        //[HttpPost]
-        //[ActionName("employees")]
-        //public HttpResponseMessage Employees()
-        //{
-        //    return TryCatchResponse(() =>
-        //    {
-        //        List<employee> result = Managers.pos.Settings.Employee.GetEmployees(_query, db);
-        //        return Request.CreateResponse(HttpStatusCode.OK, result);
-        //    });
-        //}
-
+        #region Сотрудники
         [HttpGet]
         [ActionName("get_employees")]
         public async Task<HttpResponseMessage> Employees()
         => await TryCatchResponseAsync(async () => await CheckResponseError(
                async () =>
-                   await Common.Net.Json.GetAsync<JObject>(AppSettings.Server.Register, "api/account/employees?db=1")
-                   , (response) =>
-                   {
-                       HttpEmployeesMessage responseMessage = response.ToObject<HttpEmployeesMessage>();
-                       return Request.CreateResponse(HttpStatusCode.OK, responseMessage.Employees);
-                   }));
+               {
+                   Principal principal = (Principal)HttpContext.Current.User;
+                   return await Common.Net.Json.GetAsync<JObject>(AppSettings.Server.Register, string.Concat("api/account/employees?db=", principal?.Data?.Database?.id));
+               }
+               , (response) =>
+               {
+                   HttpEmployeesMessage responseMessage = response.ToObject<HttpEmployeesMessage>();
+                   return Request.CreateResponse(HttpStatusCode.OK, responseMessage.Employees);
+               })
+        );
+
+        [HttpGet]
+        [ActionName("get_employee")]
+        public async Task<HttpResponseMessage> Employee(int id)
+        => await TryCatchResponseAsync(async () => await CheckResponseError(
+               async () =>
+               {
+                   Principal principal = (Principal)HttpContext.Current.User;
+                   return await Common.Net.Json.GetAsync<JObject>(AppSettings.Server.Register, string.Concat("api/account/employees?db=", principal?.Data?.Database?.id));
+               }
+               , (response) =>
+               {
+                   HttpEmployeesMessage responseMessage = response.ToObject<HttpEmployeesMessage>();
+                   return Request.CreateResponse(HttpStatusCode.OK, responseMessage.Employees);
+               })
+
+        #endregion
 
     }
 }
