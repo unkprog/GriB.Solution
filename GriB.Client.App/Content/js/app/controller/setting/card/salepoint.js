@@ -31,6 +31,7 @@ define(["require", "exports", "app/common/variables", "app/controller/setting/ca
                     SalePoint.prototype.createModel = function () {
                         return new kendo.data.ObservableObject({
                             "Header": vars._statres("label$salesPoints"),
+                            "cardModel": []
                         });
                     };
                     SalePoint.prototype.getCardSettings = function () {
@@ -47,7 +48,7 @@ define(["require", "exports", "app/common/variables", "app/controller/setting/ca
                     SalePoint.prototype.loadData = function () {
                         var controller = this;
                         this.Service.GetSalePoints(function (responseData) {
-                            controller.Model.set("editModel", responseData);
+                            controller.Model.set("cardModel", responseData);
                             controller.afterLoad();
                         });
                         return false;

@@ -55,6 +55,10 @@ export namespace Controller {
             return true;
         }
 
+        //public AfterShow(e: any): void {
+           
+        //}
+
         public ViewHide(e: any): void {
             this.destroyEvents();
 
@@ -225,6 +229,19 @@ export namespace Controller {
             super();
         }
 
+
+        protected createModel(): kendo.data.ObservableObject {
+            return new kendo.data.ObservableObject({
+                "Header": "",
+                "editModel": {},
+            });
+        }
+
+
+        public get EditorModel(): Interfaces.Model.IEditorModel {
+            return this.Model.get("editModel").toJSON();
+        }
+
         private navHeader: JQuery;
         private btnSave: JQuery;
         private btnCancel: JQuery;
@@ -272,10 +289,6 @@ export namespace Controller {
             this.destroyClickEvent(this.btnSave, this.CancelButtonClick);
         }
 
-        public get EditorModel(): Interfaces.Model.IBaseModel {
-            return null;
-        }
-
         public SaveButtonClick: { (e: any): void; };
         private saveButtonClick(e): void {
             if (this.validate()) {
@@ -321,6 +334,18 @@ export namespace Controller {
         constructor() {
             super();
         }
+
+        protected createModel(): kendo.data.ObservableObject {
+            return new kendo.data.ObservableObject({
+                "Header": "",
+                "cardModel": [],
+            });
+        }
+
+        public get CardModel(): Interfaces.Model.IEditorModel[] {
+            return this.Model.get("cardModel").toJSON();
+        }
+
 
         private navHeader: JQuery;
         private btnAdd: JQuery;
@@ -434,7 +459,6 @@ export namespace Controller {
 
         protected afterLoad(): void {
             this.setupTable();
-            M.updateTextFields();
             _app.HideLoading();
         }
 
@@ -522,9 +546,9 @@ export namespace Controller {
 
         protected getTableBodyHtml(): string {
             let html: string = '';
-            let data = this.Model.get("editModel");
+            let data = this.Model.get("cardModel");
             if (data && data.length > 0) {
-                let item: Interfaces.Model.ISalepointModel;
+                let item: Interfaces.Model.IEditorModel;
                 if (!this.templateRow)
                     this.templateRow = kendo.template(this.getTableRowTemplate());
                 for (let i = 0, icount = (data && data.length ? data.length : 0); i < icount; i++) {
@@ -594,7 +618,7 @@ export namespace Controller {
             let id: any = this.getSelectedRowId();
             if (id) {
                 let _id: number = +id;
-                let model: any[] = this.Model.get("editModel");
+                let model: any[] = this.Model.get("cardModel");
                 for (let i = model.length - 1; i >= 0; i--) {
                     if (model[i].id === _id) {
                         model.splice(i, 1);

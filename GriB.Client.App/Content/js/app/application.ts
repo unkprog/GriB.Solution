@@ -72,8 +72,11 @@ export module App {
 
         public HideLoading() {
             this.progressControl.hide();
-            if (this.contentControl)
+            if (this.contentControl) {
                 this.contentControl.show();
+                //if (this._controller)
+                //    this._controller.AfterShow(this);
+            }
             this.resize({});
         }
 

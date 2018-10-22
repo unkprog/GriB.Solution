@@ -14,6 +14,7 @@
         ViewInit(view: JQuery): boolean;
         ViewShow(e: any): boolean;
         ViewHide(e: any): void;
+        //AfterShow(e: any): void;
         ViewResize(e?: any): void;
     }
 
@@ -51,6 +52,7 @@
     }
 
     export interface IControllerCard extends IController {
+        CardModel: Interfaces.Model.IEditorModel[];
         Add(): void;
         Delete(): void;
         Edit(): void;

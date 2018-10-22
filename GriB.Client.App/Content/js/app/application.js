@@ -55,8 +55,11 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
             };
             Application.prototype.HideLoading = function () {
                 this.progressControl.hide();
-                if (this.contentControl)
+                if (this.contentControl) {
                     this.contentControl.show();
+                    //if (this._controller)
+                    //    this._controller.AfterShow(this);
+                }
                 this.resize({});
             };
             Application.prototype.loadAppView = function () {

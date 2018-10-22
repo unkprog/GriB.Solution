@@ -30,6 +30,11 @@ namespace GriB.Common.Web.Http
         public sqldb  database { get; set; }
     }
 
+    public class HttpEmployeeMessage
+    {
+        public employee Employee { get; set; }
+    }
+
     public class HttpEmployeesMessage
     {
         public List<employee> Employees { get; set; }

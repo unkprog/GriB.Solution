@@ -147,7 +147,17 @@ namespace GriB.Client.App.Controllers
                , (response) =>
                {
                    HttpEmployeesMessage responseMessage = response.ToObject<HttpEmployeesMessage>();
-                   return Request.CreateResponse(HttpStatusCode.OK, responseMessage.Employees);
+                   List<Models.Editor.employeecard> employees = new List<Models.Editor.employeecard>();
+                   return TryCatchResponseQuery((query) =>
+                   {
+                       Models.Editor.employeecard employee;
+                       foreach (var emp in responseMessage.Employees)
+                       {
+                           employee = (employeecard)Managers.Editors.Employee.GetEmployee(query, new Models.Editor.employeecard(emp));
+                           employees.Add(employee);
+                       }
+                       return Request.CreateResponse(HttpStatusCode.OK, employees);
+                   });
                })
         );
 
@@ -157,14 +167,20 @@ namespace GriB.Client.App.Controllers
         => await TryCatchResponseAsync(async () => await CheckResponseError(
                async () =>
                {
-                   Principal principal = (Principal)HttpContext.Current.User;
-                   return await Common.Net.Json.GetAsync<JObject>(AppSettings.Server.Register, string.Concat("api/account/employees?db=", principal?.Data?.Database?.id));
+                   return await Common.Net.Json.GetAsync<JObject>(AppSettings.Server.Register, string.Concat("api/account/employee?id=", id));
                }
                , (response) =>
                {
-                   HttpEmployeesMessage responseMessage = response.ToObject<HttpEmployeesMessage>();
-                   return Request.CreateResponse(HttpStatusCode.OK, responseMessage.Employees);
+                   return TryCatchResponseQuery((query) =>
+                   {
+                       HttpEmployeeMessage responseMessage = response.ToObject<HttpEmployeeMessage>();
+                       Models.Editor.employee result = new Models.Editor.employee(responseMessage.Employee);
+                       Managers.Editors.Employee.GetEmployeeSalepointAccess(query, result);
+
+                       return Request.CreateResponse(HttpStatusCode.OK, new { employee = result });
+                   });
                })
+        );
 
         #endregion
 

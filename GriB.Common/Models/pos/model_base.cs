@@ -6,6 +6,12 @@ namespace GriB.Common.Models.pos
     public class model_base
     {
         public int id { get; set; }
+
+        public model_base() { }
+        public model_base(model_base mbase)
+        {
+            id = mbase.id;
+        }
     }
 
     public class model_sys : model_base
@@ -15,6 +21,20 @@ namespace GriB.Common.Models.pos
         public int      cu { get; set; }
         public DateTime ud { get; set; }
         public int      uu { get; set; }
+
+        public model_sys() : base()
+        {
+
+        }
+
+        public model_sys(model_sys sys) : base(sys)
+        {
+            d  = sys.d;
+            cd = sys.cd;
+            cu = sys.cu;
+            ud = sys.ud;
+            uu = sys.uu;
+        }
     }
 
     public class model_login : model_base

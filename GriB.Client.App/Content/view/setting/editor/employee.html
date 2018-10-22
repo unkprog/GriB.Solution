@@ -1,106 +1,113 @@
 ﻿<div id="editor-view-employee">
-
-    <div class="padding-0001em">
+    <div class="row row-inputs">
+        <ul id="editor-view-tabs" class="tabs">
+            <li class="tab col s6 m6 l6 xl6" id="editor-view-employee-tab1"><a class="active" href="#editor-view-tab-employee" data-bind="text:labelEmployee"></a></li>
+            <li class="tab col s6 m6 l6 xl6"><a href="#editor-view-tab-accessright" data-bind="text:labelAccessRight"></a></li>
+        </ul>
+    </div>
+    <div id="editor-view-tab-employee" class="padding-0001em">
+        <div class="section editor-section">
+            <h5 data-bind="text:labelLoginToSystem"></h5>
+        </div>
         <div class="row row-inputs">
-            <div class="col s12">
-                <ul id="editor-view-tabs" class="tabs">
-                    <li class="tab col s6"><a class="active" href="#editor-view-tab-employee" data-bind="text:labelEmployee"></a></li>
-                    <li class="tab col s6"><a href="#editor-view-tab-accessright" data-bind="text:labelAccessRight"></a></li>
-                </ul>
-
-                <div id="editor-view-tab-employee">
-                    <div class="section" style="padding-top: 0; padding-bottom: 0">
-                        <h5 data-bind="text:labelLoginToSystem"></h5>
-                    </div>
-                    <div class="row row-inputs">
-                        <div class="col s12 m6 l4 xl3">
-                            <div class="input-field">
-                                <input id="login-phone" type="tel">
-                                <label for="login-phone" data-bind="text:labelPhone"></label>
-                            </div>
-                        </div>
-                        <div class="col s12 m6 l4 xl3">
-                            <div class="input-field">
-                                <input id="login-pass" type="password" value="1">
-                                <label for="login-pass" data-bind="text:labelPassword">Пасс</label>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row row-inputs">
-                        <div class="col s12 m6 l4 xl3">
-                            <div class="input-field">
-                                <div id="employee-access-div" class="switch valign-wrapper">
-                                    <label>
-                                        <span data-bind="text:labelNo"></span>
-                                        <input id="employee-access" type="checkbox">
-                                        <span class="lever"></span>
-                                        <span data-bind="text:labelYes"></span>
-                                    </label>
-                                </div>
-                                <label class="cb-header-label" data-bind="text:labelAccessSystem"></label>
-                            </div>
-                        </div>
-                        <div class="col s12 m6 l4 xl3">
-                            <div class="input-field">
-                                <select id="employee-open" class="validate">
-                                    <option value="0" selected data-bind="text:labelPOSterminal"></option>
-                                    <option value="1" data-bind="text:labelSettings"></option>
-                                    <option value="2" data-bind="text:labelReports"></option>
-                                </select>
-                                <label for="employee-open" data-bind="text:labelOpenOnLogin"></label>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="section" style="padding-top: 0; padding-bottom: 0">
-                        <h5 data-bind="text:labelEmployeeInformation"></h5>
-                    </div>
-                    <div class="row row-inputs">
-                        <div class="col s12 m6 l4 xl3">
-                            <div class="input-field">
-                                <input id="employee-surname" type="text">
-                                <label for="employee-surname" data-bind="text:labelSurname"></label>
-                            </div>
-                        </div>
-                        <div class="col s12 m6 l4 xl3">
-                            <div class="input-field">
-                                <input id="employee-name" type="text">
-                                <label for="employee-name" data-bind="text:labelName"></label>
-                            </div>
-                        </div>
-                        <div class="col s12 m6 l4 xl3">
-                            <div class="input-field">
-                                <input id="employee-patronymic" type="text">
-                                <label for="employee-patronymic" data-bind="text:labelPatronymic"></label>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row row-inputs">
-                        <div class="col s12 m6 l4 xl3 ">
-                            <div class="input-field">
-                                <select id="employee-sex-list" class="validate">
-                                    <option value="0" selected data-bind="text:labelUnspecified"></option>
-                                    <option value="1" data-bind="text:labelMale"></option>
-                                    <option value="2" data-bind="text:labelFemale"></option>
-                                </select>
-                                <label for="employee-sex-list" data-bind="text:labelSex"></label>
-                            </div>
-                        </div>
-
-                        <div class="col s12 m6 l4 xl3">
-                            <div class="input-field">
-                                <input id="employee-birth" type="text" class="datepicker">
-                                <label for="employee-birth" data-bind="text:labelDateBirth"></label>
-                            </div>
-                        </div>
-                    </div>
+            <div class="col s12 m6 l4 xl3">
+                <div class="input-field">
+                    <input id="login-phone" type="tel" data-bind="value:editModel.phone">
+                    <label for="login-phone" data-bind="text:labelPhone"></label>
                 </div>
-
-                <div id="editor-view-tab-accessright">
-
-                </div>
-
             </div>
+            <div class="col s12 m6 l4 xl3">
+                <div class="input-field">
+                    <input id="login-pass" type="password" data-bind="value:editModel.pass">
+                    <label for="login-pass" data-bind="text:labelPassword"></label>
+                </div>
+            </div>
+        </div>
+        <div class="row row-inputs">
+            <div class="col s12 m6 l4 xl3">
+                <div class="input-field">
+                    <div id="employee-access-div" class="switch valign-wrapper">
+                        <label>
+                            <span data-bind="text:labelNo"></span>
+                            <input id="employee-access" type="checkbox" data-bind="checked:editModel.isaccess">
+                            <span class="lever"></span>
+                            <span data-bind="text:labelYes"></span>
+                        </label>
+                    </div>
+                    <label class="cb-header-label" data-bind="text:labelAccessSystem"></label>
+                </div>
+            </div>
+            <div class="col s12 m6 l4 xl3">
+                <div class="input-field">
+                    <select id="employee-open" class="validate">
+                        <option value="0" selected data-bind="text:labelPOSterminal"></option>
+                        <option value="1" data-bind="text:labelSettings"></option>
+                        <option value="2" data-bind="text:labelReports"></option>
+                    </select>
+                    <label for="employee-open" data-bind="text:labelOpenOnLogin"></label>
+                </div>
+            </div>
+        </div>
+
+        <div class="section editor-section">
+            <h5 data-bind="text:labelEmployeeInformation"></h5>
+        </div>
+        <div class="row row-inputs">
+            <div class="col s12 m6 l4 xl3">
+                <div class="input-field">
+                    <input id="employee-surname" type="text" data-bind="value:editModel.fname">
+                    <label for="employee-surname" data-bind="text:labelSurname"></label>
+                </div>
+            </div>
+            <div class="col s12 m6 l4 xl3">
+                <div class="input-field">
+                    <input id="employee-name" type="text" data-bind="value:editModel.mname">
+                    <label for="employee-name" data-bind="text:labelName"></label>
+                </div>
+            </div>
+            <div class="col s12 m6 l4 xl3">
+                <div class="input-field">
+                    <input id="employee-patronymic" type="text" data-bind="value:editModel.lname">
+                    <label for="employee-patronymic" data-bind="text:labelPatronymic"></label>
+                </div>
+            </div>
+        </div>
+        <div class="row row-inputs">
+            <div class="col s12 m6 l4 xl3 ">
+                <div class="input-field">
+                    <select id="employee-sex-list" class="validate">
+                        <option value="0" selected data-bind="text:labelUnspecified"></option>
+                        <option value="1" data-bind="text:labelMale"></option>
+                        <option value="2" data-bind="text:labelFemale"></option>
+                    </select>
+                    <label for="employee-sex-list" data-bind="text:labelSex"></label>
+                </div>
+            </div>
+
+            <div class="col s12 m6 l4 xl3">
+                <div class="input-field">
+                    <input id="employee-birth" type="text" class="datepicker" data-bind="value:editModel.datebirth">
+                    <label for="employee-birth" data-bind="text:labelDateBirth"></label>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="editor-view-tab-accessright">
+        <div class="row row-table">
+            <div class="col s12 m12 l12 xl12 col-table">
+                <table id="employee-rigths" class="highlight z-depth-1">
+                    <thead>
+                        <tr>
+                            <th data-bind="text:labelSalePoint"></th>
+                            <th data-bind="text:labelAccess"></th>
+                            <th data-bind="text:labelDefault"></th>
+                        </tr>
+                    </thead>
+                    <tbody id="employee-rigths-rows"></tbody>
+                </table>
+            </div>
+
         </div>
     </div>
 </div>

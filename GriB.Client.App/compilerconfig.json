@@ -59,5 +59,9 @@
   {
     "outputFile": "Content/js/lib/materialize/materialize.es5.js",
     "inputFile": "Content/js/lib/materialize/materialize.js"
+  },
+  {
+    "outputFile": "Scss/components/_variables.css",
+    "inputFile": "Scss/components/_variables.scss"
   }
 ]

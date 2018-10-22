@@ -15,7 +15,6 @@ declare namespace M {
     }
 
     function updateTextFields(): JQuery;
-    function updateTabIndicator(): JQuery;
     function toast(options :toastOptions): JQuery;
     export namespace Modal {
         function getInstance(elems: any, options?: any): JQuery;
@@ -23,5 +22,9 @@ declare namespace M {
 
     export namespace FormSelect {
         function init(elems: any, options?: any): JQuery;
+    }
+    export namespace Tabs {
+        function getInstance(elems: any):any;
+        function updateTabIndicator(): JQuery;
     }
 }

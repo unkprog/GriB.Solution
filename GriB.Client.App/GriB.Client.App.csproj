@@ -147,12 +147,6 @@
       <DependentUpon>kendo.data.xml.es5.js</DependentUpon>
     </Content>
     <Content Include="Content\js\lib\kendo\kendo.data.xml.js" />
-    <Content Include="Content\js\lib\materialize\materialize.es5.js">
-      <DependentUpon>materialize.js</DependentUpon>
-    </Content>
-    <Content Include="Content\js\lib\materialize\materialize.es5.min.js">
-      <DependentUpon>materialize.es5.js</DependentUpon>
-    </Content>
     <Content Include="Content\js\lib\materialize\materialize.js" />
     <Content Include="Content\js\lib\materialize\materialize.min.js" />
     <Content Include="Content\js\lib\require\domReady.js" />
@@ -177,9 +171,10 @@
     <Content Include="Content\view\setting\index.html" />
     <Content Include="Content\view\terminal\index.html" />
     <Content Include="Global.asax" />
-    <Content Include="Scripts\Query\Employee\Salepointaccess\[get].sql" />
-    <Content Include="Scripts\Query\Employee\Salepointaccess\[set].sql" />
+    <Content Include="Scripts\Query\Employee\SalepointAccess\[get].sql" />
+    <Content Include="Scripts\Query\Employee\SalepointAccess\[set].sql" />
     <Content Include="Scripts\Query\Employee\[get].sql" />
+    <Content Include="Scripts\Query\Employee\[del].sql" />
     <Content Include="Scripts\Query\Employee\[set].sql" />
     <Content Include="Scripts\Query\Organization\Info1\[get].sql" />
     <Content Include="Scripts\Query\Organization\Info1\[set].sql" />
@@ -207,6 +202,7 @@
     <Compile Include="Handlers\AuthorizationHeaderHandler.cs" />
     <Compile Include="Managers\AppSettings.cs" />
     <Compile Include="Managers\AuthUser.cs" />
+    <Compile Include="Managers\Editors\Employee.cs" />
     <Compile Include="Managers\Editors\Organization.cs" />
     <Compile Include="Models\Editor\References.cs" />
     <Compile Include="Models\t_org.cs" />

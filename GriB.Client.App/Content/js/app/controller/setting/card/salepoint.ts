@@ -15,6 +15,7 @@ export namespace Controller.Setting.Card {
         protected createModel(): kendo.data.ObservableObject {
             return new kendo.data.ObservableObject({
                 "Header": vars._statres("label$salesPoints"),
+                "cardModel": []
             });
         }
 
@@ -33,7 +34,7 @@ export namespace Controller.Setting.Card {
         protected loadData(): boolean {
             let controller = this;
             this.Service.GetSalePoints((responseData) => {
-                controller.Model.set("editModel", responseData);
+                controller.Model.set("cardModel", responseData);
                 controller.afterLoad();
             });
             return false;

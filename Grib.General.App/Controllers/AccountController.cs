@@ -126,6 +126,16 @@ namespace GriB.General.App.Controllers
             });
         }
 
+        [HttpGet]
+        [ActionName("employee")]
+        public HttpResponseMessage Employee(int id)
+        {
+            return TryCatchResponse(() =>
+            {
+                employee result = Managers.pos.Settings.Employee.GetEmployee(_query, id);
+                return Request.CreateResponse(HttpStatusCode.OK, new HttpEmployeeMessage() { Employee = result });
+            });
+        }
 
         [HttpGet]
         [ActionName("employees")]
@@ -137,5 +147,6 @@ namespace GriB.General.App.Controllers
                 return Request.CreateResponse(HttpStatusCode.OK, new HttpEmployeesMessage() { Employees = result });
             });
         }
+
     }
 }

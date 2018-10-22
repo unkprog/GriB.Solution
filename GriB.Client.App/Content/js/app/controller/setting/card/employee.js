@@ -31,21 +31,30 @@ define(["require", "exports", "app/common/variables", "app/controller/setting/ca
                     Employee.prototype.createModel = function () {
                         return new kendo.data.ObservableObject({
                             "Header": vars._statres("label$employees"),
+                            "cardModel": []
                         });
                     };
                     Employee.prototype.getCardSettings = function () {
                         return {
                             FieldId: "id",
                             Columns: [
-                                { Header: "Наименование", Field: "name" },
-                                { Header: "Телефон", Field: "phone" },
+                                { Header: vars._statres("label$name"), Field: "name" },
+                                { Header: vars._statres("label$phone"), Field: "phone" },
+                                { Header: vars._statres("label$access"), Field: "access" }
                             ]
                         };
                     };
+                    Object.defineProperty(Employee.prototype, "CardModel", {
+                        get: function () {
+                            return this.Model.get("cardModel").toJSON();
+                        },
+                        enumerable: true,
+                        configurable: true
+                    });
                     Employee.prototype.loadData = function () {
                         var controller = this;
                         this.Service.GetEmployees(function (responseData) {
-                            controller.Model.set("editModel", responseData);
+                            controller.Model.set("cardModel", responseData);
                             controller.afterLoad();
                         });
                         return false;

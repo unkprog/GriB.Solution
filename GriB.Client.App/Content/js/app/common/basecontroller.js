@@ -72,6 +72,8 @@ define(["require", "exports", "app/common/utils", "./variables"], function (requ
                 M.updateTextFields();
                 return true;
             };
+            //public AfterShow(e: any): void {
+            //}
             Base.prototype.ViewHide = function (e) {
                 this.destroyEvents();
             };
@@ -226,6 +228,19 @@ define(["require", "exports", "app/common/utils", "./variables"], function (requ
             function BaseEditor() {
                 return _super.call(this) || this;
             }
+            BaseEditor.prototype.createModel = function () {
+                return new kendo.data.ObservableObject({
+                    "Header": "",
+                    "editModel": {},
+                });
+            };
+            Object.defineProperty(BaseEditor.prototype, "EditorModel", {
+                get: function () {
+                    return this.Model.get("editModel").toJSON();
+                },
+                enumerable: true,
+                configurable: true
+            });
             BaseEditor.prototype.ViewInit = function (view) {
                 var navbarHeader = '<div class="navbar-fixed editor-header z-depth-1">';
                 navbarHeader += '        <nav class="editor-header-nav">';
@@ -259,13 +274,6 @@ define(["require", "exports", "app/common/utils", "./variables"], function (requ
                 this.destroyClickEvent(this.btnSave, this.SaveButtonClick);
                 this.destroyClickEvent(this.btnSave, this.CancelButtonClick);
             };
-            Object.defineProperty(BaseEditor.prototype, "EditorModel", {
-                get: function () {
-                    return null;
-                },
-                enumerable: true,
-                configurable: true
-            });
             BaseEditor.prototype.saveButtonClick = function (e) {
                 if (this.validate()) {
                     this.Save();
@@ -303,6 +311,19 @@ define(["require", "exports", "app/common/utils", "./variables"], function (requ
             function BaseCard() {
                 return _super.call(this) || this;
             }
+            BaseCard.prototype.createModel = function () {
+                return new kendo.data.ObservableObject({
+                    "Header": "",
+                    "cardModel": [],
+                });
+            };
+            Object.defineProperty(BaseCard.prototype, "CardModel", {
+                get: function () {
+                    return this.Model.get("cardModel").toJSON();
+                },
+                enumerable: true,
+                configurable: true
+            });
             BaseCard.prototype.ViewInit = function (view) {
                 var navbarHeader = '<div class="navbar-fixed editor-header z-depth-1">';
                 navbarHeader += '        <nav class="editor-header-nav">';
@@ -384,7 +405,6 @@ define(["require", "exports", "app/common/utils", "./variables"], function (requ
             };
             BaseCard.prototype.afterLoad = function () {
                 this.setupTable();
-                M.updateTextFields();
                 variables_1._app.HideLoading();
             };
             BaseCard.prototype.getCardSettings = function () {
@@ -457,7 +477,7 @@ define(["require", "exports", "app/common/utils", "./variables"], function (requ
             };
             BaseCard.prototype.getTableBodyHtml = function () {
                 var html = '';
-                var data = this.Model.get("editModel");
+                var data = this.Model.get("cardModel");
                 if (data && data.length > 0) {
                     var item = void 0;
                     if (!this.templateRow)
@@ -509,7 +529,7 @@ define(["require", "exports", "app/common/utils", "./variables"], function (requ
                 var id = this.getSelectedRowId();
                 if (id) {
                     var _id = +id;
-                    var model = this.Model.get("editModel");
+                    var model = this.Model.get("cardModel");
                     for (var i = model.length - 1; i >= 0; i--) {
                         if (model[i].id === _id) {
                             model.splice(i, 1);

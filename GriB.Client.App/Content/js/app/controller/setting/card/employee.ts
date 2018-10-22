@@ -15,6 +15,7 @@ export namespace Controller.Setting.Card {
         protected createModel(): kendo.data.ObservableObject {
             return new kendo.data.ObservableObject({
                 "Header": vars._statres("label$employees"),
+                "cardModel": []
             });
         }
 
@@ -22,17 +23,21 @@ export namespace Controller.Setting.Card {
             return {
                 FieldId: "id",
                 Columns: [
-                    { Header: "Наименование", Field: "name" },
-                    { Header: "Телефон", Field: "phone" },
-                   // { Header: "Статус", Field: "state" }
+                    { Header: vars._statres("label$name"), Field: "name" },
+                    { Header: vars._statres("label$phone"), Field: "phone" },
+                    { Header: vars._statres("label$access"), Field: "access" }
                 ]
             };
+        }
+
+        public get CardModel(): Interfaces.Model.IEmployeeModel[] {
+            return this.Model.get("cardModel").toJSON();
         }
 
         protected loadData(): boolean {
             let controller = this;
             this.Service.GetEmployees((responseData) => {
-                controller.Model.set("editModel", responseData);
+                controller.Model.set("cardModel", responseData);
                 controller.afterLoad();
             });
             return false;

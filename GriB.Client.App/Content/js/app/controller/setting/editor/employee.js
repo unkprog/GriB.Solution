@@ -31,6 +31,7 @@ define(["require", "exports", "app/common/variables", "app/controller/setting/ed
                     Employee.prototype.createModel = function () {
                         return new kendo.data.ObservableObject({
                             "Header": "",
+                            "editModel": {},
                             "labelEmployee": vars._statres("label$employee"),
                             "labelAccessRight": vars._statres("label$accessright"),
                             "labelLoginToSystem": vars._statres("label$logintosystem"),
@@ -46,12 +47,15 @@ define(["require", "exports", "app/common/variables", "app/controller/setting/ed
                             "labelEmployeeInformation": vars._statres("label$employeeinformation"),
                             "labelDateBirth": vars._statres("label$datebirth"),
                             "labelSurname": vars._statres("label$surname"),
-                            "labelName": vars._statres("label$name"),
+                            "labelName": vars._statres("label$fname"),
                             "labelPatronymic": vars._statres("label$patronymic"),
                             "labelSex": vars._statres("label$sex"),
                             "labelUnspecified": vars._statres("label$unspecified"),
                             "labelMale": vars._statres("label$male"),
                             "labelFemale": vars._statres("label$female"),
+                            "labelSalePoint": vars._statres("label$salePoint"),
+                            "labelAccess": vars._statres("label$access"),
+                            "labelDefault": vars._statres("label$default"),
                         });
                     };
                     Object.defineProperty(Employee.prototype, "EditorModel", {
@@ -62,26 +66,57 @@ define(["require", "exports", "app/common/variables", "app/controller/setting/ed
                         configurable: true
                     });
                     Employee.prototype.loadData = function () {
+                        var _this = this;
                         var controller = this;
-                        var id = (vars._editorData["id_salepoint"] ? vars._editorData["id_salepoint"] : 0);
-                        //this.Service.GetSalePoint(id, (responseData) => {
-                        //   controller.Model.set("editModel", responseData.salepoint);
-                        controller.afterLoad();
-                        //});
-                        return true;
-                    };
-                    Employee.prototype.ViewShow = function (e) {
-                        this.setupControls();
-                        _super.prototype.ViewShow.call(this, e);
-                        return true;
+                        var id = (vars._editorData["id_employee"] ? vars._editorData["id_employee"] : 0);
+                        this.Service.GetEmployee(id, function (responseData) {
+                            controller.Model.set("editModel", responseData.employee);
+                            _this.setupControls();
+                            controller.afterLoad();
+                        });
+                        return false;
                     };
                     Employee.prototype.setupControls = function () {
-                        $('#editor-view-tabs').tabs();
                         $('#employee-open').formSelect();
                         $('#employee-sex-list').formSelect();
                         $('#employee-birth').datepicker();
                         $('#employee-access-div').height($('#login-phone').height());
-                        // M.updateTabIndicator();
+                        this.setupTableAccess();
+                    };
+                    Employee.prototype.setupTableAccess = function () {
+                        var model = this.EditorModel;
+                        var data = model.accesssalepoints;
+                        var html = '';
+                        // let rows: JQuery[] = [];
+                        if (data && data.length > 0) {
+                            var item = void 0;
+                            for (var i = 0, icount = (data && data.length ? data.length : 0); i < icount; i++) {
+                                item = data[i];
+                                html += '<tr id="row_' + i + '">';
+                                html += '<td>' + item.salepoint.name + '</td>';
+                                html += '<td>';
+                                html += '<div class="switch valign-wrapper">';
+                                html += '    <label>';
+                                html += '        <input id="isaccess_' + i + '" type="checkbox"' + (item.isaccess ? ' checked="checked"' : '') + '>';
+                                html += '        <span class="lever"></span>';
+                                html += '     </label>';
+                                html += '</div>';
+                                html += '</td>';
+                                html += '<td>';
+                                html += '<div class="valign-wrapper">';
+                                html += '    <label>';
+                                html += '        <input id="isdefault_' + i + '" name="group_isdefault" type="radio"' + (item.isdefault ? ' checked="checked"' : '') + '>';
+                                html += '        <span></span>';
+                                html += '     </label>';
+                                html += '</div>';
+                                html += '</td>';
+                                html += '</tr>';
+                            }
+                        }
+                        $("#employee-rigths-rows").html(html);
+                    };
+                    Employee.prototype.ViewResize = function (e) {
+                        $('#editor-view-tabs').tabs();
                     };
                     return Employee;
                 }(edit.Controller.Setting.Editor.Editor));
