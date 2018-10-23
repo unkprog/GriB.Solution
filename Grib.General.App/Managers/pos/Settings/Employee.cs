@@ -20,6 +20,19 @@ namespace GriB.General.App.Managers.pos.Settings
             pass = (string)values[14]
         };
 
+        private const string cmdGetEmploees = @"user\Get\[employees]";
+        public static List<employee> GetEmployees(this Query query, int db)
+        {
+            List<employee> result = new List<employee>();
+            query.Execute(cmdGetEmploees, new SqlParameter[] { new SqlParameter("@db", db) }
+            , (values) =>
+            {
+                result.Add(readEmployeeFromValues(values));
+            });
+
+            return result;
+        }
+
         private const string cmdGetEmploee = @"user\Get\[employee]";
         public static employee GetEmployee(this Query query, int id)
         {
@@ -33,17 +46,33 @@ namespace GriB.General.App.Managers.pos.Settings
             return result;
         }
 
-        private const string cmdGetEmploees = @"user\Get\[employees]";
-        public static List<employee> GetEmployees(this Query query, int db)
+        private const string cmdDelEmploee = @"user\[del]";
+        public static void DelEmployee(this Query query, int id)
         {
-            List<employee> result = new List<employee>();
-            query.Execute(cmdGetEmploees, new SqlParameter[] { new SqlParameter("@db", db) }
-            , (values) =>
-            {
-                result.Add(readEmployeeFromValues(values));
-            });
-
-            return result;
+            query.Execute(cmdDelEmploee, new SqlParameter[] { new SqlParameter("@id", id) }
+            , (values) => { });
         }
+
+        private const string cmdSetUserEmploee = @"user\[set]";
+        private const string cmdSetUserDbEmploee = @"user\db\[set]";
+        private const string cmdSetUserPersonEmploee = @"user\person\[set]";
+        private const string cmdSetUserSecEmploee = @"user\sec\[set]";
+        public static void SetEmployee(this Query query, int db, employee empl)
+        {
+            query.Execute(cmdSetUserEmploee, new SqlParameter[] { new SqlParameter("@id", empl.id), new SqlParameter("@cu", empl.cu), new SqlParameter("@uu", empl.uu), new SqlParameter("@phone", empl.phone) }
+            , (values) => { empl.id = (int)values[0]; });
+
+            query.Execute(cmdSetUserDbEmploee, new SqlParameter[] { new SqlParameter("@id", empl.id), new SqlParameter("@db", db) }
+            , (values) => { });
+
+            query.Execute(cmdSetUserSecEmploee, new SqlParameter[] { new SqlParameter("@id", empl.id), new SqlParameter("@pass", empl.pass), new SqlParameter("@birth", empl.birth), new SqlParameter("@fname", empl.fname), new SqlParameter("@mname", empl.mname), new SqlParameter("@lname", empl.lname), new SqlParameter("@email", empl.email) }
+            , (values) => { });
+
+
+            query.Execute(cmdSetUserPersonEmploee, new SqlParameter[] { new SqlParameter("@id", empl.id), new SqlParameter("@sex", empl.sex), new SqlParameter("@birth", empl.birth), new SqlParameter("@fname", empl.fname), new SqlParameter("@mname", empl.mname), new SqlParameter("@lname", empl.lname), new SqlParameter("@email", empl.email) }
+            , (values) => { });
+
+        }
+
     }
 }

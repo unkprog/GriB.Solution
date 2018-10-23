@@ -126,17 +126,7 @@ namespace GriB.General.App.Controllers
             });
         }
 
-        [HttpGet]
-        [ActionName("employee")]
-        public HttpResponseMessage Employee(int id)
-        {
-            return TryCatchResponse(() =>
-            {
-                employee result = Managers.pos.Settings.Employee.GetEmployee(_query, id);
-                return Request.CreateResponse(HttpStatusCode.OK, new HttpEmployeeMessage() { Employee = result });
-            });
-        }
-
+        #region Employee
         [HttpGet]
         [ActionName("employees")]
         public HttpResponseMessage Employees(int db)
@@ -148,5 +138,40 @@ namespace GriB.General.App.Controllers
             });
         }
 
+        [HttpGet]
+        [ActionName("employee")]
+        public HttpResponseMessage Employee(int id)
+        {
+            return TryCatchResponse(() =>
+            {
+                employee result = Managers.pos.Settings.Employee.GetEmployee(_query, id);
+                return Request.CreateResponse(HttpStatusCode.OK, new HttpEmployeeMessage() { Employee = result });
+            });
+        }
+
+        [HttpPost]
+        [ActionName("upd_employee")]
+        public HttpResponseMessage UpdateEmployees(int db, employee empl)
+        {
+            return TryCatchResponse(() =>
+            {
+                Managers.pos.Settings.Employee.SetEmployee(_query, db, empl);
+                employee result = Managers.pos.Settings.Employee.GetEmployee(_query, empl.id);
+                return Request.CreateResponse(HttpStatusCode.OK, new HttpEmployeeMessage() { Employee = result });
+            });
+        }
+
+
+        [HttpGet]
+        [ActionName("del_employee")]
+        public HttpResponseMessage DeleteEmployees(int id)
+        {
+            return TryCatchResponse(() =>
+            {
+                Managers.pos.Settings.Employee.DelEmployee(_query, id);
+                return Request.CreateResponse(HttpStatusCode.OK, new HttpEmployeeMessage() { Employee = Managers.pos.Settings.Employee.GetEmployee(_query, id) });
+            });
+        }
+        #endregion
     }
 }

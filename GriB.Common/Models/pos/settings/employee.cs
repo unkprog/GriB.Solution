@@ -14,7 +14,17 @@ namespace GriB.Common.Models.pos.settings
         public string   lname { get; set; }
         public string   email { get; set; }
 
-        public employee() : base() { }
+        public employee() : base()
+        {
+            phone = string.Empty;
+            pass = string.Empty;
+            fname = string.Empty;
+            mname = string.Empty;
+            lname = string.Empty;
+            email = string.Empty;
+            birth = new DateTime(1899, 12, 30);
+        }
+
         public employee(employee empl) : base(empl)
         {
             pid   = empl.pid;

@@ -61,19 +61,19 @@ export namespace Controller.Security {
         }
 
         private validate(model: Interfaces.Model.ILoginModel): boolean {
-            let validateMessage: string = '';
+            let result: boolean = true;
 
-            if (!utils.validatePhone(model.phone))
-                validateMessage = validateMessage + (validateMessage !== '' ? '<br/>' : '') + vars._statres('msg$error$phoneNumberIncorrect');
-           
+            if (!utils.validatePhone(model.phone)) {
+                M.toast({ html: vars._statres('msg$error$phoneNumberIncorrect') });
+                result = false;
+            }
 
-            if (utils.isNullOrEmpty(model.pass))
-                validateMessage = validateMessage + (validateMessage !== '' ? '<br/>' : '') + vars._statres('msg$error$invalidPassword');
+            if (utils.isNullOrEmpty(model.pass)) {
+                M.toast({ html: vars._statres('msg$error$invalidPassword') });
+                result = false;
+            }
 
-            if (validateMessage !== '')
-                vars._showError(validateMessage);
-
-            return (validateMessage === '');
+            return result;
         }
 
         public RegisterButtonClick: { (e: any): void; };

@@ -11,7 +11,7 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-define(["require", "exports", "app/common/variables", "app/controller/setting/editor/editor"], function (require, exports, vars, edit) {
+define(["require", "exports", "app/common/variables", "app/common/utils", "app/controller/setting/editor/editor"], function (require, exports, vars, utils, edit) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var Controller;
@@ -117,6 +117,23 @@ define(["require", "exports", "app/common/variables", "app/controller/setting/ed
                     };
                     Employee.prototype.ViewResize = function (e) {
                         $('#editor-view-tabs').tabs();
+                    };
+                    Employee.prototype.Save = function () {
+                        var model = this.EditorModel;
+                        this.afterSave();
+                    };
+                    Employee.prototype.validate = function () {
+                        var result = true;
+                        var model = this.EditorModel;
+                        if (!utils.validatePhone(model.phone)) {
+                            M.toast({ html: vars._statres('msg$error$phoneNumberIncorrect') });
+                            result = false;
+                        }
+                        if (utils.isNullOrEmpty(model.pass)) {
+                            M.toast({ html: vars._statres('msg$error$invalidPassword') });
+                            result = false;
+                        }
+                        return result;
                     };
                     return Employee;
                 }(edit.Controller.Setting.Editor.Editor));

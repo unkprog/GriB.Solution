@@ -109,6 +109,26 @@ export namespace Controller.Setting.Editor {
             $('#editor-view-tabs').tabs();
         }
 
+        public Save(): void {
+            let model: Interfaces.Model.IEmployeeModel = this.EditorModel;
+            this.afterSave();
+        }
 
+        protected validate(): boolean {
+            let result: boolean = true;
+            let model: Interfaces.Model.IEmployeeModel = this.EditorModel;
+
+            if (!utils.validatePhone(model.phone)) {
+                M.toast({ html: vars._statres('msg$error$phoneNumberIncorrect') });
+                result = false;
+            }
+
+            if (utils.isNullOrEmpty(model.pass)) {
+                M.toast({ html: vars._statres('msg$error$invalidPassword') });
+                result = false;
+            }
+
+            return result;
+        }
     }
 }

@@ -182,6 +182,48 @@ namespace GriB.Client.App.Controllers
                })
         );
 
+        [HttpPost]
+        [ActionName("post_employee")]
+        public async Task<HttpResponseMessage> PostEmployee(Models.Editor.employee empl)
+        => await TryCatchResponseAsync(async () => await CheckResponseError(
+              async () =>
+              {
+                  Principal principal = (Principal)HttpContext.Current.User;
+                  return await Common.Net.Json.PostAsync<JObject, JObject>(AppSettings.Server.Register, "api/account/upd_employee", JObject.FromObject(new { db = principal.Data.Database.id, empl }));
+              }
+              , (response) =>
+              {
+                  return TryCatchResponseQuery((query) =>
+                  {
+                      HttpEmployeeMessage responseMessage = response.ToObject<HttpEmployeeMessage>();
+                      //Models.Editor.employee result = new Models.Editor.employee(responseMessage.Employee);
+                      //Managers.Editors.Employee.GetEmployeeSalepointAccess(query, result);
+
+                      return Request.CreateResponse(HttpStatusCode.OK, "Ok");
+                  });
+              })
+        );
+        
+        [HttpGet]
+        [ActionName("del_employee")]
+        public async Task<HttpResponseMessage> DeleteEmployee(int id)
+        => await TryCatchResponseAsync(async () => await CheckResponseError(
+              async () =>
+              {
+                  return await Common.Net.Json.GetAsync<JObject>(AppSettings.Server.Register, string.Concat("api/account/del_employee?id=", id));
+              }
+              , (response) =>
+              {
+                  return TryCatchResponseQuery((query) =>
+                  {
+                      HttpEmployeeMessage responseMessage = response.ToObject<HttpEmployeeMessage>();
+                      Models.Editor.employee result = new Models.Editor.employee(responseMessage.Employee);
+                      Managers.Editors.Employee.GetEmployeeSalepointAccess(query, result);
+
+                      return Request.CreateResponse(HttpStatusCode.OK, new { employee = result });
+                  });
+              })
+       );
         #endregion
 
     }
