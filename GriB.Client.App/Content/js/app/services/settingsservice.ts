@@ -56,5 +56,39 @@ export module Services {
         public DelEmployee(id: number, Callback: (responseData: any) => void) {
             this.GetApi({ Action: "/del_employee", RequestData: { id: id }, Callback: Callback });
         }
+
+        // Валюты
+        public GetCurrencies(Callback: (responseData: any) => void) {
+            this.GetApi({ Action: "/get_currencies", Callback: Callback });
+        }
+
+        public GetCurrency(id: number, Callback: (responseData: any) => void) {
+            this.GetApi({ Action: "/get_currency", RequestData: { id: id }, Callback: Callback });
+        }
+
+        public SetCurrency(model: Interfaces.Model.ICurrency, Callback: (responseData: any) => void) {
+            this.PostApi({ Action: "/post_currency", RequestData: JSON.stringify(model), Callback: Callback });
+        }
+
+        public DelCurrency(id: number, Callback: (responseData: any) => void) {
+            this.GetApi({ Action: "/del_currency", RequestData: { id: id }, Callback: Callback });
+        }
+
+        // Единицы измерения
+        public GetUnits(Callback: (responseData: any) => void) {
+            this.GetApi({ Action: "/get_units", Callback: Callback });
+        }
+
+        public GetUnit(id: number, Callback: (responseData: any) => void) {
+            this.GetApi({ Action: "/get_unit", RequestData: { id: id }, Callback: Callback });
+        }
+
+        public SetUnit(model: Interfaces.Model.IUnit, Callback: (responseData: any) => void) {
+            this.PostApi({ Action: "/post_unit", RequestData: JSON.stringify(model), Callback: Callback });
+        }
+
+        public DelUnit(id: number, Callback: (responseData: any) => void) {
+            this.GetApi({ Action: "/del_Unit", RequestData: { id: id }, Callback: Callback });
+        }
     }
 }

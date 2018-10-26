@@ -32,8 +32,12 @@ define(["require", "exports", "i18n!nls/strings"], function (require, exports) {
     exports._controllers["setting/editor/organization"] = function (module) { return new module.Controller.Setting.Editor.Organization(); };
     exports._controllers["setting/editor/salepoint"] = function (module) { return new module.Controller.Setting.Editor.SalePoint(); };
     exports._controllers["setting/editor/employee"] = function (module) { return new module.Controller.Setting.Editor.Employee(); };
+    exports._controllers["setting/editor/currency"] = function (module) { return new module.Controller.Setting.Editor.Currency(); };
+    exports._controllers["setting/editor/unit"] = function (module) { return new module.Controller.Setting.Editor.Unit(); };
     exports._controllers["setting/card/salepoint"] = function (module) { return new module.Controller.Setting.Card.SalePoint(); };
     exports._controllers["setting/card/employee"] = function (module) { return new module.Controller.Setting.Card.Employee(); };
+    exports._controllers["setting/card/currency"] = function (module) { return new module.Controller.Setting.Card.Currency(); };
+    exports._controllers["setting/card/unit"] = function (module) { return new module.Controller.Setting.Card.Unit(); };
     exports._editorData = {};
 });
 //# sourceMappingURL=variables.js.map

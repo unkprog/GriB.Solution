@@ -163,6 +163,8 @@
     <Content Include="Content\view\security\register.html" />
     <Content Include="Content\view\security\login.html" />
     <Content Include="Content\view\app.html" />
+    <Content Include="Content\view\setting\card\unit.html" />
+    <Content Include="Content\view\setting\card\currency.html" />
     <Content Include="Content\view\setting\card\employee.html" />
     <Content Include="Content\view\setting\card\salepoint.html" />
     <Content Include="Content\view\setting\editor\employee.html" />
@@ -297,7 +299,9 @@
     <TypeScriptCompile Include="Content\js\app\controller\security\register.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\security\login.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\setting\card\card.ts" />
+    <TypeScriptCompile Include="Content\js\app\controller\setting\card\unit.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\setting\card\employee.ts" />
+    <TypeScriptCompile Include="Content\js\app\controller\setting\card\currency.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\setting\card\salepoint.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\setting\editor\editor.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\setting\editor\employee.ts" />

@@ -224,7 +224,97 @@ namespace GriB.Client.App.Controllers
                       return Request.CreateResponse(HttpStatusCode.OK, new { employee = result });
                   });
               })
-       );
+        );
+        #endregion
+
+        #region Валюта
+        [HttpGet]
+        [ActionName("get_currencies")]
+        public HttpResponseMessage GetCurrencies()
+        {
+            return TryCatchResponseQuery((query) =>
+            {
+                return Request.CreateResponse(HttpStatusCode.OK, Unit.GetUnits(query, Unit.typeCurrency));
+            });
+        }
+
+        [HttpGet]
+        [ActionName("get_currency")]
+        public HttpResponseMessage GetCurrency(int id)
+        {
+            return TryCatchResponseQuery((query) =>
+            {
+                return Request.CreateResponse(HttpStatusCode.OK, Unit.GetUnit(query, id));
+            });
+        }
+
+        [HttpPost]
+        [ActionName("post_currency")]
+        public HttpResponseMessage PostCurrency(unit unit)
+        {
+            return TryCatchResponseQuery((query) =>
+            {
+                Principal principal = (Principal)HttpContext.Current.User;
+                Unit.SetUnit(query, unit, Unit.typeCurrency, principal.Data.User.id);
+                return Request.CreateResponse(HttpStatusCode.OK, "Ok");
+            });
+        }
+
+        [HttpGet]
+        [ActionName("del_currency")]
+        public HttpResponseMessage DeleteCurrency(int id)
+        {
+            return TryCatchResponseQuery((query) =>
+            {
+                Unit.DelUnit(query, id);
+                return Request.CreateResponse(HttpStatusCode.OK, "Ok");
+            });
+        }
+        #endregion
+
+        #region Единица измерения
+        [HttpGet]
+        [ActionName("get_units")]
+        public HttpResponseMessage GetUnits()
+        {
+            return TryCatchResponseQuery((query) =>
+            {
+                return Request.CreateResponse(HttpStatusCode.OK, Unit.GetUnits(query, Unit.typeUnit));
+            });
+        }
+
+        [HttpGet]
+        [ActionName("get_unit")]
+        public HttpResponseMessage GetUnit(int id)
+        {
+            return TryCatchResponseQuery((query) =>
+            {
+                return Request.CreateResponse(HttpStatusCode.OK, Unit.GetUnit(query, id));
+            });
+        }
+
+        [HttpPost]
+        [ActionName("post_unit")]
+        public HttpResponseMessage PostUnit(unit unit)
+        {
+            return TryCatchResponseQuery((query) =>
+            {
+                Principal principal = (Principal)HttpContext.Current.User;
+                Unit.SetUnit(query, unit, Unit.typeUnit, principal.Data.User.id);
+                return Request.CreateResponse(HttpStatusCode.OK, "Ok");
+            });
+        }
+
+        [HttpGet]
+        [ActionName("del_unit")]
+        public HttpResponseMessage DeleteUnit(int id)
+        {
+            return TryCatchResponseQuery((query) =>
+            {
+                Unit.DelUnit(query, id);
+                return Request.CreateResponse(HttpStatusCode.OK, "Ok");
+            });
+        }
         #endregion
 
     }

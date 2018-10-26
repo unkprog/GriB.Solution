@@ -40,11 +40,15 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
                     this.OrganizationButtonClick = this.createClickEvent("btn-organization", this.organizationButtonClick);
                     this.SalePointButtonClick = this.createClickEvent("btn-salepoint", this.salePointButtonClick);
                     this.EmployeetButtonClick = this.createClickEvent("btn-employee", this.employeetButtonClick);
+                    this.CurrencyButtonClick = this.createClickEvent("btn-currency", this.currencyButtonClick);
+                    this.UnitButtonClick = this.createClickEvent("btn-unit", this.unitButtonClick);
                 };
                 Index.prototype.destroyEvents = function () {
                     this.destroyClickEvent("btn-organization", this.OrganizationButtonClick);
                     this.destroyClickEvent("btn-salepoint", this.SalePointButtonClick);
                     this.destroyClickEvent("btn-employee", this.EmployeetButtonClick);
+                    this.destroyClickEvent("btn-currency", this.CurrencyButtonClick);
+                    this.destroyClickEvent("btn-unit", this.UnitButtonClick);
                 };
                 Index.prototype.organizationButtonClick = function (e) {
                     variables_1._main.OpenController("setting/editor/organization", this);
@@ -54,6 +58,12 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
                 };
                 Index.prototype.employeetButtonClick = function (e) {
                     variables_1._main.OpenController("setting/card/employee", this);
+                };
+                Index.prototype.currencyButtonClick = function (e) {
+                    variables_1._main.OpenController("setting/card/currency", this);
+                };
+                Index.prototype.unitButtonClick = function (e) {
+                    variables_1._main.OpenController("setting/card/unit", this);
                 };
                 return Index;
             }(base.Controller.Base));

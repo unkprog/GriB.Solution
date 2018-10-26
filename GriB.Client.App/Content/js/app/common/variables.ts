@@ -53,9 +53,13 @@ _controllers["about/index"] = function (module: any): Interfaces.IController { r
 _controllers["setting/editor/organization"] = function (module: any): Interfaces.IController { return new module.Controller.Setting.Editor.Organization(); };
 _controllers["setting/editor/salepoint"] = function (module: any): Interfaces.IController { return new module.Controller.Setting.Editor.SalePoint(); };
 _controllers["setting/editor/employee"] = function (module: any): Interfaces.IController { return new module.Controller.Setting.Editor.Employee(); };
+_controllers["setting/editor/currency"] = function (module: any): Interfaces.IController { return new module.Controller.Setting.Editor.Currency(); };
+_controllers["setting/editor/unit"] = function (module: any): Interfaces.IController { return new module.Controller.Setting.Editor.Unit(); };
 
 _controllers["setting/card/salepoint"] = function (module: any): Interfaces.IController { return new module.Controller.Setting.Card.SalePoint(); };
 _controllers["setting/card/employee"] = function (module: any): Interfaces.IController { return new module.Controller.Setting.Card.Employee(); };
+_controllers["setting/card/currency"] = function (module: any): Interfaces.IController { return new module.Controller.Setting.Card.Currency(); };
+_controllers["setting/card/unit"] = function (module: any): Interfaces.IController { return new module.Controller.Setting.Card.Unit(); };
 
 
 export declare let _editorData: any;

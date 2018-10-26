@@ -1,16 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data.SqlClient;
-using GriB.Client.App.Models;
-using GriB.Client.App.Models.Editor;
 using GriB.Common.Sql;
+using GriB.Client.App.Models.Editor;
 
 namespace GriB.Client.App.Managers.Editors
 {
     public static class Unit
     {
-        public const int typeCurrency = 0;
-        public const int typeUnit     = 1;
+        public const int typeCurrency = 1;
+        public const int typeUnit     = 2;
 
         private static unit readFromValues(object[] values) => new unit() { id = (int)values[0], code = (string)values[1], nameshort = (string)values[2], name = (string)values[3] };
 
@@ -27,7 +25,7 @@ namespace GriB.Client.App.Managers.Editors
             return result;
         }
 
-        public static unit GetOrganization(this Query query, int id)
+        public static unit GetUnit(this Query query, int id)
         {
             unit result = new unit();
             query.Execute(cmdGet, new SqlParameter[] { new SqlParameter() { ParameterName = "@id", Value = id }, new SqlParameter() { ParameterName = "@code", Value = string.Empty }, new SqlParameter() { ParameterName = "@nameshort", Value = string.Empty }, new SqlParameter() { ParameterName = "@name", Value = string.Empty }, new SqlParameter() { ParameterName = "@type", Value = 0 } }
@@ -40,7 +38,7 @@ namespace GriB.Client.App.Managers.Editors
         }
 
         private const string cmdSet = @"Unit\[set]";
-        public static unit SetOrganization(this Query query, unit unit, int type, int user)
+        public static unit SetUnit(this Query query, unit unit, int type, int user)
         {
             unit result = unit;
             query.Execute(cmdSet, new SqlParameter[] { new SqlParameter("@id", unit.id), new SqlParameter("@u", user), new SqlParameter("@type", type), new SqlParameter("@code", unit.code), new SqlParameter("@nameshort", unit.nameshort), new SqlParameter("@name", unit.name) }
@@ -49,11 +47,11 @@ namespace GriB.Client.App.Managers.Editors
                 result.id = (int)values[0];
             });
 
-            return GetOrganization(query, result.id);
+            return GetUnit(query, result.id);
         }
 
         private const string cmdDel = @"Unit\[del]";
-        public static void DelOrganization(this Query query, int id)
+        public static void DelUnit(this Query query, int id)
         {
             query.Execute(cmdDel, new SqlParameter[] { new SqlParameter("@id", id) }
             , (values) => { });

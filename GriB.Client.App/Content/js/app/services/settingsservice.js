@@ -63,6 +63,32 @@ define(["require", "exports", "app/common/baseservice"], function (require, expo
             SettingsService.prototype.DelEmployee = function (id, Callback) {
                 this.GetApi({ Action: "/del_employee", RequestData: { id: id }, Callback: Callback });
             };
+            // Валюты
+            SettingsService.prototype.GetCurrencies = function (Callback) {
+                this.GetApi({ Action: "/get_currencies", Callback: Callback });
+            };
+            SettingsService.prototype.GetCurrency = function (id, Callback) {
+                this.GetApi({ Action: "/get_currency", RequestData: { id: id }, Callback: Callback });
+            };
+            SettingsService.prototype.SetCurrency = function (model, Callback) {
+                this.PostApi({ Action: "/post_currency", RequestData: JSON.stringify(model), Callback: Callback });
+            };
+            SettingsService.prototype.DelCurrency = function (id, Callback) {
+                this.GetApi({ Action: "/del_currency", RequestData: { id: id }, Callback: Callback });
+            };
+            // Единицы измерения
+            SettingsService.prototype.GetUnits = function (Callback) {
+                this.GetApi({ Action: "/get_units", Callback: Callback });
+            };
+            SettingsService.prototype.GetUnit = function (id, Callback) {
+                this.GetApi({ Action: "/get_unit", RequestData: { id: id }, Callback: Callback });
+            };
+            SettingsService.prototype.SetUnit = function (model, Callback) {
+                this.PostApi({ Action: "/post_unit", RequestData: JSON.stringify(model), Callback: Callback });
+            };
+            SettingsService.prototype.DelUnit = function (id, Callback) {
+                this.GetApi({ Action: "/del_Unit", RequestData: { id: id }, Callback: Callback });
+            };
             return SettingsService;
         }(base.Services.BaseService));
         Services.SettingsService = SettingsService;

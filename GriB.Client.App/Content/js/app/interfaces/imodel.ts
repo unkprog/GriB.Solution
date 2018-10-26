@@ -62,4 +62,15 @@
         datebirth: Date;
         accesssalepoints: ISalePointAccessModel[];
     }
+
+    export interface IBaseUnit extends IReferenceModel, IEditorModel {
+        code: number;
+        nameshort: string;
+    }
+
+    export interface ICurrency extends IBaseUnit {
+    }
+
+    export interface IUnit extends IBaseUnit {
+    }
 }
