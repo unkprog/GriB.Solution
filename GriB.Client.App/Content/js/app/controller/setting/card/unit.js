@@ -53,7 +53,7 @@ define(["require", "exports", "app/common/variables", "app/controller/setting/ca
                         return false;
                     };
                     Unit.prototype.Add = function () {
-                        vars._editorData["id_unit"] = 0;
+                        vars._editorData["id_unit"] = -1;
                         vars._app.OpenController("setting/editor/unit", this);
                     };
                     Unit.prototype.Edit = function () {

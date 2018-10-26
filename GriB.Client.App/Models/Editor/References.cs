@@ -6,6 +6,10 @@ namespace GriB.Client.App.Models.Editor
 {
     public class reference : model_base
     {
+        public reference()
+        {
+            name = string.Empty;
+        }
         public string name { get; set; }
     }
 
@@ -63,6 +67,11 @@ namespace GriB.Client.App.Models.Editor
 
     public class unit : reference
     {
+        public unit()
+        {
+            code = string.Empty;
+            nameshort = string.Empty;
+        }
         public string code      { get; set; }
         public string nameshort { get; set; }
     }

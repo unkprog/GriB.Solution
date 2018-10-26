@@ -41,7 +41,7 @@ export namespace Controller.Setting.Card {
 
 
         public Add() {
-            vars._editorData["id_unit"] = 0;
+            vars._editorData["id_unit"] = -1;
             vars._app.OpenController("setting/editor/unit", this);
         }
 

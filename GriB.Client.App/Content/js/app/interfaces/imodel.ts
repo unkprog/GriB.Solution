@@ -64,7 +64,7 @@
     }
 
     export interface IBaseUnit extends IReferenceModel, IEditorModel {
-        code: number;
+        code: string;
         nameshort: string;
     }
 

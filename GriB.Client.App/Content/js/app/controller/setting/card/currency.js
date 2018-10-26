@@ -53,7 +53,7 @@ define(["require", "exports", "app/common/variables", "app/controller/setting/ca
                         return false;
                     };
                     Currency.prototype.Add = function () {
-                        vars._editorData["id_currency"] = 0;
+                        vars._editorData["id_currency"] = -1;
                         vars._app.OpenController("setting/editor/currency", this);
                     };
                     Currency.prototype.Edit = function () {

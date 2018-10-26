@@ -41,7 +41,7 @@ export namespace Controller.Setting.Card {
 
 
         public Add() {
-            vars._editorData["id_currency"] = 0;
+            vars._editorData["id_currency"] = -1;
             vars._app.OpenController("setting/editor/currency", this);
         }
 
