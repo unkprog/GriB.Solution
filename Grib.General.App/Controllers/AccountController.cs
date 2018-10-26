@@ -151,11 +151,12 @@ namespace GriB.General.App.Controllers
 
         [HttpPost]
         [ActionName("upd_employee")]
-        public HttpResponseMessage UpdateEmployees(int db, employee empl)
+        public HttpResponseMessage UpdateEmployees(employeedb empldb)
         {
             return TryCatchResponse(() =>
             {
-                Managers.pos.Settings.Employee.SetEmployee(_query, db, empl);
+                employee empl = new employee(empldb.empl);
+                Managers.pos.Settings.Employee.SetEmployee(_query, empldb.db, empl);
                 employee result = Managers.pos.Settings.Employee.GetEmployee(_query, empl.id);
                 return Request.CreateResponse(HttpStatusCode.OK, new HttpEmployeeMessage() { Employee = result });
             });

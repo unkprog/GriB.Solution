@@ -106,4 +106,6 @@ define({
     "label$patronymic": "Отчество",
     "label$male": "Мужской",
     "label$female": "Женский",
+
+    "msg$error$pointsalenotnotavailabledefault": "Точка продаж по умолчанию не доступна",
 });

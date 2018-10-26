@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
-using GriB.Client.App.Models;
 using GriB.Client.App.Models.Editor;
 using GriB.Common.Sql;
 
@@ -14,6 +13,7 @@ namespace GriB.Client.App.Managers.Editors
         {
             empl.isaccess = (bool)values[1];
             empl.openonlogin = (int)values[2];
+            empl.defaultsalepoint = (int)values[3];
             return empl;
         }
 
@@ -47,12 +47,11 @@ namespace GriB.Client.App.Managers.Editors
         public static employee SetEmployee(this Query query, employee empl)
         {
             employee result = empl;
-            query.Execute(cmdSet, new SqlParameter[] { new SqlParameter("@id", empl.id), new SqlParameter("@isaccess", empl.isaccess), new SqlParameter("@openonlogin", empl.openonlogin) }
+            query.Execute(cmdSet, new SqlParameter[] { new SqlParameter("@id", empl.id), new SqlParameter("@isaccess", empl.isaccess), new SqlParameter("@openonlogin", empl.openonlogin), new SqlParameter("@defaultsalepoint", empl.defaultsalepoint) }
             , (values) =>
             {
                 result.id = (int)values[0];
             });
-
             return result;
         }
 
@@ -76,7 +75,7 @@ namespace GriB.Client.App.Managers.Editors
                 employee_salepointaccess item = new employee_salepointaccess()
                 {
                       salepoint = new salepoint() { id = (int)values[idx++], name = (string)values[idx++], company_id = (int)values[idx++], city = (string)values[idx++], address = (string)values[idx++], schedule = (string)values[idx++] }
-                    , isaccess = (bool)values[idx++], isdefault = (bool)values[idx++]
+                    , isaccess = (bool)values[idx++]
                 };
                 result.accesssalepoints.Add(item);
             });
@@ -88,9 +87,17 @@ namespace GriB.Client.App.Managers.Editors
         public static employee SetEmployeeSalepointAccess(this Query query, employee empl)
         {
             employee result = empl;
-            foreach(var item in  result.accesssalepoints)
-            query.Execute(cmdSetSalepointAcces, new SqlParameter[] { new SqlParameter("@id", empl.id), new SqlParameter("@salepoint", item.salepoint.id), new SqlParameter("@isaccess",item.isaccess), new SqlParameter("@isdefault", item.isdefault) }
-            , (values) => { });
+            try
+            {
+
+                foreach (var item in result.accesssalepoints)
+                    query.Execute(cmdSetSalepointAcces, new SqlParameter[] { new SqlParameter("@id", empl.id), new SqlParameter("@salepoint", item.salepoint.id), new SqlParameter("@isaccess", item.isaccess) }
+                    , (values) => { });
+            }
+            catch (Exception ex)
+            {
+                int i = 0;
+            }
 
             return result;
         }

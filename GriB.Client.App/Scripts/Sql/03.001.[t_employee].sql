@@ -5,9 +5,10 @@ if not exists (select * from [sys].[objects] where [object_id] = object_id(N'[t_
 begin
   create table [t_employee]
   (
-    [id]          [int]  not null,
-	[isaccess]    [bit]  not null default (0),
-	[openonlogin] [int]  not null default (0),
+    [id]               [int]  not null,
+	[isaccess]         [bit]  not null default (0),
+	[openonlogin]      [int]  not null default (0),
+	[defaultsalepoint] [int]  not null default (0),
     primary key clustered ([id])
   )
 end
@@ -19,7 +20,6 @@ begin
     [id]        [int] not null,
 	[salepoint] [int] not null,
 	[isaccess]  [bit] not null default (0),
-	[isdefault] [bit] not null default (0),
-    primary key clustered ([id])
+    primary key clustered ([id], [salepoint])
   )
 end

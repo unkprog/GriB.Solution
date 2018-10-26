@@ -175,6 +175,7 @@ namespace GriB.Client.App.Controllers
                    {
                        HttpEmployeeMessage responseMessage = response.ToObject<HttpEmployeeMessage>();
                        Models.Editor.employee result = new Models.Editor.employee(responseMessage.Employee);
+                       Managers.Editors.Employee.GetEmployee(query, result);
                        Managers.Editors.Employee.GetEmployeeSalepointAccess(query, result);
 
                        return Request.CreateResponse(HttpStatusCode.OK, new { employee = result });
@@ -189,16 +190,16 @@ namespace GriB.Client.App.Controllers
               async () =>
               {
                   Principal principal = (Principal)HttpContext.Current.User;
-                  return await Common.Net.Json.PostAsync<JObject, JObject>(AppSettings.Server.Register, "api/account/upd_employee", JObject.FromObject(new { db = principal.Data.Database.id, empl }));
+                  return await Common.Net.Json.PostAsync<JObject, Object>(AppSettings.Server.Register, "api/account/upd_employee", new employeedb (){ db = principal.Data.Database.id, empl = empl });
               }
               , (response) =>
               {
                   return TryCatchResponseQuery((query) =>
                   {
                       HttpEmployeeMessage responseMessage = response.ToObject<HttpEmployeeMessage>();
-                      //Models.Editor.employee result = new Models.Editor.employee(responseMessage.Employee);
-                      //Managers.Editors.Employee.GetEmployeeSalepointAccess(query, result);
-
+                      empl.id = responseMessage.Employee.id;
+                      Managers.Editors.Employee.SetEmployee(query, empl);
+                      Managers.Editors.Employee.SetEmployeeSalepointAccess(query, empl);
                       return Request.CreateResponse(HttpStatusCode.OK, "Ok");
                   });
               })

@@ -59,7 +59,7 @@ namespace GriB.General.App.Managers.pos.Settings
         private const string cmdSetUserSecEmploee = @"user\sec\[set]";
         public static void SetEmployee(this Query query, int db, employee empl)
         {
-            query.Execute(cmdSetUserEmploee, new SqlParameter[] { new SqlParameter("@id", empl.id), new SqlParameter("@cu", empl.cu), new SqlParameter("@uu", empl.uu), new SqlParameter("@phone", empl.phone) }
+            query.Execute(cmdSetUserEmploee, new SqlParameter[] { new SqlParameter("@id", empl.id), new SqlParameter("@db", db), new SqlParameter("@cu", empl.cu), new SqlParameter("@uu", empl.uu), new SqlParameter("@phone", empl.phone) }
             , (values) => { empl.id = (int)values[0]; });
 
             query.Execute(cmdSetUserDbEmploee, new SqlParameter[] { new SqlParameter("@id", empl.id), new SqlParameter("@db", db) }

@@ -1,12 +1,12 @@
 ﻿if exists(select [id] from [t_employee_salepointaccess] with(nolock) where [id]=@id and [salepoint]=@salepoint)
 begin
   update [t_employee_salepointaccess] 
-  set [isaccess] = @isaccess, [isdefault] = @isdefault
+  set [isaccess] = @isaccess
   where [id] = @id and [salepoint]=@salepoint
 end
 else begin
-  insert into [t_org_info1]([id], [salepoint], [isaccess], [isdefault])
-  select @id, @salepoint, @isaccess, @isdefault
+  insert into [t_employee_salepointaccess]([id], [salepoint], [isaccess])
+  select @id, @salepoint, @isaccess
 end
 
 select @id

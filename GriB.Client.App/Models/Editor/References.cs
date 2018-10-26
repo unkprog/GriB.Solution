@@ -27,14 +27,14 @@ namespace GriB.Client.App.Models.Editor
     {
         public salepoint salepoint { get; set; }
         public bool isaccess       { get; set; }
-        public bool isdefault      { get; set; }
     }
 
     public class employee : Common.Models.pos.settings.employee
     {
-        public bool isfullaccess { get; set; }
-        public bool isaccess     { get; set; }
-        public int  openonlogin  { get; set; }
+        public bool isfullaccess     { get; set; }
+        public bool isaccess         { get; set; }
+        public int  openonlogin      { get; set; }
+        public int  defaultsalepoint { get; set; }
 
         public List<employee_salepointaccess> accesssalepoints { get; set; }
 

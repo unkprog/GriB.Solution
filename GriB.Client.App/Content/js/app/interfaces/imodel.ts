@@ -47,7 +47,6 @@
     export interface ISalePointAccessModel {
         salepoint: ISalepointModel; 
         isaccess: boolean;
-        isdefault: boolean;
     }
         
     export interface IEmployeeModel extends IReferenceModel, IEditorModel {
@@ -55,6 +54,7 @@
         pass: string;
         isaccess: boolean;
         openonlogin: number;
+        defaultsalepoint: number;
         fname: string;
         mname: string;
         lname: string;
