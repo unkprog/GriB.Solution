@@ -184,8 +184,12 @@
     <Content Include="Scripts\Query\Organization\[del].sql" />
     <Content Include="Scripts\Query\Organization\[set].sql" />
     <Content Include="Scripts\Query\Organization\[get].sql" />
+    <Content Include="Scripts\Query\Unit\[del].sql" />
+    <Content Include="Scripts\Query\Unit\[get].sql" />
+    <Content Include="Scripts\Query\Unit\[set].sql" />
     <Content Include="Scripts\Sql\01.001.[t_orgtype].sql" />
     <Content Include="Scripts\Sql\03.001.[t_employee].sql" />
+    <Content Include="Scripts\Sql\04.001.[t_unit].sql" />
     <Content Include="Scripts\Sql\02.001.[t_org].sql" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
@@ -203,6 +207,7 @@
     <Compile Include="Managers\AppSettings.cs" />
     <Compile Include="Managers\AuthUser.cs" />
     <Compile Include="Managers\Editors\Employee.cs" />
+    <Compile Include="Managers\Editors\Unit.cs" />
     <Compile Include="Managers\Editors\Organization.cs" />
     <Compile Include="Models\Editor\References.cs" />
     <Compile Include="Models\t_org.cs" />

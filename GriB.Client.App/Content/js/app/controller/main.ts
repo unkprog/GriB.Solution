@@ -51,7 +51,7 @@ export namespace Controller {
             this.content = view.find("#main-view-content");
             super.ViewInit(view);
             this.MenuSettingsButtonClick({});
-            return true;
+            return false;
         }
 
         public ViewHide(e) {

@@ -198,7 +198,7 @@ export namespace Controller {
                         isInit = self._controller.ViewInit(view);
                         self._content.html(view[0]);
                         isInit = isInit && self._controller.ViewShow(this);
-                        self._controller.ViewResize(this);
+                        //self._controller.ViewResize(this);
                     }
                     catch (ex) {
                         console.log(ex);

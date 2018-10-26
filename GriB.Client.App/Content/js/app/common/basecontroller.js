@@ -197,7 +197,7 @@ define(["require", "exports", "app/common/utils", "./variables"], function (requ
                             isInit = self._controller.ViewInit(view);
                             self._content.html(view[0]);
                             isInit = isInit && self._controller.ViewShow(_this);
-                            self._controller.ViewResize(_this);
+                            //self._controller.ViewResize(this);
                         }
                         catch (ex) {
                             console.log(ex);
