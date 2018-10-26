@@ -163,6 +163,8 @@
     <Content Include="Content\view\security\register.html" />
     <Content Include="Content\view\security\login.html" />
     <Content Include="Content\view\app.html" />
+    <Content Include="Content\view\setting\card\product.html" />
+    <Content Include="Content\view\setting\card\category.html" />
     <Content Include="Content\view\setting\card\unit.html" />
     <Content Include="Content\view\setting\card\currency.html" />
     <Content Include="Content\view\setting\card\employee.html" />
@@ -175,6 +177,11 @@
     <Content Include="Content\view\setting\index.html" />
     <Content Include="Content\view\terminal\index.html" />
     <Content Include="Global.asax" />
+    <Content Include="Scripts\Query\Category\SalepointAccess\[get].sql" />
+    <Content Include="Scripts\Query\Category\SalepointAccess\[set].sql" />
+    <Content Include="Scripts\Query\Category\[del].sql" />
+    <Content Include="Scripts\Query\Category\[get].sql" />
+    <Content Include="Scripts\Query\Category\[set].sql" />
     <Content Include="Scripts\Query\Employee\SalepointAccess\[get].sql" />
     <Content Include="Scripts\Query\Employee\SalepointAccess\[set].sql" />
     <Content Include="Scripts\Query\Employee\[get].sql" />
@@ -193,6 +200,7 @@
     <Content Include="Scripts\Query\Unit\[set].sql" />
     <Content Include="Scripts\Sql\01.001.[t_orgtype].sql" />
     <Content Include="Scripts\Sql\03.001.[t_employee].sql" />
+    <Content Include="Scripts\Sql\05.001.[t_category].sql" />
     <Content Include="Scripts\Sql\04.001.[t_unit].sql" />
     <Content Include="Scripts\Sql\02.001.[t_org].sql" />
     <Content Include="Web.config">
@@ -211,6 +219,7 @@
     <Compile Include="Managers\AppSettings.cs" />
     <Compile Include="Managers\AuthUser.cs" />
     <Compile Include="Managers\Editors\Employee.cs" />
+    <Compile Include="Managers\Editors\Category.cs" />
     <Compile Include="Managers\Editors\Unit.cs" />
     <Compile Include="Managers\Editors\Organization.cs" />
     <Compile Include="Models\Editor\References.cs" />
@@ -301,6 +310,8 @@
     <TypeScriptCompile Include="Content\js\app\controller\security\register.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\security\login.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\setting\card\card.ts" />
+    <TypeScriptCompile Include="Content\js\app\controller\setting\card\product.ts" />
+    <TypeScriptCompile Include="Content\js\app\controller\setting\card\category.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\setting\card\unit.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\setting\card\employee.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\setting\card\currency.ts" />

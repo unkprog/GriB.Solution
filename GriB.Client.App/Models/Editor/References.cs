@@ -13,6 +13,11 @@ namespace GriB.Client.App.Models.Editor
         public string name { get; set; }
     }
 
+    public class reference_hierarhy : reference
+    {
+        public int pid { get; set; }
+    }
+
     public class company : reference
     {
         public string site  { get; set; }
@@ -28,7 +33,7 @@ namespace GriB.Client.App.Models.Editor
         public string schedule   { get; set; }
     }
 
-    public class employee_salepointaccess
+    public class salepointaccess
     {
         public salepoint salepoint { get; set; }
         public bool isaccess       { get; set; }
@@ -41,16 +46,16 @@ namespace GriB.Client.App.Models.Editor
         public int  openonlogin      { get; set; }
         public int  defaultsalepoint { get; set; }
 
-        public List<employee_salepointaccess> accesssalepoints { get; set; }
+        public List<salepointaccess> accesssalepoints { get; set; }
 
         public employee() : base()
         {
-            accesssalepoints = new List<employee_salepointaccess>();
+            accesssalepoints = new List<salepointaccess>();
         }
 
         public employee(Common.Models.pos.settings.employee empl) : base(empl)
         {
-            accesssalepoints = new List<employee_salepointaccess>();
+            accesssalepoints = new List<salepointaccess>();
             isfullaccess = isaccess = (empl?.pid == 0);
         }
     }
@@ -81,5 +86,18 @@ namespace GriB.Client.App.Models.Editor
         public unit     unit  { get; set; }
         public DateTime date  { get; set; }
         public double   value { get; set; }
+    }
+
+    public class category : reference_hierarhy
+    {
+        public category()
+        {
+            photo = string.Empty;
+            accesssalepoints = new List<salepointaccess>();
+        }
+        public string photo { get; set; }
+
+        public List<salepointaccess> accesssalepoints { get; set; }
+
     }
 }

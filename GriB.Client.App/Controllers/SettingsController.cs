@@ -317,5 +317,50 @@ namespace GriB.Client.App.Controllers
         }
         #endregion
 
+        #region Категории
+        [HttpGet]
+        [ActionName("get_categories")]
+        public HttpResponseMessage GetCategories()
+        {
+            return TryCatchResponseQuery((query) =>
+            {
+                return Request.CreateResponse(HttpStatusCode.OK, Category.GetCategories(query));
+            });
+        }
+
+        [HttpGet]
+        [ActionName("get_category")]
+        public HttpResponseMessage GetCategory(int id)
+        {
+            return TryCatchResponseQuery((query) =>
+            {
+                return Request.CreateResponse(HttpStatusCode.OK, Category.GetCategory(query, id));
+            });
+        }
+
+        [HttpPost]
+        [ActionName("post_category")]
+        public HttpResponseMessage PostCategory(category category)
+        {
+            return TryCatchResponseQuery((query) =>
+            {
+                Principal principal = (Principal)HttpContext.Current.User;
+                Category.SetCategory(query, category, principal.Data.User.id);
+                return Request.CreateResponse(HttpStatusCode.OK, "Ok");
+            });
+        }
+
+        [HttpGet]
+        [ActionName("del_category")]
+        public HttpResponseMessage DeleteCategory(int id)
+        {
+            return TryCatchResponseQuery((query) =>
+            {
+                Category.DelCategory(query, id);
+                return Request.CreateResponse(HttpStatusCode.OK, "Ok");
+            });
+        }
+        #endregion
+
     }
 }

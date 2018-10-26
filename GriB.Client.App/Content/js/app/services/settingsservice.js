@@ -87,7 +87,33 @@ define(["require", "exports", "app/common/baseservice"], function (require, expo
                 this.PostApi({ Action: "/post_unit", RequestData: JSON.stringify(model), Callback: Callback });
             };
             SettingsService.prototype.DelUnit = function (id, Callback) {
-                this.GetApi({ Action: "/del_Unit", RequestData: { id: id }, Callback: Callback });
+                this.GetApi({ Action: "/del_unit", RequestData: { id: id }, Callback: Callback });
+            };
+            // Категории
+            SettingsService.prototype.GetCategries = function (Callback) {
+                this.GetApi({ Action: "/get_categories", Callback: Callback });
+            };
+            SettingsService.prototype.GetCategory = function (id, Callback) {
+                this.GetApi({ Action: "/get_category", RequestData: { id: id }, Callback: Callback });
+            };
+            SettingsService.prototype.SetCategory = function (model, Callback) {
+                this.PostApi({ Action: "/post_category", RequestData: JSON.stringify(model), Callback: Callback });
+            };
+            SettingsService.prototype.DelCategory = function (id, Callback) {
+                this.GetApi({ Action: "/del_category", RequestData: { id: id }, Callback: Callback });
+            };
+            // Товары
+            SettingsService.prototype.GetProducts = function (Callback) {
+                this.GetApi({ Action: "/get_products", Callback: Callback });
+            };
+            SettingsService.prototype.GetProduct = function (id, Callback) {
+                this.GetApi({ Action: "/get_product", RequestData: { id: id }, Callback: Callback });
+            };
+            SettingsService.prototype.SetProduct = function (model, Callback) {
+                this.PostApi({ Action: "/post_product", RequestData: JSON.stringify(model), Callback: Callback });
+            };
+            SettingsService.prototype.DelProduct = function (id, Callback) {
+                this.GetApi({ Action: "/del_product", RequestData: { id: id }, Callback: Callback });
             };
             return SettingsService;
         }(base.Services.BaseService));

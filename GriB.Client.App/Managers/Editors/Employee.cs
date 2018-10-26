@@ -66,13 +66,13 @@ namespace GriB.Client.App.Managers.Editors
         public static employee GetEmployeeSalepointAccess(this Query query, employee empl)
         {
             employee result = empl;
-            result.accesssalepoints = new List<employee_salepointaccess>();
+            result.accesssalepoints = new List<salepointaccess>();
 
             query.Execute(cmdGetSalepointAcces, new SqlParameter[] { new SqlParameter("@id", empl.id), new SqlParameter("@type", Organization.typeDivision) }
             , (values) =>
             {
                 int idx = 0;
-                employee_salepointaccess item = new employee_salepointaccess()
+                salepointaccess item = new salepointaccess()
                 {
                       salepoint = new salepoint() { id = (int)values[idx++], name = (string)values[idx++], company_id = (int)values[idx++], city = (string)values[idx++], address = (string)values[idx++], schedule = (string)values[idx++] }
                     , isaccess = (bool)values[idx++]

@@ -19,52 +19,16 @@ export namespace Controller.Setting.Card {
             });
         }
 
-        protected getCardSettings(): Interfaces.ICardSettings {
+        protected createCardSettings(): Interfaces.ICardSettings {
             return {
-                FieldId: "id",
+                FieldId: "id", ValueIdNew: -1, EditIdName: "id_currency", EditController: "setting/editor/currency",
+                Load: $.proxy(this.Service.GetCurrencies, this.Service), Delete: $.proxy(this.Service.DelCurrency, this.Service),
                 Columns: [
                     { Header: vars._statres("label$code"), Field: "code" },
                     { Header: vars._statres("label$nameshort"), Field: "nameshort" },
                     { Header: vars._statres("label$name"), HeaderStyle: "hide-on-small-only", Field: "name", FieldStyle: "hide-on-small-only" },
                 ]
             };
-        }
-
-        protected loadData(): boolean {
-            let controller = this;
-            this.Service.GetCurrencies((responseData) => {
-                controller.Model.set("cardModel", responseData);
-                controller.afterLoad();
-            });
-            return false;
-        }
-
-
-        public Add() {
-            vars._editorData["id_currency"] = -1;
-            vars._app.OpenController("setting/editor/currency", this);
-        }
-
-        public Edit(): void {
-            let id: any = this.getSelectedRowId();
-            if (id) {
-                let _id: number = +id;
-                if (_id > 0) {
-                    vars._editorData["id_currency"] = _id;
-                    vars._app.OpenController("setting/editor/currency", this);
-                }
-            }
-        }
-
-        public Delete(): void {
-            let id: any = this.getSelectedRowId();
-            if (id) {
-                let _id: number = +id;
-                let controller = this;
-                this.Service.DelCurrency(_id, (responseData) => {
-                    controller.afterDelete();
-                });
-            }
         }
     }
 }

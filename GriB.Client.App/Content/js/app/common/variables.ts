@@ -55,11 +55,15 @@ _controllers["setting/editor/salepoint"] = function (module: any): Interfaces.IC
 _controllers["setting/editor/employee"] = function (module: any): Interfaces.IController { return new module.Controller.Setting.Editor.Employee(); };
 _controllers["setting/editor/currency"] = function (module: any): Interfaces.IController { return new module.Controller.Setting.Editor.Currency(); };
 _controllers["setting/editor/unit"] = function (module: any): Interfaces.IController { return new module.Controller.Setting.Editor.Unit(); };
+_controllers["setting/editor/category"] = function (module: any): Interfaces.IController { return new module.Controller.Setting.Editor.Category(); };
+_controllers["setting/editor/product"] = function (module: any): Interfaces.IController { return new module.Controller.Setting.Editor.Product(); };
 
 _controllers["setting/card/salepoint"] = function (module: any): Interfaces.IController { return new module.Controller.Setting.Card.SalePoint(); };
 _controllers["setting/card/employee"] = function (module: any): Interfaces.IController { return new module.Controller.Setting.Card.Employee(); };
 _controllers["setting/card/currency"] = function (module: any): Interfaces.IController { return new module.Controller.Setting.Card.Currency(); };
 _controllers["setting/card/unit"] = function (module: any): Interfaces.IController { return new module.Controller.Setting.Card.Unit(); };
+_controllers["setting/card/category"] = function (module: any): Interfaces.IController { return new module.Controller.Setting.Card.Category(); };
+_controllers["setting/card/product"] = function (module: any): Interfaces.IController { return new module.Controller.Setting.Card.Product(); };
 
 
 export declare let _editorData: any;

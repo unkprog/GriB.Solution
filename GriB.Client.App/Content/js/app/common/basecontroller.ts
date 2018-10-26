@@ -1,4 +1,5 @@
 ﻿import utils = require('app/common/utils');
+import vars = require('app/common/variables');
 import { _app, _main } from './variables';
 
 export namespace Controller {
@@ -333,6 +334,7 @@ export namespace Controller {
 
         constructor() {
             super();
+            this.cardSettings = this.createCardSettings();
         }
 
         protected createModel(): kendo.data.ObservableObject {
@@ -346,6 +348,10 @@ export namespace Controller {
             return this.Model.get("cardModel").toJSON();
         }
 
+        private cardSettings: Interfaces.ICardSettings;
+        public get CardSettings(): Interfaces.ICardSettings {
+            return this.cardSettings;
+        }
 
         private navHeader: JQuery;
         private btnAdd: JQuery;
@@ -452,21 +458,8 @@ export namespace Controller {
             this.destroyClickEvent(this.btnClose, this.CloseButtonClick);
         }
 
-        protected loadData(): boolean {
-            this.afterLoad();
-            return true;
-        }
-
-        protected afterLoad(): void {
-            this.setupTable();
-            _app.HideLoading();
-        }
-
-        protected getCardSettings(): Interfaces.ICardSettings  {
-            return {
-                FieldId: "",
-                Columns: []
-            };
+        protected createCardSettings(): Interfaces.ICardSettings {
+            return { FieldId: "", ValueIdNew: 0, EditIdName: "", EditController: "", Load: undefined, Delete: undefined, Columns: [] };
         }
 
         private rows: JQuery;
@@ -487,7 +480,7 @@ export namespace Controller {
         }
 
         protected getTableHeaderHtml(): string {
-            let columns: Interfaces.ICardColumn[] = this.getCardSettings().Columns;
+            let columns: Interfaces.ICardColumn[] = this.CardSettings.Columns;
             let html: string = '';
 
             html += '<tr>';
@@ -509,7 +502,7 @@ export namespace Controller {
 
         private templateRow: Function;
         protected getTableRowTemplate(): string {
-            let setting: Interfaces.ICardSettings = this.getCardSettings();
+            let setting: Interfaces.ICardSettings = this.CardSettings;
             let columns: Interfaces.ICardColumn[] = setting.Columns;
             let html: string = '';
 
@@ -599,20 +592,57 @@ export namespace Controller {
 
         }
 
-        public Edit(): void {
-           
+        protected loadData(): boolean {
+            let controller = this;
+            if (this.CardSettings && this.CardSettings.Load) {
+                this.CardSettings.Load((responseData) => {
+                    controller.Model.set("cardModel", responseData);
+                    controller.afterLoad();
+                });
+                return false;
+            }
+            controller.afterLoad();
+            return true;
+        }
+
+        protected afterLoad(): void {
+            this.setupTable();
+            _app.HideLoading();
         }
 
         public Add(): void {
+            vars._editorData[this.CardSettings.EditIdName] = this.CardSettings.ValueIdNew;
+            vars._app.OpenController(this.CardSettings.EditController, this);
         }
 
         protected afterAdd(): void {
 
         }
 
-        public Delete(): void {
-            this.afterDelete();
+        public Edit(): void {
+            let id: any = this.getSelectedRowId();
+            if (id) {
+                let _id: number = +id;
+                if (_id > 0) {
+                    vars._editorData[this.CardSettings.EditIdName] = _id;
+                    vars._app.OpenController(this.CardSettings.EditController, this);
+                }
+            }
         }
+
+        public Delete(): void {
+            let id: any = this.getSelectedRowId();
+            if (id) {
+                let _id: number = +id;
+                let controller = this;
+                if (this.CardSettings && this.CardSettings.Delete) {
+                    this.CardSettings.Delete(_id, (responseData) => {
+                        controller.afterDelete();
+                    });
+                }
+            }
+        }
+
 
         protected afterDelete(): void {
             let id: any = this.getSelectedRowId();

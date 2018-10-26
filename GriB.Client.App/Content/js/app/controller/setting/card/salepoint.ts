@@ -19,9 +19,10 @@ export namespace Controller.Setting.Card {
             });
         }
 
-        protected getCardSettings(): Interfaces.ICardSettings {
+        protected createCardSettings(): Interfaces.ICardSettings {
             return {
-                FieldId: "id",
+                FieldId: "id", ValueIdNew: 0, EditIdName: "id_salepoint", EditController: "setting/editor/salepoint",
+                Load: $.proxy(this.Service.GetSalePoints, this.Service), Delete: $.proxy(this.Service.DelSalePoint, this.Service),
                 Columns: [
                     { Header: "Наименование", Field: "name" },
                     { Header: "Город", Field: "city" },
@@ -30,16 +31,6 @@ export namespace Controller.Setting.Card {
                 ]
             };
         }
-
-        protected loadData(): boolean {
-            let controller = this;
-            this.Service.GetSalePoints((responseData) => {
-                controller.Model.set("cardModel", responseData);
-                controller.afterLoad();
-            });
-            return false;
-        }
-
 
         //private setupRows(data: any) {
         //    let html: string = '';
@@ -66,34 +57,6 @@ export namespace Controller.Setting.Card {
         //    //});
         //}
 
-        public Add() {
-            
-            vars._editorData["id_salepoint"] = 0;
-            vars._app.OpenController("setting/editor/salepoint", this);
-        }
-
-        public Edit(): void {
-            let id: any = this.getSelectedRowId();
-            if (id) {
-                let _id: number = +id;
-                if (_id > 0) {
-                    vars._editorData["id_salepoint"] = _id;
-                    vars._app.OpenController("setting/editor/salepoint", this);
-                }
-            }
-        }
-
-        public Delete(): void {
-            let id: any = this.getSelectedRowId();
-            if (id) {
-                let _id: number = +id;
-                let controller = this;
-                this.Service.DelSalePoint(_id, (responseData) => {
-                    controller.afterDelete();
-                });
-            }
-        }
-       
         //public ViewResize(e: any): void {
         //    let tbody: JQuery = $('#card-view-salepoint-table').find('tbody');
         //    if (tbody && tbody.length > 0) {

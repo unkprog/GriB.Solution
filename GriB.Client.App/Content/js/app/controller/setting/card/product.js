@@ -20,36 +20,34 @@ define(["require", "exports", "app/common/variables", "app/controller/setting/ca
         (function (Setting) {
             var Card;
             (function (Card) {
-                var Unit = /** @class */ (function (_super) {
-                    __extends(Unit, _super);
-                    function Unit() {
+                var Category = /** @class */ (function (_super) {
+                    __extends(Category, _super);
+                    function Category() {
                         return _super.call(this) || this;
                     }
-                    Unit.prototype.createOptions = function () {
-                        return { Url: "/Content/view/setting/card/unit.html", Id: "card-view-unit" };
+                    Category.prototype.createOptions = function () {
+                        return { Url: "/Content/view/setting/card/product.html", Id: "card-view-product" };
                     };
-                    Unit.prototype.createModel = function () {
+                    Category.prototype.createModel = function () {
                         return new kendo.data.ObservableObject({
-                            "Header": vars._statres("label$units"),
+                            "Header": vars._statres("label$categories"),
                             "cardModel": []
                         });
                     };
-                    Unit.prototype.createCardSettings = function () {
+                    Category.prototype.createCardSettings = function () {
                         return {
-                            FieldId: "id", ValueIdNew: -1, EditIdName: "id_unit", EditController: "setting/editor/unit",
-                            Load: $.proxy(this.Service.GetUnits, this.Service), Delete: $.proxy(this.Service.DelUnit, this.Service),
+                            FieldId: "id", ValueIdNew: -1, EditIdName: "id_product", EditController: "setting/editor/product",
+                            Load: $.proxy(this.Service.GetProducts, this.Service), Delete: $.proxy(this.Service.DelProduct, this.Service),
                             Columns: [
-                                { Header: vars._statres("label$code"), Field: "code" },
-                                { Header: vars._statres("label$nameshort"), Field: "nameshort" },
-                                { Header: vars._statres("label$name"), HeaderStyle: "hide-on-small-only", Field: "name", FieldStyle: "hide-on-small-only" },
+                                { Header: vars._statres("label$name"), Field: "name" },
                             ]
                         };
                     };
-                    return Unit;
+                    return Category;
                 }(card.Controller.Setting.Card.Card));
-                Card.Unit = Unit;
+                Card.Category = Category;
             })(Card = Setting.Card || (Setting.Card = {}));
         })(Setting = Controller.Setting || (Controller.Setting = {}));
     })(Controller = exports.Controller || (exports.Controller = {}));
 });
-//# sourceMappingURL=unit.js.map
+//# sourceMappingURL=product.js.map

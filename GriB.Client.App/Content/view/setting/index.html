@@ -2,22 +2,22 @@
     <div class="row">
         <div class="col s12 m12 l12 xl12">
             <div class="section">
-                <h5>Настройки</h5>
+                <h5 data-bind="text:labelSettings"></h5>
             </div>
             <div class="divider"></div>
 
             <div class="section">
-                <h5>Организационная структура</h5>
+                <h5 data-bind="text:labelOrganizationalStructure"></h5>
                 <p>
                     <div class="row">
                         <div class="col s12 m6 l4 xl3">
-                            <a id="btn-organization" class="btn btncol" data-bind="text:labelOrganization">Организация</a>
+                            <a id="btn-organization" class="btn btncol" data-bind="text:labelOrganization">я</a>
                         </div>
                         <div class="col s12 m6 l4 xl3">
-                            <a id="btn-salepoint" class="btn btncol" data-bind="text:labelSalesPoints">Точки продаж</a>
+                            <a id="btn-salepoint" class="btn btncol" data-bind="text:labelSalesPoints"></a>
                         </div>
                         <div class="col s12 m6 l4 xl3">
-                            <a id="btn-employee" class="btn btncol" data-bind="text:labelEmployees">Сотрудники</a>
+                            <a id="btn-employee" class="btn btncol" data-bind="text:labelEmployees"></a>
                         </div>
                     </div>
                 </p>
@@ -25,15 +25,29 @@
             <div class="divider"></div>
 
             <div class="section">
-                <h5>Валюты и единицы измерения</h5>
+                <h5 data-bind="text:labelCurrenciesAndUnits"></h5>
                 <p>
                     <div class="row">
-
                         <div class="col s12 m6 l4 xl3">
-                            <a id="btn-currency" class="btn btncol" data-bind="text:labelCurrencies">Валюты</a>
+                            <a id="btn-currency" class="btn btncol" data-bind="text:labelCurrencies"></a>
                         </div>
                         <div class="col s12 m6 l4 xl3">
-                            <a id="btn-unit" class="btn btncol" data-bind="text:labelUnits">Справочники</a>
+                            <a id="btn-unit" class="btn btncol" data-bind="text:labelUnits"></a>
+                        </div>
+                    </div>
+                </p>
+            </div>
+            <div class="divider"></div>
+
+            <div class="section">
+                <h5 data-bind="text:labelCategoriesProducts"></h5>
+                <p>
+                    <div class="row">
+                        <div class="col s12 m6 l4 xl3">
+                            <a id="btn-category" class="btn btncol" data-bind="text:labelCategories"></a>
+                        </div>
+                        <div class="col s12 m6 l4 xl3">
+                            <a id="btn-product" class="btn btncol" data-bind="text:labelProducts"></a>
                         </div>
                     </div>
                 </p>

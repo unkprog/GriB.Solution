@@ -48,11 +48,17 @@
 
     export interface ICardSettings {
         FieldId?: string;
+        ValueIdNew: number;
+        EditIdName: string;
+        EditController: string;
         Columns?: ICardColumn[];
+        Load: (callback: (responseData: any) => void) => void;
+        Delete: (id: number, callback: (responseData: any) => void) => void;
     }
 
     export interface IControllerCard extends IController {
         CardModel: Interfaces.Model.IEditorModel[];
+        CardSettings: Interfaces.ICardSettings;
         Add(): void;
         Delete(): void;
         Edit(): void;

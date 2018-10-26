@@ -11,7 +11,7 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-define(["require", "exports", "app/common/utils", "./variables"], function (require, exports, utils, variables_1) {
+define(["require", "exports", "app/common/utils", "app/common/variables", "./variables"], function (require, exports, utils, vars, variables_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var Controller;
@@ -309,7 +309,9 @@ define(["require", "exports", "app/common/utils", "./variables"], function (requ
         var BaseCard = /** @class */ (function (_super) {
             __extends(BaseCard, _super);
             function BaseCard() {
-                return _super.call(this) || this;
+                var _this = _super.call(this) || this;
+                _this.cardSettings = _this.createCardSettings();
+                return _this;
             }
             BaseCard.prototype.createModel = function () {
                 return new kendo.data.ObservableObject({
@@ -320,6 +322,13 @@ define(["require", "exports", "app/common/utils", "./variables"], function (requ
             Object.defineProperty(BaseCard.prototype, "CardModel", {
                 get: function () {
                     return this.Model.get("cardModel").toJSON();
+                },
+                enumerable: true,
+                configurable: true
+            });
+            Object.defineProperty(BaseCard.prototype, "CardSettings", {
+                get: function () {
+                    return this.cardSettings;
                 },
                 enumerable: true,
                 configurable: true
@@ -399,19 +408,8 @@ define(["require", "exports", "app/common/utils", "./variables"], function (requ
                 this.destroyClickEvent(this.btnDelete, this.DeleteButtonClick);
                 this.destroyClickEvent(this.btnClose, this.CloseButtonClick);
             };
-            BaseCard.prototype.loadData = function () {
-                this.afterLoad();
-                return true;
-            };
-            BaseCard.prototype.afterLoad = function () {
-                this.setupTable();
-                variables_1._app.HideLoading();
-            };
-            BaseCard.prototype.getCardSettings = function () {
-                return {
-                    FieldId: "",
-                    Columns: []
-                };
+            BaseCard.prototype.createCardSettings = function () {
+                return { FieldId: "", ValueIdNew: 0, EditIdName: "", EditController: "", Load: undefined, Delete: undefined, Columns: [] };
             };
             BaseCard.prototype.setupTable = function () {
                 this.tableHead.html(this.getTableHeaderHtml());
@@ -427,7 +425,7 @@ define(["require", "exports", "app/common/utils", "./variables"], function (requ
                 this.createClickEvent(this.rows, this.rowClick);
             };
             BaseCard.prototype.getTableHeaderHtml = function () {
-                var columns = this.getCardSettings().Columns;
+                var columns = this.CardSettings.Columns;
                 var html = '';
                 html += '<tr>';
                 for (var i = 0, icount = columns && columns.length ? columns.length : 0; i < icount; i++) {
@@ -445,7 +443,7 @@ define(["require", "exports", "app/common/utils", "./variables"], function (requ
                 return html;
             };
             BaseCard.prototype.getTableRowTemplate = function () {
-                var setting = this.getCardSettings();
+                var setting = this.CardSettings;
                 var columns = setting.Columns;
                 var html = '';
                 html += '<tr';
@@ -516,14 +514,49 @@ define(["require", "exports", "app/common/utils", "./variables"], function (requ
                 this.Close();
                 variables_1._main.ControllerBack(e);
             };
-            BaseCard.prototype.Edit = function () {
+            BaseCard.prototype.loadData = function () {
+                var controller = this;
+                if (this.CardSettings && this.CardSettings.Load) {
+                    this.CardSettings.Load(function (responseData) {
+                        controller.Model.set("cardModel", responseData);
+                        controller.afterLoad();
+                    });
+                    return false;
+                }
+                controller.afterLoad();
+                return true;
+            };
+            BaseCard.prototype.afterLoad = function () {
+                this.setupTable();
+                variables_1._app.HideLoading();
             };
             BaseCard.prototype.Add = function () {
+                vars._editorData[this.CardSettings.EditIdName] = this.CardSettings.ValueIdNew;
+                vars._app.OpenController(this.CardSettings.EditController, this);
             };
             BaseCard.prototype.afterAdd = function () {
             };
+            BaseCard.prototype.Edit = function () {
+                var id = this.getSelectedRowId();
+                if (id) {
+                    var _id = +id;
+                    if (_id > 0) {
+                        vars._editorData[this.CardSettings.EditIdName] = _id;
+                        vars._app.OpenController(this.CardSettings.EditController, this);
+                    }
+                }
+            };
             BaseCard.prototype.Delete = function () {
-                this.afterDelete();
+                var id = this.getSelectedRowId();
+                if (id) {
+                    var _id = +id;
+                    var controller_1 = this;
+                    if (this.CardSettings && this.CardSettings.Delete) {
+                        this.CardSettings.Delete(_id, function (responseData) {
+                            controller_1.afterDelete();
+                        });
+                    }
+                }
             };
             BaseCard.prototype.afterDelete = function () {
                 var id = this.getSelectedRowId();

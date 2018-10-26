@@ -1,4 +1,7 @@
-﻿if not exists (select * from [sys].[objects] where [object_id] = object_id(N'[t_unit]') and type in (N'U'))
+﻿-- ru: Валюты и единицы измерения
+-- en: Currencies and units
+
+if not exists (select * from [sys].[objects] where [object_id] = object_id(N'[t_unit]') and type in (N'U'))
 begin
   create table [t_unit]
   (

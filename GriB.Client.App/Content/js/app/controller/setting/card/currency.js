@@ -34,47 +34,16 @@ define(["require", "exports", "app/common/variables", "app/controller/setting/ca
                             "cardModel": []
                         });
                     };
-                    Currency.prototype.getCardSettings = function () {
+                    Currency.prototype.createCardSettings = function () {
                         return {
-                            FieldId: "id",
+                            FieldId: "id", ValueIdNew: -1, EditIdName: "id_currency", EditController: "setting/editor/currency",
+                            Load: $.proxy(this.Service.GetCurrencies, this.Service), Delete: $.proxy(this.Service.DelCurrency, this.Service),
                             Columns: [
                                 { Header: vars._statres("label$code"), Field: "code" },
                                 { Header: vars._statres("label$nameshort"), Field: "nameshort" },
                                 { Header: vars._statres("label$name"), HeaderStyle: "hide-on-small-only", Field: "name", FieldStyle: "hide-on-small-only" },
                             ]
                         };
-                    };
-                    Currency.prototype.loadData = function () {
-                        var controller = this;
-                        this.Service.GetCurrencies(function (responseData) {
-                            controller.Model.set("cardModel", responseData);
-                            controller.afterLoad();
-                        });
-                        return false;
-                    };
-                    Currency.prototype.Add = function () {
-                        vars._editorData["id_currency"] = -1;
-                        vars._app.OpenController("setting/editor/currency", this);
-                    };
-                    Currency.prototype.Edit = function () {
-                        var id = this.getSelectedRowId();
-                        if (id) {
-                            var _id = +id;
-                            if (_id > 0) {
-                                vars._editorData["id_currency"] = _id;
-                                vars._app.OpenController("setting/editor/currency", this);
-                            }
-                        }
-                    };
-                    Currency.prototype.Delete = function () {
-                        var id = this.getSelectedRowId();
-                        if (id) {
-                            var _id = +id;
-                            var controller_1 = this;
-                            this.Service.DelCurrency(_id, function (responseData) {
-                                controller_1.afterDelete();
-                            });
-                        }
                     };
                     return Currency;
                 }(card.Controller.Setting.Card.Card));

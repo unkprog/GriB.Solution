@@ -88,7 +88,41 @@ export module Services {
         }
 
         public DelUnit(id: number, Callback: (responseData: any) => void) {
-            this.GetApi({ Action: "/del_Unit", RequestData: { id: id }, Callback: Callback });
+            this.GetApi({ Action: "/del_unit", RequestData: { id: id }, Callback: Callback });
+        }
+
+        // Категории
+        public GetCategries(Callback: (responseData: any) => void) {
+            this.GetApi({ Action: "/get_categories", Callback: Callback });
+        }
+
+        public GetCategory(id: number, Callback: (responseData: any) => void) {
+            this.GetApi({ Action: "/get_category", RequestData: { id: id }, Callback: Callback });
+        }
+
+        public SetCategory(model: Interfaces.Model.ICategory, Callback: (responseData: any) => void) {
+            this.PostApi({ Action: "/post_category", RequestData: JSON.stringify(model), Callback: Callback });
+        }
+
+        public DelCategory(id: number, Callback: (responseData: any) => void) {
+            this.GetApi({ Action: "/del_category", RequestData: { id: id }, Callback: Callback });
+        }
+
+        // Товары
+        public GetProducts(Callback: (responseData: any) => void) {
+            this.GetApi({ Action: "/get_products", Callback: Callback });
+        }
+
+        public GetProduct(id: number, Callback: (responseData: any) => void) {
+            this.GetApi({ Action: "/get_product", RequestData: { id: id }, Callback: Callback });
+        }
+
+        public SetProduct(model: Interfaces.Model.ICategory, Callback: (responseData: any) => void) {
+            this.PostApi({ Action: "/post_product", RequestData: JSON.stringify(model), Callback: Callback });
+        }
+
+        public DelProduct(id: number, Callback: (responseData: any) => void) {
+            this.GetApi({ Action: "/del_product", RequestData: { id: id }, Callback: Callback });
         }
     }
 }

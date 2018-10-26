@@ -7,6 +7,10 @@
         name: string;
     }
 
+    export interface IReferenceHierarhyModel {
+        pid: number;
+    }
+
     export interface IIdentityModel extends IBaseModel {
         phone: string;
         role: number;
@@ -72,5 +76,9 @@
     }
 
     export interface IUnit extends IBaseUnit {
+    }
+
+    export interface ICategory extends IReferenceHierarhyModel, IEditorModel {
+        photo: string;
     }
 }

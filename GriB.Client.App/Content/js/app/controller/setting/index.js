@@ -29,11 +29,17 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
                 Index.prototype.createModel = function () {
                     return new kendo.data.ObservableObject({
                         "Header": "POS Cloud",
+                        "labelSettings": vars._statres("label$settings"),
+                        "labelOrganizationalStructure": vars._statres("label$organizationalstructure"),
                         "labelOrganization": vars._statres("label$organization"),
                         "labelSalesPoints": vars._statres("label$salesPoints"),
                         "labelEmployees": vars._statres("label$employees"),
+                        "labelCurrenciesAndUnits": vars._statres("label$currenciesandunits"),
                         "labelCurrencies": vars._statres("label$currencies"),
                         "labelUnits": vars._statres("label$units"),
+                        "labelCategoriesProducts": vars._statres("label$categoriesproducts"),
+                        "labelCategories": vars._statres("label$categories"),
+                        "labelProducts": vars._statres("label$products"),
                     });
                 };
                 Index.prototype.createEvents = function () {
@@ -42,6 +48,8 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
                     this.EmployeetButtonClick = this.createClickEvent("btn-employee", this.employeetButtonClick);
                     this.CurrencyButtonClick = this.createClickEvent("btn-currency", this.currencyButtonClick);
                     this.UnitButtonClick = this.createClickEvent("btn-unit", this.unitButtonClick);
+                    this.CategoryButtonClick = this.createClickEvent("btn-category", this.categoryButtonClick);
+                    this.ProductButtonClick = this.createClickEvent("btn-product", this.productButtonClick);
                 };
                 Index.prototype.destroyEvents = function () {
                     this.destroyClickEvent("btn-organization", this.OrganizationButtonClick);
@@ -49,6 +57,8 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
                     this.destroyClickEvent("btn-employee", this.EmployeetButtonClick);
                     this.destroyClickEvent("btn-currency", this.CurrencyButtonClick);
                     this.destroyClickEvent("btn-unit", this.UnitButtonClick);
+                    this.destroyClickEvent("btn-category", this.CategoryButtonClick);
+                    this.destroyClickEvent("btn-product", this.ProductButtonClick);
                 };
                 Index.prototype.organizationButtonClick = function (e) {
                     variables_1._main.OpenController("setting/editor/organization", this);
@@ -64,6 +74,12 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
                 };
                 Index.prototype.unitButtonClick = function (e) {
                     variables_1._main.OpenController("setting/card/unit", this);
+                };
+                Index.prototype.categoryButtonClick = function (e) {
+                    variables_1._main.OpenController("setting/card/category", this);
+                };
+                Index.prototype.productButtonClick = function (e) {
+                    variables_1._main.OpenController("setting/card/product", this);
                 };
                 return Index;
             }(base.Controller.Base));

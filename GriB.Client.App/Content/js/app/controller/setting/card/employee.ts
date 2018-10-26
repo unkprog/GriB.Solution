@@ -19,9 +19,10 @@ export namespace Controller.Setting.Card {
             });
         }
 
-        protected getCardSettings(): Interfaces.ICardSettings {
+        protected createCardSettings(): Interfaces.ICardSettings {
             return {
-                FieldId: "id",
+                FieldId: "id", ValueIdNew: 0, EditIdName: "id_employee", EditController: "setting/editor/employee",
+                Load: $.proxy(this.Service.GetEmployees, this.Service), Delete: $.proxy(this.Service.DelEmployee, this.Service),
                 Columns: [
                     { Header: vars._statres("label$name"), Field: "name" },
                     { Header: vars._statres("label$phone"), Field: "phone" },
@@ -33,49 +34,5 @@ export namespace Controller.Setting.Card {
         public get CardModel(): Interfaces.Model.IEmployeeModel[] {
             return this.Model.get("cardModel").toJSON();
         }
-
-        protected loadData(): boolean {
-            let controller = this;
-            this.Service.GetEmployees((responseData) => {
-                controller.Model.set("cardModel", responseData);
-                controller.afterLoad();
-            });
-            return false;
-        }
-
-
-        public Add() {
-            vars._editorData["id_employee"] = 0;
-            vars._app.OpenController("setting/editor/employee", this);
-        }
-
-        public Edit(): void {
-            let id: any = this.getSelectedRowId();
-            if (id) {
-                let _id: number = +id;
-                if (_id > 0) {
-                    vars._editorData["id_employee"] = _id;
-                    vars._app.OpenController("setting/editor/employee", this);
-                }
-            }
-        }
-
-        public Delete(): void {
-            let id: any = this.getSelectedRowId();
-            if (id) {
-                let _id: number = +id;
-                let controller = this;
-                this.Service.DelSalePoint(_id, (responseData) => {
-                    controller.afterDelete();
-                });
-            }
-        }
-       
-        //public ViewResize(e: any): void {
-        //    let tbody: JQuery = $('#card-view-salepoint-table').find('tbody');
-        //    if (tbody && tbody.length > 0) {
-        //        tbody.height($(window).height() - tbody.offset().top - (0.2 * parseFloat(getComputedStyle(tbody[0]).fontSize)) - 1);
-        //    }
-        //}
     }
 }

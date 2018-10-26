@@ -16,11 +16,17 @@ export namespace Controller.Setting {
         protected createModel(): kendo.data.ObservableObject {
             return new kendo.data.ObservableObject({
                 "Header": "POS Cloud",
+                "labelSettings": vars._statres("label$settings"),
+                "labelOrganizationalStructure": vars._statres("label$organizationalstructure"),
                 "labelOrganization": vars._statres("label$organization"),
                 "labelSalesPoints": vars._statres("label$salesPoints"),
                 "labelEmployees": vars._statres("label$employees"),
+                "labelCurrenciesAndUnits": vars._statres("label$currenciesandunits"),
                 "labelCurrencies": vars._statres("label$currencies"),
                 "labelUnits": vars._statres("label$units"),
+                "labelCategoriesProducts": vars._statres("label$categoriesproducts"),
+                "labelCategories": vars._statres("label$categories"),
+                "labelProducts": vars._statres("label$products"),
             });
         }
 
@@ -30,6 +36,8 @@ export namespace Controller.Setting {
             this.EmployeetButtonClick = this.createClickEvent("btn-employee", this.employeetButtonClick);
             this.CurrencyButtonClick = this.createClickEvent("btn-currency", this.currencyButtonClick);
             this.UnitButtonClick = this.createClickEvent("btn-unit", this.unitButtonClick);
+            this.CategoryButtonClick = this.createClickEvent("btn-category", this.categoryButtonClick);
+            this.ProductButtonClick = this.createClickEvent("btn-product", this.productButtonClick);
         }
 
         protected destroyEvents(): void {
@@ -38,6 +46,8 @@ export namespace Controller.Setting {
             this.destroyClickEvent("btn-employee", this.EmployeetButtonClick);
             this.destroyClickEvent("btn-currency", this.CurrencyButtonClick);
             this.destroyClickEvent("btn-unit", this.UnitButtonClick);
+            this.destroyClickEvent("btn-category", this.CategoryButtonClick);
+            this.destroyClickEvent("btn-product", this.ProductButtonClick);
         }
 
         public OrganizationButtonClick: { (e: any): void; };
@@ -63,6 +73,16 @@ export namespace Controller.Setting {
         public UnitButtonClick: { (e: any): void; };
         private unitButtonClick(e) {
             _main.OpenController("setting/card/unit", this);
+        }
+
+        public CategoryButtonClick: { (e: any): void; };
+        private categoryButtonClick(e) {
+            _main.OpenController("setting/card/category", this);
+        }
+
+        public ProductButtonClick: { (e: any): void; };
+        private productButtonClick(e) {
+            _main.OpenController("setting/card/product", this);
         }
     }
 }
