@@ -8,7 +8,7 @@ namespace GriB.Client.App.Managers.Editors
     public static class Category
     {
 
-        private static category readFromValues(object[] values) => new category() { id = (int)values[0], name = (string)values[1], photo = (string)values[2] };
+        private static category readFromValues(object[] values) => new category() { id = (int)values[0], pid = (int)values[1], name = (string)values[2], photo = (string)values[3] };
 
         private const string cmdGet = @"Category\[get]";
         public static List<category> GetCategories(this Query query)

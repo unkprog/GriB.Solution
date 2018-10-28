@@ -44,21 +44,8 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                         enumerable: true,
                         configurable: true
                     });
-                    Currency.prototype.loadData = function () {
-                        var controller = this;
-                        var id = (vars._editorData["id_currency"] ? vars._editorData["id_currency"] : 0);
-                        this.Service.GetCurrency(id, function (responseData) {
-                            controller.Model.set("editModel", responseData);
-                            controller.afterLoad();
-                        });
-                        return false;
-                    };
-                    Currency.prototype.Save = function () {
-                        var controller = this;
-                        var model = this.EditorModel;
-                        this.Service.SetCurrency(model, function (responseData) {
-                            controller.afterSave();
-                        });
+                    Currency.prototype.createEditorSettings = function () {
+                        return { EditIdName: "id_currency", Load: $.proxy(this.Service.GetCurrency, this.Service), Save: $.proxy(this.Service.SetCurrency, this.Service) };
                     };
                     Currency.prototype.validate = function () {
                         var result = true;

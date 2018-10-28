@@ -44,21 +44,8 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                         enumerable: true,
                         configurable: true
                     });
-                    Unit.prototype.loadData = function () {
-                        var controller = this;
-                        var id = (vars._editorData["id_unit"] ? vars._editorData["id_unit"] : 0);
-                        this.Service.GetUnit(id, function (responseData) {
-                            controller.Model.set("editModel", responseData);
-                            controller.afterLoad();
-                        });
-                        return false;
-                    };
-                    Unit.prototype.Save = function () {
-                        var controller = this;
-                        var model = this.EditorModel;
-                        this.Service.SetUnit(model, function (responseData) {
-                            controller.afterSave();
-                        });
+                    Unit.prototype.createEditorSettings = function () {
+                        return { EditIdName: "id_unit", Load: $.proxy(this.Service.GetUnit, this.Service), Save: $.proxy(this.Service.SetUnit, this.Service) };
                     };
                     Unit.prototype.validate = function () {
                         var result = true;

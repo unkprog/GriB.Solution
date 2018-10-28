@@ -226,7 +226,9 @@ define(["require", "exports", "app/common/utils", "app/common/variables", "./var
         var BaseEditor = /** @class */ (function (_super) {
             __extends(BaseEditor, _super);
             function BaseEditor() {
-                return _super.call(this) || this;
+                var _this = _super.call(this) || this;
+                _this.editorSettings = _this.createEditorSettings();
+                return _this;
             }
             BaseEditor.prototype.createModel = function () {
                 return new kendo.data.ObservableObject({
@@ -241,6 +243,16 @@ define(["require", "exports", "app/common/utils", "app/common/variables", "./var
                 enumerable: true,
                 configurable: true
             });
+            Object.defineProperty(BaseEditor.prototype, "EditorSettings", {
+                get: function () {
+                    return this.editorSettings;
+                },
+                enumerable: true,
+                configurable: true
+            });
+            BaseEditor.prototype.createEditorSettings = function () {
+                return { EditIdName: "", Load: undefined, Save: undefined };
+            };
             BaseEditor.prototype.ViewInit = function (view) {
                 var navbarHeader = '<div class="navbar-fixed editor-header z-depth-1">';
                 navbarHeader += '        <nav class="editor-header-nav">';
@@ -284,10 +296,23 @@ define(["require", "exports", "app/common/utils", "app/common/variables", "./var
                 variables_1._main.ControllerBack(e);
             };
             BaseEditor.prototype.loadData = function () {
-                this.afterLoad();
+                var controller = this;
+                if (controller.EditorSettings && controller.EditorSettings.Load) {
+                    var id = (vars._editorData[controller.EditorSettings.EditIdName] ? vars._editorData[controller.EditorSettings.EditIdName] : 0);
+                    controller.EditorSettings.Load(id, function (responseData) {
+                        controller.Model.set("editModel", responseData.record);
+                        controller.afterLoad(responseData);
+                        controller.endLoad();
+                    });
+                    return false;
+                }
+                controller.afterLoad();
+                controller.endLoad();
                 return true;
             };
-            BaseEditor.prototype.afterLoad = function () {
+            BaseEditor.prototype.afterLoad = function (responseData) {
+            };
+            BaseEditor.prototype.endLoad = function () {
                 M.updateTextFields();
                 variables_1._app.HideLoading();
                 this.View.show();
@@ -295,11 +320,22 @@ define(["require", "exports", "app/common/utils", "app/common/variables", "./var
             BaseEditor.prototype.validate = function () {
                 return true;
             };
-            BaseEditor.prototype.afterSave = function () {
+            BaseEditor.prototype.endSave = function () {
                 variables_1._main.ControllerBack(this);
             };
+            BaseEditor.prototype.getSaveModel = function () {
+                return this.EditorModel;
+            };
             BaseEditor.prototype.Save = function () {
-                this.afterSave();
+                var controller = this;
+                if (controller.EditorSettings && controller.EditorSettings.Save) {
+                    var model = controller.getSaveModel();
+                    controller.EditorSettings.Save(model, function (responseData) {
+                        controller.endSave();
+                    });
+                    return;
+                }
+                controller.endSave();
             };
             BaseEditor.prototype.Cancel = function () {
             };

@@ -48,16 +48,13 @@ export namespace Controller.Setting.Editor {
             return this.Model.get("editModel").toJSON();
         }
 
-        protected loadData(): boolean {
-            let controller = this;
-            let id: number = (vars._editorData["id_employee"] ? vars._editorData["id_employee"] : 0);
-            this.Service.GetEmployee(id, (responseData) => {
-                controller.Model.set("editModel", responseData.employee);
-                //$('#employee-sex-list').val()
-                this.setupControls();
-                controller.afterLoad();
-            });
-            return false;
+        protected createEditorSettings(): Interfaces.IEditorSettings {
+            return { EditIdName: "id_employee", Load: $.proxy(this.Service.GetEmployee, this.Service), Save: $.proxy(this.Service.SetEmployee, this.Service) };
+        }
+
+        protected afterLoad(responseData?: any): void {
+            super.afterLoad(responseData);
+            this.setupControls();
         }
 
 
@@ -149,14 +146,6 @@ export namespace Controller.Setting.Editor {
             $('#editor-view-tabs').tabs();
         }
 
-        public Save(): void {
-            let model: Interfaces.Model.IEmployeeModel = this.EditorModel;
-            let controller = this;
-            this.Service.SetEmployee(model, (responseData) => {
-                controller.afterSave();
-            });
-          
-        }
 
         protected validate(): boolean {
             let result: boolean = true;

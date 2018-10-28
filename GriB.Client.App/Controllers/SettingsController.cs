@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
@@ -9,11 +10,12 @@ using GriB.Client.App.Managers;
 using GriB.Client.App.Managers.Editors;
 using GriB.Client.App.Models;
 using GriB.Client.App.Models.Editor;
-using GriB.Common.Models.pos;
 using GriB.Common.Models.pos.settings;
 using GriB.Common.Models.Security;
 using GriB.Common.Web.Http;
 using Newtonsoft.Json.Linq;
+using System.Web.Hosting;
+using System.IO;
 
 namespace GriB.Client.App.Controllers
 {
@@ -51,7 +53,7 @@ namespace GriB.Client.App.Controllers
             {
                 List<t_org> orgs = Organization.GetOrganizations(query, Organization.typeCompany);
                 t_org org = Organization.GetOrganizationInfo(query, (orgs != null && orgs.Count > 0 ? orgs[0] : new t_org() { type = Organization.typeCompany }));
-                return Request.CreateResponse(HttpStatusCode.OK, new company() { id = org.id, name = org.name, site = org.info?.site, email = org.info?.email, phone = org.info?.phone });
+                return Request.CreateResponse(HttpStatusCode.OK, new { record = new company() { id = org.id, name = org.name, site = org.info?.site, email = org.info?.email, phone = org.info?.phone }});
             });
         }
 
@@ -96,7 +98,7 @@ namespace GriB.Client.App.Controllers
                 org.parent = Organization.GetOrganization(query, org.pid);
 
                 salepoint result = new salepoint() { id = org.id, name = org.name, company_id = (int)org.parent?.pid, city = org.parent?.name, address = org.info1?.address, schedule = org.info1?.schedule };
-                return Request.CreateResponse(HttpStatusCode.OK, new { companies = orgs, salepoint = result });
+                return Request.CreateResponse(HttpStatusCode.OK, new { companies = orgs, record = result });
 
             });
         }
@@ -178,7 +180,7 @@ namespace GriB.Client.App.Controllers
                        Managers.Editors.Employee.GetEmployee(query, result);
                        Managers.Editors.Employee.GetEmployeeSalepointAccess(query, result);
 
-                       return Request.CreateResponse(HttpStatusCode.OK, new { employee = result });
+                       return Request.CreateResponse(HttpStatusCode.OK, new { record = result });
                    });
                })
         );
@@ -221,7 +223,7 @@ namespace GriB.Client.App.Controllers
                       Models.Editor.employee result = new Models.Editor.employee(responseMessage.Employee);
                       Managers.Editors.Employee.GetEmployeeSalepointAccess(query, result);
 
-                      return Request.CreateResponse(HttpStatusCode.OK, new { employee = result });
+                      return Request.CreateResponse(HttpStatusCode.OK, "Ok");
                   });
               })
         );
@@ -244,7 +246,7 @@ namespace GriB.Client.App.Controllers
         {
             return TryCatchResponseQuery((query) =>
             {
-                return Request.CreateResponse(HttpStatusCode.OK, Unit.GetUnit(query, id));
+                return Request.CreateResponse(HttpStatusCode.OK, new { record = Unit.GetUnit(query, id) });
             });
         }
 
@@ -289,7 +291,7 @@ namespace GriB.Client.App.Controllers
         {
             return TryCatchResponseQuery((query) =>
             {
-                return Request.CreateResponse(HttpStatusCode.OK, Unit.GetUnit(query, id));
+                return Request.CreateResponse(HttpStatusCode.OK, new { record = Unit.GetUnit(query, id) });
             });
         }
 
@@ -334,7 +336,7 @@ namespace GriB.Client.App.Controllers
         {
             return TryCatchResponseQuery((query) =>
             {
-                return Request.CreateResponse(HttpStatusCode.OK, Category.GetCategory(query, id));
+                return Request.CreateResponse(HttpStatusCode.OK, new { record = Category.GetCategory(query, id) });
             });
         }
 
@@ -362,5 +364,66 @@ namespace GriB.Client.App.Controllers
         }
         #endregion
 
+
+        [HttpPost]
+        [ActionName("uploadimage")]
+        public async Task<HttpResponseMessage> UploadReportImage()
+        {
+            return await TryCatchResponseAsync(async () =>
+            {
+                // type = 0 - category
+                // type = 1 - product
+                if (!Request.Content.IsMimeMultipartContent())
+                    throw new System.Web.Http.HttpResponseException(HttpStatusCode.UnsupportedMediaType);
+
+                var provider = new MultipartMemoryStreamProvider();
+                await Request.Content.ReadAsMultipartAsync(provider);
+
+                var fileContent = provider.Contents.First(x => x.Headers.ContentDisposition.Name == "\"file\"");
+                var typeContent = provider.Contents.First(x => x.Headers.ContentDisposition.Name == "\"type\"");
+                var photoContent = provider.Contents.First(x => x.Headers.ContentDisposition.Name == "\"photo\"");
+                byte[] image = await fileContent.ReadAsByteArrayAsync();
+                string type = await typeContent.ReadAsStringAsync();
+                string photo = await photoContent.ReadAsStringAsync();
+                string ext = fileContent.Headers.ContentDisposition.FileName.Trim('\"');
+                ext = ext.Substring(ext.LastIndexOf('.'));
+
+                Principal principal = (Principal)HttpContext.Current.User;
+
+                string path = string.Concat(HostingEnvironment.ApplicationPhysicalPath, "\\Images");
+                if (!Directory.Exists(path))
+                    Directory.CreateDirectory(path);
+                path = string.Concat(path, "\\Databases");
+                if (!Directory.Exists(path))
+                    Directory.CreateDirectory(path);
+                path = string.Concat(path, "\\", principal.Data.Database.catalog);
+
+                if (type == "0")
+                    path = string.Concat(path, "\\category");
+                else if (type == "1")
+                    path = string.Concat(path, "\\product");
+                else 
+                    path = string.Concat(path, "\\other");
+
+                if (!Directory.Exists(path))
+                    Directory.CreateDirectory(path);
+
+                if (string.IsNullOrEmpty(photo))
+                {
+                    photo = Guid.NewGuid().ToString().Replace("-", ""); // string.Concat(Guid.NewGuid().ToString().Replace("-", ""), ext);
+                }
+                else
+                {
+                    photo = photo.Substring(photo.LastIndexOf('/'));
+                    photo = photo.Substring(0, photo.LastIndexOf('.'));
+                    //string.Concat(Guid.NewGuid().ToString().Replace("-", ""), ext);
+                }
+                path = string.Concat(path, "\\", photo, ext);
+                File.WriteAllBytes(path, image);
+
+                string result = path.Replace(HostingEnvironment.ApplicationPhysicalPath, "").Replace("\\", "/");
+                return Request.CreateResponse(HttpStatusCode.OK, result);
+            });
+        }
     }
 }

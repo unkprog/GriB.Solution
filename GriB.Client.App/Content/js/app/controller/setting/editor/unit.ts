@@ -29,22 +29,8 @@ export namespace Controller.Setting.Editor {
         }
 
 
-        protected loadData(): boolean {
-            let controller = this;
-            let id: number = (vars._editorData["id_unit"] ? vars._editorData["id_unit"] : 0);
-            this.Service.GetUnit(id, (responseData) => {
-                controller.Model.set("editModel", responseData);
-                controller.afterLoad();
-            });
-            return false;
-        }
-
-        public Save(): void {
-            let controller = this;
-            let model : Interfaces.Model.ICurrency = this.EditorModel;
-            this.Service.SetUnit(model, (responseData) => {
-                controller.afterSave();
-            });
+        protected createEditorSettings(): Interfaces.IEditorSettings {
+            return { EditIdName: "id_unit", Load: $.proxy(this.Service.GetUnit, this.Service), Save: $.proxy(this.Service.SetUnit, this.Service) };
         }
 
         protected validate(): boolean {

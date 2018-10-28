@@ -7,7 +7,7 @@
         name: string;
     }
 
-    export interface IReferenceHierarhyModel {
+    export interface IReferenceHierarhyModel extends IReferenceModel {
         pid: number;
     }
 

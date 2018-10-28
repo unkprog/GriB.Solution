@@ -65,17 +65,12 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                         enumerable: true,
                         configurable: true
                     });
-                    Employee.prototype.loadData = function () {
-                        var _this = this;
-                        var controller = this;
-                        var id = (vars._editorData["id_employee"] ? vars._editorData["id_employee"] : 0);
-                        this.Service.GetEmployee(id, function (responseData) {
-                            controller.Model.set("editModel", responseData.employee);
-                            //$('#employee-sex-list').val()
-                            _this.setupControls();
-                            controller.afterLoad();
-                        });
-                        return false;
+                    Employee.prototype.createEditorSettings = function () {
+                        return { EditIdName: "id_employee", Load: $.proxy(this.Service.GetEmployee, this.Service), Save: $.proxy(this.Service.SetEmployee, this.Service) };
+                    };
+                    Employee.prototype.afterLoad = function (responseData) {
+                        _super.prototype.afterLoad.call(this, responseData);
+                        this.setupControls();
                     };
                     Employee.prototype.setupControls = function () {
                         $('#employee-open').formSelect();
@@ -151,13 +146,6 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                     };
                     Employee.prototype.ViewResize = function (e) {
                         $('#editor-view-tabs').tabs();
-                    };
-                    Employee.prototype.Save = function () {
-                        var model = this.EditorModel;
-                        var controller = this;
-                        this.Service.SetEmployee(model, function (responseData) {
-                            controller.afterSave();
-                        });
                     };
                     Employee.prototype.validate = function () {
                         var result = true;

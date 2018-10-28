@@ -115,6 +115,23 @@ define(["require", "exports", "app/common/baseservice"], function (require, expo
             SettingsService.prototype.DelProduct = function (id, Callback) {
                 this.GetApi({ Action: "/del_product", RequestData: { id: id }, Callback: Callback });
             };
+            SettingsService.prototype.UploadImage = function (data, Callback) {
+                var self = this;
+                var action = (self.Options && self.Options.BaseUrl ? self.Options.BaseUrl : '') + "/uploadimage";
+                $.ajax({
+                    url: action,
+                    type: "post",
+                    data: data,
+                    contentType: false, processData: false,
+                    success: function (responseData) {
+                        if (Callback)
+                            Callback(responseData);
+                    },
+                    error: function (e) {
+                        self.handleError(e);
+                    }
+                });
+            };
             return SettingsService;
         }(base.Services.BaseService));
         Services.SettingsService = SettingsService;

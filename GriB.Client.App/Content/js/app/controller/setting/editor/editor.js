@@ -23,12 +23,12 @@ define(["require", "exports", "app/common/basecontroller", "app/services/setting
                 var Editor = /** @class */ (function (_super) {
                     __extends(Editor, _super);
                     function Editor() {
-                        var _this = _super.call(this) || this;
-                        _this.settingService = new svc.Services.SettingsService();
-                        return _this;
+                        return _super.call(this) || this;
                     }
                     Object.defineProperty(Editor.prototype, "Service", {
                         get: function () {
+                            if (!this.settingService)
+                                this.settingService = new svc.Services.SettingsService();
                             return this.settingService;
                         },
                         enumerable: true,

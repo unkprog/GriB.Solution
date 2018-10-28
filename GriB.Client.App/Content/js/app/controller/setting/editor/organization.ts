@@ -29,22 +29,18 @@ export namespace Controller.Setting.Editor {
             return this.Model.get("editModel").toJSON();
         }
 
-       // $('input#input_text, textarea#textarea2').characterCounter();
+        protected createEditorSettings(): Interfaces.IEditorSettings {
+            return { EditIdName: "id_currency", Load: undefined, Save: $.proxy(this.Service.SetOrganization, this.Service) };
+        }
 
         protected loadData(): boolean {
             let controller = this;
             this.Service.GetOrganization((responseData) => {
-                controller.Model.set("editModel", responseData);
-                controller.afterLoad();
+                controller.Model.set("editModel", responseData.record);
+                controller.afterLoad(responseData);
+                controller.endLoad();
             });
             return false;
-        }
-
-        public Save(): void {
-            let controller = this;
-            this.Service.SetOrganization(controller.EditorModel, (responseData) => {
-                controller.afterSave();
-            });
         }
 
         protected validate(): boolean {

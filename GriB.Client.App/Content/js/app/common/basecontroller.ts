@@ -228,8 +228,8 @@ export namespace Controller {
 
         constructor() {
             super();
+            this.editorSettings = this.createEditorSettings();
         }
-
 
         protected createModel(): kendo.data.ObservableObject {
             return new kendo.data.ObservableObject({
@@ -238,9 +238,17 @@ export namespace Controller {
             });
         }
 
-
         public get EditorModel(): Interfaces.Model.IEditorModel {
             return this.Model.get("editModel").toJSON();
+        }
+
+        private editorSettings: Interfaces.IEditorSettings;
+        public get EditorSettings(): Interfaces.IEditorSettings {
+            return this.editorSettings;
+        }
+
+        protected createEditorSettings(): Interfaces.IEditorSettings {
+            return { EditIdName: "", Load: undefined, Save: undefined };
         }
 
         private navHeader: JQuery;
@@ -304,11 +312,25 @@ export namespace Controller {
         }
 
         protected loadData(): boolean {
-            this.afterLoad();
+            let controller = this;
+            if (controller.EditorSettings && controller.EditorSettings.Load) {
+                let id: number = (vars._editorData[controller.EditorSettings.EditIdName] ? vars._editorData[controller.EditorSettings.EditIdName] : 0);
+                controller.EditorSettings.Load(id, (responseData) => {
+                    controller.Model.set("editModel", responseData.record);
+                    controller.afterLoad(responseData);
+                    controller.endLoad();
+                });
+                return false;
+            }
+            controller.afterLoad();
+            controller.endLoad();
             return true;
         }
 
-        protected afterLoad(): void {
+        protected afterLoad(responseData?: any): void {
+        }
+
+        protected endLoad(): void {
             M.updateTextFields();
             _app.HideLoading();
             this.View.show();
@@ -318,12 +340,24 @@ export namespace Controller {
             return true;
         }
 
-        protected afterSave(): void {
+        private endSave(): void {
             _main.ControllerBack(this);
         }
 
+        protected getSaveModel(): Interfaces.Model.IEditorModel {
+            return this.EditorModel;
+        }
+
         public Save(): void {
-            this.afterSave();
+            let controller = this;
+            if (controller.EditorSettings && controller.EditorSettings.Save) {
+                let model: Interfaces.Model.IEditorModel = controller.getSaveModel();
+                controller.EditorSettings.Save(model, (responseData) => {
+                    controller.endSave();
+                });
+                return;
+            }
+            controller.endSave();
         }
 
         public Cancel(): void {
@@ -400,8 +434,6 @@ export namespace Controller {
             navbarHeader += '</nav>';
             this.navSearch = $(navbarHeader);
             this.inputSearch = this.navSearch.find('card-view-search');
-
-
 
             navbarHeader  = '<div class="row row-table">';
             navbarHeader += '    <div class="col s12 m12 l12 xl12 col-table">';

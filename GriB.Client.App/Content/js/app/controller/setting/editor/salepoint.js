@@ -47,16 +47,12 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                         enumerable: true,
                         configurable: true
                     });
-                    SalePoint.prototype.loadData = function () {
-                        var _this = this;
-                        var controller = this;
-                        var id = (vars._editorData["id_salepoint"] ? vars._editorData["id_salepoint"] : 0);
-                        this.Service.GetSalePoint(id, function (responseData) {
-                            controller.Model.set("editModel", responseData.salepoint);
-                            _this.setupListCompany(responseData);
-                            controller.afterLoad();
-                        });
-                        return false;
+                    SalePoint.prototype.createEditorSettings = function () {
+                        return { EditIdName: "id_salepoint", Load: $.proxy(this.Service.GetSalePoint, this.Service), Save: $.proxy(this.Service.SetSalePoint, this.Service) };
+                    };
+                    SalePoint.prototype.afterLoad = function (responseData) {
+                        _super.prototype.afterLoad.call(this, responseData);
+                        this.setupListCompany(responseData);
                     };
                     SalePoint.prototype.setupListCompany = function (responseData) {
                         var html = '';
@@ -71,14 +67,11 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                             list.html('');
                         list.formSelect();
                     };
-                    SalePoint.prototype.Save = function () {
-                        var controller = this;
-                        var comp = $("#editor-view-company-list").formSelect("getSelectedValues");
+                    SalePoint.prototype.getSaveModel = function () {
                         var model = this.EditorModel;
+                        var comp = $("#editor-view-company-list").formSelect("getSelectedValues");
                         model.company_id = (comp && comp.length > 0 ? +comp[0] : 0);
-                        this.Service.SetSalePoint(model, function (responseData) {
-                            controller.afterSave();
-                        });
+                        return model;
                     };
                     SalePoint.prototype.validate = function () {
                         var result = true;

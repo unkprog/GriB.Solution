@@ -33,6 +33,7 @@
 
     export interface IControllerEditor extends IController {
         EditorModel: Interfaces.Model.IBaseModel;
+        EditorSettings: Interfaces.IEditorSettings;
         Save(): void;
         Cancel(): void;
     }
@@ -54,6 +55,12 @@
         Columns?: ICardColumn[];
         Load: (callback: (responseData: any) => void) => void;
         Delete: (id: number, callback: (responseData: any) => void) => void;
+    }
+
+    export interface IEditorSettings {
+        EditIdName: string;
+        Load: (id: number, callback: (responseData: any) => void) => void;
+        Save: (model: Interfaces.Model.IEditorModel, callback: (responseData: any) => void) => void;
     }
 
     export interface IControllerCard extends IController {

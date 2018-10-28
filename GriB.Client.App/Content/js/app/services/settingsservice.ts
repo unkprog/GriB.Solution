@@ -124,5 +124,23 @@ export module Services {
         public DelProduct(id: number, Callback: (responseData: any) => void) {
             this.GetApi({ Action: "/del_product", RequestData: { id: id }, Callback: Callback });
         }
+
+        public UploadImage(data: any, Callback: (responseData: any) => void) {
+            var self = this;
+            let action = (self.Options && self.Options.BaseUrl ? self.Options.BaseUrl : '') + "/uploadimage";
+            $.ajax({
+                url: action, 
+                type: "post",
+                data: data,
+                contentType: false, processData: false,
+                success: function (responseData) {
+                    if (Callback)
+                        Callback(responseData);
+                },
+                error: function (e) {
+                    self.handleError(e);
+                }
+            });
+        }
     }
 }

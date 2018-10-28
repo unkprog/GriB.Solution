@@ -45,20 +45,17 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                         enumerable: true,
                         configurable: true
                     });
-                    // $('input#input_text, textarea#textarea2').characterCounter();
+                    Organization.prototype.createEditorSettings = function () {
+                        return { EditIdName: "id_currency", Load: undefined, Save: $.proxy(this.Service.SetOrganization, this.Service) };
+                    };
                     Organization.prototype.loadData = function () {
                         var controller = this;
                         this.Service.GetOrganization(function (responseData) {
-                            controller.Model.set("editModel", responseData);
-                            controller.afterLoad();
+                            controller.Model.set("editModel", responseData.record);
+                            controller.afterLoad(responseData);
+                            controller.endLoad();
                         });
                         return false;
-                    };
-                    Organization.prototype.Save = function () {
-                        var controller = this;
-                        this.Service.SetOrganization(controller.EditorModel, function (responseData) {
-                            controller.afterSave();
-                        });
                     };
                     Organization.prototype.validate = function () {
                         var result = true;

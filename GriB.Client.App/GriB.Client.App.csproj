@@ -109,6 +109,7 @@
       <DependentUpon>materialize.css</DependentUpon>
     </Content>
     <Content Include="Content\img\menu-background.png" />
+    <Content Include="Content\img\noimage.png" />
     <Content Include="Content\index.html" />
     <Content Include="Content\js\lib\i18n.js" />
     <Content Include="Content\js\lib\jquery-3.3.1.min.js" />
@@ -169,6 +170,7 @@
     <Content Include="Content\view\setting\card\currency.html" />
     <Content Include="Content\view\setting\card\employee.html" />
     <Content Include="Content\view\setting\card\salepoint.html" />
+    <Content Include="Content\view\setting\editor\category.html" />
     <Content Include="Content\view\setting\editor\unit.html" />
     <Content Include="Content\view\setting\editor\employee.html" />
     <Content Include="Content\view\setting\editor\currency.html" />
@@ -316,6 +318,7 @@
     <TypeScriptCompile Include="Content\js\app\controller\setting\card\employee.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\setting\card\currency.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\setting\card\salepoint.ts" />
+    <TypeScriptCompile Include="Content\js\app\controller\setting\editor\category.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\setting\editor\unit.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\setting\editor\editor.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\setting\editor\employee.ts" />

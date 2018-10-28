@@ -4,4 +4,4 @@
 from [pos_user] [u] with(nolock)
 left outer join [pos_user_person] [up] with(nolock) on [u].[id] = [up].[id]
 left outer join [pos_user_sec] [us] with(nolock) on [u].[id] = [us].[id]
-where [u].[id] = @id
+where [u].[id] = @id 

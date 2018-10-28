@@ -23,28 +23,12 @@ export namespace Controller.Setting.Editor {
             });
         }
 
-
         public get EditorModel(): Interfaces.Model.ICurrency {
             return this.Model.get("editModel").toJSON();
         }
 
-
-        protected loadData(): boolean {
-            let controller = this;
-            let id: number = (vars._editorData["id_currency"] ? vars._editorData["id_currency"] : 0);
-            this.Service.GetCurrency(id, (responseData) => {
-                controller.Model.set("editModel", responseData);
-                controller.afterLoad();
-            });
-            return false;
-        }
-
-        public Save(): void {
-            let controller = this;
-            let model : Interfaces.Model.ICurrency = this.EditorModel;
-            this.Service.SetCurrency(model, (responseData) => {
-                controller.afterSave();
-            });
+        protected createEditorSettings(): Interfaces.IEditorSettings {
+            return { EditIdName: "id_currency", Load: $.proxy(this.Service.GetCurrency, this.Service), Save: $.proxy(this.Service.SetCurrency, this.Service) };
         }
 
         protected validate(): boolean {

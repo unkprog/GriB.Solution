@@ -31,16 +31,13 @@ export namespace Controller.Setting.Editor {
             return this.Model.get("editModel").toJSON();
         }
 
+        protected createEditorSettings(): Interfaces.IEditorSettings {
+            return { EditIdName: "id_salepoint", Load: $.proxy(this.Service.GetSalePoint, this.Service), Save: $.proxy(this.Service.SetSalePoint, this.Service) };
+        }
 
-        protected loadData(): boolean {
-            let controller = this;
-            let id: number = (vars._editorData["id_salepoint"] ? vars._editorData["id_salepoint"] : 0);
-            this.Service.GetSalePoint(id, (responseData) => {
-                controller.Model.set("editModel", responseData.salepoint);
-                this.setupListCompany(responseData);
-                controller.afterLoad();
-            });
-            return false;
+        protected afterLoad(responseData?: any): void {
+            super.afterLoad(responseData);
+            this.setupListCompany(responseData);
         }
 
         private setupListCompany(responseData: any) {
@@ -57,16 +54,12 @@ export namespace Controller.Setting.Editor {
             list.formSelect();
         }
 
-        public Save(): void {
-            let controller = this;
+        protected getSaveModel(): Interfaces.Model.IEditorModel {
+            let model: Interfaces.Model.ISalepointModel = this.EditorModel;
             let comp = $("#editor-view-company-list").formSelect("getSelectedValues");
-            let model : Interfaces.Model.ISalepointModel = this.EditorModel;
-
             model.company_id = (comp && comp.length > 0 ? +comp[0] : 0);
 
-            this.Service.SetSalePoint(model, (responseData) => {
-                controller.afterSave();
-            });
+            return model;
         }
 
         protected validate(): boolean {
