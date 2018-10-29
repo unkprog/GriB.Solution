@@ -136,5 +136,6 @@ define({
     "label$category": "Категория",
     "label$includedincategory": "Входит в категорию",
     "label$addphoto": "Добавить фото",
+    "label$categorynotspecified": "Категория не указана",
 
 });

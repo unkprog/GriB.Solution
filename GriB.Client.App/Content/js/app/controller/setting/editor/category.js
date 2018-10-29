@@ -89,7 +89,22 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                         this.controlPhoto.css("backgroundImage", "url(" + this.EditorModel.photo + ")");
                         $("#editor-view-category-list").formSelect();
                         M.textareaAutoResize($("#editor-view-category-description"));
+                        this.setupListCategory(responseData);
                         this.setupTableAccess();
+                    };
+                    Category.prototype.setupListCategory = function (responseData) {
+                        var html = '';
+                        var categories = responseData.categories;
+                        var list = $("#editor-view-category-list");
+                        html += ' <option value="0"' + (0 === this.EditorModel.pid ? ' selected' : '') + '>' + vars._statres("label$categorynotspecified") + '</option>';
+                        if (categories && categories.length > 0) {
+                            for (var i = 0, icount = categories.length; i < icount; i++)
+                                html += ' <option value="' + categories[i].id + '"' + (categories[i].id === this.EditorModel.pid ? ' selected' : '') + '>' + categories[i].name + '</option>';
+                            list.html(html);
+                        }
+                        else
+                            list.html('');
+                        list.formSelect();
                     };
                     Category.prototype.setupTableAccess = function () {
                         var model = this.EditorModel;
@@ -135,6 +150,12 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                                 _this.controlPhoto.css("backgroundImage", "url(" + controller.EditorModel.photo + ")");
                             });
                         }
+                    };
+                    Category.prototype.getSaveModel = function () {
+                        var model = this.EditorModel;
+                        var catg = $("#editor-view-category-list").val();
+                        model.pid = +catg; //(catg && catg.length > 0 ? +catg[0] : 0);
+                        return model;
                     };
                     return Category;
                 }(edit.Controller.Setting.Editor.Editor));

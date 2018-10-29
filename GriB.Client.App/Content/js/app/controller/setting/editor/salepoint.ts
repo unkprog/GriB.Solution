@@ -56,8 +56,8 @@ export namespace Controller.Setting.Editor {
 
         protected getSaveModel(): Interfaces.Model.IEditorModel {
             let model: Interfaces.Model.ISalepoint = this.EditorModel;
-            let comp = $("#editor-view-company-list").formSelect("getSelectedValues");
-            model.company_id = (comp && comp.length > 0 ? +comp[0] : 0);
+            let comp = $("#editor-view-company-list").val();//.formSelect("getSelectedValues");
+            model.company_id = +comp; //(comp && comp.length > 0 ? +comp[0] : 0);
 
             return model;
         }

@@ -339,7 +339,7 @@ namespace GriB.Client.App.Controllers
                 category result = Category.GetCategory(query, id);
                 Category.GetCategoryDescription(query, result);
                 Category.GetCategorySalepointAccess(query, result);
-                return Request.CreateResponse(HttpStatusCode.OK, new { record = result });
+                return Request.CreateResponse(HttpStatusCode.OK, new { record = result, categories = Category.GetCategoriesNotThis(query, id) });
             });
         }
 

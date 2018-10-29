@@ -83,9 +83,24 @@ export namespace Controller.Setting.Editor {
             this.controlPhoto.css("backgroundImage", "url(" + this.EditorModel.photo + ")");
             $("#editor-view-category-list").formSelect();
             M.textareaAutoResize($("#editor-view-category-description"));
+            this.setupListCategory(responseData);
             this.setupTableAccess();
         }
 
+        private setupListCategory(responseData: any) {
+            let html: string = '';
+            let categories = responseData.categories;
+            let list: JQuery = $("#editor-view-category-list");
+            html += ' <option value="0"' + (0 === this.EditorModel.pid ? ' selected' : '') + '>' + vars._statres("label$categorynotspecified") + '</option>';
+            if (categories && categories.length > 0) {
+                for (let i = 0, icount = categories.length; i < icount; i++)
+                    html += ' <option value="' + categories[i].id + '"' + (categories[i].id === this.EditorModel.pid ? ' selected' : '') + '>' + categories[i].name + '</option>';
+                list.html(html);
+            }
+            else
+                list.html('');
+            list.formSelect();
+        }
 
         private setupTableAccess(): void {
             let model: Interfaces.Model.ICategory = this.EditorModel;
@@ -140,6 +155,14 @@ export namespace Controller.Setting.Editor {
                     this.controlPhoto.css("backgroundImage", "url(" + controller.EditorModel.photo + ")");
                 });
             }
+        }
+
+        protected getSaveModel(): Interfaces.Model.IEditorModel {
+            let model: Interfaces.Model.ICategory = this.EditorModel;
+            let catg = $("#editor-view-category-list").val();
+            model.pid = +catg; //(catg && catg.length > 0 ? +catg[0] : 0);
+
+            return model;
         }
     }
 }

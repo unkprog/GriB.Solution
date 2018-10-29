@@ -184,6 +184,7 @@
     <Content Include="Scripts\Query\Category\SalepointAccess\[get].sql" />
     <Content Include="Scripts\Query\Category\SalepointAccess\[set].sql" />
     <Content Include="Scripts\Query\Category\[del].sql" />
+    <Content Include="Scripts\Query\Category\[get_not_this].sql" />
     <Content Include="Scripts\Query\Category\[get].sql" />
     <Content Include="Scripts\Query\Category\[set].sql" />
     <Content Include="Scripts\Query\Employee\SalepointAccess\[get].sql" />

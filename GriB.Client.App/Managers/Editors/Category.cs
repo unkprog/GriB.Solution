@@ -23,6 +23,19 @@ namespace GriB.Client.App.Managers.Editors
             return result;
         }
 
+        private const string cmdGetNotThis = @"Category\[get_not_this]";
+        public static List<category> GetCategoriesNotThis(this Query query, int id)
+        {
+            List<category> result = new List<category>();
+            query.Execute(cmdGetNotThis, new SqlParameter[] { new SqlParameter() { ParameterName = "@id", Value = id } }
+            , (values) =>
+            {
+                result.Add(readFromValues(values));
+            });
+
+            return result;
+        }
+
         public static category GetCategory(this Query query, int id)
         {
             category result = new category();

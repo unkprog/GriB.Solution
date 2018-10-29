@@ -69,8 +69,8 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                     };
                     SalePoint.prototype.getSaveModel = function () {
                         var model = this.EditorModel;
-                        var comp = $("#editor-view-company-list").formSelect("getSelectedValues");
-                        model.company_id = (comp && comp.length > 0 ? +comp[0] : 0);
+                        var comp = $("#editor-view-company-list").val(); //.formSelect("getSelectedValues");
+                        model.company_id = +comp; //(comp && comp.length > 0 ? +comp[0] : 0);
                         return model;
                     };
                     SalePoint.prototype.validate = function () {
