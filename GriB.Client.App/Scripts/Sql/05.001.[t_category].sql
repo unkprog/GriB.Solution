@@ -18,7 +18,6 @@ begin
   )
 end
 
-
 if not exists (select * from [sys].[objects] where [object_id] = object_id(N'[t_category_salepointaccess]') and type in (N'U'))
 begin
   create table [t_category_salepointaccess]
@@ -27,5 +26,16 @@ begin
 	[salepoint] [int] not null,
 	[isaccess]  [bit] not null default (0),
     primary key clustered ([id], [salepoint])
+  )
+end
+
+
+if not exists (select * from [sys].[objects] where [object_id] = object_id(N'[t_category_description]') and type in (N'U'))
+begin
+  create table [t_category_description]
+  (
+    [id]          [int]            not null,
+	[description] [nvarchar](3098) not null default (N''),
+    primary key clustered ([id])
   )
 end

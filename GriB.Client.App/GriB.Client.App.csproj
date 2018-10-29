@@ -179,6 +179,8 @@
     <Content Include="Content\view\setting\index.html" />
     <Content Include="Content\view\terminal\index.html" />
     <Content Include="Global.asax" />
+    <Content Include="Scripts\Query\Category\Description\[get].sql" />
+    <Content Include="Scripts\Query\Category\Description\[set].sql" />
     <Content Include="Scripts\Query\Category\SalepointAccess\[get].sql" />
     <Content Include="Scripts\Query\Category\SalepointAccess\[set].sql" />
     <Content Include="Scripts\Query\Category\[del].sql" />

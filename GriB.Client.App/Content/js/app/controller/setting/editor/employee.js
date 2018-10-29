@@ -83,39 +83,11 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                         var model = this.EditorModel;
                         var data = model.accesssalepoints;
                         var html = '';
-                        // let rows: JQuery[] = [];
                         if (data && data.length > 0) {
                             var item = void 0;
-                            //html = '<tr>';
-                            //html += '<td data-bind="text:salepoint.name"></td>';
-                            //html += '<td>';
-                            //html += '<div class="switch valign-wrapper">';
-                            //html += '    <label>';
-                            //html += '        <input type="checkbox" data-bind="checked:isaccess">';
-                            //html += '        <span class="lever"></span>';
-                            //html += '     </label>';
-                            //html += '</div>';
-                            //html += '</td>';
-                            //html += '<td>';
-                            ////html += '<div class="valign-wrapper">';
-                            ////html += '    <label>';
-                            ////html += '        <input name="group_isdefault" type="radio" #=item.isdefault ? \' checked="checked"\' : \'\'#>';
-                            ////html += '        <span></span>';
-                            ////html += '     </label>';
-                            ////html += '</div>';
-                            //html += '</td>';
-                            //html += '</tr>';
-                            //let template = kendo.template(html);
-                            ////let itemsAppend: [];
-                            //let itemAppend: JQuery;
                             for (var i = 0, icount = (data && data.length ? data.length : 0); i < icount; i++) {
                                 item = data[i];
                                 item;
-                                // html = template(item);
-                                // itemAppend = $(html);
-                                // $("#employee-rigths-rows").append(itemAppend);
-                                //// itemsAppend.push(itemAppend);
-                                // kendo.bind(itemAppend, new kendo.data.ObservableObject(item));
                                 html += '<tr>';
                                 html += '<td data-bind="text:editModel.accesssalepoints[' + i + '].salepoint.name"></td>';
                                 html += '<td>';
@@ -139,10 +111,6 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                         }
                         $("#employee-rigths-rows").html(html);
                         kendo.bind($("#employee-rigths-rows"), this.Model);
-                        //this.Model.bind("change", function (e) {
-                        //    console.log(e.field, "=", this.get(e.field));
-                        //    //if (e.field. editModel.accesssalepoints[0].isdefault
-                        //});
                     };
                     Employee.prototype.ViewResize = function (e) {
                         $('#editor-view-tabs').tabs();

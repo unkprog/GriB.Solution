@@ -336,7 +336,10 @@ namespace GriB.Client.App.Controllers
         {
             return TryCatchResponseQuery((query) =>
             {
-                return Request.CreateResponse(HttpStatusCode.OK, new { record = Category.GetCategory(query, id) });
+                category result = Category.GetCategory(query, id);
+                Category.GetCategoryDescription(query, result);
+                Category.GetCategorySalepointAccess(query, result);
+                return Request.CreateResponse(HttpStatusCode.OK, new { record = result });
             });
         }
 
@@ -347,7 +350,9 @@ namespace GriB.Client.App.Controllers
             return TryCatchResponseQuery((query) =>
             {
                 Principal principal = (Principal)HttpContext.Current.User;
-                Category.SetCategory(query, category, principal.Data.User.id);
+                category result = Category.SetCategory(query, category, principal.Data.User.id);
+                Category.SetCategoryDescription(query, category);
+                Category.SetCategorySalepointAccess(query, category);
                 return Request.CreateResponse(HttpStatusCode.OK, "Ok");
             });
         }
@@ -390,38 +395,43 @@ namespace GriB.Client.App.Controllers
 
                 Principal principal = (Principal)HttpContext.Current.User;
 
-                string path = string.Concat(HostingEnvironment.ApplicationPhysicalPath, "\\Images");
+                string path = HostingEnvironment.ApplicationPhysicalPath;
+                path = string.Concat(path, path.LastIndexOf("\\") > 0 ? string.Empty : "\\", "Images");
                 if (!Directory.Exists(path))
                     Directory.CreateDirectory(path);
                 path = string.Concat(path, "\\Databases");
                 if (!Directory.Exists(path))
                     Directory.CreateDirectory(path);
                 path = string.Concat(path, "\\", principal.Data.Database.catalog);
+                if (!Directory.Exists(path))
+                    Directory.CreateDirectory(path);
 
                 if (type == "0")
                     path = string.Concat(path, "\\category");
                 else if (type == "1")
                     path = string.Concat(path, "\\product");
-                else 
+                else
                     path = string.Concat(path, "\\other");
 
                 if (!Directory.Exists(path))
                     Directory.CreateDirectory(path);
 
-                if (string.IsNullOrEmpty(photo))
-                {
-                    photo = Guid.NewGuid().ToString().Replace("-", ""); // string.Concat(Guid.NewGuid().ToString().Replace("-", ""), ext);
-                }
-                else
-                {
-                    photo = photo.Substring(photo.LastIndexOf('/'));
-                    photo = photo.Substring(0, photo.LastIndexOf('.'));
-                    //string.Concat(Guid.NewGuid().ToString().Replace("-", ""), ext);
-                }
+                photo = string.Concat(HostingEnvironment.ApplicationPhysicalPath, photo);
+                if (!string.IsNullOrEmpty(photo) && File.Exists(photo))
+                    File.Delete(photo);
+
+                photo = Guid.NewGuid().ToString().Replace("-", ""); // string.Concat(Guid.NewGuid().ToString().Replace("-", ""), ext);
+
+                //else
+                //{
+                //    photo = photo.Substring(photo.LastIndexOf('/') + 1);
+                //    photo = photo.Substring(0, photo.LastIndexOf('.'));
+                //    //string.Concat(Guid.NewGuid().ToString().Replace("-", ""), ext);
+                //}
                 path = string.Concat(path, "\\", photo, ext);
                 File.WriteAllBytes(path, image);
 
-                string result = path.Replace(HostingEnvironment.ApplicationPhysicalPath, "").Replace("\\", "/");
+                string result = string.Concat("/", path.Replace(HostingEnvironment.ApplicationPhysicalPath, "").Replace("\\", "/"));
                 return Request.CreateResponse(HttpStatusCode.OK, result);
             });
         }

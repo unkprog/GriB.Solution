@@ -34,14 +34,14 @@
 
     }
 
-    export interface ICompanyModel extends IReferenceModel, IEditorModel {
+    export interface ICompany extends IReferenceModel, IEditorModel {
         site: string;
         email: string;
         phone: string;
     }
 
 
-    export interface ISalepointModel extends IReferenceModel, IEditorModel {
+    export interface ISalepoint extends IReferenceModel, IEditorModel {
         company_id: number;
         city: string;
         address: string;
@@ -49,11 +49,15 @@
     }
 
     export interface ISalePointAccessModel {
-        salepoint: ISalepointModel; 
+        salepoint: ISalepoint; 
         isaccess: boolean;
     }
-        
-    export interface IEmployeeModel extends IReferenceModel, IEditorModel {
+
+    export interface IEditorSalePointAccess extends IReferenceModel, IEditorModel {
+        accesssalepoints: ISalePointAccessModel[];
+    }
+
+    export interface IEmployeeModel extends IReferenceModel, IEditorModel, IEditorSalePointAccess {
         phone: string;
         pass: string;
         isaccess: boolean;
@@ -64,7 +68,6 @@
         lname: string;
         sex: number;
         datebirth: Date;
-        accesssalepoints: ISalePointAccessModel[];
     }
 
     export interface IBaseUnit extends IReferenceModel, IEditorModel {
@@ -78,7 +81,8 @@
     export interface IUnit extends IBaseUnit {
     }
 
-    export interface ICategory extends IReferenceHierarhyModel, IEditorModel {
+    export interface ICategory extends IReferenceHierarhyModel, IEditorModel, IEditorSalePointAccess {
         photo: string;
+        description: string;
     }
 }

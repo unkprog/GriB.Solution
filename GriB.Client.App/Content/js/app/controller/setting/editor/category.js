@@ -32,9 +32,15 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                         return new kendo.data.ObservableObject({
                             "Header": vars._statres("label$category"),
                             "editModel": {},
+                            "labelAccessRight": vars._statres("label$accessright"),
+                            "labelCategory": vars._statres("label$category"),
                             "labelName": vars._statres("label$name"),
+                            "labelIncludedInCategory": vars._statres("label$includedincategory"),
                             "labelPosTerminal": vars._statres("label$POSterminal"),
                             "labelAddPhoto": vars._statres("label$addphoto"),
+                            "labelDescription": vars._statres("label$description"),
+                            "labelSalePoint": vars._statres("label$salePoint"),
+                            "labelAccess": vars._statres("label$access"),
                         });
                     };
                     Object.defineProperty(Category.prototype, "EditorModel", {
@@ -61,9 +67,6 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                         this.controlPhoto = view.find("#editor-view-category-photo");
                         var onUpolad = $.proxy(this.uploudImageClick, this);
                         this.imgDialog.bind("change", onUpolad);
-                        //    .change(function (e) {
-                        //    controller.UploadImage(controller.imgDialog[0].files);
-                        //});
                         return _super.prototype.ViewInit.call(this, view);
                     };
                     Category.prototype.createEvents = function () {
@@ -75,9 +78,43 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                         this.imgDialog.unbind();
                         _super.prototype.destroyEvents.call(this);
                     };
+                    Category.prototype.ViewResize = function (e) {
+                        _super.prototype.ViewResize.call(this, e);
+                        $('#editor-view-category-tabs').tabs();
+                        if (this.controlPhoto)
+                            this.controlPhoto.height(this.controlPhoto.width());
+                    };
                     Category.prototype.afterLoad = function (responseData) {
                         _super.prototype.afterLoad.call(this, responseData);
                         this.controlPhoto.css("backgroundImage", "url(" + this.EditorModel.photo + ")");
+                        $("#editor-view-category-list").formSelect();
+                        M.textareaAutoResize($("#editor-view-category-description"));
+                        this.setupTableAccess();
+                    };
+                    Category.prototype.setupTableAccess = function () {
+                        var model = this.EditorModel;
+                        var data = model.accesssalepoints;
+                        var html = '';
+                        if (data && data.length > 0) {
+                            var item = void 0;
+                            for (var i = 0, icount = (data && data.length ? data.length : 0); i < icount; i++) {
+                                item = data[i];
+                                item;
+                                html += '<tr>';
+                                html += '<td data-bind="text:editModel.accesssalepoints[' + i + '].salepoint.name"></td>';
+                                html += '<td>';
+                                html += '<div class="switch valign-wrapper">';
+                                html += '    <label>';
+                                html += '        <input type="checkbox" data-bind="checked:editModel.accesssalepoints[' + i + '].isaccess">';
+                                html += '        <span class="lever"></span>';
+                                html += '     </label>';
+                                html += '</div>';
+                                html += '</td>';
+                                html += '</tr>';
+                            }
+                        }
+                        $("#category-rigths-rows").html(html);
+                        kendo.bind($("#category-rigths-rows"), this.Model);
                     };
                     Category.prototype.addPhotoButtonClick = function (e) {
                         $("#editor-view-image-input").trigger("click");

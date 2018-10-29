@@ -70,45 +70,12 @@ export namespace Controller.Setting.Editor {
             let model: Interfaces.Model.IEmployeeModel = this.EditorModel;
             let data: Interfaces.Model.ISalePointAccessModel[] = model.accesssalepoints;
             let html: string = '';
-           // let rows: JQuery[] = [];
 
             if (data && data.length > 0) {
                 let item: Interfaces.Model.ISalePointAccessModel;
-                //html = '<tr>';
-                //html += '<td data-bind="text:salepoint.name"></td>';
-                //html += '<td>';
-                //html += '<div class="switch valign-wrapper">';
-                //html += '    <label>';
-                //html += '        <input type="checkbox" data-bind="checked:isaccess">';
-                //html += '        <span class="lever"></span>';
-                //html += '     </label>';
-                //html += '</div>';
-                //html += '</td>';
-
-                //html += '<td>';
-                ////html += '<div class="valign-wrapper">';
-                ////html += '    <label>';
-                ////html += '        <input name="group_isdefault" type="radio" #=item.isdefault ? \' checked="checked"\' : \'\'#>';
-                ////html += '        <span></span>';
-                ////html += '     </label>';
-                ////html += '</div>';
-                //html += '</td>';
-                //html += '</tr>';
-
-                //let template = kendo.template(html);
-
-
-                ////let itemsAppend: [];
-                //let itemAppend: JQuery;
                 for (let i = 0, icount = (data && data.length ? data.length : 0); i < icount; i++) {
                     item = data[i];
                     item
-                   // html = template(item);
-                   // itemAppend = $(html);
-                   // $("#employee-rigths-rows").append(itemAppend);
-                   //// itemsAppend.push(itemAppend);
-                   // kendo.bind(itemAppend, new kendo.data.ObservableObject(item));
-
 
                     html += '<tr>';
                     html += '<td data-bind="text:editModel.accesssalepoints[' + i + '].salepoint.name"></td>';
@@ -136,10 +103,6 @@ export namespace Controller.Setting.Editor {
             
             $("#employee-rigths-rows").html(html);
             kendo.bind($("#employee-rigths-rows"), this.Model);
-            //this.Model.bind("change", function (e) {
-            //    console.log(e.field, "=", this.get(e.field));
-            //    //if (e.field. editModel.accesssalepoints[0].isdefault
-            //});
         }
 
         public ViewResize(e) {

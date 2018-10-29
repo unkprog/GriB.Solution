@@ -15,6 +15,7 @@ declare namespace M {
     }
 
     function updateTextFields(): JQuery;
+    function textareaAutoResize(els?:any): JQuery;
     function toast(options :toastOptions): JQuery;
     export namespace Modal {
         function getInstance(elems: any, options?: any): JQuery;

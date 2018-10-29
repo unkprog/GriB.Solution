@@ -93,9 +93,11 @@ namespace GriB.Client.App.Models.Editor
         public category()
         {
             photo = string.Empty;
+            description = string.Empty;
             accesssalepoints = new List<salepointaccess>();
         }
         public string photo { get; set; }
+        public string description { get; set; }
 
         public List<salepointaccess> accesssalepoints { get; set; }
 

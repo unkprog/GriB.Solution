@@ -55,5 +55,66 @@ namespace GriB.Client.App.Managers.Editors
             , (values) => { });
         }
 
+        private const string cmdGetDescription = @"Category\Description\[get]";
+        public static category GetCategoryDescription(this Query query, category category)
+        {
+            category result = category;
+            query.Execute(cmdGetDescription, new SqlParameter[] { new SqlParameter("@id", category.id), new SqlParameter("@description", category.description) }
+            , (values) =>
+            {
+                category.description = (string)values[1];
+            });
+
+            return result;
+        }
+
+        private const string cmdSetDescription = @"Category\Description\[set]";
+        public static category SetCategoryDescription(this Query query, category category)
+        {
+            category result = category;
+            query.Execute(cmdSetDescription, new SqlParameter[] { new SqlParameter("@id", category.id), new SqlParameter("@description", category.description) }
+            , (values) => { });
+            return result;
+        }
+
+        private const string cmdGetSalepointAcces = @"Category\SalepointAccess\[get]";
+        public static category GetCategorySalepointAccess(this Query query, category category)
+        {
+            category result = category;
+            result.accesssalepoints = new List<salepointaccess>();
+
+            query.Execute(cmdGetSalepointAcces, new SqlParameter[] { new SqlParameter("@id", category.id), new SqlParameter("@type", Organization.typeDivision) }
+            , (values) =>
+            {
+                int idx = 0;
+                salepointaccess item = new salepointaccess()
+                {
+                    salepoint = new salepoint() { id = (int)values[idx++], name = (string)values[idx++], company_id = (int)values[idx++], city = (string)values[idx++], address = (string)values[idx++], schedule = (string)values[idx++] }
+                    , isaccess = (bool)values[idx++]
+                };
+                result.accesssalepoints.Add(item);
+            });
+
+            return result;
+        }
+
+        private const string cmdSetSalepointAcces = @"Category\SalepointAccess\[set]";
+        public static category SetCategorySalepointAccess(this Query query, category category)
+        {
+            category result = category;
+            //try
+            //{
+
+                foreach (var item in result.accesssalepoints)
+                    query.Execute(cmdSetSalepointAcces, new SqlParameter[] { new SqlParameter("@id", category.id), new SqlParameter("@salepoint", item.salepoint.id), new SqlParameter("@isaccess", item.isaccess) }
+                    , (values) => { });
+            //}
+            //catch (Exception ex)
+            //{
+            //    int i = 0;
+            //}
+
+            return result;
+        }
     }
 }

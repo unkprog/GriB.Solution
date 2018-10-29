@@ -27,7 +27,7 @@ export namespace Controller.Setting.Editor {
         }
 
 
-        public get EditorModel(): Interfaces.Model.ISalepointModel {
+        public get EditorModel(): Interfaces.Model.ISalepoint {
             return this.Model.get("editModel").toJSON();
         }
 
@@ -55,7 +55,7 @@ export namespace Controller.Setting.Editor {
         }
 
         protected getSaveModel(): Interfaces.Model.IEditorModel {
-            let model: Interfaces.Model.ISalepointModel = this.EditorModel;
+            let model: Interfaces.Model.ISalepoint = this.EditorModel;
             let comp = $("#editor-view-company-list").formSelect("getSelectedValues");
             model.company_id = (comp && comp.length > 0 ? +comp[0] : 0);
 
@@ -64,7 +64,7 @@ export namespace Controller.Setting.Editor {
 
         protected validate(): boolean {
             let result: boolean = true;
-            let model: Interfaces.Model.ISalepointModel = this.EditorModel;
+            let model: Interfaces.Model.ISalepoint = this.EditorModel;
 
             if (utils.isNullOrEmpty(model.name)) {
                 M.toast({ html: vars._statres("msg$error$invalidSalePointName") });

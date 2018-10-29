@@ -25,7 +25,7 @@ export namespace Controller.Setting.Editor {
         }
 
        
-        public get EditorModel(): Interfaces.Model.ICompanyModel {
+        public get EditorModel(): Interfaces.Model.ICompany {
             return this.Model.get("editModel").toJSON();
         }
 
@@ -45,7 +45,7 @@ export namespace Controller.Setting.Editor {
 
         protected validate(): boolean {
             let result: boolean = true;
-            let model: Interfaces.Model.ICompanyModel = this.EditorModel;
+            let model: Interfaces.Model.ICompany = this.EditorModel;
 
             if (utils.isNullOrEmpty(model.name)) {
                 M.toast({ html: vars._statres("msg$error$invalidCompanyName") });
