@@ -100,6 +100,21 @@ namespace GriB.Client.App.Models.Editor
         public string description { get; set; }
 
         public List<salepointaccess> accesssalepoints { get; set; }
+    }
 
+    public class product : reference_hierarhy
+    {
+        public product()
+        {
+            photo = string.Empty;
+            description = string.Empty;
+            accesssalepoints = new List<salepointaccess>();
+        }
+        public int    type        { get; set; }
+        public int    category    { get; set; }
+        public string photo       { get; set; }
+        public string description { get; set; }
+
+        public List<salepointaccess> accesssalepoints { get; set; }
     }
 }

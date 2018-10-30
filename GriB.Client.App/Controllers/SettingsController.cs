@@ -369,6 +369,55 @@ namespace GriB.Client.App.Controllers
         }
         #endregion
 
+        #region Товары, услуги
+        [HttpGet]
+        [ActionName("get_products")]
+        public HttpResponseMessage GetProducts()
+        {
+            return TryCatchResponseQuery((query) =>
+            {
+                return Request.CreateResponse(HttpStatusCode.OK, Product.GetProducts(query));
+            });
+        }
+
+        [HttpGet]
+        [ActionName("get_product")]
+        public HttpResponseMessage GetProduct(int id)
+        {
+            return TryCatchResponseQuery((query) =>
+            {
+                product result = Product.GetProduct(query, id);
+                Product.GetProductDescription(query, result);
+                Product.GetProductSalepointAccess(query, result);
+                return Request.CreateResponse(HttpStatusCode.OK, new { record = result, categories = Category.GetCategories(query) });
+            });
+        }
+
+        [HttpPost]
+        [ActionName("post_product")]
+        public HttpResponseMessage PostProduct(product product)
+        {
+            return TryCatchResponseQuery((query) =>
+            {
+                Principal principal = (Principal)HttpContext.Current.User;
+                product result = Product.SetProduct(query, product, principal.Data.User.id);
+                Product.SetProductDescription(query, product);
+                Product.SetProductSalepointAccess(query, product);
+                return Request.CreateResponse(HttpStatusCode.OK, "Ok");
+            });
+        }
+
+        [HttpGet]
+        [ActionName("del_product")]
+        public HttpResponseMessage DeleteProduct(int id)
+        {
+            return TryCatchResponseQuery((query) =>
+            {
+                Product.DelProduct(query, id);
+                return Request.CreateResponse(HttpStatusCode.OK, "Ok");
+            });
+        }
+        #endregion
 
         [HttpPost]
         [ActionName("uploadimage")]

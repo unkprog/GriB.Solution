@@ -200,11 +200,19 @@
     <Content Include="Scripts\Query\Organization\[del].sql" />
     <Content Include="Scripts\Query\Organization\[set].sql" />
     <Content Include="Scripts\Query\Organization\[get].sql" />
+    <Content Include="Scripts\Query\Product\Description\[get].sql" />
+    <Content Include="Scripts\Query\Product\Description\[set].sql" />
+    <Content Include="Scripts\Query\Product\SalepointAccess\[get].sql" />
+    <Content Include="Scripts\Query\Product\SalepointAccess\[set].sql" />
+    <Content Include="Scripts\Query\Product\[del].sql" />
+    <Content Include="Scripts\Query\Product\[get].sql" />
+    <Content Include="Scripts\Query\Product\[set].sql" />
     <Content Include="Scripts\Query\Unit\[del].sql" />
     <Content Include="Scripts\Query\Unit\[get].sql" />
     <Content Include="Scripts\Query\Unit\[set].sql" />
     <Content Include="Scripts\Sql\01.001.[t_orgtype].sql" />
     <Content Include="Scripts\Sql\03.001.[t_employee].sql" />
+    <Content Include="Scripts\Sql\06.001.[t_product].sql" />
     <Content Include="Scripts\Sql\05.001.[t_category].sql" />
     <Content Include="Scripts\Sql\04.001.[t_unit].sql" />
     <Content Include="Scripts\Sql\02.001.[t_org].sql" />
@@ -223,6 +231,7 @@
     <Compile Include="Handlers\AuthorizationHeaderHandler.cs" />
     <Compile Include="Managers\AppSettings.cs" />
     <Compile Include="Managers\AuthUser.cs" />
+    <Compile Include="Managers\Editors\Product.cs" />
     <Compile Include="Managers\Editors\Employee.cs" />
     <Compile Include="Managers\Editors\Category.cs" />
     <Compile Include="Managers\Editors\Unit.cs" />
