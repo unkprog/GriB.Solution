@@ -3,7 +3,7 @@ import utils = require('app/common/utils');
 import card = require('app/controller/setting/card/card');
 
 export namespace Controller.Setting.Card {
-    export class Category extends card.Controller.Setting.Card.Card {
+    export class Product extends card.Controller.Setting.Card.Card {
         constructor() {
             super();
         }
@@ -14,7 +14,7 @@ export namespace Controller.Setting.Card {
 
         protected createModel(): kendo.data.ObservableObject {
             return new kendo.data.ObservableObject({
-                "Header": vars._statres("label$categories"),
+                "Header": vars._statres("label$products"),
                 "cardModel": []
             });
         }

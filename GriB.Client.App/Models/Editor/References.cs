@@ -20,31 +20,31 @@ namespace GriB.Client.App.Models.Editor
 
     public class company : reference
     {
-        public string site  { get; set; }
+        public string site { get; set; }
         public string email { get; set; }
         public string phone { get; set; }
     }
 
     public class salepoint : reference
     {
-        public int    company_id { get; set; }
-        public string city       { get; set; }
-        public string address    { get; set; }
-        public string schedule   { get; set; }
+        public int company_id { get; set; }
+        public string city { get; set; }
+        public string address { get; set; }
+        public string schedule { get; set; }
     }
 
     public class salepointaccess
     {
         public salepoint salepoint { get; set; }
-        public bool isaccess       { get; set; }
+        public bool isaccess { get; set; }
     }
 
     public class employee : Common.Models.pos.settings.employee
     {
-        public bool isfullaccess     { get; set; }
-        public bool isaccess         { get; set; }
-        public int  openonlogin      { get; set; }
-        public int  defaultsalepoint { get; set; }
+        public bool isfullaccess { get; set; }
+        public bool isaccess { get; set; }
+        public int openonlogin { get; set; }
+        public int defaultsalepoint { get; set; }
 
         public List<salepointaccess> accesssalepoints { get; set; }
 
@@ -62,11 +62,11 @@ namespace GriB.Client.App.Models.Editor
 
     public class employeecard : employee
     {
-        public string name   { get => string.Concat(fname, !string.IsNullOrEmpty(fname) && !string.IsNullOrEmpty(mname) ? " " : string.Empty, mname, (!string.IsNullOrEmpty(fname) || !string.IsNullOrEmpty(mname)) && !string.IsNullOrEmpty(lname) ? " " : string.Empty, lname); }
+        public string name { get => string.Concat(fname, !string.IsNullOrEmpty(fname) && !string.IsNullOrEmpty(mname) ? " " : string.Empty, mname, (!string.IsNullOrEmpty(fname) || !string.IsNullOrEmpty(mname)) && !string.IsNullOrEmpty(lname) ? " " : string.Empty, lname); }
         public string access { get => (isaccess || isfullaccess ? "Да" : "Нет"); }
         public employeecard(Common.Models.pos.settings.employee empl) : base(empl)
         {
-            
+
         }
     }
 
@@ -77,15 +77,15 @@ namespace GriB.Client.App.Models.Editor
             code = string.Empty;
             nameshort = string.Empty;
         }
-        public string code      { get; set; }
+        public string code { get; set; }
         public string nameshort { get; set; }
     }
 
-    public class unit_rate 
+    public class unit_rate
     {
-        public unit     unit  { get; set; }
-        public DateTime date  { get; set; }
-        public double   value { get; set; }
+        public unit unit { get; set; }
+        public DateTime date { get; set; }
+        public double value { get; set; }
     }
 
     public class category : reference_hierarhy
@@ -102,19 +102,32 @@ namespace GriB.Client.App.Models.Editor
         public List<salepointaccess> accesssalepoints { get; set; }
     }
 
+    public class category_card : category
+    {
+        public category_card()
+        {
+            parentname = string.Empty;
+        }
+        public string parentname { get; set; }
+    }
+
     public class product : reference_hierarhy
     {
         public product()
         {
             photo = string.Empty;
             description = string.Empty;
+            vendorcode = string.Empty;
+            barcode = string.Empty;
             accesssalepoints = new List<salepointaccess>();
         }
-        public int    type        { get; set; }
-        public int    category    { get; set; }
-        public string photo       { get; set; }
+        public int type { get; set; }
+        public int category { get; set; }
+        public string photo { get; set; }
         public string description { get; set; }
-
+        public string vendorcode { get; set; }
+        public string barcode { get; set; }
+        public bool putonsale { get; set; }
         public List<salepointaccess> accesssalepoints { get; set; }
     }
 }

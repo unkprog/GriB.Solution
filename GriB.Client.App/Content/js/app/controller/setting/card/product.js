@@ -20,21 +20,21 @@ define(["require", "exports", "app/common/variables", "app/controller/setting/ca
         (function (Setting) {
             var Card;
             (function (Card) {
-                var Category = /** @class */ (function (_super) {
-                    __extends(Category, _super);
-                    function Category() {
+                var Product = /** @class */ (function (_super) {
+                    __extends(Product, _super);
+                    function Product() {
                         return _super.call(this) || this;
                     }
-                    Category.prototype.createOptions = function () {
+                    Product.prototype.createOptions = function () {
                         return { Url: "/Content/view/setting/card/product.html", Id: "card-view-product" };
                     };
-                    Category.prototype.createModel = function () {
+                    Product.prototype.createModel = function () {
                         return new kendo.data.ObservableObject({
-                            "Header": vars._statres("label$categories"),
+                            "Header": vars._statres("label$products"),
                             "cardModel": []
                         });
                     };
-                    Category.prototype.createCardSettings = function () {
+                    Product.prototype.createCardSettings = function () {
                         return {
                             FieldId: "id", ValueIdNew: -1, EditIdName: "id_product", EditController: "setting/editor/product",
                             Load: $.proxy(this.Service.GetProducts, this.Service), Delete: $.proxy(this.Service.DelProduct, this.Service),
@@ -43,9 +43,9 @@ define(["require", "exports", "app/common/variables", "app/controller/setting/ca
                             ]
                         };
                     };
-                    return Category;
+                    return Product;
                 }(card.Controller.Setting.Card.Card));
-                Card.Category = Category;
+                Card.Product = Product;
             })(Card = Setting.Card || (Setting.Card = {}));
         })(Setting = Controller.Setting || (Controller.Setting = {}));
     })(Controller = exports.Controller || (exports.Controller = {}));

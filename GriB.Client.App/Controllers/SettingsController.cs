@@ -326,7 +326,7 @@ namespace GriB.Client.App.Controllers
         {
             return TryCatchResponseQuery((query) =>
             {
-                return Request.CreateResponse(HttpStatusCode.OK, Category.GetCategories(query));
+                return Request.CreateResponse(HttpStatusCode.OK, Category.GetCategoriesCard(query));
             });
         }
 
@@ -389,7 +389,7 @@ namespace GriB.Client.App.Controllers
                 product result = Product.GetProduct(query, id);
                 Product.GetProductDescription(query, result);
                 Product.GetProductSalepointAccess(query, result);
-                return Request.CreateResponse(HttpStatusCode.OK, new { record = result, categories = Category.GetCategories(query) });
+                return Request.CreateResponse(HttpStatusCode.OK, new { record = result, categories = Category.GetCategories(query), units = Unit.GetUnits(query, Unit.typeUnit), currencies = Unit.GetUnits(query, Unit.typeCurrency) });
             });
         }
 

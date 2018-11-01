@@ -84,5 +84,23 @@
     export interface ICategory extends IReferenceHierarhyModel, IEditorModel, IEditorSalePointAccess {
         photo: string;
         description: string;
+        parentname: string;
+    }
+
+    export interface IProduct extends IReferenceHierarhyModel, IEditorModel, IEditorSalePointAccess {
+        photo: string;
+        description: string;
+        categoryname: string;
+        vendorcode: string;
+        barcode: string;
+        putonsale: boolean;
+
+        quantity: number;
+        unit: number;
+        currency: number;
+        costprice: number;
+        sellingprice: number;
+
+
     }
 }

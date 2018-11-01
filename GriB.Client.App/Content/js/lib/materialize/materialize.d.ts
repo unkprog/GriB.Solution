@@ -5,6 +5,7 @@
     formSelect(methodName?: any, paramName?: any): JQuery;
     datepicker(methodName?: any, paramName?: any): JQuery;
     tablePagination(options: any): JQuery;
+    characterCounter(): JQuery;
 }
 
 

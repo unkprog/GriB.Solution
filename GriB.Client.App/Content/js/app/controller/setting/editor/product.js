@@ -20,40 +20,54 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
         (function (Setting) {
             var Editor;
             (function (Editor) {
-                var Category = /** @class */ (function (_super) {
-                    __extends(Category, _super);
-                    function Category() {
+                var Product = /** @class */ (function (_super) {
+                    __extends(Product, _super);
+                    function Product() {
                         return _super.call(this) || this;
                     }
-                    Category.prototype.createOptions = function () {
-                        return { Url: "/Content/view/setting/editor/category.html", Id: "editor-view-category" };
+                    Product.prototype.createOptions = function () {
+                        return { Url: "/Content/view/setting/editor/product.html", Id: "editor-view-product" };
                     };
-                    Category.prototype.createModel = function () {
+                    Product.prototype.createModel = function () {
                         return new kendo.data.ObservableObject({
-                            "Header": vars._statres("label$category"),
+                            "Header": vars._statres("label$product"),
                             "editModel": {},
+                            "labelSpecifications": vars._statres("label$specifications"),
                             "labelAccessRight": vars._statres("label$accessright"),
-                            "labelCategory": vars._statres("label$category"),
+                            "labelType": vars._statres("label$type"),
+                            "labelProduct": vars._statres("label$product"),
+                            "labelProduction": vars._statres("label$production"),
+                            "labelService": vars._statres("label$service"),
                             "labelName": vars._statres("label$name"),
                             "labelIncludedInCategory": vars._statres("label$includedincategory"),
+                            "labelVendorCode": vars._statres("label$vendorcode"),
+                            "labelBarCode": vars._statres("label$barcode"),
                             "labelPosTerminal": vars._statres("label$POSterminal"),
+                            "labelPutOnSale": vars._statres("label$putonsale"),
                             "labelAddPhoto": vars._statres("label$addphoto"),
                             "labelDescription": vars._statres("label$description"),
                             "labelSalePoint": vars._statres("label$salePoint"),
                             "labelAccess": vars._statres("label$access"),
+                            "labelAccounting": vars._statres("label$accounting"),
+                            "labelAccountingParameters": vars._statres("label$accountingparameters"),
+                            "labelQuantity": vars._statres("label$quantity"),
+                            "labelUnit": vars._statres("label$unit"),
+                            "labelCurrency": vars._statres("label$currency"),
+                            "labelCostPrice": vars._statres("label$costprice"),
+                            "labelSellingPrice": vars._statres("label$sellingprice"),
                         });
                     };
-                    Object.defineProperty(Category.prototype, "EditorModel", {
+                    Object.defineProperty(Product.prototype, "EditorModel", {
                         get: function () {
                             return this.Model.get("editModel").toJSON();
                         },
                         enumerable: true,
                         configurable: true
                     });
-                    Category.prototype.createEditorSettings = function () {
-                        return { EditIdName: "id_category", Load: $.proxy(this.Service.GetCategory, this.Service), Save: $.proxy(this.Service.SetCategory, this.Service) };
+                    Product.prototype.createEditorSettings = function () {
+                        return { EditIdName: "id_product", Load: $.proxy(this.Service.GetProduct, this.Service), Save: $.proxy(this.Service.SetProduct, this.Service) };
                     };
-                    Category.prototype.validate = function () {
+                    Product.prototype.validate = function () {
                         var result = true;
                         var model = this.EditorModel;
                         if (utils.isNullOrEmpty(model.name)) {
@@ -62,38 +76,46 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                         }
                         return result;
                     };
-                    Category.prototype.ViewInit = function (view) {
+                    Product.prototype.ViewInit = function (view) {
                         this.imgDialog = view.find("#editor-view-image-input");
-                        this.controlPhoto = view.find("#editor-view-category-photo");
+                        this.controlPhoto = view.find("#editor-view-product-photo");
                         this.categoryList = view.find("#editor-view-category-list");
+                        this.unitList = view.find("#editor-view-product-unit");
+                        this.currencyList = view.find("#editor-view-product-currency");
+                        this.rightRows = view.find("#product-rigths-rows");
+                        this.controlType = view.find('#editor-view-product-type');
                         var onUpolad = $.proxy(this.uploudImageClick, this);
                         this.imgDialog.bind("change", onUpolad);
+                        view.find("#editor-view-product-name").characterCounter();
+                        view.find("#editor-view-product-description").characterCounter();
                         return _super.prototype.ViewInit.call(this, view);
                     };
-                    Category.prototype.createEvents = function () {
+                    Product.prototype.createEvents = function () {
                         _super.prototype.createEvents.call(this);
-                        this.AddPhotoButtonClick = this.createClickEvent("editor-view-category-addphoto", this.addPhotoButtonClick);
+                        this.AddPhotoButtonClick = this.createClickEvent("editor-view-product-addphoto", this.addPhotoButtonClick);
                     };
-                    Category.prototype.destroyEvents = function () {
-                        this.destroyClickEvent("editor-view-category-addphoto", this.AddPhotoButtonClick);
+                    Product.prototype.destroyEvents = function () {
+                        this.destroyClickEvent("editor-view-product-addphoto", this.AddPhotoButtonClick);
                         this.imgDialog.unbind();
                         _super.prototype.destroyEvents.call(this);
                     };
-                    Category.prototype.ViewResize = function (e) {
+                    Product.prototype.ViewResize = function (e) {
                         _super.prototype.ViewResize.call(this, e);
-                        $('#editor-view-category-tabs').tabs();
-                        M.textareaAutoResize($("#editor-view-category-description"));
+                        $('#editor-view-product-tabs').tabs();
+                        M.textareaAutoResize($("#editor-view-product-description"));
+                        this.controlType.formSelect();
                         if (this.controlPhoto)
                             this.controlPhoto.height(this.controlPhoto.width());
                     };
-                    Category.prototype.afterLoad = function (responseData) {
+                    Product.prototype.afterLoad = function (responseData) {
                         _super.prototype.afterLoad.call(this, responseData);
-                        //this.controlTabs.tabs();
                         this.controlPhoto.css("backgroundImage", "url(" + this.EditorModel.photo + ")");
                         this.setupListCategory(responseData);
+                        this.setupListUnit(responseData);
+                        this.setupListCurrencies(responseData);
                         this.setupTableAccess();
                     };
-                    Category.prototype.setupListCategory = function (responseData) {
+                    Product.prototype.setupListCategory = function (responseData) {
                         var html = '';
                         var categories = responseData.categories;
                         html += ' <option value="0"' + (0 === this.EditorModel.pid ? ' selected' : '') + '>' + vars._statres("label$categorynotspecified") + '</option>';
@@ -106,7 +128,33 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                             this.categoryList.html('');
                         this.categoryList.formSelect();
                     };
-                    Category.prototype.setupTableAccess = function () {
+                    Product.prototype.setupListUnit = function (responseData) {
+                        var html = '';
+                        var units = responseData.units;
+                        html += ' <option value="0"' + (0 === this.EditorModel.pid ? ' selected' : '') + '>' + vars._statres("label$unitnotspecified") + '</option>';
+                        if (units && units.length > 0) {
+                            for (var i = 0, icount = units.length; i < icount; i++)
+                                html += ' <option value="' + units[i].id + '"' + (units[i].id === this.EditorModel.unit ? ' selected' : '') + '>' + units[i].name + '</option>';
+                            this.unitList.html(html);
+                        }
+                        else
+                            this.unitList.html('');
+                        this.unitList.formSelect();
+                    };
+                    Product.prototype.setupListCurrencies = function (responseData) {
+                        var html = '';
+                        var currencies = responseData.currencies;
+                        html += ' <option value="0"' + (0 === this.EditorModel.pid ? ' selected' : '') + '>' + vars._statres("label$currencynotspecified") + '</option>';
+                        if (currencies && currencies.length > 0) {
+                            for (var i = 0, icount = currencies.length; i < icount; i++)
+                                html += ' <option value="' + currencies[i].id + '"' + (currencies[i].id === this.EditorModel.currency ? ' selected' : '') + '>' + currencies[i].code + (utils.isNullOrEmpty(currencies[i].name) ? '' : ' - ') + currencies[i].name + '</option>';
+                            this.currencyList.html(html);
+                        }
+                        else
+                            this.currencyList.html('');
+                        this.currencyList.formSelect();
+                    };
+                    Product.prototype.setupTableAccess = function () {
                         var model = this.EditorModel;
                         var data = model.accesssalepoints;
                         var html = '';
@@ -128,21 +176,21 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                                 html += '</tr>';
                             }
                         }
-                        $("#category-rigths-rows").html(html);
-                        kendo.bind($("#category-rigths-rows"), this.Model);
+                        this.rightRows.html(html);
+                        kendo.bind(this.rightRows, this.Model);
                     };
-                    Category.prototype.addPhotoButtonClick = function (e) {
+                    Product.prototype.addPhotoButtonClick = function (e) {
                         $("#editor-view-image-input").trigger("click");
                     };
-                    Category.prototype.uploudImageClick = function (e) {
+                    Product.prototype.uploudImageClick = function (e) {
                         this.UploadImage(this.imgDialog[0].files);
                     };
-                    Category.prototype.UploadImage = function (files) {
+                    Product.prototype.UploadImage = function (files) {
                         var _this = this;
                         var controller = this;
                         if (files.length > 0) {
                             var dataUpload = new FormData();
-                            dataUpload.append("type", '0');
+                            dataUpload.append("type", '1');
                             dataUpload.append("photo", controller.EditorModel.photo);
                             dataUpload.append("file", files[0]);
                             controller.Service.UploadImage(dataUpload, function (responseData) {
@@ -151,17 +199,17 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                             });
                         }
                     };
-                    Category.prototype.getSaveModel = function () {
+                    Product.prototype.getSaveModel = function () {
                         var model = this.EditorModel;
-                        var catg = $("#editor-view-category-list").val();
+                        var catg = this.categoryList.val();
                         model.pid = +catg; //(catg && catg.length > 0 ? +catg[0] : 0);
                         return model;
                     };
-                    return Category;
+                    return Product;
                 }(edit.Controller.Setting.Editor.Editor));
-                Editor.Category = Category;
+                Editor.Product = Product;
             })(Editor = Setting.Editor || (Setting.Editor = {}));
         })(Setting = Controller.Setting || (Controller.Setting = {}));
     })(Controller = exports.Controller || (exports.Controller = {}));
 });
-//# sourceMappingURL=category.js.map
+//# sourceMappingURL=product.js.map

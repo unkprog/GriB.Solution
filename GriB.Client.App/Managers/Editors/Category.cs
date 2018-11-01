@@ -23,6 +23,20 @@ namespace GriB.Client.App.Managers.Editors
             return result;
         }
 
+        private static category_card readFromValuesCard(object[] values) => new category_card() { id = (int)values[0], pid = (int)values[1], name = (string)values[2], photo = (string)values[3], parentname = (string)values[4] };
+        private const string cmdGetCard = @"Category\[get_card]";
+        public static List<category_card> GetCategoriesCard(this Query query)
+        {
+            List<category_card> result = new List<category_card>();
+            query.Execute(cmdGetCard, new SqlParameter[] { new SqlParameter() { ParameterName = "@id", Value = 0 }, new SqlParameter() { ParameterName = "@name", Value = string.Empty } }
+            , (values) =>
+            {
+                result.Add(readFromValuesCard(values));
+            });
+
+            return result;
+        }
+
         private const string cmdGetNotThis = @"Category\[get_not_this]";
         public static List<category> GetCategoriesNotThis(this Query query, int id)
         {

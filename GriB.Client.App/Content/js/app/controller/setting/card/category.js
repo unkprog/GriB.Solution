@@ -40,6 +40,7 @@ define(["require", "exports", "app/common/variables", "app/controller/setting/ca
                             Load: $.proxy(this.Service.GetCategries, this.Service), Delete: $.proxy(this.Service.DelCategory, this.Service),
                             Columns: [
                                 { Header: vars._statres("label$name"), Field: "name" },
+                                { Header: vars._statres("label$group"), Field: "parentname" },
                             ]
                         };
                     };
