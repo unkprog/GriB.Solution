@@ -40,8 +40,15 @@ define(["require", "exports", "app/common/variables", "app/controller/setting/ca
                             Load: $.proxy(this.Service.GetProducts, this.Service), Delete: $.proxy(this.Service.DelProduct, this.Service),
                             Columns: [
                                 { Header: vars._statres("label$name"), Field: "name" },
+                                { Header: vars._statres("label$type"), Field: "typename" },
                             ]
                         };
+                    };
+                    Product.prototype.afterLoad = function () {
+                        var items = this.Model.get("cardModel");
+                        for (var i = 0, icount = items.length; i < icount; i++)
+                            items[i].typename = items[i].type === 0 ? vars._statres("label$product") : items[i].type === 1 ? vars._statres("label$production") : vars._statres("label$service");
+                        _super.prototype.afterLoad.call(this);
                     };
                     return Product;
                 }(card.Controller.Setting.Card.Card));

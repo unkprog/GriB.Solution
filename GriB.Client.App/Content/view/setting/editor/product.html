@@ -79,24 +79,27 @@
         </div>
     </div>
 
-    <div id="editor-view-product-tab-accounting"  class="padding-0001em">
+    <div id="editor-view-product-tab-accounting" class="padding-0001em">
         <div class="section editor-section">
             <h5 data-bind="text:labelAccountingParameters"></h5>
         </div>
 
         <div class="row row-inputs">
-            <div class="input-field col s9 m8 l3 xl3">
+            <div class="input-field col s12 m8 l6 xl6">
                 <select id="editor-view-product-unit" class="validate" data-bind="value:editModel.unit"></select>
                 <label for="editor-view-product-unit" data-bind="text:labelUnit"></label>
             </div>
-            <div class="input-field col s3 m4 l2 xl2">
+        </div>
+
+        <div class="row row-inputs">
+            <div class="input-field col s6 m4 l2 xl2">
                 <input id="editor-view-product-quantity" type="number" data-bind="value:editModel.quantity">
                 <label for="editor-view-product-quantity" data-bind="text:labelQuantity"></label>
             </div>
         </div>
 
         <div class="row row-inputs">
-            <div class="input-field col s12 m12 l5 xl5">
+            <div class="input-field col s12 m8 l6 xl6">
                 <select id="editor-view-product-currency" class="validate" data-bind="value:editModel.currency"></select>
                 <label for="editor-view-product-currency" data-bind="text:labelCurrency"></label>
             </div>

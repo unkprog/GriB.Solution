@@ -2,6 +2,7 @@
 using System.Data.SqlClient;
 using GriB.Common.Sql;
 using GriB.Client.App.Models.Editor;
+using System;
 
 namespace GriB.Client.App.Managers.Editors
 {
@@ -105,6 +106,81 @@ namespace GriB.Client.App.Managers.Editors
             foreach (var item in result.accesssalepoints)
                 query.Execute(cmdSetSalepointAcces, new SqlParameter[] { new SqlParameter("@id", product.id), new SqlParameter("@salepoint", item.salepoint.id), new SqlParameter("@isaccess", item.isaccess) }
                 , (values) => { });
+            return result;
+        }
+
+        private const string cmdGetAccount = @"Product\Account\[get]";
+        public static product GetProductAccount(this Query query, product product)
+        {
+            product result = product;
+            query.Execute(cmdGetAccount, new SqlParameter[] { new SqlParameter("@id", product.id), new SqlParameter("@vendorcode", string.Empty), new SqlParameter("@barcode", string.Empty) }
+            , (values) =>
+            {
+                product.vendorcode = (string)values[1];
+                product.barcode = (string)values[2];
+                product.unit = (int)values[3];
+                product.quantity = (double)values[4];
+                product.currency = (int)values[5];
+            });
+
+            return result;
+        }
+
+        private const string cmdSetAccount = @"Product\Account\[set]";
+        public static product SetProductAccount(this Query query, product product)
+        {
+            product result = product;
+            query.Execute(cmdSetAccount, new SqlParameter[] { new SqlParameter("@id", product.id), new SqlParameter("@vendorcode", product.vendorcode), new SqlParameter("@barcode", product.barcode)
+            , new SqlParameter("@unit", product.unit), new SqlParameter("@quantity", product.quantity), new SqlParameter("@currency", product.currency) }
+            , (values) => { });
+            return result;
+        }
+
+        private const string cmdGetCost = @"Product\Cost\[get]";
+        public static product GetProductCost(this Query query, product product)
+        {
+            product result = product;
+            query.Execute(cmdGetCost, new SqlParameter[] { new SqlParameter("@id", product.id) }
+            , (values) =>
+            {
+                product.costprices.Add(new price_item() { date = (DateTime)values[1], price = (double)values[2] });
+            });
+            if(product.costprices.Count > 0)
+            product.costprice = product.costprices[0].price;
+
+            return result;
+        }
+
+        private const string cmdSetCost = @"Product\Cost\[set]";
+        public static product SetProductCost(this Query query, product product)
+        {
+            product result = product;
+            query.Execute(cmdSetCost, new SqlParameter[] { new SqlParameter("@id", product.id), new SqlParameter("@price", product.costprice) }
+            , (values) => { });
+            return result;
+        }
+
+        private const string cmdGetSale = @"Product\Sale\[get]";
+        public static product GetProductSale(this Query query, product product)
+        {
+            product result = product;
+            query.Execute(cmdGetSale, new SqlParameter[] { new SqlParameter("@id", product.id) }
+            , (values) =>
+            {
+                product.sellingprices.Add(new price_item() { date = (DateTime)values[1], price = (double)values[2] });
+            });
+            if (product.sellingprices.Count > 0)
+                product.sellingprice = product.sellingprices[0].price;
+
+            return result;
+        }
+
+        private const string cmdSetSale = @"Product\Sale\[set]";
+        public static product SetProductSale(this Query query, product product)
+        {
+            product result = product;
+            query.Execute(cmdSetSale, new SqlParameter[] { new SqlParameter("@id", product.id), new SqlParameter("@price", product.sellingprice) }
+            , (values) => { });
             return result;
         }
     }

@@ -48,6 +48,13 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                     Organization.prototype.createEditorSettings = function () {
                         return { EditIdName: "id_currency", Load: undefined, Save: $.proxy(this.Service.SetOrganization, this.Service) };
                     };
+                    Organization.prototype.ViewInit = function (view) {
+                        view.find("#editor-view-organization-name").characterCounter();
+                        view.find("#editor-view-organization-website").characterCounter();
+                        view.find("#editor-view-organization-email").characterCounter();
+                        view.find("#editor-view-organization-phone").characterCounter();
+                        return _super.prototype.ViewInit.call(this, view);
+                    };
                     Organization.prototype.loadData = function () {
                         var controller = this;
                         this.Service.GetOrganization(function (responseData) {
@@ -62,6 +69,22 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                         var model = this.EditorModel;
                         if (utils.isNullOrEmpty(model.name)) {
                             M.toast({ html: vars._statres("msg$error$invalidCompanyName") });
+                            result = false;
+                        }
+                        else if (model.name.length > 238) {
+                            M.toast({ html: utils.stringFormat(vars._statres("msg$error$fieldexceedscharacters"), vars._statres("label$companyName"), 238) });
+                            result = false;
+                        }
+                        if (!utils.isNullOrEmpty(model.site) && model.site.length > 54) {
+                            M.toast({ html: utils.stringFormat(vars._statres("msg$error$fieldexceedscharacters"), vars._statres("label$website"), 54) });
+                            result = false;
+                        }
+                        if (!utils.isNullOrEmpty(model.email) && model.email.length > 54) {
+                            M.toast({ html: utils.stringFormat(vars._statres("msg$error$fieldexceedscharacters"), vars._statres("label$email"), 54) });
+                            result = false;
+                        }
+                        if (!utils.isNullOrEmpty(model.phone) && model.phone.length > 18) {
+                            M.toast({ html: utils.stringFormat(vars._statres("msg$error$fieldexceedscharacters"), vars._statres("label$phone"), 18) });
                             result = false;
                         }
                         return result;

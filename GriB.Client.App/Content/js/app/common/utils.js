@@ -33,5 +33,17 @@ define(["require", "exports"], function (require, exports) {
         return pattern.test(phone);
     }
     exports.validatePhone = validatePhone;
+    function stringFormat() {
+        var args1 = [];
+        for (var _i = 0; _i < arguments.length; _i++) {
+            args1[_i] = arguments[_i];
+        }
+        var args = Array.prototype.slice.call(arguments, 1);
+        return arguments[0].replace(/\{(\d+)\}/g, function (match, index) {
+            return args[index];
+        });
+    }
+    exports.stringFormat = stringFormat;
+    ;
 });
 //# sourceMappingURL=utils.js.map

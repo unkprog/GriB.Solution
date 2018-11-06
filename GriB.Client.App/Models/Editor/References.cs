@@ -111,6 +111,12 @@ namespace GriB.Client.App.Models.Editor
         public string parentname { get; set; }
     }
 
+    public class price_item
+    {
+        public DateTime date { get; set; }
+        public double price { get; set; }
+    }
+
     public class product : reference_hierarhy
     {
         public product()
@@ -119,15 +125,27 @@ namespace GriB.Client.App.Models.Editor
             description = string.Empty;
             vendorcode = string.Empty;
             barcode = string.Empty;
+            costprices = new List<price_item>();
+            sellingprices = new List<price_item>();
             accesssalepoints = new List<salepointaccess>();
         }
-        public int type { get; set; }
-        public int category { get; set; }
-        public string photo { get; set; }
-        public string description { get; set; }
-        public string vendorcode { get; set; }
-        public string barcode { get; set; }
-        public bool putonsale { get; set; }
+        public int    type         { get; set; }
+        public int    category     { get; set; }
+        public string photo        { get; set; }
+        public string description  { get; set; }
+        public string vendorcode   { get; set; }
+        public string barcode      { get; set; }
+        public bool   putonsale    { get; set; }
+
+        public int    unit         { get; set; }
+        public double quantity     { get; set; }
+        public int    currency     { get; set; }
+        public double costprice    { get; set; }
+        public double sellingprice { get; set; }
+
+        public List<price_item> costprices { get; set; }
+        public List<price_item> sellingprices { get; set; }
         public List<salepointaccess> accesssalepoints { get; set; }
     }
+
 }

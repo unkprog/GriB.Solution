@@ -44,18 +44,31 @@ export namespace Controller.Setting.Editor {
             if (utils.isNullOrEmpty(model.name)) {
                 M.toast({ html: vars._statres("msg$error$invalidname") });
                 result = false;
+            } else if (model.name.length > 60) {
+                M.toast({ html: utils.stringFormat(vars._statres("msg$error$fieldexceedscharacters"), vars._statres("label$name"), 60) });
+                result = false;
             }
+
+            if (!utils.isNullOrEmpty(model.name) && model.description.length > 3098) {
+                M.toast({ html: utils.stringFormat(vars._statres("msg$error$fieldexceedscharacters"), vars._statres("label$description"), 3098) });
+                result = false;
+            }
+
             return result;
         }
 
         private imgDialog: any;
+        private controlName: JQuery;
         private controlPhoto: JQuery;
         private categoryList: JQuery;
         public ViewInit(view: JQuery): boolean {
+            this.controlName = view.find("#editor-view-category-name"); 
             this.imgDialog = view.find("#editor-view-image-input");
             this.controlPhoto = view.find("#editor-view-category-photo");
             this.categoryList = view.find("#editor-view-category-list");
-            
+
+            this.controlName.characterCounter();
+
             let onUpolad = $.proxy(this.uploudImageClick, this);
 
             this.imgDialog.bind("change", onUpolad);
@@ -162,8 +175,9 @@ export namespace Controller.Setting.Editor {
             let model: Interfaces.Model.ICategory = this.EditorModel;
             let catg = $("#editor-view-category-list").val();
             model.pid = +catg; //(catg && catg.length > 0 ? +catg[0] : 0);
-
             return model;
         }
+
+       
     }
 }

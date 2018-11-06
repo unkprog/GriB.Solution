@@ -27,3 +27,10 @@ export function validatePhone(phone: string): boolean {
     var pattern = new RegExp(/^\+?1?\s*?\(?\d{3}(?:\)|[-|\s])?\s*?\d{3}[-|\s]?\d{4}$/);
     return pattern.test(phone);
 }
+
+export function stringFormat(...args1:any[]): string {
+    var args = Array.prototype.slice.call(arguments, 1);
+    return arguments[0].replace(/\{(\d+)\}/g, function (match, index) {
+        return args[index];
+    });
+};

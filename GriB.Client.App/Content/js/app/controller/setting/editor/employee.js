@@ -112,6 +112,13 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                         $("#employee-rigths-rows").html(html);
                         kendo.bind($("#employee-rigths-rows"), this.Model);
                     };
+                    Employee.prototype.ViewInit = function (view) {
+                        view.find("#login-pass").characterCounter();
+                        view.find("#employee-surname").characterCounter();
+                        view.find("#employee-name").characterCounter();
+                        view.find("#employee-patronymic").characterCounter();
+                        return _super.prototype.ViewInit.call(this, view);
+                    };
                     Employee.prototype.ViewResize = function (e) {
                         $('#editor-view-tabs').tabs();
                     };
@@ -124,6 +131,22 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                         }
                         if (utils.isNullOrEmpty(model.pass)) {
                             M.toast({ html: vars._statres('msg$error$invalidPassword') });
+                            result = false;
+                        }
+                        else if (model.pass.length > 50) {
+                            M.toast({ html: utils.stringFormat(vars._statres("msg$error$fieldexceedscharacters"), vars._statres("label$password"), 50) });
+                            result = false;
+                        }
+                        if (!utils.isNullOrEmpty(model.fname) && model.fname.length > 60) {
+                            M.toast({ html: utils.stringFormat(vars._statres("msg$error$fieldexceedscharacters"), vars._statres("label$surname"), 60) });
+                            result = false;
+                        }
+                        if (!utils.isNullOrEmpty(model.mname) && model.mname.length > 60) {
+                            M.toast({ html: utils.stringFormat(vars._statres("msg$error$fieldexceedscharacters"), vars._statres("label$fname"), 60) });
+                            result = false;
+                        }
+                        if (!utils.isNullOrEmpty(model.lname) && model.lname.length > 60) {
+                            M.toast({ html: utils.stringFormat(vars._statres("msg$error$fieldexceedscharacters"), vars._statres("label$patronymic"), 60) });
                             result = false;
                         }
                         var data = model.accesssalepoints;

@@ -60,12 +60,22 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                             M.toast({ html: vars._statres("msg$error$invalidname") });
                             result = false;
                         }
+                        else if (model.name.length > 60) {
+                            M.toast({ html: utils.stringFormat(vars._statres("msg$error$fieldexceedscharacters"), vars._statres("label$name"), 60) });
+                            result = false;
+                        }
+                        if (!utils.isNullOrEmpty(model.name) && model.description.length > 3098) {
+                            M.toast({ html: utils.stringFormat(vars._statres("msg$error$fieldexceedscharacters"), vars._statres("label$description"), 3098) });
+                            result = false;
+                        }
                         return result;
                     };
                     Category.prototype.ViewInit = function (view) {
+                        this.controlName = view.find("#editor-view-category-name");
                         this.imgDialog = view.find("#editor-view-image-input");
                         this.controlPhoto = view.find("#editor-view-category-photo");
                         this.categoryList = view.find("#editor-view-category-list");
+                        this.controlName.characterCounter();
                         var onUpolad = $.proxy(this.uploudImageClick, this);
                         this.imgDialog.bind("change", onUpolad);
                         return _super.prototype.ViewInit.call(this, view);

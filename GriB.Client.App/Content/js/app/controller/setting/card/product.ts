@@ -25,8 +25,16 @@ export namespace Controller.Setting.Card {
                 Load: $.proxy(this.Service.GetProducts, this.Service), Delete: $.proxy(this.Service.DelProduct, this.Service),
                 Columns: [
                     { Header: vars._statres("label$name"), Field: "name" },
+                    { Header: vars._statres("label$type"), Field: "typename" },
                 ]
             };
+        }
+
+        protected afterLoad(): void {
+            let items = this.Model.get("cardModel");
+            for (let i = 0, icount = items.length; i < icount; i++)
+                items[i].typename = items[i].type === 0 ? vars._statres("label$product") : items[i].type === 1 ? vars._statres("label$production") : vars._statres("label$service");
+            super.afterLoad();
         }
     }
 }

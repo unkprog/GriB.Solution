@@ -387,8 +387,11 @@ namespace GriB.Client.App.Controllers
             return TryCatchResponseQuery((query) =>
             {
                 product result = Product.GetProduct(query, id);
+                Product.GetProductAccount(query, result);
                 Product.GetProductDescription(query, result);
                 Product.GetProductSalepointAccess(query, result);
+                Product.GetProductCost(query, result);
+                Product.GetProductSale(query, result);
                 return Request.CreateResponse(HttpStatusCode.OK, new { record = result, categories = Category.GetCategories(query), units = Unit.GetUnits(query, Unit.typeUnit), currencies = Unit.GetUnits(query, Unit.typeCurrency) });
             });
         }
@@ -401,8 +404,11 @@ namespace GriB.Client.App.Controllers
             {
                 Principal principal = (Principal)HttpContext.Current.User;
                 product result = Product.SetProduct(query, product, principal.Data.User.id);
+                Product.SetProductAccount(query, product);
                 Product.SetProductDescription(query, product);
                 Product.SetProductSalepointAccess(query, product);
+                Product.SetProductCost(query, product);
+                Product.SetProductSale(query, product);
                 return Request.CreateResponse(HttpStatusCode.OK, "Ok");
             });
         }

@@ -202,10 +202,16 @@
     <Content Include="Scripts\Query\Organization\[del].sql" />
     <Content Include="Scripts\Query\Organization\[set].sql" />
     <Content Include="Scripts\Query\Organization\[get].sql" />
+    <Content Include="Scripts\Query\Product\Account\[get].sql" />
+    <Content Include="Scripts\Query\Product\Account\[set].sql" />
+    <Content Include="Scripts\Query\Product\Cost\[get].sql" />
+    <Content Include="Scripts\Query\Product\Cost\[set].sql" />
     <Content Include="Scripts\Query\Product\Description\[get].sql" />
     <Content Include="Scripts\Query\Product\Description\[set].sql" />
     <Content Include="Scripts\Query\Product\SalepointAccess\[get].sql" />
     <Content Include="Scripts\Query\Product\SalepointAccess\[set].sql" />
+    <Content Include="Scripts\Query\Product\Sale\[get].sql" />
+    <Content Include="Scripts\Query\Product\Sale\[set].sql" />
     <Content Include="Scripts\Query\Product\[del].sql" />
     <Content Include="Scripts\Query\Product\[get].sql" />
     <Content Include="Scripts\Query\Product\[set].sql" />
@@ -214,6 +220,8 @@
     <Content Include="Scripts\Query\Unit\[set].sql" />
     <Content Include="Scripts\Sql\01.001.[t_orgtype].sql" />
     <Content Include="Scripts\Sql\03.001.[t_employee].sql" />
+    <Content Include="Scripts\Sql\06.003.[t_product].sql" />
+    <Content Include="Scripts\Sql\06.002.[t_product].sql" />
     <Content Include="Scripts\Sql\06.001.[t_product].sql" />
     <Content Include="Scripts\Sql\05.001.[t_category].sql" />
     <Content Include="Scripts\Sql\04.001.[t_unit].sql" />

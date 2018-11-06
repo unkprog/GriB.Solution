@@ -35,6 +35,14 @@ export namespace Controller.Setting.Editor {
             return { EditIdName: "id_salepoint", Load: $.proxy(this.Service.GetSalePoint, this.Service), Save: $.proxy(this.Service.SetSalePoint, this.Service) };
         }
 
+        public ViewInit(view: JQuery): boolean {
+            view.find("#editor-view-salepoint-name").characterCounter();
+            view.find("#editor-view-salepoint-city").characterCounter();
+            view.find("#editor-view-salepoint-address").characterCounter();
+            view.find("#editor-view-salepoint-schedule").characterCounter();
+            return super.ViewInit(view);
+        }
+
         protected afterLoad(responseData?: any): void {
             super.afterLoad(responseData);
             this.setupListCompany(responseData);
@@ -69,13 +77,25 @@ export namespace Controller.Setting.Editor {
             if (utils.isNullOrEmpty(model.name)) {
                 M.toast({ html: vars._statres("msg$error$invalidSalePointName") });
                 result = false;
+            } else if (model.name.length > 238) {
+                M.toast({ html: utils.stringFormat(vars._statres("msg$error$fieldexceedscharacters"), vars._statres("label$salePointName"), 238) });
+                result = false;
             }
 
-            //if (utils.isNullOrEmpty(model.city)) {
-            //    M.toast({ html: vars._statres("msg$error$invalidCity") });
-            //    result = false;
-            //}
+            if (!utils.isNullOrEmpty(model.city) && model.city.length > 54) {
+                M.toast({ html: utils.stringFormat(vars._statres("msg$error$fieldexceedscharacters"), vars._statres("label$city"), 54) });
+                result = false;
+            }
 
+            if (!utils.isNullOrEmpty(model.address) && model.address.length > 54) {
+                M.toast({ html: utils.stringFormat(vars._statres("msg$error$fieldexceedscharacters"), vars._statres("label$address"), 54) });
+                result = false;
+            }
+
+            if (!utils.isNullOrEmpty(model.schedule) && model.schedule.length > 18) {
+                M.toast({ html: utils.stringFormat(vars._statres("msg$error$fieldexceedscharacters"), vars._statres("label$schedule"), 18) });
+                result = false;
+            }
 
             return result;
         }

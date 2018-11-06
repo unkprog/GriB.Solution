@@ -58,7 +58,17 @@ export namespace Controller.Setting.Editor {
             if (utils.isNullOrEmpty(model.name)) {
                 M.toast({ html: vars._statres("msg$error$invalidname") });
                 result = false;
+            } else if (model.name.length > 60) {
+                M.toast({ html: utils.stringFormat(vars._statres("msg$error$fieldexceedscharacters"), vars._statres("label$name"), 60) });
+                result = false;
             }
+
+
+            if (!utils.isNullOrEmpty(model.name) && model.description.length > 3098) {
+                M.toast({ html: utils.stringFormat(vars._statres("msg$error$fieldexceedscharacters"), vars._statres("label$description"), 3098) });
+                result = false;
+            }
+
             return result;
         }
 
