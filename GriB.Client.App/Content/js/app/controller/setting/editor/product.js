@@ -33,6 +33,7 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                             "Header": vars._statres("label$product"),
                             "editModel": {},
                             "labelSpecifications": vars._statres("label$specifications"),
+                            "labelComposition": vars._statres("label$composition"),
                             "labelAccessRight": vars._statres("label$accessright"),
                             "labelType": vars._statres("label$type"),
                             "labelProduct": vars._statres("label$product"),
@@ -135,10 +136,14 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                     Product.prototype.changeModel = function (e) {
                         if (e.field === "editModel.type") {
                             var model = this.EditorModel;
-                            if (+model.type === 1)
+                            if (+model.type === 1) {
                                 $("#editor-view-product-tab2").hide();
-                            else
+                                $("#editor-view-product-tab3").show();
+                            }
+                            else {
+                                $("#editor-view-product-tab3").hide();
                                 $("#editor-view-product-tab2").show();
+                            }
                         }
                     };
                     Product.prototype.ViewResize = function (e) {
@@ -155,6 +160,7 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                         this.setupListCategory(responseData);
                         this.setupListUnit(responseData);
                         this.setupListCurrencies(responseData);
+                        this.changeModel({ field: "editModel.type" });
                         this.setupTableAccess();
                     };
                     Product.prototype.setupListCategory = function (responseData) {

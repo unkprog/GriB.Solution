@@ -18,6 +18,7 @@ export namespace Controller.Setting.Editor {
                 "Header": vars._statres("label$product"),
                 "editModel": {},
                 "labelSpecifications": vars._statres("label$specifications"),
+                "labelComposition": vars._statres("label$composition"),
                 "labelAccessRight": vars._statres("label$accessright"),
                 "labelType": vars._statres("label$type"),
                 "labelProduct": vars._statres("label$product"),
@@ -41,8 +42,6 @@ export namespace Controller.Setting.Editor {
                 "labelCostPrice": vars._statres("label$costprice"),
                 "labelSellingPrice": vars._statres("label$sellingprice"),
             });
-
-           
 
             return oo;
         }
@@ -143,10 +142,14 @@ export namespace Controller.Setting.Editor {
         private changeModel(e: any): void {
             if (e.field === "editModel.type") {
                 let model: Interfaces.Model.IProduct = this.EditorModel;
-                if (+model.type === 1)
+                if (+model.type === 1) {
                     $("#editor-view-product-tab2").hide();
-                else
+                    $("#editor-view-product-tab3").show();
+                }
+                else {
+                    $("#editor-view-product-tab3").hide();
                     $("#editor-view-product-tab2").show();
+                }
             }
         }
 
@@ -165,6 +168,7 @@ export namespace Controller.Setting.Editor {
             this.setupListCategory(responseData);
             this.setupListUnit(responseData);
             this.setupListCurrencies(responseData);
+            this.changeModel({ field: "editModel.type" });
             this.setupTableAccess();
         }
 
