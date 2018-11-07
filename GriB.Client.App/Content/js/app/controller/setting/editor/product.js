@@ -29,7 +29,7 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                         return { Url: "/Content/view/setting/editor/product.html", Id: "editor-view-product" };
                     };
                     Product.prototype.createModel = function () {
-                        return new kendo.data.ObservableObject({
+                        var oo = new kendo.data.ObservableObject({
                             "Header": vars._statres("label$product"),
                             "editModel": {},
                             "labelSpecifications": vars._statres("label$specifications"),
@@ -56,6 +56,7 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                             "labelCostPrice": vars._statres("label$costprice"),
                             "labelSellingPrice": vars._statres("label$sellingprice"),
                         });
+                        return oo;
                     };
                     Object.defineProperty(Product.prototype, "EditorModel", {
                         get: function () {
@@ -78,8 +79,28 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                             M.toast({ html: utils.stringFormat(vars._statres("msg$error$fieldexceedscharacters"), vars._statres("label$name"), 60) });
                             result = false;
                         }
+                        if (!utils.isNullOrEmpty(model.vendorcode) && model.vendorcode.length > 61) {
+                            M.toast({ html: utils.stringFormat(vars._statres("msg$error$fieldexceedscharacters"), vars._statres("label$vendorcode"), 61) });
+                            result = false;
+                        }
+                        if (!utils.isNullOrEmpty(model.barcode) && model.barcode.length > 61) {
+                            M.toast({ html: utils.stringFormat(vars._statres("msg$error$fieldexceedscharacters"), vars._statres("label$barcode"), 61) });
+                            result = false;
+                        }
                         if (!utils.isNullOrEmpty(model.name) && model.description.length > 3098) {
                             M.toast({ html: utils.stringFormat(vars._statres("msg$error$fieldexceedscharacters"), vars._statres("label$description"), 3098) });
+                            result = false;
+                        }
+                        var data = model.accesssalepoints;
+                        var isaccess = false;
+                        for (var i = 0, icount = (data && data.length ? data.length : 0); i < icount; i++) {
+                            if (data[i].isaccess === true) {
+                                isaccess = true;
+                                break;
+                            }
+                        }
+                        if (isaccess === false) {
+                            M.toast({ html: vars._statres('msg$error$noaccessspecified') });
                             result = false;
                         }
                         return result;
@@ -96,16 +117,29 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                         this.imgDialog.bind("change", onUpolad);
                         view.find("#editor-view-product-name").characterCounter();
                         view.find("#editor-view-product-description").characterCounter();
+                        view.find("#editor-view-product-vendorcode").characterCounter();
+                        view.find("#editor-view-product-barcode").characterCounter();
                         return _super.prototype.ViewInit.call(this, view);
                     };
                     Product.prototype.createEvents = function () {
                         _super.prototype.createEvents.call(this);
                         this.AddPhotoButtonClick = this.createClickEvent("editor-view-product-addphoto", this.addPhotoButtonClick);
+                        this.Model.bind("change", $.proxy(this.changeModel, this));
                     };
                     Product.prototype.destroyEvents = function () {
+                        this.Model.unbind("change");
                         this.destroyClickEvent("editor-view-product-addphoto", this.AddPhotoButtonClick);
                         this.imgDialog.unbind();
                         _super.prototype.destroyEvents.call(this);
+                    };
+                    Product.prototype.changeModel = function (e) {
+                        if (e.field === "editModel.type") {
+                            var model = this.EditorModel;
+                            if (+model.type === 1)
+                                $("#editor-view-product-tab2").hide();
+                            else
+                                $("#editor-view-product-tab2").show();
+                        }
                     };
                     Product.prototype.ViewResize = function (e) {
                         _super.prototype.ViewResize.call(this, e);

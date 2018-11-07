@@ -88,6 +88,7 @@
     }
 
     export interface IProduct extends IReferenceHierarhyModel, IEditorModel, IEditorSalePointAccess {
+        type: number;
         photo: string;
         description: string;
         categoryname: string;

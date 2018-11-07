@@ -152,10 +152,10 @@ namespace GriB.Client.App.Managers.Editors
         }
 
         private const string cmdSetCost = @"Product\Cost\[set]";
-        public static product SetProductCost(this Query query, product product)
+        public static product SetProductCost(this Query query, product product, int user)
         {
             product result = product;
-            query.Execute(cmdSetCost, new SqlParameter[] { new SqlParameter("@id", product.id), new SqlParameter("@price", product.costprice) }
+            query.Execute(cmdSetCost, new SqlParameter[] { new SqlParameter("@id", product.id), new SqlParameter("@u", user), new SqlParameter("@price", product.costprice) }
             , (values) => { });
             return result;
         }
@@ -176,10 +176,10 @@ namespace GriB.Client.App.Managers.Editors
         }
 
         private const string cmdSetSale = @"Product\Sale\[set]";
-        public static product SetProductSale(this Query query, product product)
+        public static product SetProductSale(this Query query, product product, int user)
         {
             product result = product;
-            query.Execute(cmdSetSale, new SqlParameter[] { new SqlParameter("@id", product.id), new SqlParameter("@price", product.sellingprice) }
+            query.Execute(cmdSetSale, new SqlParameter[] { new SqlParameter("@id", product.id), new SqlParameter("@u", user), new SqlParameter("@price", product.sellingprice) }
             , (values) => { });
             return result;
         }

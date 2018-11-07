@@ -2,7 +2,7 @@
     <div class="row row-inputs">
         <ul id="editor-view-product-tabs" class="tabs">
             <li class="tab col s6 m6 l4 xl4" id="editor-view-product-tab1"><a class="active" href="#editor-view-tab-product" data-bind="text:labelProduct"></a></li>
-            <li class="tab col s6 m6 l4 xl4"><a href="#editor-view-product-tab-accounting" data-bind="text:labelAccounting"></a></li>
+            <li class="tab col s6 m6 l4 xl4" id="editor-view-product-tab2"><a href="#editor-view-product-tab-accounting" data-bind="text:labelAccounting"></a></li>
             <li class="tab col s6 m6 l4 xl4"><a href="#editor-view-product-tab-accessright" data-bind="text:labelAccessRight"></a></li>
         </ul>
     </div>
@@ -36,11 +36,11 @@
         </div>
         <div class="row row-inputs">
             <div class="input-field col s12 m6 l4 xl3">
-                <input id="editor-view-product-vendorcode" type="text" data-length="18" data-bind="value:editModel.vendorcode">
+                <input id="editor-view-product-vendorcode" type="text" data-length="61" data-bind="value:editModel.vendorcode">
                 <label for="editor-view-product-vendorcode" data-bind="text:labelVendorCode"></label>
             </div>
             <div class="input-field col s12 m6 l4 xl3">
-                <input id="editor-view-product-barcode" type="text" data-length="18" data-bind="value:editModel.barcode">
+                <input id="editor-view-product-barcode" type="text" data-length="61" data-bind="value:editModel.barcode">
                 <label for="editor-view-product-barcode" data-bind="text:labelBarCode"></label>
             </div>
         </div>

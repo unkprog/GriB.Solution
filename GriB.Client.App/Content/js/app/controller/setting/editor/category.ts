@@ -14,7 +14,7 @@ export namespace Controller.Setting.Editor {
         }
 
         protected createModel(): kendo.data.ObservableObject {
-            return new kendo.data.ObservableObject({
+            let oo: kendo.data.ObservableObject = new kendo.data.ObservableObject({
                 "Header": vars._statres("label$category"),
                 "editModel": {},
                 "labelAccessRight": vars._statres("label$accessright"),
@@ -27,6 +27,7 @@ export namespace Controller.Setting.Editor {
                 "labelSalePoint": vars._statres("label$salePoint"),
                 "labelAccess": vars._statres("label$access"),
             });
+            return oo;
         }
 
         public get EditorModel(): Interfaces.Model.ICategory {
@@ -68,6 +69,7 @@ export namespace Controller.Setting.Editor {
             this.categoryList = view.find("#editor-view-category-list");
 
             this.controlName.characterCounter();
+            view.find("#editor-view-category-description").characterCounter();
 
             let onUpolad = $.proxy(this.uploudImageClick, this);
 

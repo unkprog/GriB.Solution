@@ -29,7 +29,7 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                         return { Url: "/Content/view/setting/editor/category.html", Id: "editor-view-category" };
                     };
                     Category.prototype.createModel = function () {
-                        return new kendo.data.ObservableObject({
+                        var oo = new kendo.data.ObservableObject({
                             "Header": vars._statres("label$category"),
                             "editModel": {},
                             "labelAccessRight": vars._statres("label$accessright"),
@@ -42,6 +42,7 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                             "labelSalePoint": vars._statres("label$salePoint"),
                             "labelAccess": vars._statres("label$access"),
                         });
+                        return oo;
                     };
                     Object.defineProperty(Category.prototype, "EditorModel", {
                         get: function () {
@@ -76,6 +77,7 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                         this.controlPhoto = view.find("#editor-view-category-photo");
                         this.categoryList = view.find("#editor-view-category-list");
                         this.controlName.characterCounter();
+                        view.find("#editor-view-category-description").characterCounter();
                         var onUpolad = $.proxy(this.uploudImageClick, this);
                         this.imgDialog.bind("change", onUpolad);
                         return _super.prototype.ViewInit.call(this, view);

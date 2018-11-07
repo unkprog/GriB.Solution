@@ -1,14 +1,12 @@
-﻿declare @curDate datetime
-set @curDate = cast(cast(getdate() as date) as datetime)
-if exists(select [id] from [t_product_saleprice] with(nolock) where [id]=@id and [date]=@curDate)
+﻿declare @_price float, @_date datetime
+set @_date = getdate()
+
+select top 1 @_price = [price] from [t_product_saleprice] with(nolock) where [id]=@id and [date] <= @_date
+
+if isnull(@_price, 0) <> @price
 begin
-  update [t_product_saleprice] 
-  set [price] = @price
-  where [id] = @id and [date] = @curDate
-end
-else begin
-  insert into [t_product_saleprice]([id], [date], [price])
-  select @id, @curDate, @price
+  insert into [t_product_saleprice]([id], [uu], [date], [price])
+  select @id, @u, @_date, @price
 end
 
 select @id

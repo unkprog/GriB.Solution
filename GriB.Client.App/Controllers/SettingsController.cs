@@ -407,8 +407,8 @@ namespace GriB.Client.App.Controllers
                 Product.SetProductAccount(query, product);
                 Product.SetProductDescription(query, product);
                 Product.SetProductSalepointAccess(query, product);
-                Product.SetProductCost(query, product);
-                Product.SetProductSale(query, product);
+                Product.SetProductCost(query, product, principal.Data.User.id);
+                Product.SetProductSale(query, product, principal.Data.User.id);
                 return Request.CreateResponse(HttpStatusCode.OK, "Ok");
             });
         }

@@ -6,7 +6,8 @@ begin
   create table [t_product_costprice]
   (
     [id]    [int]      not null,
-	[date]  [datetime] not null default (cast(cast(getdate() as date) as datetime)),
+	[uu]    [int]      not null,
+	[date]  [datetime] not null default (getdate()),
 	[price] [float]    not null default (0),
     primary key clustered ([id], [date])
   )
@@ -19,7 +20,8 @@ begin
   create table [t_product_saleprice]
   (
     [id]    [int]      not null,
-	[date]  [datetime] not null default (cast(cast(getdate() as date) as datetime)),
+	[uu]    [int]      not null,
+	[date]  [datetime] not null default (getdate()),
 	[price] [float]    not null default (0),
     primary key clustered ([id], [date])
   )

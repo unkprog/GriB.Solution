@@ -14,7 +14,7 @@ export namespace Controller.Setting.Editor {
         }
 
         protected createModel(): kendo.data.ObservableObject {
-            return new kendo.data.ObservableObject({
+            let oo: kendo.data.ObservableObject = new kendo.data.ObservableObject({
                 "Header": vars._statres("label$product"),
                 "editModel": {},
                 "labelSpecifications": vars._statres("label$specifications"),
@@ -41,6 +41,10 @@ export namespace Controller.Setting.Editor {
                 "labelCostPrice": vars._statres("label$costprice"),
                 "labelSellingPrice": vars._statres("label$sellingprice"),
             });
+
+           
+
+            return oo;
         }
 
         public get EditorModel(): Interfaces.Model.IProduct {
@@ -63,9 +67,32 @@ export namespace Controller.Setting.Editor {
                 result = false;
             }
 
+            if (!utils.isNullOrEmpty(model.vendorcode) && model.vendorcode.length > 61) {
+                M.toast({ html: utils.stringFormat(vars._statres("msg$error$fieldexceedscharacters"), vars._statres("label$vendorcode"), 61) });
+                result = false;
+            }
+
+            if (!utils.isNullOrEmpty(model.barcode) && model.barcode.length > 61) {
+                M.toast({ html: utils.stringFormat(vars._statres("msg$error$fieldexceedscharacters"), vars._statres("label$barcode"), 61) });
+                result = false;
+            }
 
             if (!utils.isNullOrEmpty(model.name) && model.description.length > 3098) {
                 M.toast({ html: utils.stringFormat(vars._statres("msg$error$fieldexceedscharacters"), vars._statres("label$description"), 3098) });
+                result = false;
+            }
+
+            let data: Interfaces.Model.ISalePointAccessModel[] = model.accesssalepoints;
+            let isaccess: boolean = false
+            for (let i = 0, icount = (data && data.length ? data.length : 0); i < icount; i++) {
+                if (data[i].isaccess === true) {
+                    isaccess = true;
+                    break;
+                }
+            }
+
+            if (isaccess === false) {
+                M.toast({ html: vars._statres('msg$error$noaccessspecified') });
                 result = false;
             }
 
@@ -93,18 +120,34 @@ export namespace Controller.Setting.Editor {
 
             view.find("#editor-view-product-name").characterCounter();
             view.find("#editor-view-product-description").characterCounter();
+            view.find("#editor-view-product-vendorcode").characterCounter();
+            view.find("#editor-view-product-barcode").characterCounter();
             return super.ViewInit(view);
         }
 
         protected createEvents(): void {
             super.createEvents();
             this.AddPhotoButtonClick = this.createClickEvent("editor-view-product-addphoto", this.addPhotoButtonClick);
+            this.Model.bind("change", $.proxy(this.changeModel, this));
         }
 
         protected destroyEvents(): void {
+            this.Model.unbind("change");
             this.destroyClickEvent("editor-view-product-addphoto", this.AddPhotoButtonClick);
             this.imgDialog.unbind();
             super.destroyEvents();
+
+        }
+
+      
+        private changeModel(e: any): void {
+            if (e.field === "editModel.type") {
+                let model: Interfaces.Model.IProduct = this.EditorModel;
+                if (+model.type === 1)
+                    $("#editor-view-product-tab2").hide();
+                else
+                    $("#editor-view-product-tab2").show();
+            }
         }
 
         public ViewResize(e: any): void {
