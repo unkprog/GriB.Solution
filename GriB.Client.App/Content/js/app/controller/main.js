@@ -29,7 +29,7 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
             Main.prototype.createModel = function () {
                 return new kendo.data.ObservableObject({
                     "Header": "",
-                    "userName": "Администратор",
+                    "employee": {},
                     "userDesc": "jdandturk@gmail.com",
                     "labelPOSterminal": vars._statres("label$POSterminal"),
                     "labelSettings": vars._statres("label$settings"),
@@ -47,6 +47,7 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
             };
             Main.prototype.ViewInit = function (view) {
                 variables_1._app.SetControlNavigation(this);
+                this.Model.set("employee", vars._identity.employee);
                 this.menu = $('<li><a id="app-btn-menu"><i class="material-icons">menu</i></a></li>');
                 this.sideNav = view.find('.sidenav');
                 this.sideNav.sidenav();
@@ -54,7 +55,7 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
                 this.buttonMenu = this.menu.find("#app-btn-menu");
                 this.content = view.find("#main-view-content");
                 _super.prototype.ViewInit.call(this, view);
-                this.MenuSettingsButtonClick({});
+                this.navigateOnStart();
                 return false;
             };
             Main.prototype.ViewHide = function (e) {
@@ -77,6 +78,14 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
                 this.destroyClickEvent("main-view-btn-reports", this.MenuReportsButtonClick);
                 this.destroyClickEvent("main-view-btn-about", this.MenuAboutButtonClick);
                 this.destroyClickEvent("main-view-btn-exit", this.MenuExitButtonClick);
+            };
+            Main.prototype.navigateOnStart = function () {
+                if (vars._identity.employee.openonlogin === 1)
+                    this.MenuSettingsButtonClick({});
+                else if (vars._identity.employee.openonlogin === 2)
+                    this.MenuReportsButtonClick({});
+                else
+                    this.MenuPOSTerminalButtonClick({});
             };
             Main.prototype.openMenuButtonClick = function (e) {
                 this.sideNav.sidenav('open');

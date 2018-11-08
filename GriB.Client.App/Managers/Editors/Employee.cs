@@ -42,7 +42,6 @@ namespace GriB.Client.App.Managers.Editors
             return result;
         }
 
-
         private const string cmdSet = @"Employee\[set]";
         public static employee SetEmployee(this Query query, employee empl)
         {

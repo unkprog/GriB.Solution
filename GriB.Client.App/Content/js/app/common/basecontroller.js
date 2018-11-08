@@ -400,7 +400,7 @@ define(["require", "exports", "app/common/utils", "app/common/variables", "./var
                 this.inputSearch = this.navSearch.find('card-view-search');
                 navbarHeader = '<div class="row row-table">';
                 navbarHeader += '    <div class="col s12 m12 l12 xl12 col-table">';
-                navbarHeader += '        <table class="highlight z-depth-1">';
+                navbarHeader += '        <table class="highlight">';
                 navbarHeader += '            <thead></thead>';
                 navbarHeader += '            <tbody></tbody>';
                 navbarHeader += '        </table>';
@@ -525,10 +525,10 @@ define(["require", "exports", "app/common/utils", "app/common/variables", "./var
             };
             BaseCard.prototype.rowClick = function (e) {
                 if (this.selectedRow)
-                    this.selectedRow.removeClass("row-active z-depth-1 grey lighten-5");
+                    this.selectedRow.removeClass("row-active z-depth-1 brown lighten-5");
                 this.selectedRow = $(e.currentTarget);
                 if (this.selectedRow)
-                    this.selectedRow.addClass("row-active z-depth-1 grey lighten-5");
+                    this.selectedRow.addClass("row-active z-depth-1 brown lighten-5");
             };
             BaseCard.prototype.editButtonClick = function (e) {
                 if (this.selectedRow) {

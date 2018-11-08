@@ -437,7 +437,7 @@ export namespace Controller {
 
             navbarHeader  = '<div class="row row-table">';
             navbarHeader += '    <div class="col s12 m12 l12 xl12 col-table">';
-            navbarHeader += '        <table class="highlight z-depth-1">';
+            navbarHeader += '        <table class="highlight">';
             navbarHeader += '            <thead></thead>';
             navbarHeader += '            <tbody></tbody>';
             navbarHeader += '        </table>';
@@ -587,10 +587,10 @@ export namespace Controller {
         private selectedRow: JQuery;
         private rowClick(e): void {
             if (this.selectedRow)
-                this.selectedRow.removeClass("row-active z-depth-1 grey lighten-5");
+                this.selectedRow.removeClass("row-active z-depth-1 brown lighten-5");
             this.selectedRow = $(e.currentTarget);
             if (this.selectedRow)
-                this.selectedRow.addClass("row-active z-depth-1 grey lighten-5");
+                this.selectedRow.addClass("row-active z-depth-1 brown lighten-5");
         }
 
 

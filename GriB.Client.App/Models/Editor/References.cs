@@ -1,4 +1,5 @@
 ﻿using GriB.Common.Models.pos;
+using GriB.Common.Models.Security;
 using System;
 using System.Collections.Generic;
 
@@ -57,6 +58,19 @@ namespace GriB.Client.App.Models.Editor
         {
             accesssalepoints = new List<salepointaccess>();
             isfullaccess = isaccess = (empl?.pid == 0);
+        }
+
+        public employee(PrincipalData data) : base()
+        {
+            id = data.User.id;
+            phone = data.User.phone;
+            sex = data.Person.sex;
+            birth = data.Person.birth;
+            fname = data.Person.fname;
+            mname = data.Person.mname;
+            lname = data.Person.lname;
+            email = data.Person.email;
+            accesssalepoints = new List<salepointaccess>();
         }
     }
 

@@ -18,7 +18,7 @@ export namespace Controller {
         protected createModel(): kendo.data.ObservableObject {
             return new kendo.data.ObservableObject({
                 "Header": "",
-                "userName": "Администратор",
+                "employee": {},
                 "userDesc": "jdandturk@gmail.com",
                 "labelPOSterminal": vars._statres("label$POSterminal"),
                 "labelSettings":vars._statres("label$settings"),
@@ -43,6 +43,7 @@ export namespace Controller {
         private buttonMenu: JQuery;
         public ViewInit(view: JQuery): boolean {
             _app.SetControlNavigation(this);
+            this.Model.set("employee", vars._identity.employee);
             this.menu = $('<li><a id="app-btn-menu"><i class="material-icons">menu</i></a></li>');
             this.sideNav = view.find('.sidenav');
             this.sideNav.sidenav();
@@ -50,7 +51,7 @@ export namespace Controller {
             this.buttonMenu = this.menu.find("#app-btn-menu");
             this.content = view.find("#main-view-content");
             super.ViewInit(view);
-            this.MenuSettingsButtonClick({});
+            this.navigateOnStart();
             return false;
         }
 
@@ -79,6 +80,15 @@ export namespace Controller {
             this.destroyClickEvent("main-view-btn-reports", this.MenuReportsButtonClick);
             this.destroyClickEvent("main-view-btn-about", this.MenuAboutButtonClick);
             this.destroyClickEvent("main-view-btn-exit", this.MenuExitButtonClick);
+        }
+
+        private navigateOnStart() {
+            if (vars._identity.employee.openonlogin === 1)
+                this.MenuSettingsButtonClick({});
+            else if (vars._identity.employee.openonlogin === 2)
+                this.MenuReportsButtonClick({});
+            else
+                this.MenuPOSTerminalButtonClick({});
         }
 
         public OpenMenuButtonClick: { (e: any): void; };

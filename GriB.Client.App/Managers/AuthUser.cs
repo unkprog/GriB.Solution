@@ -1,4 +1,5 @@
-﻿using GriB.Common.Models.Security;
+﻿using GriB.Client.App.Handlers;
+using GriB.Common.Models.Security;
 using System.Collections.Generic;
 
 namespace GriB.Client.App.Managers
@@ -13,7 +14,10 @@ namespace GriB.Client.App.Managers
             if (!authorizedList.ContainsKey(key))
                 authorizedList.Add(key, principal);
             else
+            {
                 authorizedList[key] = principal;
+                AuthorizationHeaderHandler.SetPrincipal(principal);
+            }
         }
 
         public static void LogOut(string key)

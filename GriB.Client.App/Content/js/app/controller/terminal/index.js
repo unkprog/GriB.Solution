@@ -28,10 +28,24 @@ define(["require", "exports", "app/common/basecontroller"], function (require, e
                 };
                 Index.prototype.createModel = function () {
                     return new kendo.data.ObservableObject({
-                        "Header": "POS Cloud",
+                        "Header": " ",
                     });
                 };
                 Index.prototype.ViewInit = function (view) {
+                    var navbarHeader = '<div class="navbar-fixed editor-header z-depth-1">';
+                    navbarHeader += '        <nav class="editor-header-nav">';
+                    navbarHeader += '            <div class="nav-wrapper editor-header">';
+                    navbarHeader += '                <a class="editor-header-title">' + this.Header + '</a>';
+                    navbarHeader += '                <ul id="pos-menu-buttons" class="left"></ul>';
+                    navbarHeader += '            </div>';
+                    navbarHeader += '        </nav>';
+                    navbarHeader += '    </div>';
+                    this.navHeader = $(navbarHeader);
+                    this.btnSave = $('<li><a id="pos-btn-cash" class="editor-header-button"><i class="material-icons editor-header">account_balance_wallet</i></a></li>');
+                    this.btnCancel = $('<li><a id="pos-btn-salepoint" class="editor-header-button"><i class="material-icons editor-header">account_balance</i></a></li>');
+                    this.navHeader.find("#pos-menu-buttons").append(this.btnSave);
+                    this.navHeader.find("#pos-menu-buttons").append(this.btnCancel);
+                    view.prepend(this.navHeader);
                     return _super.prototype.ViewInit.call(this, view);
                 };
                 Index.prototype.ViewHide = function (e) {

@@ -44,7 +44,7 @@ namespace GriB.Client.App.Handlers
         /// Set principal method.   
         /// </summary>   
         /// <param name="principal">Principal parameter</param>   
-        private static void SetPrincipal(Principal principal)
+        public static void SetPrincipal(Principal principal)
         {
             // setting.   
             Thread.CurrentPrincipal = principal;

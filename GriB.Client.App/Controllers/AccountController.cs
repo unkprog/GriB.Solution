@@ -9,11 +9,14 @@ using GriB.Common.Web.Http;
 using GriB.Common.Models.Security;
 using GriB.Common.Sql;
 using System.Web.Hosting;
+using GriB.Client.App.Models.Editor;
+using GriB.Client.App.Managers.Editors;
+using GriB.Client.App.Handlers;
 
 namespace GriB.Client.App.Controllers
 {
     [AllowAnonymous]
-    public class AccountController : BaseApiController
+    public class AccountController : BaseController
     {
         [HttpPost]
         [ActionName("register")]
@@ -48,7 +51,14 @@ namespace GriB.Client.App.Controllers
                         //// TODO: Добавить проверку Expires!!!
                         Principal principal = new Principal(principalData);
                         AuthUser.LogIn(principal);
-                        return Request.CreateResponse(HttpStatusCode.OK, new { result = "Ok", indetity = new { auth = true, token = principal.GetKey() } });
+                        AuthorizationHeaderHandler.SetPrincipal(principal);
+                        employee empl = new employee(principal.Data);
+                        return TryCatchResponseQuery((query) =>
+                        {
+                            empl = Employee.GetEmployee(query, empl);
+                            empl = Employee.GetEmployeeSalepointAccess(query, empl);
+                            return Request.CreateResponse(HttpStatusCode.OK, new { result = "Ok", indetity = new { auth = true, token = principal.GetKey(), employee = new Models.Editor.employeecard(empl) } });
+                        });
                     });
         });
 

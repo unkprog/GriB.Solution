@@ -28,6 +28,7 @@
     export interface IIdentity extends IBaseModel {
         auth: boolean;
         token: string;
+        employee: IEmployeeModel;
     }
 
     export interface IEditorModel extends IBaseModel {
