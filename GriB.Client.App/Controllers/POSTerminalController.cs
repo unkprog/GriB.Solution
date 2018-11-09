@@ -17,8 +17,10 @@ namespace GriB.Client.App.Controllers
                 Principal principal = (Principal)HttpContext.Current.User;
 
             // principal.Data.User.id
-            return Request.CreateResponse(HttpStatusCode.OK, "Ok");// {;//new { record = new company() { id = org.id, name = org.name, site = org.info?.site, email = org.info?.email, phone = org.info?.phone } });
+            return Request.CreateResponse(HttpStatusCode.OK, new {employee = AccountController.AccountData(query, principal) });
             });
         }
+
+        
     }
 }

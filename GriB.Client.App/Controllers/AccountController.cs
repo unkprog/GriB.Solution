@@ -12,6 +12,7 @@ using System.Web.Hosting;
 using GriB.Client.App.Models.Editor;
 using GriB.Client.App.Managers.Editors;
 using GriB.Client.App.Handlers;
+using System.Web;
 
 namespace GriB.Client.App.Controllers
 {
@@ -52,15 +53,21 @@ namespace GriB.Client.App.Controllers
                         Principal principal = new Principal(principalData);
                         AuthUser.LogIn(principal);
                         AuthorizationHeaderHandler.SetPrincipal(principal);
-                        employee empl = new employee(principal.Data);
                         return TryCatchResponseQuery((query) =>
                         {
-                            empl = Employee.GetEmployee(query, empl);
-                            empl = Employee.GetEmployeeSalepointAccess(query, empl);
-                            return Request.CreateResponse(HttpStatusCode.OK, new { result = "Ok", indetity = new { auth = true, token = principal.GetKey(), employee = new Models.Editor.employeecard(empl) } });
+                            return Request.CreateResponse(HttpStatusCode.OK, new { result = "Ok", indetity = new { auth = true, token = principal.GetKey(), employee = AccountData(query, principal) } });
                         });
                     });
         });
+
+     
+        internal static employeecard AccountData(Query query, Principal principal)
+        {
+            employee empl = new employee(principal.Data);
+            empl = Employee.GetEmployee(query, empl);
+            empl = Employee.GetEmployeeSalepointAccess(query, empl);
+            return new employeecard(empl);
+        }
 
         [HttpPost]
         [ActionName("recovery")]

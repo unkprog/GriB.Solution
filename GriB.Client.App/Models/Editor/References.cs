@@ -56,7 +56,18 @@ namespace GriB.Client.App.Models.Editor
 
         public employee(Common.Models.pos.settings.employee empl) : base(empl)
         {
-            accesssalepoints = new List<salepointaccess>();
+            if (empl is employee)
+            {
+                employee _empl = (employee)empl;
+                isfullaccess = _empl.isfullaccess;
+                isaccess = _empl.isaccess;
+                openonlogin = _empl.openonlogin;
+                defaultsalepoint = _empl.defaultsalepoint;
+                accesssalepoints = new List<salepointaccess>(_empl.accesssalepoints);
+            }
+            else
+                accesssalepoints = new List<salepointaccess>();
+
             isfullaccess = isaccess = (empl?.pid == 0);
         }
 

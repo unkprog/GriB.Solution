@@ -6,6 +6,8 @@
     datepicker(methodName?: any, paramName?: any): JQuery;
     tablePagination(options: any): JQuery;
     characterCounter(): JQuery;
+    dropdown(methodName?: any, paramName?: any): JQuery;
+    recalculateDimensions(): JQuery;
 }
 
 
@@ -25,8 +27,12 @@ declare namespace M {
     export namespace FormSelect {
         function init(elems: any, options?: any): JQuery;
     }
+
     export namespace Tabs {
-        function getInstance(elems: any):any;
+        function getInstance(elems: any): any;
         function updateTabIndicator(): JQuery;
+    }
+    export namespace Dropdown {
+        function getInstance(elems: any): any;
     }
 }
