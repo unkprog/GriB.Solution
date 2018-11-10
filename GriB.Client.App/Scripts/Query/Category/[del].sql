@@ -1,7 +1,3 @@
-﻿delete [t_category_salepointaccess] where [id] = @id
-
-delete [t_category_description] where [id] = @id
-
-delete [t_category] where [id] = @id
+﻿update [t_category] set [d] = [id], [uu]=@u, [ud] = getdate() where [id] = @id
 
 

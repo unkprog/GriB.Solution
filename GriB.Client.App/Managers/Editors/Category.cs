@@ -76,9 +76,9 @@ namespace GriB.Client.App.Managers.Editors
         }
 
         private const string cmdDel = @"Category\[del]";
-        public static void DelCategory(this Query query, int id)
+        public static void DelCategory(this Query query, int id, int user)
         {
-            query.Execute(cmdDel, new SqlParameter[] { new SqlParameter("@id", id) }
+            query.Execute(cmdDel, new SqlParameter[] { new SqlParameter("@id", id), new SqlParameter("@u", user) }
             , (values) => { });
         }
 

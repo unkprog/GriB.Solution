@@ -130,7 +130,7 @@ namespace GriB.Client.App.Controllers
         {
             return TryCatchResponseQuery((query) =>
             {
-                Organization.DelOrganization(query, id);
+                Organization.DelOrganization(query, id, ((Principal)HttpContext.Current.User).Data.User.id);
                 return Request.CreateResponse(HttpStatusCode.OK, "Ok");
             });
         }
@@ -268,7 +268,7 @@ namespace GriB.Client.App.Controllers
         {
             return TryCatchResponseQuery((query) =>
             {
-                Unit.DelUnit(query, id);
+                Unit.DelUnit(query, id, ((Principal)HttpContext.Current.User).Data.User.id);
                 return Request.CreateResponse(HttpStatusCode.OK, "Ok");
             });
         }
@@ -313,7 +313,7 @@ namespace GriB.Client.App.Controllers
         {
             return TryCatchResponseQuery((query) =>
             {
-                Unit.DelUnit(query, id);
+                Unit.DelUnit(query, id, ((Principal)HttpContext.Current.User).Data.User.id);
                 return Request.CreateResponse(HttpStatusCode.OK, "Ok");
             });
         }
@@ -363,7 +363,7 @@ namespace GriB.Client.App.Controllers
         {
             return TryCatchResponseQuery((query) =>
             {
-                Category.DelCategory(query, id);
+                Category.DelCategory(query, id, ((Principal)HttpContext.Current.User).Data.User.id);
                 return Request.CreateResponse(HttpStatusCode.OK, "Ok");
             });
         }
@@ -392,6 +392,7 @@ namespace GriB.Client.App.Controllers
                 Product.GetProductSalepointAccess(query, result);
                 Product.GetProductCost(query, result);
                 Product.GetProductSale(query, result);
+                Product.GetProductComposition(query, result);
                 return Request.CreateResponse(HttpStatusCode.OK, new { record = result, categories = Category.GetCategories(query), units = Unit.GetUnits(query, Unit.typeUnit), currencies = Unit.GetUnits(query, Unit.typeCurrency) });
             });
         }
@@ -409,6 +410,8 @@ namespace GriB.Client.App.Controllers
                 Product.SetProductSalepointAccess(query, product);
                 Product.SetProductCost(query, product, principal.Data.User.id);
                 Product.SetProductSale(query, product, principal.Data.User.id);
+                Product.SetProductComposition(query, product);
+                Product.DelProductComposition(query, product);
                 return Request.CreateResponse(HttpStatusCode.OK, "Ok");
             });
         }
@@ -419,7 +422,7 @@ namespace GriB.Client.App.Controllers
         {
             return TryCatchResponseQuery((query) =>
             {
-                Product.DelProduct(query, id);
+                Product.DelProduct(query, id, ((Principal)HttpContext.Current.User).Data.User.id);
                 return Request.CreateResponse(HttpStatusCode.OK, "Ok");
             });
         }

@@ -25,9 +25,6 @@ define(["require", "exports", "app/common/variables", "app/controller/setting/ca
                     function Unit() {
                         return _super.call(this) || this;
                     }
-                    Unit.prototype.createOptions = function () {
-                        return { Url: "/Content/view/setting/card/unit.html", Id: "card-view-unit" };
-                    };
                     Unit.prototype.createModel = function () {
                         return new kendo.data.ObservableObject({
                             "Header": vars._statres("label$units"),
@@ -36,7 +33,8 @@ define(["require", "exports", "app/common/variables", "app/controller/setting/ca
                     };
                     Unit.prototype.createCardSettings = function () {
                         return {
-                            FieldId: "id", ValueIdNew: -1, EditIdName: "id_unit", EditController: "setting/editor/unit",
+                            FieldId: "id", FieldSearch: "code", ValueIdNew: -1, EditIdName: "id_unit", EditController: "setting/editor/unit",
+                            IsAdd: true, IsEdit: true, IsDelete: true, IsSelect: false,
                             Load: $.proxy(this.Service.GetUnits, this.Service), Delete: $.proxy(this.Service.DelUnit, this.Service),
                             Columns: [
                                 { Header: vars._statres("label$code"), Field: "code" },

@@ -157,6 +157,45 @@ td, th {
     padding: 0.5em 0.5em;
 }
 
+thead {
+    background-color: #efebe9;
+}
+
+td, th {
+    padding: 0.5em 0.5em;
+}
+
+.table {
+    display: table;
+    width: 100%;
+}
+
+.table-row {
+    display: table-row;
+    width: 100%;
+}
+
+.col-auto {
+    -webkit-box-flex: 0;
+    -ms-flex: 0 0 auto;
+    flex: 0 0 auto;
+    width: auto;
+    max-width: none;
+}
+
+.col-md-auto {
+    position: relative;
+    width: 100%;
+    min-height: 1px;
+    padding-right: 15px;
+    padding-left: 15px;
+}
+
+.table-cell-input {
+    width: 50px;
+    text-align: right;
+}
+
 .row-table {
     padding: 0.2em;
     margin: 0;

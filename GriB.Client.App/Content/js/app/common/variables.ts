@@ -64,6 +64,7 @@ _controllers["setting/card/currency"] = function (module: any): Interfaces.ICont
 _controllers["setting/card/unit"] = function (module: any): Interfaces.IController { return new module.Controller.Setting.Card.Unit(); };
 _controllers["setting/card/category"] = function (module: any): Interfaces.IController { return new module.Controller.Setting.Card.Category(); };
 _controllers["setting/card/product"] = function (module: any): Interfaces.IController { return new module.Controller.Setting.Card.Product(); };
+_controllers["setting/card/productselect"] = function (module: any): Interfaces.IController { return new module.Controller.Setting.Card.ProductSelect(); };
 
 
 export declare let _editorData: any;

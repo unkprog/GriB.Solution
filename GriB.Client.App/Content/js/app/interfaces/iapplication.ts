@@ -14,5 +14,7 @@
         ShowMessage(header: string, message: string, onClose?: () => void): void;
 
         Identity: Interfaces.Model.IIdentity;
+
+        OpenViewTemplate(controller: Interfaces.IController, template: string, backController?: Interfaces.IController, isRestore?: boolean);
     }
 }

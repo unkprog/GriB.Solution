@@ -25,9 +25,6 @@ define(["require", "exports", "app/common/variables", "app/controller/setting/ca
                     function Product() {
                         return _super.call(this) || this;
                     }
-                    Product.prototype.createOptions = function () {
-                        return { Url: "/Content/view/setting/card/product.html", Id: "card-view-product" };
-                    };
                     Product.prototype.createModel = function () {
                         return new kendo.data.ObservableObject({
                             "Header": vars._statres("label$products"),
@@ -36,7 +33,8 @@ define(["require", "exports", "app/common/variables", "app/controller/setting/ca
                     };
                     Product.prototype.createCardSettings = function () {
                         return {
-                            FieldId: "id", ValueIdNew: -1, EditIdName: "id_product", EditController: "setting/editor/product",
+                            FieldId: "id", FieldSearch: "name", ValueIdNew: -1, EditIdName: "id_product", EditController: "setting/editor/product",
+                            IsAdd: true, IsEdit: true, IsDelete: true, IsSelect: false,
                             Load: $.proxy(this.Service.GetProducts, this.Service), Delete: $.proxy(this.Service.DelProduct, this.Service),
                             Columns: [
                                 { Header: vars._statres("label$name"), Field: "name" },

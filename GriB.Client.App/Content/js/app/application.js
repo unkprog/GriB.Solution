@@ -103,13 +103,15 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
                 else
                     this._controllerNavigation.RestoreController();
             };
-            Application.prototype.OpenController = function (urlController, backController) {
+            Application.prototype.OpenController = function (urlController, backController, onLoadController) {
                 var self = this;
                 var ctrlCreate = vars._controllers[urlController];
                 if (ctrlCreate) {
                     var url = "/Content/js/app/controller/" + urlController + ".js";
                     require([url], function (module) {
                         var controller = ctrlCreate(module);
+                        if (onLoadController)
+                            onLoadController(controller);
                         self.OpenView(controller, backController);
                     });
                 }
@@ -122,7 +124,6 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
                     this._model.set("AppHeader", "POS Cloud");
             };
             Application.prototype.OpenView = function (controller, backController, isRestore) {
-                var _this = this;
                 if (isRestore === void 0) { isRestore = false; }
                 var self = this;
                 if (self._controllerNavigation !== self) {
@@ -133,27 +134,32 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
                     return; //Already loaded and current
                 self.ShowLoading();
                 $.when($.ajax({ url: controller.Options.Url, cache: false })).done(function (template) {
-                    var isInit = false;
-                    try {
-                        if (self._controller)
-                            self._controller.ViewHide(_this);
-                        self._controller = controller;
-                        if (!isRestore)
-                            self._controllersStack.Push(backController);
-                        self.SetHeader(self._controller);
-                        var view = $(template);
-                        isInit = self._controller.ViewInit(view);
-                        self.contentControl.html(view[0]);
-                        isInit = isInit && self._controller.ViewShow(_this);
-                        //self._controller.ViewResize(this);
-                    }
-                    finally {
-                        if (isInit)
-                            self.HideLoading();
-                    }
+                    self.OpenViewTemplate(controller, template, backController, isRestore);
                 }).fail(function (e) {
                     self.HideLoading();
                 });
+            };
+            Application.prototype.OpenViewTemplate = function (controller, template, backController, isRestore) {
+                if (isRestore === void 0) { isRestore = false; }
+                var self = this;
+                var isInit = false;
+                try {
+                    if (self._controller)
+                        self._controller.ViewHide(this);
+                    self._controller = controller;
+                    if (!isRestore)
+                        self._controllersStack.Push(backController);
+                    self.SetHeader(self._controller);
+                    var view = $(template);
+                    isInit = self._controller.ViewInit(view);
+                    self.contentControl.html(view[0]);
+                    isInit = isInit && self._controller.ViewShow(this);
+                    //self._controller.ViewResize(this);
+                }
+                finally {
+                    if (isInit)
+                        self.HideLoading();
+                }
             };
             Application.prototype.login = function () {
                 this.OpenController("security/login");

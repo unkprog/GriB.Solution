@@ -379,25 +379,32 @@ define(["require", "exports", "app/common/utils", "app/common/variables", "./var
                 navbarHeader += '        </nav>';
                 navbarHeader += '    </div>';
                 this.navHeader = $(navbarHeader);
-                this.btnEdit = $('<li><a id="card-btn-edit" class="editor-header-button"><i class="material-icons editor-header">edit</i></a></li>');
-                this.btnAdd = $('<li><a id="card-btn-add" class="editor-header-button"><i class="material-icons editor-header">add</i></a></li>');
-                this.btnDelete = $('<li><a id="card-btn-delete" class="editor-header-button"><i class="material-icons editor-header">remove</i></a></li>');
+                if (this.CardSettings.IsEdit)
+                    this.btnEdit = $('<li><a id="card-btn-edit" class="editor-header-button"><i class="material-icons editor-header">edit</i></a></li>');
+                if (this.CardSettings.IsAdd)
+                    this.btnAdd = $('<li><a id="card-btn-add" class="editor-header-button"><i class="material-icons editor-header">add</i></a></li>');
+                if (this.CardSettings.IsDelete)
+                    this.btnDelete = $('<li><a id="card-btn-delete" class="editor-header-button"><i class="material-icons editor-header">remove</i></a></li>');
+                if (this.CardSettings.IsSelect)
+                    this.btnSelect = $('<li><a id="editor-btn-select" class="editor-header-button"><i class="material-icons editor-header">done</i></a></li>');
                 this.btnClose = $('<li><a id="card-btn-close" class="editor-header-button"><i class="material-icons editor-header">close</i></a></li>');
                 var cardButtons = this.navHeader.find("#cardButtons");
-                cardButtons.append(this.btnEdit).append(this.btnAdd).append(this.btnDelete).append(this.btnClose);
+                cardButtons.append(this.btnEdit).append(this.btnAdd).append(this.btnDelete).append(this.btnSelect).append(this.btnClose);
                 navbarHeader = '<nav class="card-search-nav editor-header z-depth-1">';
                 navbarHeader += '   <div class="nav-wrapper">';
                 navbarHeader += '       <form>';
                 navbarHeader += '           <div class="input-field">';
-                navbarHeader += '               <input id="card-view-search" type="search" required>';
+                navbarHeader += '               <input id="card-view-search" type="search" required value="">';
                 navbarHeader += '               <label class="label-icon" for="search"><i class="material-icons editor-header">search</i></label>';
-                navbarHeader += '               <i class="material-icons editor-header">close</i>';
+                navbarHeader += '               <i id="card-view-search-clear" class="material-icons editor-header">close</i>';
                 navbarHeader += '           </div>';
                 navbarHeader += '       </form>';
                 navbarHeader += '   </div>';
                 navbarHeader += '</nav>';
                 this.navSearch = $(navbarHeader);
-                this.inputSearch = this.navSearch.find('card-view-search');
+                this.formSearch = this.navSearch.find('form');
+                this.inputSearch = this.formSearch.find('#card-view-search');
+                this.clearSearch = this.formSearch.find('#card-view-search-clear');
                 navbarHeader = '<div class="row row-table">';
                 navbarHeader += '    <div class="col s12 m12 l12 xl12 col-table">';
                 navbarHeader += '        <table class="highlight">';
@@ -430,22 +437,31 @@ define(["require", "exports", "app/common/utils", "app/common/variables", "./var
                     this.btnDelete.remove();
                 if (this.btnClose)
                     this.btnClose.remove();
+                if (this.btnSelect)
+                    this.btnSelect.remove();
             };
             BaseCard.prototype.createEvents = function () {
                 this.EditButtonClick = this.createClickEvent(this.btnEdit, this.editButtonClick);
                 this.AddButtonClick = this.createClickEvent(this.btnAdd, this.addButtonClick);
                 this.DeleteButtonClick = this.createClickEvent(this.btnDelete, this.deleteButtonClick);
                 this.CloseButtonClick = this.createClickEvent(this.btnClose, this.closeButtonClick);
+                this.SelectButtonClick = this.createClickEvent(this.btnSelect, this.selectButtonClick);
+                this.ClearButtonClick = this.createClickEvent(this.clearSearch, this.clearButtonClick);
+                this.proxySearch = $.proxy(this.search, this);
+                this.formSearch.on('submit', this.proxySearch);
             };
             BaseCard.prototype.destroyEvents = function () {
+                this.formSearch.off('submit', this.proxySearch);
+                this.destroyClickEvent(this.clearSearch, this.ClearButtonClick);
                 this.destroyClickEvent(this.rows, this.rowClick);
+                this.destroyClickEvent(this.btnSelect, this.SelectButtonClick);
                 this.destroyClickEvent(this.btnEdit, this.EditButtonClick);
                 this.destroyClickEvent(this.btnAdd, this.AddButtonClick);
                 this.destroyClickEvent(this.btnDelete, this.DeleteButtonClick);
                 this.destroyClickEvent(this.btnClose, this.CloseButtonClick);
             };
             BaseCard.prototype.createCardSettings = function () {
-                return { FieldId: "", ValueIdNew: 0, EditIdName: "", EditController: "", Load: undefined, Delete: undefined, Columns: [] };
+                return { FieldId: "", FieldSearch: "", ValueIdNew: 0, EditIdName: "", IsAdd: false, IsEdit: false, IsDelete: false, IsSelect: false, EditController: "", Load: undefined, Delete: undefined, Columns: [] };
             };
             BaseCard.prototype.setupTable = function () {
                 this.tableHead.html(this.getTableHeaderHtml());
@@ -454,11 +470,17 @@ define(["require", "exports", "app/common/utils", "app/common/variables", "./var
                 this.createClickEvent(this.rows, this.rowClick);
             };
             BaseCard.prototype.setupRows = function () {
+                this.selectedRow = null;
                 if (this.rows)
                     this.destroyClickEvent(this.rows, this.rowClick);
                 this.tableBody.html(this.getTableBodyHtml());
                 this.rows = this.tableBody.find('tr');
                 this.createClickEvent(this.rows, this.rowClick);
+            };
+            BaseCard.prototype.search = function (e) {
+                e.preventDefault();
+                this.setupRows();
+                return false;
             };
             BaseCard.prototype.getTableHeaderHtml = function () {
                 var columns = this.CardSettings.Columns;
@@ -509,16 +531,32 @@ define(["require", "exports", "app/common/utils", "app/common/variables", "./var
                 html += '</tr>';
                 return html;
             };
+            BaseCard.prototype.getItemsForView = function () {
+                var result = [];
+                var data = this.Model.get("cardModel");
+                var strSearch = this.inputSearch.val(); // ($("#card-view-search").val() as string);
+                var fieldSearch = this.CardSettings.FieldSearch;
+                var isNotSearch = (utils.isNullOrEmpty(fieldSearch) || utils.isNullOrEmpty(strSearch));
+                if (!isNotSearch)
+                    strSearch = strSearch.toLowerCase();
+                for (var i = 0, icount = (data && data.length ? data.length : 0); i < icount; i++) {
+                    if (isNotSearch) {
+                        result.push(data[i]);
+                    }
+                    else if (data[i][fieldSearch].toLowerCase().indexOf(strSearch) > -1) {
+                        result.push(data[i]);
+                    }
+                }
+                return result;
+            };
             BaseCard.prototype.getTableBodyHtml = function () {
                 var html = '';
-                var data = this.Model.get("cardModel");
+                var data = this.getItemsForView();
                 if (data && data.length > 0) {
-                    var item = void 0;
                     if (!this.templateRow)
                         this.templateRow = kendo.template(this.getTableRowTemplate());
                     for (var i = 0, icount = (data && data.length ? data.length : 0); i < icount; i++) {
-                        item = data[i];
-                        html += this.templateRow(item);
+                        html += this.templateRow(data[i]);
                     }
                 }
                 return html;
@@ -546,9 +584,19 @@ define(["require", "exports", "app/common/utils", "app/common/variables", "./var
             BaseCard.prototype.deleteButtonClick = function (e) {
                 this.Delete();
             };
+            BaseCard.prototype.selectButtonClick = function (e) {
+                if (this.OnSelect)
+                    this.OnSelect(this);
+                this.Close();
+                variables_1._main.ControllerBack(e);
+            };
             BaseCard.prototype.closeButtonClick = function (e) {
                 this.Close();
                 variables_1._main.ControllerBack(e);
+            };
+            BaseCard.prototype.clearButtonClick = function (e) {
+                this.inputSearch.val("");
+                this.setupRows();
             };
             BaseCard.prototype.loadData = function () {
                 var controller = this;

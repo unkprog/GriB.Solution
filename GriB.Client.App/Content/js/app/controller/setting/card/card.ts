@@ -1,6 +1,5 @@
 ﻿import base = require('app/common/basecontroller');
 import svc = require('app/services/settingsservice');
-import { _app } from 'app/common/variables';
 
 export namespace Controller.Setting.Card {
     export class Card extends base.Controller.BaseCard {
@@ -13,6 +12,10 @@ export namespace Controller.Setting.Card {
             if (!this.settingService)
                 this.settingService = new svc.Services.SettingsService();
             return this.settingService;
+        }
+
+        protected createOptions(): Interfaces.IControllerOptions {
+            return { Url: "/Content/view/setting/card/card.html", Id: "card-view" };
         }
     }
 }

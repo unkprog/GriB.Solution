@@ -164,6 +164,7 @@
     <Content Include="Content\view\security\register.html" />
     <Content Include="Content\view\security\login.html" />
     <Content Include="Content\view\app.html" />
+    <Content Include="Content\view\setting\card\card.html" />
     <Content Include="Content\view\setting\card\product.html" />
     <Content Include="Content\view\setting\card\category.html" />
     <Content Include="Content\view\setting\card\unit.html" />
@@ -204,6 +205,9 @@
     <Content Include="Scripts\Query\Organization\[get].sql" />
     <Content Include="Scripts\Query\Product\Account\[get].sql" />
     <Content Include="Scripts\Query\Product\Account\[set].sql" />
+    <Content Include="Scripts\Query\Product\Composition\[get].sql" />
+    <Content Include="Scripts\Query\Product\Composition\[del].sql" />
+    <Content Include="Scripts\Query\Product\Composition\[set].sql" />
     <Content Include="Scripts\Query\Product\Cost\[get].sql" />
     <Content Include="Scripts\Query\Product\Cost\[set].sql" />
     <Content Include="Scripts\Query\Product\Description\[get].sql" />
@@ -220,8 +224,9 @@
     <Content Include="Scripts\Query\Unit\[set].sql" />
     <Content Include="Scripts\Sql\01.001.[t_orgtype].sql" />
     <Content Include="Scripts\Sql\03.001.[t_employee].sql" />
-    <Content Include="Scripts\Sql\06.003.[t_product].sql" />
-    <Content Include="Scripts\Sql\06.002.[t_product].sql" />
+    <Content Include="Scripts\Sql\06.004.[t_product_composition].sql" />
+    <Content Include="Scripts\Sql\06.003.[t_product_price].sql" />
+    <Content Include="Scripts\Sql\06.002.[t_product_account].sql" />
     <Content Include="Scripts\Sql\06.001.[t_product].sql" />
     <Content Include="Scripts\Sql\05.001.[t_category].sql" />
     <Content Include="Scripts\Sql\04.001.[t_unit].sql" />
@@ -247,7 +252,12 @@
     <Compile Include="Managers\Editors\Category.cs" />
     <Compile Include="Managers\Editors\Unit.cs" />
     <Compile Include="Managers\Editors\Organization.cs" />
+    <Compile Include="Models\Editor\Category.cs" />
+    <Compile Include="Models\Editor\Employee.cs" />
+    <Compile Include="Models\Editor\Organization.cs" />
+    <Compile Include="Models\Editor\Product.cs" />
     <Compile Include="Models\Editor\References.cs" />
+    <Compile Include="Models\Editor\Unit.cs" />
     <Compile Include="Models\t_org.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

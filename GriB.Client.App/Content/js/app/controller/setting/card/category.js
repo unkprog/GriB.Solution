@@ -25,9 +25,6 @@ define(["require", "exports", "app/common/variables", "app/controller/setting/ca
                     function Category() {
                         return _super.call(this) || this;
                     }
-                    Category.prototype.createOptions = function () {
-                        return { Url: "/Content/view/setting/card/category.html", Id: "card-view-category" };
-                    };
                     Category.prototype.createModel = function () {
                         return new kendo.data.ObservableObject({
                             "Header": vars._statres("label$categories"),
@@ -36,7 +33,8 @@ define(["require", "exports", "app/common/variables", "app/controller/setting/ca
                     };
                     Category.prototype.createCardSettings = function () {
                         return {
-                            FieldId: "id", ValueIdNew: -1, EditIdName: "id_category", EditController: "setting/editor/category",
+                            FieldId: "id", FieldSearch: "name", ValueIdNew: -1, EditIdName: "id_category", EditController: "setting/editor/category",
+                            IsAdd: true, IsEdit: true, IsDelete: true, IsSelect: false,
                             Load: $.proxy(this.Service.GetCategries, this.Service), Delete: $.proxy(this.Service.DelCategory, this.Service),
                             Columns: [
                                 { Header: vars._statres("label$name"), Field: "name" },

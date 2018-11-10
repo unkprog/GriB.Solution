@@ -127,13 +127,15 @@ export module App {
                 this._controllerNavigation.RestoreController();
         }
 
-        public OpenController(urlController: string, backController?: Interfaces.IController) {
+        public OpenController(urlController: string, backController?: Interfaces.IController, onLoadController?: (controller: Interfaces.IController) => void) {
             var self = this;
             let ctrlCreate: any = vars._controllers[urlController]
             if (ctrlCreate) {
                 let url: string = "/Content/js/app/controller/" + urlController + ".js";
                 require([url], function (module) {
                     let controller: Interfaces.IController = ctrlCreate(module);
+                    if (onLoadController)
+                        onLoadController(controller);
                     self.OpenView(controller, backController);
                 });
             }
@@ -160,30 +162,35 @@ export module App {
             self.ShowLoading();
 
             $.when($.ajax({ url: controller.Options.Url, cache: false })).done((template) => {
-                let isInit: boolean = false;
-                try {
-                    if (self._controller)
-                        self._controller.ViewHide(this);
-
-                    self._controller = controller;
-                    if (!isRestore)
-                        self._controllersStack.Push(backController);
-
-                    self.SetHeader(self._controller);
-
-                    let view = $(template);
-                    isInit = self._controller.ViewInit(view);
-                    self.contentControl.html(view[0]);
-                    isInit = isInit && self._controller.ViewShow(this);
-
-                    //self._controller.ViewResize(this);
-                } finally {
-                    if (isInit)
-                        self.HideLoading();
-                }
+                self.OpenViewTemplate(controller, template, backController, isRestore);
             }).fail((e) => {
                 self.HideLoading();
             });
+        }
+
+        public OpenViewTemplate(controller: Interfaces.IController, template: any, backController?: Interfaces.IController, isRestore: boolean = false) {
+            let self = this;
+            let isInit: boolean = false;
+            try {
+                if (self._controller)
+                    self._controller.ViewHide(this);
+
+                self._controller = controller;
+                if (!isRestore)
+                    self._controllersStack.Push(backController);
+
+                self.SetHeader(self._controller);
+
+                let view:any = $(template);
+                isInit = self._controller.ViewInit(view);
+                self.contentControl.html(view[0]);
+                isInit = isInit && self._controller.ViewShow(this);
+
+                //self._controller.ViewResize(this);
+            } finally {
+                if (isInit)
+                    self.HideLoading();
+            }
         }
 
         private login(): void {

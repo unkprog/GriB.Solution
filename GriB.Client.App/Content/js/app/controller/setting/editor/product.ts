@@ -2,6 +2,7 @@
 import utils = require('app/common/utils');
 import edit = require('app/controller/setting/editor/editor');
 import { _app } from 'app/common/variables';
+import { App } from '../../../application';
 
 export namespace Controller.Setting.Editor {
     export class Product extends edit.Controller.Setting.Editor.Editor {
@@ -41,6 +42,9 @@ export namespace Controller.Setting.Editor {
                 "labelCurrency": vars._statres("label$currency"),
                 "labelCostPrice": vars._statres("label$costprice"),
                 "labelSellingPrice": vars._statres("label$sellingprice"),
+                "labelQuantityShort": vars._statres("label$quantityshort"),
+                "labelUnitShort": vars._statres("label$unitshort"),
+                "labelAdd": vars._statres("button$label$add")
             });
 
             return oo;
@@ -105,6 +109,7 @@ export namespace Controller.Setting.Editor {
         private currencyList: JQuery;
         private unitList: JQuery;
         private rightRows: JQuery;
+        private btnAddComposition: JQuery;
         public ViewInit(view: JQuery): boolean {
             this.imgDialog = view.find("#editor-view-image-input");
             this.controlPhoto = view.find("#editor-view-product-photo");
@@ -113,26 +118,36 @@ export namespace Controller.Setting.Editor {
             this.currencyList = view.find("#editor-view-product-currency");
             this.rightRows = view.find("#product-rigths-rows");
             this.controlType = view.find('#editor-view-product-type');
-            let onUpolad = $.proxy(this.uploudImageClick, this);
+            this.btnAddComposition = view.find("#btn-add-composition");
 
-            this.imgDialog.bind("change", onUpolad);
 
             view.find("#editor-view-product-name").characterCounter();
             view.find("#editor-view-product-description").characterCounter();
             view.find("#editor-view-product-vendorcode").characterCounter();
             view.find("#editor-view-product-barcode").characterCounter();
-            return super.ViewInit(view);
+            let result = super.ViewInit(view);
+
+            let tabs: JQuery = view.find("#editor-view-product-tabs");
+            tabs.remove();
+            view.find(".editor-header-nav").append(tabs);
+            return result;
         }
 
         protected createEvents(): void {
             super.createEvents();
+
+            let onUpolad = $.proxy(this.uploudImageClick, this);
+            this.imgDialog.bind("change", onUpolad);
+
             this.AddPhotoButtonClick = this.createClickEvent("editor-view-product-addphoto", this.addPhotoButtonClick);
+            this.AddCompositionButtonClick = this.createClickEvent(this.btnAddComposition, this.addCompositionButtonClick);
             this.Model.bind("change", $.proxy(this.changeModel, this));
         }
 
         protected destroyEvents(): void {
             this.Model.unbind("change");
             this.destroyClickEvent("editor-view-product-addphoto", this.AddPhotoButtonClick);
+            this.destroyClickEvent(this.btnAddComposition, this.addCompositionButtonClick);
             this.imgDialog.unbind();
             super.destroyEvents();
 
@@ -143,18 +158,17 @@ export namespace Controller.Setting.Editor {
             if (e.field === "editModel.type") {
                 let model: Interfaces.Model.IProduct = this.EditorModel;
                 if (+model.type === 1) {
-                    $("#editor-view-product-tab2").hide();
-                    $("#editor-view-product-tab3").show();
+                    $("#editor-view-product-composition").show();
                 }
                 else {
-                    $("#editor-view-product-tab3").hide();
-                    $("#editor-view-product-tab2").show();
+                    $("#editor-view-product-composition").hide();
                 }
             }
         }
 
         public ViewResize(e: any): void {
             super.ViewResize(e);
+           
             $('#editor-view-product-tabs').tabs();
             M.textareaAutoResize($("#editor-view-product-description"));
             this.controlType.formSelect();
@@ -252,6 +266,26 @@ export namespace Controller.Setting.Editor {
         private uploudImageClick(e) {
             this.UploadImage(this.imgDialog[0].files);
         }
+
+        public AddCompositionButtonClick: { (e: any): void; };
+        private addCompositionButtonClick(e) {
+            let self = this;
+            _app.OpenController('setting/card/product', this, (controller: Interfaces.IController) => {
+                let ctrlProduct: Interfaces.IControllerCard = controller as Interfaces.IControllerCard;
+                ctrlProduct.CardSettings.IsAdd = false;
+                ctrlProduct.CardSettings.IsEdit = false;
+                ctrlProduct.CardSettings.IsDelete = false;
+                ctrlProduct.CardSettings.IsSelect = true;
+                ctrlProduct.OnSelect = $.proxy(self.selectComposition, self);
+            });
+            //require(["/Content/js/app/controller/setting/card/product.js"], function (module) {
+            
+        }
+
+        private selectComposition(controller: Interfaces.IControllerCard) {
+            //controller.
+        }
+
 
         public UploadImage(files: any) {
             let controller = this;

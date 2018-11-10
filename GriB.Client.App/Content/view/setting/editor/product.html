@@ -1,9 +1,8 @@
 ﻿<div id="editor-view-product">
     <div class="row row-inputs">
-        <ul id="editor-view-product-tabs" class="tabs">
+        <ul id="editor-view-product-tabs" class="tabs tabs-fixed-width">
             <li class="tab col s6 m6 l4 xl4" id="editor-view-product-tab1"><a class="active" href="#editor-view-tab-product" data-bind="text:labelProduct"></a></li>
             <li class="tab col s6 m6 l4 xl4" id="editor-view-product-tab2"><a href="#editor-view-product-tab-accounting" data-bind="text:labelAccounting"></a></li>
-            <li class="tab col s6 m6 l4 xl4" id="editor-view-product-tab3"><a href="#editor-view-product-tab-composition" data-bind="text:labelComposition"></a></li>
             <li class="tab col s6 m6 l4 xl4" id="editor-view-product-tab4"><a href="#editor-view-product-tab-accessright" data-bind="text:labelAccessRight"></a></li>
         </ul>
     </div>
@@ -117,13 +116,49 @@
             </div>
         </div>
 
+        <div id="editor-view-product-composition">
+            <div class="section editor-section">
+                <h5 data-bind="text:labelComposition"></h5> 
+            </div>
+
+            <table class="table">
+                <thead class="table-row">
+                    <tr>
+                        <th class="col-md-auto" data-bind="text:labelName"></th>
+                        <th class="col-md-auto right-align" data-bind="text:labelQuantityShort" style="padding-right: 0;"></th>
+                        <th class="col-md-auto" data-bind="text:labelUnitShort"></th>
+                        <th class="col-md-auto"></th>
+                    </tr>
+                </thead>
+
+                <tbody class="table-row">
+                    <tr class="table-row">
+                        <td class="col-md-auto">Alvin</td>
+                        <td class="col-md-auto right-align"><input class="table-cell-input" type="number" value="0.87" /></td>
+                        <td class="col-md-auto">кг</td>
+                        <td class="col-md-auto"><a class="editor-header-button"><i class="material-icons editor-header">close</i></a></td>
+                    </tr>
+                    <tr class="table-row">
+                        <td class="col-md-auto">Alan</td>
+                        <td class="col-md-auto right-align"><input class="table-cell-input" type="number" value="3.76" /></td>
+                        <td class="col-md-auto">кг</td>
+                        <td class="col-md-auto"><a class="editor-header-button"><i class="material-icons editor-header">close</i></a></td>
+                    </tr>
+                    <tr class="table-row">
+                        <td class="col-md-auto">Jonathan</td>
+                        <td class="col-md-auto right-align"><input class="table-cell-input" type="number" value="7.00" /></td>
+                        <td class="col-md-auto">кг</td>
+                        <td class="col-md-auto"><a class="editor-header-button"><i class="material-icons editor-header">close</i></a></td>
+                    </tr>
+                    <tr class="table-row" >
+                        <td class="col-md-auto" colspan="4"><a id="btn-add-composition" class="btn btncol"><span data-bind="text:labelAdd"></span></a></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 
 
-
-    <div id="editor-view-product-tab-composition" class="padding-0001em">
-
-    </div>
 
 
     <div id="editor-view-product-tab-accessright">

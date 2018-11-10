@@ -391,10 +391,13 @@ export namespace Controller {
         private btnAdd: JQuery;
         private btnDelete: JQuery;
         private btnEdit: JQuery;
+        private btnSelect: JQuery;
         private btnClose: JQuery;
 
         private navSearch: JQuery;
+        private formSearch: JQuery;
         private inputSearch: JQuery;
+        private clearSearch: JQuery;
 
         private tableRow: JQuery;
         private tableHead: JQuery;
@@ -413,27 +416,32 @@ export namespace Controller {
 
             this.navHeader = $(navbarHeader);
 
-            this.btnEdit = $('<li><a id="card-btn-edit" class="editor-header-button"><i class="material-icons editor-header">edit</i></a></li>');
-            this.btnAdd = $('<li><a id="card-btn-add" class="editor-header-button"><i class="material-icons editor-header">add</i></a></li>');
-            this.btnDelete = $('<li><a id="card-btn-delete" class="editor-header-button"><i class="material-icons editor-header">remove</i></a></li>');
+            if (this.CardSettings.IsEdit)   this.btnEdit   = $('<li><a id="card-btn-edit" class="editor-header-button"><i class="material-icons editor-header">edit</i></a></li>');
+            if (this.CardSettings.IsAdd)    this.btnAdd    = $('<li><a id="card-btn-add" class="editor-header-button"><i class="material-icons editor-header">add</i></a></li>');
+            if (this.CardSettings.IsDelete) this.btnDelete = $('<li><a id="card-btn-delete" class="editor-header-button"><i class="material-icons editor-header">remove</i></a></li>');
+            if (this.CardSettings.IsSelect) this.btnSelect = $('<li><a id="editor-btn-select" class="editor-header-button"><i class="material-icons editor-header">done</i></a></li>');
+
             this.btnClose = $('<li><a id="card-btn-close" class="editor-header-button"><i class="material-icons editor-header">close</i></a></li>');
 
             let cardButtons: JQuery = this.navHeader.find("#cardButtons");
-            cardButtons.append(this.btnEdit).append(this.btnAdd).append(this.btnDelete).append(this.btnClose);
+            cardButtons.append(this.btnEdit).append(this.btnAdd).append(this.btnDelete).append(this.btnSelect).append(this.btnClose);
 
             navbarHeader = '<nav class="card-search-nav editor-header z-depth-1">';
             navbarHeader += '   <div class="nav-wrapper">';
             navbarHeader += '       <form>';
             navbarHeader += '           <div class="input-field">';
-            navbarHeader += '               <input id="card-view-search" type="search" required>';
+            navbarHeader += '               <input id="card-view-search" type="search" required value="">';
             navbarHeader += '               <label class="label-icon" for="search"><i class="material-icons editor-header">search</i></label>';
-            navbarHeader += '               <i class="material-icons editor-header">close</i>';
+            navbarHeader += '               <i id="card-view-search-clear" class="material-icons editor-header">close</i>';
             navbarHeader += '           </div>';
             navbarHeader += '       </form>';
             navbarHeader += '   </div>';
             navbarHeader += '</nav>';
             this.navSearch = $(navbarHeader);
-            this.inputSearch = this.navSearch.find('card-view-search');
+            this.formSearch = this.navSearch.find('form');
+            this.inputSearch = this.formSearch.find('#card-view-search');
+            this.clearSearch = this.formSearch.find('#card-view-search-clear');
+
 
             navbarHeader  = '<div class="row row-table">';
             navbarHeader += '    <div class="col s12 m12 l12 xl12 col-table">';
@@ -473,17 +481,27 @@ export namespace Controller {
                 this.btnDelete.remove();
             if (this.btnClose)
                 this.btnClose.remove();
+            if (this.btnSelect)
+                this.btnSelect.remove();
         }
 
+        private proxySearch;
         protected createEvents(): void {
             this.EditButtonClick = this.createClickEvent(this.btnEdit, this.editButtonClick);
             this.AddButtonClick = this.createClickEvent(this.btnAdd, this.addButtonClick);
             this.DeleteButtonClick = this.createClickEvent(this.btnDelete, this.deleteButtonClick);
             this.CloseButtonClick = this.createClickEvent(this.btnClose, this.closeButtonClick);
+            this.SelectButtonClick = this.createClickEvent(this.btnSelect, this.selectButtonClick);
+            this.ClearButtonClick = this.createClickEvent(this.clearSearch, this.clearButtonClick); 
+            this.proxySearch = $.proxy(this.search, this);
+            this.formSearch.on('submit', this.proxySearch);
         }
 
         protected destroyEvents(): void {
+            this.formSearch.off('submit', this.proxySearch);
+            this.destroyClickEvent(this.clearSearch, this.ClearButtonClick); 
             this.destroyClickEvent(this.rows, this.rowClick);
+            this.destroyClickEvent(this.btnSelect, this.SelectButtonClick);
             this.destroyClickEvent(this.btnEdit, this.EditButtonClick);
             this.destroyClickEvent(this.btnAdd, this.AddButtonClick);
             this.destroyClickEvent(this.btnDelete, this.DeleteButtonClick);
@@ -491,8 +509,9 @@ export namespace Controller {
         }
 
         protected createCardSettings(): Interfaces.ICardSettings {
-            return { FieldId: "", ValueIdNew: 0, EditIdName: "", EditController: "", Load: undefined, Delete: undefined, Columns: [] };
+            return { FieldId: "", FieldSearch: "", ValueIdNew: 0, EditIdName: "", IsAdd: false, IsEdit: false, IsDelete: false, IsSelect: false, EditController: "", Load: undefined, Delete: undefined, Columns: [] };
         }
+
 
         private rows: JQuery;
         private setupTable(): void {
@@ -503,12 +522,20 @@ export namespace Controller {
         }
 
         private setupRows(): void {
+            this.selectedRow = null;
+
             if (this.rows)
                 this.destroyClickEvent(this.rows, this.rowClick);
 
             this.tableBody.html(this.getTableBodyHtml());
             this.rows = this.tableBody.find('tr');
             this.createClickEvent(this.rows, this.rowClick);
+        }
+
+        private search(e: any) {
+            e.preventDefault();
+            this.setupRows();
+            return false;
         }
 
         protected getTableHeaderHtml(): string {
@@ -568,17 +595,34 @@ export namespace Controller {
             return html;
         }
 
+        protected getItemsForView(): Interfaces.Model.IEditorModel[] {
+            let result: Interfaces.Model.IEditorModel[] = [];
+            let data: Interfaces.Model.IEditorModel[] = this.Model.get("cardModel");
+            let strSearch: string = (this.inputSearch.val() as string); // ($("#card-view-search").val() as string);
+            let fieldSearch: string = this.CardSettings.FieldSearch;
+            let isNotSearch: boolean = (utils.isNullOrEmpty(fieldSearch) || utils.isNullOrEmpty(strSearch));
+            if (!isNotSearch)
+                strSearch = strSearch.toLowerCase();
+            for (let i = 0, icount = (data && data.length ? data.length : 0); i < icount; i++) {
+                if (isNotSearch) {
+                    result.push(data[i]);
+                }
+                else if ((data[i][fieldSearch] as string).toLowerCase().indexOf(strSearch) > -1) {
+                    result.push(data[i]);
+                }
+            }
+            return result;
+        }
 
         protected getTableBodyHtml(): string {
             let html: string = '';
-            let data = this.Model.get("cardModel");
+            let data: Interfaces.Model.IEditorModel[] = this.getItemsForView();
+
             if (data && data.length > 0) {
-                let item: Interfaces.Model.IEditorModel;
                 if (!this.templateRow)
                     this.templateRow = kendo.template(this.getTableRowTemplate());
                 for (let i = 0, icount = (data && data.length ? data.length : 0); i < icount; i++) {
-                    item = data[i];
-                    html += this.templateRow(item);
+                        html += this.templateRow(data[i]);
                 }
             }
             return html;
@@ -617,12 +661,29 @@ export namespace Controller {
             this.Delete();
         }
 
+        public OnSelect: { (controller: Interfaces.IControllerCard): void; };
+        public SelectButtonClick: { (e: any): void; };
+        private selectButtonClick(e): void {
+            if (this.OnSelect)
+                this.OnSelect(this);
+            this.Close();
+            _main.ControllerBack(e);
+        }
+
         public CloseButtonClick: { (e: any): void; };
         private closeButtonClick(e): void {
             this.Close();
             _main.ControllerBack(e);
-
         }
+
+        
+
+        public ClearButtonClick: { (e: any): void; };
+        private clearButtonClick(e): void {
+            this.inputSearch.val("");
+            this.setupRows();
+        }
+        
 
         protected loadData(): boolean {
             let controller = this;

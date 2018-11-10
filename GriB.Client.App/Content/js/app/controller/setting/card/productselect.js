@@ -11,7 +11,7 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-define(["require", "exports", "app/common/basecontroller", "app/services/settingsservice"], function (require, exports, base, svc) {
+define(["require", "exports", "app/controller/setting/card/product"], function (require, exports, card) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var Controller;
@@ -19,29 +19,25 @@ define(["require", "exports", "app/common/basecontroller", "app/services/setting
         var Setting;
         (function (Setting) {
             var Card;
-            (function (Card_1) {
-                var Card = /** @class */ (function (_super) {
-                    __extends(Card, _super);
-                    function Card() {
+            (function (Card) {
+                var ProductSelect = /** @class */ (function (_super) {
+                    __extends(ProductSelect, _super);
+                    function ProductSelect() {
                         return _super.call(this) || this;
                     }
-                    Object.defineProperty(Card.prototype, "Service", {
-                        get: function () {
-                            if (!this.settingService)
-                                this.settingService = new svc.Services.SettingsService();
-                            return this.settingService;
-                        },
-                        enumerable: true,
-                        configurable: true
-                    });
-                    Card.prototype.createOptions = function () {
-                        return { Url: "/Content/view/setting/card/card.html", Id: "card-view" };
+                    ProductSelect.prototype.createCardSettings = function () {
+                        var settings = _super.prototype.createCardSettings.call(this);
+                        settings.IsAdd = false;
+                        settings.IsEdit = false;
+                        settings.IsDelete = false;
+                        settings.IsSelect = true;
+                        return settings;
                     };
-                    return Card;
-                }(base.Controller.BaseCard));
-                Card_1.Card = Card;
+                    return ProductSelect;
+                }(card.Controller.Setting.Card.Product));
+                Card.ProductSelect = ProductSelect;
             })(Card = Setting.Card || (Setting.Card = {}));
         })(Setting = Controller.Setting || (Controller.Setting = {}));
     })(Controller = exports.Controller || (exports.Controller = {}));
 });
-//# sourceMappingURL=card.js.map
+//# sourceMappingURL=productselect.js.map

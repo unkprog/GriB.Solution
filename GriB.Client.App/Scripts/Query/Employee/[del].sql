@@ -1,4 +1,2 @@
-﻿delete [t_employee_salepointaccess] where [id] = @id
-
-delete [t_employee] where [id] = @id
+﻿--update [t_employee] set [d] = [id], [uu]=@u, [ud] = getdate() where [id] = @id
 

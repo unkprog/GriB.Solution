@@ -1,6 +1,2 @@
-﻿delete [t_org_info1] where [id] = @id
-
-delete [t_org_info] where [id] = @id
-
-delete [t_org] where [id] = @id
+﻿update [t_org] set [d] = [id], [uu]=@u, [ud] = getdate() where [id] = @id
 

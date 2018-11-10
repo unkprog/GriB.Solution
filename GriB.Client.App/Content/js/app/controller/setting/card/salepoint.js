@@ -25,9 +25,6 @@ define(["require", "exports", "app/common/variables", "app/controller/setting/ca
                     function SalePoint() {
                         return _super.call(this) || this;
                     }
-                    SalePoint.prototype.createOptions = function () {
-                        return { Url: "/Content/view/setting/card/salepoint.html", Id: "card-view-salepoint" };
-                    };
                     SalePoint.prototype.createModel = function () {
                         return new kendo.data.ObservableObject({
                             "Header": vars._statres("label$salesPoints"),
@@ -36,7 +33,8 @@ define(["require", "exports", "app/common/variables", "app/controller/setting/ca
                     };
                     SalePoint.prototype.createCardSettings = function () {
                         return {
-                            FieldId: "id", ValueIdNew: 0, EditIdName: "id_salepoint", EditController: "setting/editor/salepoint",
+                            FieldId: "id", FieldSearch: "name", ValueIdNew: 0, EditIdName: "id_salepoint", EditController: "setting/editor/salepoint",
+                            IsAdd: true, IsEdit: true, IsDelete: true, IsSelect: false,
                             Load: $.proxy(this.Service.GetSalePoints, this.Service), Delete: $.proxy(this.Service.DelSalePoint, this.Service),
                             Columns: [
                                 { Header: "Наименование", Field: "name" },

@@ -11,7 +11,7 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-define(["require", "exports", "app/common/variables", "app/common/utils", "app/controller/setting/editor/editor"], function (require, exports, vars, utils, edit) {
+define(["require", "exports", "app/common/variables", "app/common/utils", "app/controller/setting/editor/editor", "app/common/variables"], function (require, exports, vars, utils, edit, variables_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var Controller;
@@ -56,6 +56,9 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                             "labelCurrency": vars._statres("label$currency"),
                             "labelCostPrice": vars._statres("label$costprice"),
                             "labelSellingPrice": vars._statres("label$sellingprice"),
+                            "labelQuantityShort": vars._statres("label$quantityshort"),
+                            "labelUnitShort": vars._statres("label$unitshort"),
+                            "labelAdd": vars._statres("button$label$add")
                         });
                         return oo;
                     };
@@ -114,22 +117,29 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                         this.currencyList = view.find("#editor-view-product-currency");
                         this.rightRows = view.find("#product-rigths-rows");
                         this.controlType = view.find('#editor-view-product-type');
-                        var onUpolad = $.proxy(this.uploudImageClick, this);
-                        this.imgDialog.bind("change", onUpolad);
+                        this.btnAddComposition = view.find("#btn-add-composition");
                         view.find("#editor-view-product-name").characterCounter();
                         view.find("#editor-view-product-description").characterCounter();
                         view.find("#editor-view-product-vendorcode").characterCounter();
                         view.find("#editor-view-product-barcode").characterCounter();
-                        return _super.prototype.ViewInit.call(this, view);
+                        var result = _super.prototype.ViewInit.call(this, view);
+                        var tabs = view.find("#editor-view-product-tabs");
+                        tabs.remove();
+                        view.find(".editor-header-nav").append(tabs);
+                        return result;
                     };
                     Product.prototype.createEvents = function () {
                         _super.prototype.createEvents.call(this);
+                        var onUpolad = $.proxy(this.uploudImageClick, this);
+                        this.imgDialog.bind("change", onUpolad);
                         this.AddPhotoButtonClick = this.createClickEvent("editor-view-product-addphoto", this.addPhotoButtonClick);
+                        this.AddCompositionButtonClick = this.createClickEvent(this.btnAddComposition, this.addCompositionButtonClick);
                         this.Model.bind("change", $.proxy(this.changeModel, this));
                     };
                     Product.prototype.destroyEvents = function () {
                         this.Model.unbind("change");
                         this.destroyClickEvent("editor-view-product-addphoto", this.AddPhotoButtonClick);
+                        this.destroyClickEvent(this.btnAddComposition, this.addCompositionButtonClick);
                         this.imgDialog.unbind();
                         _super.prototype.destroyEvents.call(this);
                     };
@@ -137,12 +147,10 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                         if (e.field === "editModel.type") {
                             var model = this.EditorModel;
                             if (+model.type === 1) {
-                                $("#editor-view-product-tab2").hide();
-                                $("#editor-view-product-tab3").show();
+                                $("#editor-view-product-composition").show();
                             }
                             else {
-                                $("#editor-view-product-tab3").hide();
-                                $("#editor-view-product-tab2").show();
+                                $("#editor-view-product-composition").hide();
                             }
                         }
                     };
@@ -232,6 +240,21 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                     };
                     Product.prototype.uploudImageClick = function (e) {
                         this.UploadImage(this.imgDialog[0].files);
+                    };
+                    Product.prototype.addCompositionButtonClick = function (e) {
+                        var self = this;
+                        variables_1._app.OpenController('setting/card/product', this, function (controller) {
+                            var ctrlProduct = controller;
+                            ctrlProduct.CardSettings.IsAdd = false;
+                            ctrlProduct.CardSettings.IsEdit = false;
+                            ctrlProduct.CardSettings.IsDelete = false;
+                            ctrlProduct.CardSettings.IsSelect = true;
+                            ctrlProduct.OnSelect = $.proxy(self.selectComposition, self);
+                        });
+                        //require(["/Content/js/app/controller/setting/card/product.js"], function (module) {
+                    };
+                    Product.prototype.selectComposition = function (controller) {
+                        //controller.
                     };
                     Product.prototype.UploadImage = function (files) {
                         var _this = this;

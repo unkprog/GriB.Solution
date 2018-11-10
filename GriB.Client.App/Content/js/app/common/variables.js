@@ -42,6 +42,7 @@ define(["require", "exports", "i18n!nls/strings"], function (require, exports) {
     exports._controllers["setting/card/unit"] = function (module) { return new module.Controller.Setting.Card.Unit(); };
     exports._controllers["setting/card/category"] = function (module) { return new module.Controller.Setting.Card.Category(); };
     exports._controllers["setting/card/product"] = function (module) { return new module.Controller.Setting.Card.Product(); };
+    exports._controllers["setting/card/productselect"] = function (module) { return new module.Controller.Setting.Card.ProductSelect(); };
     exports._editorData = {};
 });
 //# sourceMappingURL=variables.js.map

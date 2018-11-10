@@ -25,9 +25,6 @@ define(["require", "exports", "app/common/variables", "app/controller/setting/ca
                     function Employee() {
                         return _super.call(this) || this;
                     }
-                    Employee.prototype.createOptions = function () {
-                        return { Url: "/Content/view/setting/card/employee.html", Id: "card-view-employee" };
-                    };
                     Employee.prototype.createModel = function () {
                         return new kendo.data.ObservableObject({
                             "Header": vars._statres("label$employees"),
@@ -36,7 +33,8 @@ define(["require", "exports", "app/common/variables", "app/controller/setting/ca
                     };
                     Employee.prototype.createCardSettings = function () {
                         return {
-                            FieldId: "id", ValueIdNew: 0, EditIdName: "id_employee", EditController: "setting/editor/employee",
+                            FieldId: "id", FieldSearch: "name", ValueIdNew: 0, EditIdName: "id_employee", EditController: "setting/editor/employee",
+                            IsAdd: true, IsEdit: true, IsDelete: true, IsSelect: false,
                             Load: $.proxy(this.Service.GetEmployees, this.Service), Delete: $.proxy(this.Service.DelEmployee, this.Service),
                             Columns: [
                                 { Header: vars._statres("label$name"), Field: "name" },

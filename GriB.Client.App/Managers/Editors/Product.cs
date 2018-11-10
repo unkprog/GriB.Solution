@@ -50,9 +50,9 @@ namespace GriB.Client.App.Managers.Editors
         }
 
         private const string cmdDel = @"Product\[del]";
-        public static void DelProduct(this Query query, int id)
+        public static void DelProduct(this Query query, int id, int user)
         {
-            query.Execute(cmdDel, new SqlParameter[] { new SqlParameter("@id", id) }
+            query.Execute(cmdDel, new SqlParameter[] { new SqlParameter("@id", id), new SqlParameter("@u", user) }
             , (values) => { });
         }
 
@@ -181,6 +181,42 @@ namespace GriB.Client.App.Managers.Editors
             product result = product;
             query.Execute(cmdSetSale, new SqlParameter[] { new SqlParameter("@id", product.id), new SqlParameter("@u", user), new SqlParameter("@price", product.sellingprice) }
             , (values) => { });
+            return result;
+        }
+
+        private const string cmdGetComposition = @"Product\Composition\[get]";
+        public static product GetProductComposition(this Query query, product product)
+        {
+            product result = product;
+            query.Execute(cmdGetComposition, new SqlParameter[] { new SqlParameter("@id", product.id) }
+            , (values) =>
+            {
+                product.composition.Add(new product_composition() { index = (int)values[1], quantity = (double)values[3], product = new product() { id = (int)values[2], name = (string)values[4], sellingprice = (double)values[5] } });
+            });
+
+            return result;
+        }
+
+        private const string cmdSetConposition = @"Product\Composition\[set]";
+        public static product SetProductComposition(this Query query, product product)
+        {
+            product result = product;
+            int index = 0;
+            foreach (var item in result.composition)
+            {
+                index++;
+                item.index = index;
+                query.Execute(cmdSetConposition, new SqlParameter[] { new SqlParameter("@id", result.id), new SqlParameter("@index", item.index), new SqlParameter("@quantity", item.quantity), new SqlParameter("@product", item.product?.id) }
+                , (values) => { });
+            }
+            return result;
+        }
+        private const string cmdDelConposition = @"Product\Composition\[del]";
+        public static product DelProductComposition(this Query query, product product)
+        {
+            product result = product;
+            query.Execute(cmdDelConposition, new SqlParameter[] { new SqlParameter("@id", result.id), new SqlParameter("@index", (result.composition != null && result.composition.Count > 0 ? result.composition[result.composition.Count].index : 0)) }
+                , (values) => { });
             return result;
         }
     }
