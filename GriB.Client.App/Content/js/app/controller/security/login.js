@@ -57,7 +57,7 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                         controller.AccountService.Login(model, function (responseData) {
                             if (responseData.result == "Ok") {
                                 vars._identity = responseData.indetity;
-                                variables_1._app.OpenController("main");
+                                variables_1._app.OpenController({ urlController: "main" });
                             }
                             else
                                 variables_1._app.ShowError(responseData.error);
@@ -77,10 +77,10 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                     return result;
                 };
                 Login.prototype.registerButtonClick = function (e) {
-                    vars._app.OpenController("security/register", this);
+                    vars._app.OpenController({ urlController: "security/register", backController: this });
                 };
                 Login.prototype.forgotButtonClick = function (e) {
-                    vars._app.OpenController("security/recovery", this);
+                    vars._app.OpenController({ urlController: "security/recovery", backController: this });
                 };
                 return Login;
             }(acc.Controller.Security.Account));

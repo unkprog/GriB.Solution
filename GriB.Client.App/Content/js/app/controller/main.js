@@ -54,6 +54,7 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
                 $("#app-navbar").find(".left").append(this.menu);
                 this.buttonMenu = this.menu.find("#app-btn-menu");
                 this.content = view.find("#main-view-content");
+                this.contentModal = view.find("#main-view-content-modal");
                 _super.prototype.ViewInit.call(this, view);
                 this.navigateOnStart();
                 return false;
@@ -104,12 +105,12 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
             };
             Main.prototype.menuExitButtonClick = function (e) {
                 this.sideNav.sidenav('close');
-                variables_1._app.OpenController("security/login");
+                variables_1._app.OpenController({ urlController: "security/login" });
             };
             Main.prototype.handleMenuItem = function (urlController) {
                 this.sideNav.sidenav('close');
                 if (!utils.isNullOrEmpty(urlController))
-                    this.OpenController(urlController);
+                    this.OpenController({ urlController: urlController });
             };
             return Main;
         }(ctrl.Controller.BaseContent));

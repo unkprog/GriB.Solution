@@ -61,25 +61,25 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
                     this.destroyClickEvent("btn-product", this.ProductButtonClick);
                 };
                 Index.prototype.organizationButtonClick = function (e) {
-                    variables_1._main.OpenController("setting/editor/organization", this);
+                    variables_1._main.OpenController({ urlController: "setting/editor/organization", backController: this });
                 };
                 Index.prototype.salePointButtonClick = function (e) {
-                    variables_1._main.OpenController("setting/card/salepoint", this);
+                    variables_1._main.OpenController({ urlController: "setting/card/salepoint", backController: this });
                 };
                 Index.prototype.employeetButtonClick = function (e) {
-                    variables_1._main.OpenController("setting/card/employee", this);
+                    variables_1._main.OpenController({ urlController: "setting/card/employee", backController: this });
                 };
                 Index.prototype.currencyButtonClick = function (e) {
-                    variables_1._main.OpenController("setting/card/currency", this);
+                    variables_1._main.OpenController({ urlController: "setting/card/currency", backController: this });
                 };
                 Index.prototype.unitButtonClick = function (e) {
-                    variables_1._main.OpenController("setting/card/unit", this);
+                    variables_1._main.OpenController({ urlController: "setting/card/unit", backController: this });
                 };
                 Index.prototype.categoryButtonClick = function (e) {
-                    variables_1._main.OpenController("setting/card/category", this);
+                    variables_1._main.OpenController({ urlController: "setting/card/category", backController: this });
                 };
                 Index.prototype.productButtonClick = function (e) {
-                    variables_1._main.OpenController("setting/card/product", this);
+                    variables_1._main.OpenController({ urlController: "setting/card/product", backController: this });
                 };
                 return Index;
             }(base.Controller.Base));

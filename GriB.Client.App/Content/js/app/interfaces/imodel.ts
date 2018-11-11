@@ -88,6 +88,12 @@
         parentname: string;
     }
 
+    export interface IProductComposition {
+        index: number;
+        product: IProduct;
+        quantity: number;
+    }
+
     export interface IProduct extends IReferenceHierarhyModel, IEditorModel, IEditorSalePointAccess {
         type: number;
         photo: string;
@@ -102,7 +108,7 @@
         currency: number;
         costprice: number;
         sellingprice: number;
-
+        composition: IProductComposition[];
 
     }
 }

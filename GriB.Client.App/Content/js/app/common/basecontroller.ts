@@ -171,47 +171,60 @@ export namespace Controller {
 
         public RestoreController() {
             if (this._controllersStack.Current)
-                this.OpenView(this._controllersStack.Current, undefined, true);
+                this.OpenView({ controller: this._controllersStack.Current, isRestore: true });
         }
 
-        public OpenController(urlController: string, backController?: Interfaces.IController) {
-            _app.OpenController(urlController, backController);
+        public OpenController(options: Interfaces.IOpenControllerOptions) {
+            _app.OpenController(options);
         }
 
-        public OpenView(controller: Interfaces.IController, backController?: Interfaces.IController, isRestore: boolean = false) {
+        public OpenView(options: Interfaces.IOpenViewOptions) {//controller: Interfaces.IController, backController?: Interfaces.IController, isRestore: boolean = false) {
             var self = this;
-            if ($("#" + controller.Options.Id).length > 0) return;     //Already loaded and current
+
+            if (options.isModal && options.isModal === true) {
+                _app.OpenViewModal(options);
+                return;
+            }
+
+            if ($("#" + options.controller.Options.Id).length > 0) return;     //Already loaded and current
             _app.ShowLoading();
 
-            $.when($.ajax({ url: controller.Options.Url, cache: false })).done((template) => {
-                let isInit: boolean = false;
-                try {
-                    if (self._controller)
-                        self._controller.ViewHide(this);
-
-                    self._controller = controller;
-                    if (!isRestore)
-                        self._controllersStack.Push(backController);
-
-                    self.SetHeader(self._controller);
-                    try {
-                        let view = $(template);
-                        isInit = self._controller.ViewInit(view);
-                        self._content.html(view[0]);
-                        isInit = isInit && self._controller.ViewShow(this);
-                        //self._controller.ViewResize(this);
-                    }
-                    catch (ex) {
-                        console.log(ex);
-                    }
-                } finally {
-                    if (isInit)
-                        _app.HideLoading();
-                }
+            $.when($.ajax({ url: options.controller.Options.Url, cache: false })).done((template) => {
+                self.OpenViewTemplate({ controller: options.controller, template: template, backController: options.backController, isRestore: options.isRestore });
             }).fail((e) => {
                 _app.HideLoading();
             });
         }
+
+        public OpenViewTemplate(options: Interfaces.IOpenViewTemplate) {
+            let self = this;
+            let isInit: boolean = false;
+            try {
+                if (self._controller)
+                    self._controller.ViewHide(this);
+
+                self._controller = options.controller;
+                if (!options.isRestore)
+                    self._controllersStack.Push(options.backController);
+
+                self.SetHeader(self._controller);
+                try {
+                    let view: any = $(options.template);
+                    isInit = self._controller.ViewInit(view);
+                    self._content.html(view[0]);
+                    isInit = isInit && self._controller.ViewShow(this);
+
+                    //self._controller.ViewResize(this);
+                }
+                catch (ex) {
+                    console.log(ex);
+                }
+            } finally {
+                if (isInit)
+                    _app.HideLoading();
+            }
+        }
+
 
         protected SetHeader(controller: Interfaces.IController) {
              //TODO: Пока не заморачиваемся с заголовком
@@ -278,6 +291,7 @@ export namespace Controller {
             super.ViewInit(view);
 
             return this.loadData();
+
         }
 
         public ViewHide(e) {
@@ -313,7 +327,7 @@ export namespace Controller {
 
         protected loadData(): boolean {
             let controller = this;
-            if (controller.EditorSettings && controller.EditorSettings.Load) {
+            if(controller.EditorSettings && controller.EditorSettings.Load) {
                 let id: number = (vars._editorData[controller.EditorSettings.EditIdName] ? vars._editorData[controller.EditorSettings.EditIdName] : 0);
                 controller.EditorSettings.Load(id, (responseData) => {
                     controller.Model.set("editModel", responseData.record);
@@ -645,7 +659,7 @@ export namespace Controller {
             }
         }
 
-        protected getSelectedRowId(): any {
+        public getSelectedRowId(): any {
             if (this.selectedRow && this.selectedRow.length > 0 && this.selectedRow[0].id) {
                 return this.selectedRow[0].id.replace("table-row-", "");
             }
@@ -664,8 +678,9 @@ export namespace Controller {
         public OnSelect: { (controller: Interfaces.IControllerCard): void; };
         public SelectButtonClick: { (e: any): void; };
         private selectButtonClick(e): void {
+            let self: any = this;
             if (this.OnSelect)
-                this.OnSelect(this);
+                this.OnSelect(self as Interfaces.IControllerCard);
             this.Close();
             _main.ControllerBack(e);
         }
@@ -705,7 +720,7 @@ export namespace Controller {
 
         public Add(): void {
             vars._editorData[this.CardSettings.EditIdName] = this.CardSettings.ValueIdNew;
-            vars._app.OpenController(this.CardSettings.EditController, this);
+            vars._app.OpenController({ urlController: this.CardSettings.EditController, backController: this });
         }
 
         protected afterAdd(): void {
@@ -718,7 +733,7 @@ export namespace Controller {
                 let _id: number = +id;
                 if (_id > 0) {
                     vars._editorData[this.CardSettings.EditIdName] = _id;
-                    vars._app.OpenController(this.CardSettings.EditController, this);
+                    vars._app.OpenController({ urlController: this.CardSettings.EditController, backController: this });
                 }
             }
         }

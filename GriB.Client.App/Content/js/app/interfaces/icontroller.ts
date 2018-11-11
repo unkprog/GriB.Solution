@@ -27,11 +27,26 @@
         Push: (controller: Interfaces.IController) => void; 
     }
 
+    export interface IOpenControllerOptions {
+        urlController: string;
+        isModal?: boolean;
+        backController?: Interfaces.IController;
+        onLoadController?: (controller: Interfaces.IController) => void;
+    }
+
+
+    export interface IOpenViewOptions {
+        controller: Interfaces.IController;
+        isModal?: boolean;
+        backController?: Interfaces.IController;
+        isRestore?: boolean;
+    }
+
     export interface IControllerNavigation {
         ControllerBack(e: any): void;
         RestoreController(): void;
-        OpenController(urlController: string, backController?: Interfaces.IController, onLoadController?: (controller: Interfaces.IController)=>void): void;
-        OpenView(controller: Interfaces.IController, backController?: Interfaces.IController, isRestore?: boolean): void;
+        OpenController(options: IOpenControllerOptions): void;
+        OpenView(options: IOpenViewOptions): void;
     }
 
     export interface IControllerEditor extends IController {
@@ -78,6 +93,7 @@
         Delete(): void;
         Edit(): void;
         Close(): void;
+        getSelectedRowId(): any;
         OnSelect(controller: IControllerCard): void;
     }
 

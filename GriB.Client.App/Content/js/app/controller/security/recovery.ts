@@ -41,7 +41,7 @@ export namespace Controller.Security {
             if (this.validate(model)) {
                 controller.AccountService.Recovery(model, (responseData) => {
                     if (responseData.result == "Ok")
-                        _app.ShowMessage(vars._statres("label$passwordRecovery"), vars._statres("msg$success$Recovery"), () => { _app.OpenController("security/login"); });
+                        _app.ShowMessage(vars._statres("label$passwordRecovery"), vars._statres("msg$success$Recovery"), () => { _app.OpenController({ urlController: "security/login" }); });
                     else
                         _app.ShowError(responseData);
                 });

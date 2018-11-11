@@ -98,21 +98,21 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
             Application.prototype.RestoreController = function () {
                 if (this._controllerNavigation === this) {
                     if (this._controllersStack.Current)
-                        this.OpenView(this._controllersStack.Current);
+                        this.OpenView({ controller: this._controllersStack.Current });
                 }
                 else
                     this._controllerNavigation.RestoreController();
             };
-            Application.prototype.OpenController = function (urlController, backController, onLoadController) {
+            Application.prototype.OpenController = function (options) {
                 var self = this;
-                var ctrlCreate = vars._controllers[urlController];
+                var ctrlCreate = vars._controllers[options.urlController];
                 if (ctrlCreate) {
-                    var url = "/Content/js/app/controller/" + urlController + ".js";
+                    var url = "/Content/js/app/controller/" + options.urlController + ".js";
                     require([url], function (module) {
                         var controller = ctrlCreate(module);
-                        if (onLoadController)
-                            onLoadController(controller);
-                        self.OpenView(controller, backController);
+                        if (options.onLoadController)
+                            options.onLoadController(controller);
+                        self.OpenView({ controller: controller, backController: options.backController });
                     });
                 }
             };
@@ -123,38 +123,43 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
                 else if ("POS Cloud" !== this._model.get("AppHeader"))
                     this._model.set("AppHeader", "POS Cloud");
             };
-            Application.prototype.OpenView = function (controller, backController, isRestore) {
-                if (isRestore === void 0) { isRestore = false; }
+            Application.prototype.OpenView = function (options) {
                 var self = this;
                 if (self._controllerNavigation !== self) {
-                    self._controllerNavigation.OpenView(controller, backController);
+                    self._controllerNavigation.OpenView(options);
                     return;
                 }
-                if ($("#" + controller.Options.Id).length > 0)
+                if (options.isModal && options.isModal === true) {
+                    self.OpenViewModal(options);
+                    return;
+                }
+                if ($("#" + options.controller.Options.Id).length > 0)
                     return; //Already loaded and current
                 self.ShowLoading();
-                $.when($.ajax({ url: controller.Options.Url, cache: false })).done(function (template) {
-                    self.OpenViewTemplate(controller, template, backController, isRestore);
+                //<div id="main-view-content-modal" style="display:none"></div>
+                $.when($.ajax({ url: options.controller.Options.Url, cache: false })).done(function (template) {
+                    self.OpenViewTemplate({ controller: options.controller, template: template, backController: options.backController, isRestore: options.isRestore });
                 }).fail(function (e) {
                     self.HideLoading();
                 });
             };
-            Application.prototype.OpenViewTemplate = function (controller, template, backController, isRestore) {
-                if (isRestore === void 0) { isRestore = false; }
+            Application.prototype.OpenViewModal = function (options) {
+                //self.OpenViewTemplate({ controller: options.controller, template: template, backController: options.backController, isRestore: options.isRestore });
+            };
+            Application.prototype.OpenViewTemplate = function (options) {
                 var self = this;
                 var isInit = false;
                 try {
                     if (self._controller)
                         self._controller.ViewHide(this);
-                    self._controller = controller;
-                    if (!isRestore)
-                        self._controllersStack.Push(backController);
+                    self._controller = options.controller;
+                    if (!options.isRestore)
+                        self._controllersStack.Push(options.backController);
                     self.SetHeader(self._controller);
-                    var view = $(template);
+                    var view = $(options.template);
                     isInit = self._controller.ViewInit(view);
                     self.contentControl.html(view[0]);
                     isInit = isInit && self._controller.ViewShow(this);
-                    //self._controller.ViewResize(this);
                 }
                 finally {
                     if (isInit)
@@ -162,7 +167,7 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
                 }
             };
             Application.prototype.login = function () {
-                this.OpenController("security/login");
+                this.OpenController({ urlController: "security/login" });
             };
             Application.prototype.initAfterLoaded = function () {
                 this.login();

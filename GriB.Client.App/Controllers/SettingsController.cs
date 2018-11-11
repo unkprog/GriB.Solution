@@ -397,6 +397,18 @@ namespace GriB.Client.App.Controllers
             });
         }
 
+
+        [HttpGet]
+        [ActionName("get_product_newcomposition")]
+        public HttpResponseMessage GetProductNewComposition(int id)
+        {
+            return TryCatchResponseQuery((query) =>
+            {
+                product_composition result = Product.GetProductCompositionNew(query, id);
+                return Request.CreateResponse(HttpStatusCode.OK, new { newcomposition = result });
+            });
+        }
+
         [HttpPost]
         [ActionName("post_product")]
         public HttpResponseMessage PostProduct(product product)
@@ -411,7 +423,6 @@ namespace GriB.Client.App.Controllers
                 Product.SetProductCost(query, product, principal.Data.User.id);
                 Product.SetProductSale(query, product, principal.Data.User.id);
                 Product.SetProductComposition(query, product);
-                Product.DelProductComposition(query, product);
                 return Request.CreateResponse(HttpStatusCode.OK, "Ok");
             });
         }

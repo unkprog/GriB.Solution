@@ -29,9 +29,10 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                         return { Url: "/Content/view/setting/editor/product.html", Id: "editor-view-product" };
                     };
                     Product.prototype.createModel = function () {
-                        var oo = new kendo.data.ObservableObject({
+                        var model = new kendo.data.ObservableObject({
                             "Header": vars._statres("label$product"),
                             "editModel": {},
+                            "isNotLoadInitView": false,
                             "labelSpecifications": vars._statres("label$specifications"),
                             "labelComposition": vars._statres("label$composition"),
                             "labelAccessRight": vars._statres("label$accessright"),
@@ -60,7 +61,7 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                             "labelUnitShort": vars._statres("label$unitshort"),
                             "labelAdd": vars._statres("button$label$add")
                         });
-                        return oo;
+                        return model;
                     };
                     Object.defineProperty(Product.prototype, "EditorModel", {
                         get: function () {
@@ -115,9 +116,9 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                         this.categoryList = view.find("#editor-view-category-list");
                         this.unitList = view.find("#editor-view-product-unit");
                         this.currencyList = view.find("#editor-view-product-currency");
+                        this.compositionRows = view.find("#product-composition-rows");
                         this.rightRows = view.find("#product-rigths-rows");
                         this.controlType = view.find('#editor-view-product-type');
-                        this.btnAddComposition = view.find("#btn-add-composition");
                         view.find("#editor-view-product-name").characterCounter();
                         view.find("#editor-view-product-description").characterCounter();
                         view.find("#editor-view-product-vendorcode").characterCounter();
@@ -133,13 +134,15 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                         var onUpolad = $.proxy(this.uploudImageClick, this);
                         this.imgDialog.bind("change", onUpolad);
                         this.AddPhotoButtonClick = this.createClickEvent("editor-view-product-addphoto", this.addPhotoButtonClick);
-                        this.AddCompositionButtonClick = this.createClickEvent(this.btnAddComposition, this.addCompositionButtonClick);
                         this.Model.bind("change", $.proxy(this.changeModel, this));
                     };
                     Product.prototype.destroyEvents = function () {
+                        this.compositionRows.unbind();
+                        this.rightRows.unbind();
                         this.Model.unbind("change");
                         this.destroyClickEvent("editor-view-product-addphoto", this.AddPhotoButtonClick);
-                        this.destroyClickEvent(this.btnAddComposition, this.addCompositionButtonClick);
+                        if (this.btnAddComposition)
+                            this.destroyClickEvent(this.btnAddComposition, this.addCompositionButtonClick);
                         this.imgDialog.unbind();
                         _super.prototype.destroyEvents.call(this);
                     };
@@ -169,6 +172,7 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                         this.setupListUnit(responseData);
                         this.setupListCurrencies(responseData);
                         this.changeModel({ field: "editModel.type" });
+                        this.setupTableComposition();
                         this.setupTableAccess();
                     };
                     Product.prototype.setupListCategory = function (responseData) {
@@ -210,15 +214,44 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                             this.currencyList.html('');
                         this.currencyList.formSelect();
                     };
+                    Product.prototype.setupTableComposition = function () {
+                        var model = this.EditorModel;
+                        var data = model.composition;
+                        var html = '';
+                        this.compositionRows.unbind();
+                        if (data && data.length > 0) {
+                            for (var i = 0, icount = (data && data.length ? data.length : 0); i < icount; i++) {
+                                html += '<tr class="table-row">';
+                                html += '<td  class="col-md-auto" data-bind="text:editModel.composition[' + i + '].product.name"></td>';
+                                html += '<td class="col-md-auto right-align"><input class="table-cell-input" type="number" data-bind="value:editModel.composition[' + i + '].quantity"/></td>';
+                                html += '<td class="col-md-auto">кг</td>';
+                                html += '<td class="col-md-auto"><a class="editor-header-button"><i class="material-icons editor-header">close</i></a></td>';
+                                html += '</tr>';
+                                /*
+                                
+            <tr class="table-row">
+                                    <td class="col-md-auto">Alvin</td>
+                                    <td class="col-md-auto right-align"><input class="table-cell-input" type="number" value="0.87" /></td>
+                                    <td class="col-md-auto">кг</td>
+                                    <td class="col-md-auto"><a class="editor-header-button"><i class="material-icons editor-header">close</i></a></td>
+                                </tr>
+                                */
+                            }
+                        }
+                        html += '<tr class="table-row">';
+                        html += '<td class="col-md-auto" colspan="4"><a id="btn-add-composition" class="btn btncol"><span data-bind="text:labelAdd"></span></a></td>';
+                        html += '</tr>';
+                        this.compositionRows.html(html);
+                        this.btnAddComposition = this.compositionRows.find("#btn-add-composition");
+                        this.AddCompositionButtonClick = this.createClickEvent(this.btnAddComposition, this.addCompositionButtonClick);
+                        kendo.bind(this.compositionRows, this.Model);
+                    };
                     Product.prototype.setupTableAccess = function () {
                         var model = this.EditorModel;
                         var data = model.accesssalepoints;
                         var html = '';
                         if (data && data.length > 0) {
-                            var item = void 0;
                             for (var i = 0, icount = (data && data.length ? data.length : 0); i < icount; i++) {
-                                item = data[i];
-                                item;
                                 html += '<tr>';
                                 html += '<td data-bind="text:editModel.accesssalepoints[' + i + '].salepoint.name"></td>';
                                 html += '<td>';
@@ -243,18 +276,27 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                     };
                     Product.prototype.addCompositionButtonClick = function (e) {
                         var self = this;
-                        variables_1._app.OpenController('setting/card/product', this, function (controller) {
-                            var ctrlProduct = controller;
-                            ctrlProduct.CardSettings.IsAdd = false;
-                            ctrlProduct.CardSettings.IsEdit = false;
-                            ctrlProduct.CardSettings.IsDelete = false;
-                            ctrlProduct.CardSettings.IsSelect = true;
-                            ctrlProduct.OnSelect = $.proxy(self.selectComposition, self);
+                        variables_1._app.OpenController({
+                            urlController: 'setting/card/product', backController: this, onLoadController: function (controller) {
+                                var ctrlProduct = controller;
+                                ctrlProduct.CardSettings.IsAdd = false;
+                                ctrlProduct.CardSettings.IsEdit = false;
+                                ctrlProduct.CardSettings.IsDelete = false;
+                                ctrlProduct.CardSettings.IsSelect = true;
+                                ctrlProduct.OnSelect = $.proxy(self.selectComposition, self);
+                            }
                         });
                         //require(["/Content/js/app/controller/setting/card/product.js"], function (module) {
                     };
                     Product.prototype.selectComposition = function (controller) {
-                        //controller.
+                        var id = controller.getSelectedRowId();
+                        var self = this;
+                        var model = this.EditorModel;
+                        this.Service.GetProductNewComposition(+id, function (responseData) {
+                            model.composition.push(responseData.newcomposition);
+                            self.Model.set("editModel", model);
+                            self.setupTableComposition();
+                        });
                     };
                     Product.prototype.UploadImage = function (files) {
                         var _this = this;

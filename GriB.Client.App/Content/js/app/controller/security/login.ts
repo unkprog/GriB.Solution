@@ -50,7 +50,7 @@ export namespace Controller.Security {
                 controller.AccountService.Login(model, (responseData) => {
                     if (responseData.result == "Ok") {
                         vars._identity = responseData.indetity;
-                        _app.OpenController("main");
+                        _app.OpenController({ urlController: "main" });
                     }
                     else
                         _app.ShowError(responseData.error);
@@ -78,12 +78,12 @@ export namespace Controller.Security {
 
         public RegisterButtonClick: { (e: any): void; };
         private registerButtonClick(e) {
-            vars._app.OpenController("security/register", this);
+            vars._app.OpenController({ urlController: "security/register", backController: this });
         }
 
         public ForgotButtonClick: { (e: any): void; };
         private forgotButtonClick(e) {
-            vars._app.OpenController("security/recovery", this);
+            vars._app.OpenController({ urlController: "security/recovery", backController: this });
         }
     }
 }

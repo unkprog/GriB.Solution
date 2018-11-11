@@ -171,45 +171,51 @@ define(["require", "exports", "app/common/utils", "app/common/variables", "./var
             };
             BaseContent.prototype.RestoreController = function () {
                 if (this._controllersStack.Current)
-                    this.OpenView(this._controllersStack.Current, undefined, true);
+                    this.OpenView({ controller: this._controllersStack.Current, isRestore: true });
             };
-            BaseContent.prototype.OpenController = function (urlController, backController) {
-                variables_1._app.OpenController(urlController, backController);
+            BaseContent.prototype.OpenController = function (options) {
+                variables_1._app.OpenController(options);
             };
-            BaseContent.prototype.OpenView = function (controller, backController, isRestore) {
-                var _this = this;
-                if (isRestore === void 0) { isRestore = false; }
+            BaseContent.prototype.OpenView = function (options) {
                 var self = this;
-                if ($("#" + controller.Options.Id).length > 0)
+                if (options.isModal && options.isModal === true) {
+                    variables_1._app.OpenViewModal(options);
+                    return;
+                }
+                if ($("#" + options.controller.Options.Id).length > 0)
                     return; //Already loaded and current
                 variables_1._app.ShowLoading();
-                $.when($.ajax({ url: controller.Options.Url, cache: false })).done(function (template) {
-                    var isInit = false;
-                    try {
-                        if (self._controller)
-                            self._controller.ViewHide(_this);
-                        self._controller = controller;
-                        if (!isRestore)
-                            self._controllersStack.Push(backController);
-                        self.SetHeader(self._controller);
-                        try {
-                            var view = $(template);
-                            isInit = self._controller.ViewInit(view);
-                            self._content.html(view[0]);
-                            isInit = isInit && self._controller.ViewShow(_this);
-                            //self._controller.ViewResize(this);
-                        }
-                        catch (ex) {
-                            console.log(ex);
-                        }
-                    }
-                    finally {
-                        if (isInit)
-                            variables_1._app.HideLoading();
-                    }
+                $.when($.ajax({ url: options.controller.Options.Url, cache: false })).done(function (template) {
+                    self.OpenViewTemplate({ controller: options.controller, template: template, backController: options.backController, isRestore: options.isRestore });
                 }).fail(function (e) {
                     variables_1._app.HideLoading();
                 });
+            };
+            BaseContent.prototype.OpenViewTemplate = function (options) {
+                var self = this;
+                var isInit = false;
+                try {
+                    if (self._controller)
+                        self._controller.ViewHide(this);
+                    self._controller = options.controller;
+                    if (!options.isRestore)
+                        self._controllersStack.Push(options.backController);
+                    self.SetHeader(self._controller);
+                    try {
+                        var view = $(options.template);
+                        isInit = self._controller.ViewInit(view);
+                        self._content.html(view[0]);
+                        isInit = isInit && self._controller.ViewShow(this);
+                        //self._controller.ViewResize(this);
+                    }
+                    catch (ex) {
+                        console.log(ex);
+                    }
+                }
+                finally {
+                    if (isInit)
+                        variables_1._app.HideLoading();
+                }
             };
             BaseContent.prototype.SetHeader = function (controller) {
                 //TODO: Пока не заморачиваемся с заголовком
@@ -585,8 +591,9 @@ define(["require", "exports", "app/common/utils", "app/common/variables", "./var
                 this.Delete();
             };
             BaseCard.prototype.selectButtonClick = function (e) {
+                var self = this;
                 if (this.OnSelect)
-                    this.OnSelect(this);
+                    this.OnSelect(self);
                 this.Close();
                 variables_1._main.ControllerBack(e);
             };
@@ -616,7 +623,7 @@ define(["require", "exports", "app/common/utils", "app/common/variables", "./var
             };
             BaseCard.prototype.Add = function () {
                 vars._editorData[this.CardSettings.EditIdName] = this.CardSettings.ValueIdNew;
-                vars._app.OpenController(this.CardSettings.EditController, this);
+                vars._app.OpenController({ urlController: this.CardSettings.EditController, backController: this });
             };
             BaseCard.prototype.afterAdd = function () {
             };
@@ -626,7 +633,7 @@ define(["require", "exports", "app/common/utils", "app/common/variables", "./var
                     var _id = +id;
                     if (_id > 0) {
                         vars._editorData[this.CardSettings.EditIdName] = _id;
-                        vars._app.OpenController(this.CardSettings.EditController, this);
+                        vars._app.OpenController({ urlController: this.CardSettings.EditController, backController: this });
                     }
                 }
             };

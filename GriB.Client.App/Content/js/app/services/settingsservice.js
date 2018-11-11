@@ -109,6 +109,9 @@ define(["require", "exports", "app/common/baseservice"], function (require, expo
             SettingsService.prototype.GetProduct = function (id, Callback) {
                 this.GetApi({ Action: "/get_product", RequestData: { id: id }, Callback: Callback });
             };
+            SettingsService.prototype.GetProductNewComposition = function (id, Callback) {
+                this.GetApi({ Action: "/get_product_newcomposition", RequestData: { id: id }, Callback: Callback });
+            };
             SettingsService.prototype.SetProduct = function (model, Callback) {
                 this.PostApi({ Action: "/post_product", RequestData: JSON.stringify(model), Callback: Callback });
             };

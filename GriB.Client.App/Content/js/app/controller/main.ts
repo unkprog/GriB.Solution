@@ -34,6 +34,7 @@ export namespace Controller {
         }
 
         private content: JQuery;
+        private contentModal: JQuery;
         protected GetContent(): JQuery {
             return this.content;
         }
@@ -50,6 +51,7 @@ export namespace Controller {
             $("#app-navbar").find(".left").append(this.menu);
             this.buttonMenu = this.menu.find("#app-btn-menu");
             this.content = view.find("#main-view-content");
+            this.contentModal = view.find("#main-view-content-modal");
             super.ViewInit(view);
             this.navigateOnStart();
             return false;
@@ -119,13 +121,13 @@ export namespace Controller {
         public MenuExitButtonClick: { (e: any): void; };
         private menuExitButtonClick(e) {
             this.sideNav.sidenav('close');
-            _app.OpenController("security/login");
+            _app.OpenController({ urlController: "security/login" });
         }
 
         private handleMenuItem(urlController: string): void {
             this.sideNav.sidenav('close');
             if (!utils.isNullOrEmpty(urlController))
-                this.OpenController(urlController);
+                this.OpenController({ urlController: urlController });
         }
     }
 }

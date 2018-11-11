@@ -121,22 +121,22 @@ export module App {
         public RestoreController() {
             if (this._controllerNavigation === this) {
                 if (this._controllersStack.Current)
-                    this.OpenView(this._controllersStack.Current);
+                    this.OpenView({ controller: this._controllersStack.Current });
             }
             else
                 this._controllerNavigation.RestoreController();
         }
 
-        public OpenController(urlController: string, backController?: Interfaces.IController, onLoadController?: (controller: Interfaces.IController) => void) {
+        public OpenController(options: Interfaces.IOpenControllerOptions) { //urlController: string, backController?: Interfaces.IController, onLoadController?: (controller: Interfaces.IController) => void) {
             var self = this;
-            let ctrlCreate: any = vars._controllers[urlController]
+            let ctrlCreate: any = vars._controllers[options.urlController]
             if (ctrlCreate) {
-                let url: string = "/Content/js/app/controller/" + urlController + ".js";
+                let url: string = "/Content/js/app/controller/" + options.urlController + ".js";
                 require([url], function (module) {
                     let controller: Interfaces.IController = ctrlCreate(module);
-                    if (onLoadController)
-                        onLoadController(controller);
-                    self.OpenView(controller, backController);
+                    if (options.onLoadController)
+                        options.onLoadController(controller);
+                    self.OpenView({ controller: controller, backController: options.backController });
                 });
             }
         }
@@ -150,43 +150,51 @@ export module App {
                     this._model.set("AppHeader", "POS Cloud");
         }
 
-        public OpenView(controller: Interfaces.IController, backController?: Interfaces.IController, isRestore: boolean = false) {
+        public OpenView(options: Interfaces.IOpenViewTemplate) {
             let self = this;
 
             if (self._controllerNavigation !== self) {
-                self._controllerNavigation.OpenView(controller, backController);
+                self._controllerNavigation.OpenView(options);
                 return;
             }
 
-            if ($("#" + controller.Options.Id).length > 0) return;     //Already loaded and current
+            if (options.isModal && options.isModal === true) {
+                self.OpenViewModal(options);
+                return;
+            }
+
+            if ($("#" + options.controller.Options.Id).length > 0) return;     //Already loaded and current
             self.ShowLoading();
 
-            $.when($.ajax({ url: controller.Options.Url, cache: false })).done((template) => {
-                self.OpenViewTemplate(controller, template, backController, isRestore);
+            //<div id="main-view-content-modal" style="display:none"></div>
+            $.when($.ajax({ url: options.controller.Options.Url, cache: false })).done((template) => {
+                self.OpenViewTemplate({ controller: options.controller, template: template, backController: options.backController, isRestore: options.isRestore });
             }).fail((e) => {
                 self.HideLoading();
             });
         }
 
-        public OpenViewTemplate(controller: Interfaces.IController, template: any, backController?: Interfaces.IController, isRestore: boolean = false) {
+        public OpenViewModal(options: Interfaces.IOpenViewOptions): void {
+            //self.OpenViewTemplate({ controller: options.controller, template: template, backController: options.backController, isRestore: options.isRestore });
+        }
+
+        public OpenViewTemplate(options: Interfaces.IOpenViewTemplate) {
             let self = this;
             let isInit: boolean = false;
             try {
                 if (self._controller)
                     self._controller.ViewHide(this);
 
-                self._controller = controller;
-                if (!isRestore)
-                    self._controllersStack.Push(backController);
+                self._controller = options.controller;
+                if (!options.isRestore)
+                    self._controllersStack.Push(options.backController);
 
                 self.SetHeader(self._controller);
 
-                let view:any = $(template);
+                let view: any = $(options.template);
                 isInit = self._controller.ViewInit(view);
                 self.contentControl.html(view[0]);
                 isInit = isInit && self._controller.ViewShow(this);
-
-                //self._controller.ViewResize(this);
             } finally {
                 if (isInit)
                     self.HideLoading();
@@ -194,7 +202,7 @@ export module App {
         }
 
         private login(): void {
-            this.OpenController("security/login");
+            this.OpenController({ urlController: "security/login" });
         }
 
         private initAfterLoaded() {

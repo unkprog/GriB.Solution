@@ -52,37 +52,37 @@ export namespace Controller.Setting {
 
         public OrganizationButtonClick: { (e: any): void; };
         private organizationButtonClick(e) {
-            _main.OpenController("setting/editor/organization", this);
+            _main.OpenController({ urlController: "setting/editor/organization", backController: this });
         }
 
         public SalePointButtonClick: { (e: any): void; };
         private salePointButtonClick(e) {
-            _main.OpenController("setting/card/salepoint", this);
+            _main.OpenController({ urlController: "setting/card/salepoint", backController: this });
         }
 
         public EmployeetButtonClick: { (e: any): void; };
         private employeetButtonClick(e) {
-            _main.OpenController("setting/card/employee", this);
+            _main.OpenController({ urlController: "setting/card/employee", backController: this });
         }
 
         public CurrencyButtonClick: { (e: any): void; };
         private currencyButtonClick(e) {
-            _main.OpenController("setting/card/currency", this);
+            _main.OpenController({ urlController: "setting/card/currency", backController: this });
         }
 
         public UnitButtonClick: { (e: any): void; };
         private unitButtonClick(e) {
-            _main.OpenController("setting/card/unit", this);
+            _main.OpenController({ urlController: "setting/card/unit", backController: this });
         }
 
         public CategoryButtonClick: { (e: any): void; };
         private categoryButtonClick(e) {
-            _main.OpenController("setting/card/category", this);
+            _main.OpenController({ urlController: "setting/card/category", backController: this });
         }
 
         public ProductButtonClick: { (e: any): void; };
         private productButtonClick(e) {
-            _main.OpenController("setting/card/product", this);
+            _main.OpenController({ urlController: "setting/card/product", backController: this });
         }
     }
 }

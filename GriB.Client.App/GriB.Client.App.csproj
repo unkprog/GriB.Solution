@@ -205,6 +205,7 @@
     <Content Include="Scripts\Query\Organization\[get].sql" />
     <Content Include="Scripts\Query\Product\Account\[get].sql" />
     <Content Include="Scripts\Query\Product\Account\[set].sql" />
+    <Content Include="Scripts\Query\Product\Composition\[get_new].sql" />
     <Content Include="Scripts\Query\Product\Composition\[get].sql" />
     <Content Include="Scripts\Query\Product\Composition\[del].sql" />
     <Content Include="Scripts\Query\Product\Composition\[set].sql" />

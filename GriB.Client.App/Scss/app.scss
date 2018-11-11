@@ -39,7 +39,7 @@
 }
 
 
-#app-content, #main-view-content {
+#app-content, #main-view-content, .main-view-content-modal {
     overflow-y: auto;
     overflow-x: hidden;
 }
@@ -187,13 +187,26 @@ td, th {
     position: relative;
     width: 100%;
     min-height: 1px;
-    padding-right: 15px;
-    padding-left: 15px;
+    padding-right: 5px;
+    padding-left: 5px;
 }
 
 .table-cell-input {
-    width: 50px;
+    width: 50px !important;
     text-align: right;
+    margin: 0 !important;
+}
+
+input[type='number'] {
+    appearance: textfield;
+}
+
+input[type='number']::-webkit-inner-spin-button,
+input[type='number']::-webkit-outer-spin-button,
+input[type='number']:hover::-webkit-inner-spin-button,
+input[type='number']:hover::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
 }
 
 .row-table {

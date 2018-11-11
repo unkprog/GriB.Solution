@@ -197,6 +197,19 @@ namespace GriB.Client.App.Managers.Editors
             return result;
         }
 
+        private const string cmdGetCompositionNew = @"Product\Composition\[get_new]";
+        public static product_composition GetProductCompositionNew(this Query query, int id)
+        {
+            product_composition result = new product_composition();
+            query.Execute(cmdGetCompositionNew, new SqlParameter[] { new SqlParameter("@id", id) }
+            , (values) =>
+            {
+               result = new product_composition() { index = (int)values[1], quantity = (double)values[3], product = new product() { id = (int)values[2], name = (string)values[4], sellingprice = (double)values[5] } };
+            });
+
+            return result;
+        }
+
         private const string cmdSetConposition = @"Product\Composition\[set]";
         public static product SetProductComposition(this Query query, product product)
         {
@@ -209,13 +222,15 @@ namespace GriB.Client.App.Managers.Editors
                 query.Execute(cmdSetConposition, new SqlParameter[] { new SqlParameter("@id", result.id), new SqlParameter("@index", item.index), new SqlParameter("@quantity", item.quantity), new SqlParameter("@product", item.product?.id) }
                 , (values) => { });
             }
+            DelProductComposition(query, product);
             return result;
         }
+
         private const string cmdDelConposition = @"Product\Composition\[del]";
         public static product DelProductComposition(this Query query, product product)
         {
             product result = product;
-            query.Execute(cmdDelConposition, new SqlParameter[] { new SqlParameter("@id", result.id), new SqlParameter("@index", (result.composition != null && result.composition.Count > 0 ? result.composition[result.composition.Count].index : 0)) }
+            query.Execute(cmdDelConposition, new SqlParameter[] { new SqlParameter("@id", result.id), new SqlParameter("@index", (result.composition != null && result.composition.Count > 0 ? result.composition[result.composition.Count-1].index : 0)) }
                 , (values) => { });
             return result;
         }

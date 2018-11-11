@@ -48,7 +48,7 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                     if (this.validate(model)) {
                         controller.AccountService.Recovery(model, function (responseData) {
                             if (responseData.result == "Ok")
-                                variables_1._app.ShowMessage(vars._statres("label$passwordRecovery"), vars._statres("msg$success$Recovery"), function () { variables_1._app.OpenController("security/login"); });
+                                variables_1._app.ShowMessage(vars._statres("label$passwordRecovery"), vars._statres("msg$success$Recovery"), function () { variables_1._app.OpenController({ urlController: "security/login" }); });
                             else
                                 variables_1._app.ShowError(responseData);
                         });

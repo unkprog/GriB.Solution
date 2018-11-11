@@ -1,8 +1,16 @@
 ﻿namespace Interfaces {
 
-    export interface IOpenControllerOptions {
+    export interface IOpenControllerCreate {
         Url: string;
         CreateController: (module: any) => Interfaces.IController;
+    }
+
+    export interface IOpenViewTemplate {
+        controller: Interfaces.IController;
+        isModal?: boolean;
+        template?: string;
+        backController?: Interfaces.IController;
+        isRestore?: boolean;
     }
 
     export interface IApplication extends IControllerNavigation {
@@ -14,7 +22,7 @@
         ShowMessage(header: string, message: string, onClose?: () => void): void;
 
         Identity: Interfaces.Model.IIdentity;
-
-        OpenViewTemplate(controller: Interfaces.IController, template: string, backController?: Interfaces.IController, isRestore?: boolean);
+        OpenViewModal(options: IOpenViewOptions);
+        OpenViewTemplate(options: IOpenViewTemplate);
     }
 }
