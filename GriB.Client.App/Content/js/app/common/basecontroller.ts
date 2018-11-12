@@ -182,7 +182,7 @@ export namespace Controller {
             var self = this;
 
             if (options.isModal && options.isModal === true) {
-                _app.OpenViewModal(options);
+                _app.OpenView(options);
                 return;
             }
 
@@ -198,6 +198,11 @@ export namespace Controller {
 
         public OpenViewTemplate(options: Interfaces.IOpenViewTemplate) {
             let self = this;
+            //if (options.isModal && options.isModal === true) {
+            //    _app.OpenViewTemplate(options);
+            //    return;
+            //}
+
             let isInit: boolean = false;
             try {
                 if (self._controller)

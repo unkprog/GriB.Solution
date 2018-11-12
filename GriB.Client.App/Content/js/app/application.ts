@@ -9,6 +9,7 @@ export module App {
         constructor() {
             vars._app = this;
             this._controllersStack = new base.Controller.ControllersStack();
+            this._controllersModalStack = new base.Controller.ControllersStack();
             this._model = new kendo.data.ObservableObject({
                 "AppHeader": "POS Cloud",
                 "labelOk": vars._statres("button$label$ok"),
@@ -19,6 +20,7 @@ export module App {
         }
 
         private _controllersStack: Interfaces.IControllerStack;
+        private _controllersModalStack: Interfaces.IControllerStack;
         private _controller: Interfaces.IController;
         public get Controller(): Interfaces.IController {
             return this._controller;
@@ -110,6 +112,15 @@ export module App {
 
         public ControllerBack: { (e: any): void; };
         private controllerBack(e): void {
+            if (this.IsModal) {
+                let contentModal: JQuery = this.contentModals.pop();
+                let controllerModal: Interfaces.IController = this._controllersModalStack.Current;
+                controllerModal.ViewHide(this);
+                this._controllersModalStack.Pop();
+                contentModal.remove();
+                return;
+            }
+
             if (this._controllerNavigation === this) {
                 this._controllersStack.Pop();
                 this.RestoreController();
@@ -136,7 +147,7 @@ export module App {
                     let controller: Interfaces.IController = ctrlCreate(module);
                     if (options.onLoadController)
                         options.onLoadController(controller);
-                    self.OpenView({ controller: controller, backController: options.backController });
+                    self.OpenView({ controller: controller, isModal: options.isModal, backController: options.backController });
                 });
             }
         }
@@ -153,13 +164,17 @@ export module App {
         public OpenView(options: Interfaces.IOpenViewTemplate) {
             let self = this;
 
-            if (self._controllerNavigation !== self) {
-                self._controllerNavigation.OpenView(options);
+            if (options.isModal && options.isModal === true) {
+                $.when($.ajax({ url: options.controller.Options.Url, cache: false })).done((template) => {
+                    self.OpenViewTemplate({ controller: options.controller, isModal: options.isModal, template: template, backController: options.backController, isRestore: options.isRestore });
+                }).fail((e) => {
+                    self.HideLoading();
+                });
                 return;
             }
 
-            if (options.isModal && options.isModal === true) {
-                self.OpenViewModal(options);
+            if (self._controllerNavigation !== self) {
+                self._controllerNavigation.OpenView(options);
                 return;
             }
 
@@ -168,32 +183,58 @@ export module App {
 
             //<div id="main-view-content-modal" style="display:none"></div>
             $.when($.ajax({ url: options.controller.Options.Url, cache: false })).done((template) => {
-                self.OpenViewTemplate({ controller: options.controller, template: template, backController: options.backController, isRestore: options.isRestore });
+                self.OpenViewTemplate({ controller: options.controller, isModal: options.isModal, template: template, backController: options.backController, isRestore: options.isRestore });
             }).fail((e) => {
                 self.HideLoading();
             });
         }
 
-        public OpenViewModal(options: Interfaces.IOpenViewOptions): void {
-            //self.OpenViewTemplate({ controller: options.controller, template: template, backController: options.backController, isRestore: options.isRestore });
-        }
+        //public OpenViewModal(options: Interfaces.IOpenViewOptions): void {
+        //    this._controllersModalStack.Push(options.controller);
+        //    let modalContent: JQuery = $('<div class="main-view-content-modal"></div>');
+        //    try {
+        //        isInit = options.controller.ViewInit(view);
+        //        self.contentControl.html(view[0]);
+        //        isInit = isInit && self._controller.ViewShow(this);
+        //    }
 
+        //    this.contentControl.parent().add(modalContent);
+        //    //self.OpenViewTemplate({ controller: options.controller, template: template, backController: options.backController, isRestore: options.isRestore });
+        //}
+        private contentModals: JQuery[] = [];
+        public get IsModal(): boolean {
+            return (this.contentModals.length > 0);
+        }
         public OpenViewTemplate(options: Interfaces.IOpenViewTemplate) {
             let self = this;
             let isInit: boolean = false;
+            let isModal: boolean = (options.isModal && options.isModal === true);
+            let content: JQuery = self.contentControl;
             try {
-                if (self._controller)
+
+                if (!isModal && self._controller)
                     self._controller.ViewHide(this);
 
                 self._controller = options.controller;
-                if (!options.isRestore)
+                if (!isModal && !options.isRestore)
                     self._controllersStack.Push(options.backController);
 
-                self.SetHeader(self._controller);
+                if (!isModal)
+                    self.SetHeader(self._controller);
 
                 let view: any = $(options.template);
                 isInit = self._controller.ViewInit(view);
-                self.contentControl.html(view[0]);
+               
+
+                if (isModal) {
+                    content = $('<div class="main-view-content-modal"></div>');
+                    self.contentModals.push(content);
+                    self.contentControl.hide();
+                    self.contentControl.parent().append(content);
+                    self._controllersModalStack.Push(options.controller);
+                }
+
+                content.html(view[0]);
                 isInit = isInit && self._controller.ViewShow(this);
             } finally {
                 if (isInit)

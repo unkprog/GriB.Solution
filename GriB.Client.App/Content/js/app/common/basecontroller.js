@@ -179,7 +179,7 @@ define(["require", "exports", "app/common/utils", "app/common/variables", "./var
             BaseContent.prototype.OpenView = function (options) {
                 var self = this;
                 if (options.isModal && options.isModal === true) {
-                    variables_1._app.OpenViewModal(options);
+                    variables_1._app.OpenView(options);
                     return;
                 }
                 if ($("#" + options.controller.Options.Id).length > 0)
@@ -193,6 +193,10 @@ define(["require", "exports", "app/common/utils", "app/common/variables", "./var
             };
             BaseContent.prototype.OpenViewTemplate = function (options) {
                 var self = this;
+                //if (options.isModal && options.isModal === true) {
+                //    _app.OpenViewTemplate(options);
+                //    return;
+                //}
                 var isInit = false;
                 try {
                     if (self._controller)

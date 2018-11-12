@@ -311,7 +311,7 @@ export namespace Controller.Setting.Editor {
             let self = this;
            
             _app.OpenController({
-                urlController: 'setting/card/product', backController: this, onLoadController: (controller: Interfaces.IController) => {
+                urlController: 'setting/card/product', isModal: true, onLoadController: (controller: Interfaces.IController) => {
                     let ctrlProduct: Interfaces.IControllerCard = controller as Interfaces.IControllerCard;
                     ctrlProduct.CardSettings.IsAdd = false;
                     ctrlProduct.CardSettings.IsEdit = false;

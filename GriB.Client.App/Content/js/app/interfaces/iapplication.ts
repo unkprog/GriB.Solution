@@ -22,7 +22,8 @@
         ShowMessage(header: string, message: string, onClose?: () => void): void;
 
         Identity: Interfaces.Model.IIdentity;
-        OpenViewModal(options: IOpenViewOptions);
+        //OpenViewModal(options: IOpenViewOptions);
         OpenViewTemplate(options: IOpenViewTemplate);
+        IsModal: boolean;
     }
 }

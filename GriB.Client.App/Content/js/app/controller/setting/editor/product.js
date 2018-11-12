@@ -277,7 +277,7 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                     Product.prototype.addCompositionButtonClick = function (e) {
                         var self = this;
                         variables_1._app.OpenController({
-                            urlController: 'setting/card/product', backController: this, onLoadController: function (controller) {
+                            urlController: 'setting/card/product', isModal: true, onLoadController: function (controller) {
                                 var ctrlProduct = controller;
                                 ctrlProduct.CardSettings.IsAdd = false;
                                 ctrlProduct.CardSettings.IsEdit = false;

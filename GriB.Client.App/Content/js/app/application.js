@@ -5,8 +5,21 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
     (function (App) {
         var Application = /** @class */ (function () {
             function Application() {
+                //public OpenViewModal(options: Interfaces.IOpenViewOptions): void {
+                //    this._controllersModalStack.Push(options.controller);
+                //    let modalContent: JQuery = $('<div class="main-view-content-modal"></div>');
+                //    try {
+                //        isInit = options.controller.ViewInit(view);
+                //        self.contentControl.html(view[0]);
+                //        isInit = isInit && self._controller.ViewShow(this);
+                //    }
+                //    this.contentControl.parent().add(modalContent);
+                //    //self.OpenViewTemplate({ controller: options.controller, template: template, backController: options.backController, isRestore: options.isRestore });
+                //}
+                this.contentModals = [];
                 vars._app = this;
                 this._controllersStack = new base.Controller.ControllersStack();
+                this._controllersModalStack = new base.Controller.ControllersStack();
                 this._model = new kendo.data.ObservableObject({
                     "AppHeader": "POS Cloud",
                     "labelOk": vars._statres("button$label$ok"),
@@ -88,6 +101,14 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
                     this._controllerNavigation = controlNavigation;
             };
             Application.prototype.controllerBack = function (e) {
+                if (this.IsModal) {
+                    var contentModal = this.contentModals.pop();
+                    var controllerModal = this._controllersModalStack.Current;
+                    controllerModal.ViewHide(this);
+                    this._controllersModalStack.Pop();
+                    contentModal.remove();
+                    return;
+                }
                 if (this._controllerNavigation === this) {
                     this._controllersStack.Pop();
                     this.RestoreController();
@@ -112,7 +133,7 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
                         var controller = ctrlCreate(module);
                         if (options.onLoadController)
                             options.onLoadController(controller);
-                        self.OpenView({ controller: controller, backController: options.backController });
+                        self.OpenView({ controller: controller, isModal: options.isModal, backController: options.backController });
                     });
                 }
             };
@@ -125,12 +146,16 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
             };
             Application.prototype.OpenView = function (options) {
                 var self = this;
-                if (self._controllerNavigation !== self) {
-                    self._controllerNavigation.OpenView(options);
+                if (options.isModal && options.isModal === true) {
+                    $.when($.ajax({ url: options.controller.Options.Url, cache: false })).done(function (template) {
+                        self.OpenViewTemplate({ controller: options.controller, isModal: options.isModal, template: template, backController: options.backController, isRestore: options.isRestore });
+                    }).fail(function (e) {
+                        self.HideLoading();
+                    });
                     return;
                 }
-                if (options.isModal && options.isModal === true) {
-                    self.OpenViewModal(options);
+                if (self._controllerNavigation !== self) {
+                    self._controllerNavigation.OpenView(options);
                     return;
                 }
                 if ($("#" + options.controller.Options.Id).length > 0)
@@ -138,27 +163,41 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
                 self.ShowLoading();
                 //<div id="main-view-content-modal" style="display:none"></div>
                 $.when($.ajax({ url: options.controller.Options.Url, cache: false })).done(function (template) {
-                    self.OpenViewTemplate({ controller: options.controller, template: template, backController: options.backController, isRestore: options.isRestore });
+                    self.OpenViewTemplate({ controller: options.controller, isModal: options.isModal, template: template, backController: options.backController, isRestore: options.isRestore });
                 }).fail(function (e) {
                     self.HideLoading();
                 });
             };
-            Application.prototype.OpenViewModal = function (options) {
-                //self.OpenViewTemplate({ controller: options.controller, template: template, backController: options.backController, isRestore: options.isRestore });
-            };
+            Object.defineProperty(Application.prototype, "IsModal", {
+                get: function () {
+                    return (this.contentModals.length > 0);
+                },
+                enumerable: true,
+                configurable: true
+            });
             Application.prototype.OpenViewTemplate = function (options) {
                 var self = this;
                 var isInit = false;
+                var isModal = (options.isModal && options.isModal === true);
+                var content = self.contentControl;
                 try {
-                    if (self._controller)
+                    if (!isModal && self._controller)
                         self._controller.ViewHide(this);
                     self._controller = options.controller;
-                    if (!options.isRestore)
+                    if (!isModal && !options.isRestore)
                         self._controllersStack.Push(options.backController);
-                    self.SetHeader(self._controller);
+                    if (!isModal)
+                        self.SetHeader(self._controller);
                     var view = $(options.template);
                     isInit = self._controller.ViewInit(view);
-                    self.contentControl.html(view[0]);
+                    if (isModal) {
+                        content = $('<div class="main-view-content-modal"></div>');
+                        self.contentModals.push(content);
+                        self.contentControl.hide();
+                        self.contentControl.parent().append(content);
+                        self._controllersModalStack.Push(options.controller);
+                    }
+                    content.html(view[0]);
                     isInit = isInit && self._controller.ViewShow(this);
                 }
                 finally {
