@@ -110,13 +110,21 @@ export namespace Controller.Setting.Editor {
             view.find("#employee-surname").characterCounter();
             view.find("#employee-name").characterCounter();
             view.find("#employee-patronymic").characterCounter();
-            return super.ViewInit(view);
+            let result = super.ViewInit(view);
+
+            let tabs: JQuery = view.find("#editor-view-tabs");
+            let header: JQuery = view.find(".editor-header-nav");
+
+            tabs.remove();
+            header.append(tabs);
+            header.parent().css('cssText', "height: 88px !important");
+            return result;
         }
 
-        public ViewResize(e) {
+        public ViewShow(e: any): boolean {
             $('#editor-view-tabs').tabs();
+            return super.ViewShow(e);
         }
-
 
         protected validate(): boolean {
             let result: boolean = true;

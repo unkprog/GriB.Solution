@@ -125,8 +125,10 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                         view.find("#editor-view-product-barcode").characterCounter();
                         var result = _super.prototype.ViewInit.call(this, view);
                         var tabs = view.find("#editor-view-product-tabs");
+                        var header = view.find(".editor-header-nav");
                         tabs.remove();
-                        view.find(".editor-header-nav").append(tabs);
+                        header.append(tabs);
+                        header.parent().css('cssText', "height: 88px !important");
                         return result;
                     };
                     Product.prototype.createEvents = function () {
@@ -159,11 +161,18 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                     };
                     Product.prototype.ViewResize = function (e) {
                         _super.prototype.ViewResize.call(this, e);
+                        if (this.controlPhoto)
+                            this.controlPhoto.height(this.controlPhoto.width());
+                    };
+                    Product.prototype.ViewShow = function (e) {
                         $('#editor-view-product-tabs').tabs();
                         M.textareaAutoResize($("#editor-view-product-description"));
                         this.controlType.formSelect();
-                        if (this.controlPhoto)
-                            this.controlPhoto.height(this.controlPhoto.width());
+                        return _super.prototype.ViewShow.call(this, e);
+                    };
+                    Product.prototype.ViewHide = function (e) {
+                        // $('#editor-view-product-tabs').tabs("destroy");
+                        _super.prototype.ViewHide.call(this, e);
                     };
                     Product.prototype.afterLoad = function (responseData) {
                         _super.prototype.afterLoad.call(this, responseData);

@@ -130,8 +130,11 @@ export namespace Controller.Setting.Editor {
             let result = super.ViewInit(view);
 
             let tabs: JQuery = view.find("#editor-view-product-tabs");
+            let header: JQuery = view.find(".editor-header-nav");
+
             tabs.remove();
-            view.find(".editor-header-nav").append(tabs);
+            header.append(tabs);
+            header.parent().css('cssText', "height: 88px !important");
             return result;
         }
 
@@ -173,11 +176,20 @@ export namespace Controller.Setting.Editor {
         public ViewResize(e: any): void {
             super.ViewResize(e);
            
+            if (this.controlPhoto)
+                this.controlPhoto.height(this.controlPhoto.width());
+        }
+
+        public ViewShow(e: any): boolean {
             $('#editor-view-product-tabs').tabs();
             M.textareaAutoResize($("#editor-view-product-description"));
             this.controlType.formSelect();
-            if (this.controlPhoto)
-                this.controlPhoto.height(this.controlPhoto.width());
+            return super.ViewShow(e);
+        }
+
+        public ViewHide(e) {
+           // $('#editor-view-product-tabs').tabs("destroy");
+            super.ViewHide(e);
         }
 
         protected afterLoad(responseData?: any): void {

@@ -117,10 +117,17 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                         view.find("#employee-surname").characterCounter();
                         view.find("#employee-name").characterCounter();
                         view.find("#employee-patronymic").characterCounter();
-                        return _super.prototype.ViewInit.call(this, view);
+                        var result = _super.prototype.ViewInit.call(this, view);
+                        var tabs = view.find("#editor-view-tabs");
+                        var header = view.find(".editor-header-nav");
+                        tabs.remove();
+                        header.append(tabs);
+                        header.parent().css('cssText', "height: 88px !important");
+                        return result;
                     };
-                    Employee.prototype.ViewResize = function (e) {
+                    Employee.prototype.ViewShow = function (e) {
                         $('#editor-view-tabs').tabs();
+                        return _super.prototype.ViewShow.call(this, e);
                     };
                     Employee.prototype.validate = function () {
                         var result = true;

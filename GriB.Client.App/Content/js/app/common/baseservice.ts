@@ -22,7 +22,7 @@ export namespace Services {
         }
 
         public GetApi(options: Interfaces.IServiceCallOptions): void {
-            _app.ShowLoading();
+            //_app.ShowLoading();
 
             let self = this;
             let action = (self.Options && self.Options.BaseUrl ? self.Options.BaseUrl : '') + options.Action;
@@ -38,7 +38,7 @@ export namespace Services {
                         self.handleError(responseData.error);
                     else if (options.Callback)
                         options.Callback(responseData);
-                    _app.HideLoading();
+                    //_app.HideLoading();
                 },
                 error: function (e, textStatus, errorThrown) {
                     self.handleError(e);

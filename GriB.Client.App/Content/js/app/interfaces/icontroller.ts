@@ -25,6 +25,7 @@
         Current: Interfaces.IController;
         Pop: () => void; 
         Push: (controller: Interfaces.IController) => void; 
+        Last: Interfaces.IController;
     }
 
     export interface IOpenControllerOptions {

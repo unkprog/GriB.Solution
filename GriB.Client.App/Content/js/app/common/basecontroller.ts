@@ -107,6 +107,10 @@ export namespace Controller {
             return this._current;
         }
 
+        public get Last(): Interfaces.IController {
+            return (this._controllers.length > 0 ? this._controllers[this._controllers.length - 1] : undefined);
+        }
+
         public Pop() : void {
             if (this._controllers.length > 0)
                 this._current = this._controllers.pop();
@@ -152,6 +156,13 @@ export namespace Controller {
             return result;
         }
 
+        public ViewShow(e: any): boolean {
+            let result: boolean = super.ViewShow(e);
+            if (this._controller)
+                this._controller.ViewShow(e);
+            return result;
+        }
+
         public ViewResize(e) {
             if (this._content) {
                 let heigth = window.innerHeight;
@@ -165,8 +176,13 @@ export namespace Controller {
 
         public ControllerBack: { (e: any): void; };
         private controllerBack(e): void {
-            this._controllersStack.Pop();
-            this.RestoreController();
+            if (_app.IsModal)
+                _app.ControllerBack(e);
+            else
+            {
+                this._controllersStack.Pop();
+                this.RestoreController();
+            }
         }
 
         public RestoreController() {
@@ -217,8 +233,7 @@ export namespace Controller {
                     let view: any = $(options.template);
                     isInit = self._controller.ViewInit(view);
                     self._content.html(view[0]);
-                    isInit = isInit && self._controller.ViewShow(this);
-
+                    isInit = self._controller.ViewShow(this) && isInit;
                     //self._controller.ViewResize(this);
                 }
                 catch (ex) {

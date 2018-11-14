@@ -74,12 +74,18 @@ export module App {
 
         public HideLoading() {
             this.progressControl.hide();
-            if (this.contentControl) {
+            if (this.IsModal)
+                this.contentModals[this.contentModals.length - 1].show();
+            else if (this.contentControl) {
                 this.contentControl.show();
                 //if (this._controller)
                 //    this._controller.AfterShow(this);
             }
             this.resize({});
+            if (this.IsModal)
+                this._controllersModalStack.Last.ViewShow(undefined);
+            else
+                this._controller.ViewShow(this);
         }
 
       
@@ -114,19 +120,21 @@ export module App {
         private controllerBack(e): void {
             if (this.IsModal) {
                 let contentModal: JQuery = this.contentModals.pop();
-                let controllerModal: Interfaces.IController = this._controllersModalStack.Current;
+                let controllerModal: Interfaces.IController = this._controllersModalStack.Last;
                 controllerModal.ViewHide(this);
-                this._controllersModalStack.Pop();
                 contentModal.remove();
+                this.contentControl.show();
+                this._controllersModalStack.Pop();
                 return;
             }
-
-            if (this._controllerNavigation === this) {
-                this._controllersStack.Pop();
-                this.RestoreController();
+            else {
+                if (this._controllerNavigation === this) {
+                    this._controllersStack.Pop();
+                    this.RestoreController();
+                }
+                else
+                    this._controllerNavigation.ControllerBack(e);
             }
-            else
-                this._controllerNavigation.ControllerBack(e);
         }
 
         public RestoreController() {
@@ -205,6 +213,7 @@ export module App {
         public get IsModal(): boolean {
             return (this.contentModals.length > 0);
         }
+
         public OpenViewTemplate(options: Interfaces.IOpenViewTemplate) {
             let self = this;
             let isInit: boolean = false;
@@ -215,10 +224,11 @@ export module App {
                 if (!isModal && self._controller)
                     self._controller.ViewHide(this);
 
-                self._controller = options.controller;
-                if (!isModal && !options.isRestore)
+                //if (!isModal)
+                    self._controller = options.controller;
+                if (!isModal && !options.isRestore) 
                     self._controllersStack.Push(options.backController);
-
+                
                 if (!isModal)
                     self.SetHeader(self._controller);
 
@@ -228,14 +238,16 @@ export module App {
 
                 if (isModal) {
                     content = $('<div class="main-view-content-modal"></div>');
+                    content.height(self.contentControl.height());
                     self.contentModals.push(content);
                     self.contentControl.hide();
                     self.contentControl.parent().append(content);
                     self._controllersModalStack.Push(options.controller);
+                    options.controller.ViewResize({});
                 }
 
                 content.html(view[0]);
-                isInit = isInit && self._controller.ViewShow(this);
+                isInit = self._controller.ViewShow(this) && isInit;
             } finally {
                 if (isInit)
                     self.HideLoading();

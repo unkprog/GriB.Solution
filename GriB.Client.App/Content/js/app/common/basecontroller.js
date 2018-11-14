@@ -118,6 +118,13 @@ define(["require", "exports", "app/common/utils", "app/common/variables", "./var
                 enumerable: true,
                 configurable: true
             });
+            Object.defineProperty(ControllersStack.prototype, "Last", {
+                get: function () {
+                    return (this._controllers.length > 0 ? this._controllers[this._controllers.length - 1] : undefined);
+                },
+                enumerable: true,
+                configurable: true
+            });
             ControllersStack.prototype.Pop = function () {
                 if (this._controllers.length > 0)
                     this._current = this._controllers.pop();
@@ -156,6 +163,12 @@ define(["require", "exports", "app/common/utils", "app/common/variables", "./var
                 this._content = this.GetContent();
                 return result;
             };
+            BaseContent.prototype.ViewShow = function (e) {
+                var result = _super.prototype.ViewShow.call(this, e);
+                if (this._controller)
+                    this._controller.ViewShow(e);
+                return result;
+            };
             BaseContent.prototype.ViewResize = function (e) {
                 if (this._content) {
                     var heigth = window.innerHeight;
@@ -166,8 +179,12 @@ define(["require", "exports", "app/common/utils", "app/common/variables", "./var
                     this._controller.ViewResize(e);
             };
             BaseContent.prototype.controllerBack = function (e) {
-                this._controllersStack.Pop();
-                this.RestoreController();
+                if (variables_1._app.IsModal)
+                    variables_1._app.ControllerBack(e);
+                else {
+                    this._controllersStack.Pop();
+                    this.RestoreController();
+                }
             };
             BaseContent.prototype.RestoreController = function () {
                 if (this._controllersStack.Current)
@@ -209,7 +226,7 @@ define(["require", "exports", "app/common/utils", "app/common/variables", "./var
                         var view = $(options.template);
                         isInit = self._controller.ViewInit(view);
                         self._content.html(view[0]);
-                        isInit = isInit && self._controller.ViewShow(this);
+                        isInit = self._controller.ViewShow(this) && isInit;
                         //self._controller.ViewResize(this);
                     }
                     catch (ex) {

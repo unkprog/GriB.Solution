@@ -68,12 +68,18 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
             };
             Application.prototype.HideLoading = function () {
                 this.progressControl.hide();
-                if (this.contentControl) {
+                if (this.IsModal)
+                    this.contentModals[this.contentModals.length - 1].show();
+                else if (this.contentControl) {
                     this.contentControl.show();
                     //if (this._controller)
                     //    this._controller.AfterShow(this);
                 }
                 this.resize({});
+                if (this.IsModal)
+                    this._controllersModalStack.Last.ViewShow(undefined);
+                else
+                    this._controller.ViewShow(this);
             };
             Application.prototype.loadAppView = function () {
                 var _this = this;
@@ -103,18 +109,21 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
             Application.prototype.controllerBack = function (e) {
                 if (this.IsModal) {
                     var contentModal = this.contentModals.pop();
-                    var controllerModal = this._controllersModalStack.Current;
+                    var controllerModal = this._controllersModalStack.Last;
                     controllerModal.ViewHide(this);
-                    this._controllersModalStack.Pop();
                     contentModal.remove();
+                    this.contentControl.show();
+                    this._controllersModalStack.Pop();
                     return;
                 }
-                if (this._controllerNavigation === this) {
-                    this._controllersStack.Pop();
-                    this.RestoreController();
+                else {
+                    if (this._controllerNavigation === this) {
+                        this._controllersStack.Pop();
+                        this.RestoreController();
+                    }
+                    else
+                        this._controllerNavigation.ControllerBack(e);
                 }
-                else
-                    this._controllerNavigation.ControllerBack(e);
             };
             Application.prototype.RestoreController = function () {
                 if (this._controllerNavigation === this) {
@@ -183,6 +192,7 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
                 try {
                     if (!isModal && self._controller)
                         self._controller.ViewHide(this);
+                    //if (!isModal)
                     self._controller = options.controller;
                     if (!isModal && !options.isRestore)
                         self._controllersStack.Push(options.backController);
@@ -192,13 +202,15 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
                     isInit = self._controller.ViewInit(view);
                     if (isModal) {
                         content = $('<div class="main-view-content-modal"></div>');
+                        content.height(self.contentControl.height());
                         self.contentModals.push(content);
                         self.contentControl.hide();
                         self.contentControl.parent().append(content);
                         self._controllersModalStack.Push(options.controller);
+                        options.controller.ViewResize({});
                     }
                     content.html(view[0]);
-                    isInit = isInit && self._controller.ViewShow(this);
+                    isInit = self._controller.ViewShow(this) && isInit;
                 }
                 finally {
                     if (isInit)

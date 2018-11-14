@@ -74,7 +74,21 @@ export namespace Controller.Setting.Editor {
             let onUpolad = $.proxy(this.uploudImageClick, this);
 
             this.imgDialog.bind("change", onUpolad);
-            return super.ViewInit(view);
+            let result = super.ViewInit(view);
+
+            let tabs: JQuery = view.find("#editor-view-category-tabs");
+            let header: JQuery = view.find(".editor-header-nav");
+
+            tabs.remove();
+            header.append(tabs);
+            header.parent().css('cssText', "height: 88px !important");
+            return result;
+        }
+
+        public ViewShow(e: any): boolean {
+            $('#editor-view-category-tabs').tabs();
+            M.textareaAutoResize($("#editor-view-category-description"));
+            return super.ViewShow(e);
         }
 
         protected createEvents(): void {
@@ -90,8 +104,6 @@ export namespace Controller.Setting.Editor {
 
         public ViewResize(e: any): void {
             super.ViewResize(e);
-            $('#editor-view-category-tabs').tabs();
-            M.textareaAutoResize($("#editor-view-category-description"));
             if (this.controlPhoto)
                 this.controlPhoto.height(this.controlPhoto.width());
         }

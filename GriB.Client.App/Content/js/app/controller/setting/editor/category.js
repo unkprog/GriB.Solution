@@ -80,7 +80,18 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                         view.find("#editor-view-category-description").characterCounter();
                         var onUpolad = $.proxy(this.uploudImageClick, this);
                         this.imgDialog.bind("change", onUpolad);
-                        return _super.prototype.ViewInit.call(this, view);
+                        var result = _super.prototype.ViewInit.call(this, view);
+                        var tabs = view.find("#editor-view-category-tabs");
+                        var header = view.find(".editor-header-nav");
+                        tabs.remove();
+                        header.append(tabs);
+                        header.parent().css('cssText', "height: 88px !important");
+                        return result;
+                    };
+                    Category.prototype.ViewShow = function (e) {
+                        $('#editor-view-category-tabs').tabs();
+                        M.textareaAutoResize($("#editor-view-category-description"));
+                        return _super.prototype.ViewShow.call(this, e);
                     };
                     Category.prototype.createEvents = function () {
                         _super.prototype.createEvents.call(this);
@@ -93,8 +104,6 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                     };
                     Category.prototype.ViewResize = function (e) {
                         _super.prototype.ViewResize.call(this, e);
-                        $('#editor-view-category-tabs').tabs();
-                        M.textareaAutoResize($("#editor-view-category-description"));
                         if (this.controlPhoto)
                             this.controlPhoto.height(this.controlPhoto.width());
                     };
