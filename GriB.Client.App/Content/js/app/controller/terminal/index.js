@@ -11,7 +11,7 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-define(["require", "exports", "app/common/variables", "app/common/basecontroller", "app/services/posterminalservice"], function (require, exports, vars, base, svc) {
+define(["require", "exports", "app/common/variables", "app/common/basecontroller", "app/services/posterminalservice", "app/common/variables"], function (require, exports, vars, base, svc, variables_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var Controller;
@@ -53,6 +53,7 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
                         vars._identity.employee = responseData.employee;
                         controller.initNavbarHeader(controller.View);
                         controller.initControlSalePoints(controller.View);
+                        variables_1._app.HideLoading();
                     });
                     return false;
                 };

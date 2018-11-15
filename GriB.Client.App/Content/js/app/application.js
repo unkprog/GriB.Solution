@@ -76,10 +76,10 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
                     //    this._controller.AfterShow(this);
                 }
                 this.resize({});
-                if (this.IsModal)
-                    this._controllersModalStack.Last.ViewShow(undefined);
-                else
-                    this._controller.ViewShow(this);
+                //if (this.IsModal)
+                //    this._controllersModalStack.Last.ViewShow(undefined);
+                //else
+                //    this._controller.ViewShow(this);
             };
             Application.prototype.loadAppView = function () {
                 var _this = this;

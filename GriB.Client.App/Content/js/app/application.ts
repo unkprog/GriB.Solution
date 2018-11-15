@@ -82,10 +82,10 @@ export module App {
                 //    this._controller.AfterShow(this);
             }
             this.resize({});
-            if (this.IsModal)
-                this._controllersModalStack.Last.ViewShow(undefined);
-            else
-                this._controller.ViewShow(this);
+            //if (this.IsModal)
+            //    this._controllersModalStack.Last.ViewShow(undefined);
+            //else
+            //    this._controller.ViewShow(this);
         }
 
       

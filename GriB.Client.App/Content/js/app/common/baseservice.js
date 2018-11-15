@@ -45,7 +45,7 @@ define(["require", "exports", "./variables"], function (require, exports, variab
                 });
             };
             BaseService.prototype.PostApi = function (options) {
-                variables_1._app.ShowLoading();
+                //_app.ShowLoading();
                 var self = this;
                 var action = (self.Options && self.Options.BaseUrl ? self.Options.BaseUrl : '') + options.Action;
                 $.ajax({
@@ -59,7 +59,7 @@ define(["require", "exports", "./variables"], function (require, exports, variab
                             self.handleError(responseData.error);
                         else if (options.Callback)
                             options.Callback(responseData);
-                        variables_1._app.HideLoading();
+                        // _app.HideLoading();
                     },
                     error: function (e, textStatus, errorThrown) {
                         self.handleError(e);

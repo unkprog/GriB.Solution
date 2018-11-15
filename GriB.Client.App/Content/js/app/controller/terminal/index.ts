@@ -47,6 +47,7 @@ export namespace Controller.Terminal {
                 vars._identity.employee = responseData.employee;
                 controller.initNavbarHeader(controller.View);
                 controller.initControlSalePoints(controller.View);
+                _app.HideLoading();
             });
             return false;
         }
