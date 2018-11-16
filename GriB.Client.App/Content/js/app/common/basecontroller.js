@@ -281,7 +281,7 @@ define(["require", "exports", "app/common/utils", "app/common/variables", "./var
                 return { EditIdName: "", Load: undefined, Save: undefined };
             };
             BaseEditor.prototype.ViewInit = function (view) {
-                var navbarHeader = '<div class="navbar-fixed editor-header z-depth-1">';
+                var navbarHeader = '<div class="navbar-fixed editor-header">';
                 navbarHeader += '        <nav class="editor-header-nav">';
                 navbarHeader += '            <div class="nav-wrapper editor-header">';
                 navbarHeader += '                <a class="editor-header-title">' + this.Header + '</a>';
@@ -397,7 +397,7 @@ define(["require", "exports", "app/common/utils", "app/common/variables", "./var
                 configurable: true
             });
             BaseCard.prototype.ViewInit = function (view) {
-                var navbarHeader = '<div class="navbar-fixed editor-header z-depth-1">';
+                var navbarHeader = '<div class="navbar-fixed editor-header">';
                 navbarHeader += '        <nav class="editor-header-nav">';
                 navbarHeader += '            <div class="nav-wrapper editor-header">';
                 navbarHeader += '                <a class="editor-header-title">' + this.Header + '</a>';

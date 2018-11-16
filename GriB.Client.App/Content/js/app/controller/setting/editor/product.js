@@ -145,6 +145,8 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                         this.destroyClickEvent("editor-view-product-addphoto", this.AddPhotoButtonClick);
                         if (this.btnAddComposition)
                             this.destroyClickEvent(this.btnAddComposition, this.addCompositionButtonClick);
+                        if (this.btnRemoveComposition)
+                            this.destroyClickEvent(this.btnRemoveComposition, this.removeCompositionButtonClick);
                         this.imgDialog.unbind();
                         _super.prototype.destroyEvents.call(this);
                     };
@@ -166,6 +168,7 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                     };
                     Product.prototype.ViewShow = function (e) {
                         $('#editor-view-product-tabs').tabs();
+                        M.Tabs.getInstance($('#editor-view-product-tabs')).updateTabIndicator();
                         M.textareaAutoResize($("#editor-view-product-description"));
                         this.controlType.formSelect();
                         return _super.prototype.ViewShow.call(this, e);
@@ -227,24 +230,17 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                         var model = this.EditorModel;
                         var data = model.composition;
                         var html = '';
+                        if (this.btnAddComposition)
+                            this.destroyClickEvent(this.btnAddComposition, this.addCompositionButtonClick);
                         this.compositionRows.unbind();
                         if (data && data.length > 0) {
                             for (var i = 0, icount = (data && data.length ? data.length : 0); i < icount; i++) {
-                                html += '<tr class="table-row">';
+                                html += '<tr class="table-row" data-index="' + i + '">';
                                 html += '<td  class="col-md-auto" data-bind="text:editModel.composition[' + i + '].product.name"></td>';
                                 html += '<td class="col-md-auto right-align"><input class="table-cell-input" type="number" data-bind="value:editModel.composition[' + i + '].quantity"/></td>';
-                                html += '<td class="col-md-auto">кг</td>';
+                                html += '<td class="col-md-auto" data-bind="text:editModel.composition[' + i + '].product.unit_name"></td>';
                                 html += '<td class="col-md-auto"><a class="editor-header-button"><i class="material-icons editor-header">close</i></a></td>';
                                 html += '</tr>';
-                                /*
-                                
-            <tr class="table-row">
-                                    <td class="col-md-auto">Alvin</td>
-                                    <td class="col-md-auto right-align"><input class="table-cell-input" type="number" value="0.87" /></td>
-                                    <td class="col-md-auto">кг</td>
-                                    <td class="col-md-auto"><a class="editor-header-button"><i class="material-icons editor-header">close</i></a></td>
-                                </tr>
-                                */
                             }
                         }
                         html += '<tr class="table-row">';
@@ -252,7 +248,9 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                         html += '</tr>';
                         this.compositionRows.html(html);
                         this.btnAddComposition = this.compositionRows.find("#btn-add-composition");
+                        this.btnRemoveComposition = this.compositionRows.find(".editor-header-button");
                         this.AddCompositionButtonClick = this.createClickEvent(this.btnAddComposition, this.addCompositionButtonClick);
+                        this.RemoveCompositionButtonClick = this.createClickEvent(this.btnRemoveComposition, this.removeCompositionButtonClick);
                         kendo.bind(this.compositionRows, this.Model);
                     };
                     Product.prototype.setupTableAccess = function () {
@@ -296,6 +294,14 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                             }
                         });
                         //require(["/Content/js/app/controller/setting/card/product.js"], function (module) {
+                    };
+                    Product.prototype.removeCompositionButtonClick = function (e) {
+                        var self = this;
+                        var model = this.EditorModel;
+                        var index = +$(e.currentTarget).parent().parent().data("index");
+                        model.composition.splice(index, 1);
+                        self.Model.set("editModel", model);
+                        self.setupTableComposition();
                     };
                     Product.prototype.selectComposition = function (controller) {
                         var id = controller.getSelectedRowId();

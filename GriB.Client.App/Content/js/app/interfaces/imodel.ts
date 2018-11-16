@@ -105,6 +105,7 @@
 
         quantity: number;
         unit: number;
+        unit_name: string;
         currency: number;
         costprice: number;
         sellingprice: number;

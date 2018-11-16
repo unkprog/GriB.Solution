@@ -289,7 +289,7 @@ export namespace Controller {
         private btnCancel: JQuery;
         public ViewInit(view: JQuery): boolean {
 
-            let navbarHeader: string = '<div class="navbar-fixed editor-header z-depth-1">';
+            let navbarHeader: string = '<div class="navbar-fixed editor-header">';
             navbarHeader += '        <nav class="editor-header-nav">';
             navbarHeader += '            <div class="nav-wrapper editor-header">';
             navbarHeader += '                <a class="editor-header-title">' + this.Header + '</a>';
@@ -439,7 +439,7 @@ export namespace Controller {
 
         public ViewInit(view: JQuery): boolean {
 
-            let navbarHeader: string = '<div class="navbar-fixed editor-header z-depth-1">';
+            let navbarHeader: string = '<div class="navbar-fixed editor-header">';
             navbarHeader += '        <nav class="editor-header-nav">';
             navbarHeader += '            <div class="nav-wrapper editor-header">';
             navbarHeader += '                <a class="editor-header-title">' + this.Header + '</a>';

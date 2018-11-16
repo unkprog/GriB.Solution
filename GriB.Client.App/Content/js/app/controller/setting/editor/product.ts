@@ -112,6 +112,7 @@ export namespace Controller.Setting.Editor {
         private compositionRows: JQuery;
         private rightRows: JQuery;
         private btnAddComposition: JQuery;
+        private btnRemoveComposition: JQuery;
         public ViewInit(view: JQuery): boolean {
             this.imgDialog = view.find("#editor-view-image-input");
             this.controlPhoto = view.find("#editor-view-product-photo");
@@ -155,6 +156,8 @@ export namespace Controller.Setting.Editor {
             this.destroyClickEvent("editor-view-product-addphoto", this.AddPhotoButtonClick);
             if (this.btnAddComposition)
                 this.destroyClickEvent(this.btnAddComposition, this.addCompositionButtonClick);
+            if (this.btnRemoveComposition)
+                this.destroyClickEvent(this.btnRemoveComposition, this.removeCompositionButtonClick);
             this.imgDialog.unbind();
             super.destroyEvents();
 
@@ -182,6 +185,7 @@ export namespace Controller.Setting.Editor {
 
         public ViewShow(e: any): boolean {
             $('#editor-view-product-tabs').tabs();
+            M.Tabs.getInstance($('#editor-view-product-tabs')).updateTabIndicator();
             M.textareaAutoResize($("#editor-view-product-description"));
             this.controlType.formSelect();
             return super.ViewShow(e);
@@ -250,26 +254,19 @@ export namespace Controller.Setting.Editor {
             let data: Interfaces.Model.IProductComposition[] = model.composition;
             let html: string = '';
 
+            if (this.btnAddComposition)
+                this.destroyClickEvent(this.btnAddComposition, this.addCompositionButtonClick);  
+
             this.compositionRows.unbind();
             if (data && data.length > 0) {
                 for (let i = 0, icount = (data && data.length ? data.length : 0); i < icount; i++) {
 
-                    html += '<tr class="table-row">';
+                    html += '<tr class="table-row" data-index="' + i + '">';
                     html += '<td  class="col-md-auto" data-bind="text:editModel.composition[' + i + '].product.name"></td>';
                     html += '<td class="col-md-auto right-align"><input class="table-cell-input" type="number" data-bind="value:editModel.composition[' + i + '].quantity"/></td>';
-                    html += '<td class="col-md-auto">кг</td>';
+                    html += '<td class="col-md-auto" data-bind="text:editModel.composition[' + i + '].product.unit_name"></td>';
                     html += '<td class="col-md-auto"><a class="editor-header-button"><i class="material-icons editor-header">close</i></a></td>';
                     html += '</tr>';
-
-                    /*
-                    
-<tr class="table-row">
-                        <td class="col-md-auto">Alvin</td>
-                        <td class="col-md-auto right-align"><input class="table-cell-input" type="number" value="0.87" /></td>
-                        <td class="col-md-auto">кг</td>
-                        <td class="col-md-auto"><a class="editor-header-button"><i class="material-icons editor-header">close</i></a></td>
-                    </tr>
-                    */
                 }
             }
 
@@ -277,9 +274,12 @@ export namespace Controller.Setting.Editor {
             html += '<td class="col-md-auto" colspan="4"><a id="btn-add-composition" class="btn btncol"><span data-bind="text:labelAdd"></span></a></td>';
             html += '</tr>';
             this.compositionRows.html(html);
-            this.btnAddComposition = this.compositionRows.find("#btn-add-composition");
-            this.AddCompositionButtonClick = this.createClickEvent(this.btnAddComposition, this.addCompositionButtonClick);
 
+         
+            this.btnAddComposition = this.compositionRows.find("#btn-add-composition");
+            this.btnRemoveComposition = this.compositionRows.find(".editor-header-button");
+            this.AddCompositionButtonClick = this.createClickEvent(this.btnAddComposition, this.addCompositionButtonClick);
+            this.RemoveCompositionButtonClick = this.createClickEvent(this.btnRemoveComposition, this.removeCompositionButtonClick);
             kendo.bind(this.compositionRows, this.Model);
 
         }
@@ -334,6 +334,15 @@ export namespace Controller.Setting.Editor {
             });
             //require(["/Content/js/app/controller/setting/card/product.js"], function (module) {
             
+        }
+        public RemoveCompositionButtonClick: { (e: any): void; };
+        private removeCompositionButtonClick(e) {
+            let self = this;
+            let model: Interfaces.Model.IProduct = this.EditorModel;
+            let index: number = +$(e.currentTarget).parent().parent().data("index");
+            model.composition.splice(index, 1);
+            self.Model.set("editModel", model);
+            self.setupTableComposition();
         }
 
         private selectComposition(controller: Interfaces.IControllerCard) {

@@ -11,6 +11,7 @@ namespace GriB.Client.App.Models.Editor
             description = string.Empty;
             vendorcode = string.Empty;
             barcode = string.Empty;
+            unit_name = string.Empty;
             costprices = new List<price_item>();
             sellingprices = new List<price_item>();
             accesssalepoints = new List<salepointaccess>();
@@ -25,6 +26,7 @@ namespace GriB.Client.App.Models.Editor
         public bool putonsale { get; set; }
 
         public int unit { get; set; }
+        public string unit_name { get; set; }
         public double quantity { get; set; }
         public int currency { get; set; }
         public double costprice { get; set; }
