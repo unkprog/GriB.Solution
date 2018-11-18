@@ -92,6 +92,7 @@
         index: number;
         product: IProduct;
         quantity: number;
+        sum: number;
     }
 
     export interface IProduct extends IReferenceHierarhyModel, IEditorModel, IEditorSalePointAccess {

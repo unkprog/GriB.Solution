@@ -43,6 +43,7 @@ export namespace Controller.Setting.Editor {
                 "labelCurrency": vars._statres("label$currency"),
                 "labelCostPrice": vars._statres("label$costprice"),
                 "labelSellingPrice": vars._statres("label$sellingprice"),
+                "labelPrice": vars._statres("label$price"),
                 "labelQuantityShort": vars._statres("label$quantityshort"),
                 "labelUnitShort": vars._statres("label$unitshort"),
                 "labelAdd": vars._statres("button$label$add")
@@ -178,7 +179,7 @@ export namespace Controller.Setting.Editor {
 
         public ViewResize(e: any): void {
             super.ViewResize(e);
-           
+            M.Tabs.getInstance($('#editor-view-product-tabs')).updateTabIndicator();
             if (this.controlPhoto)
                 this.controlPhoto.height(this.controlPhoto.width());
         }
@@ -250,6 +251,7 @@ export namespace Controller.Setting.Editor {
         }
 
         private setupTableComposition(): void {
+            let self = this;
             let model: Interfaces.Model.IProduct = this.EditorModel;
             let data: Interfaces.Model.IProductComposition[] = model.composition;
             let html: string = '';
@@ -260,22 +262,25 @@ export namespace Controller.Setting.Editor {
             this.compositionRows.unbind();
             if (data && data.length > 0) {
                 for (let i = 0, icount = (data && data.length ? data.length : 0); i < icount; i++) {
+                    data[i].sum = Math.round((data[i].quantity * data[i].product.sellingprice) * 100) / 100;
 
-                    html += '<tr class="table-row" data-index="' + i + '">';
-                    html += '<td  class="col-md-auto" data-bind="text:editModel.composition[' + i + '].product.name"></td>';
-                    html += '<td class="col-md-auto right-align"><input class="table-cell-input" type="number" data-bind="value:editModel.composition[' + i + '].quantity"/></td>';
-                    html += '<td class="col-md-auto" data-bind="text:editModel.composition[' + i + '].product.unit_name"></td>';
-                    html += '<td class="col-md-auto"><a class="editor-header-button"><i class="material-icons editor-header">close</i></a></td>';
+                    html += '<tr data-index="' + i + '">';
+                    html += '<td class="product-col-name" data-bind="text:editModel.composition[' + i + '].product.name"></td>';
+                    html += '<td class="product-col-quantity"><input class="table-cell-input" type="number" data-bind="value:editModel.composition[' + i + '].quantity"/></td>';
+                    html += '<td class="product-col-unit" data-bind="text:editModel.composition[' + i + '].product.unit_name"></td>';
+                    html += '<td class="product-col-sum hide-on-small-only" data-bind="text:editModel.composition[' + i + '].sum"></td>';
+                    html += '<td class="product-col-btn"><a class="product-col-button-delete"><i class="material-icons editor-header">close</i></a></td>';
                     html += '</tr>';
                 }
             }
 
-            html += '<tr class="table-row">';
-            html += '<td class="col-md-auto" colspan="4"><a id="btn-add-composition" class="btn btncol"><span data-bind="text:labelAdd"></span></a></td>';
+            html += '<tr>';
+            html += '<td><a id="btn-add-composition" class="btn btncol"><span data-bind="text:labelAdd"></span></a></td>';
             html += '</tr>';
             this.compositionRows.html(html);
 
-         
+            self.Model.set("editModel", model);
+
             this.btnAddComposition = this.compositionRows.find("#btn-add-composition");
             this.btnRemoveComposition = this.compositionRows.find(".editor-header-button");
             this.AddCompositionButtonClick = this.createClickEvent(this.btnAddComposition, this.addCompositionButtonClick);

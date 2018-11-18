@@ -121,61 +121,40 @@
                 <h5 data-bind="text:labelComposition"></h5>
             </div>
 
-            <table class="table">
-                <thead class="table-row">
+            <table>
+                <thead>
                     <tr>
-                        <th class="col-md-auto" data-bind="text:labelName"></th>
-                        <th class="col-md-auto right-align" data-bind="text:labelQuantityShort" style="padding-right: 0;"></th>
-                        <th class="col-md-auto" data-bind="text:labelUnitShort"></th>
-                        <th class="col-md-auto"></th>
+                        <th class="product-col-name" data-bind="text:labelName"></th>
+                        <th class="product-col-quantity" data-bind="text:labelQuantityShort"></th>
+                        <th class="product-col-unit" data-bind="text:labelUnitShort"></th>
+                        <th class="product-col-sum hide-on-small-only" data-bind="text:labelPrice"></th>
+                        <th class="product-col-btn"></th>
                     </tr>
                 </thead>
 
-                <tbody id="product-composition-rows" class="table-row">
-                    <tr class="table-row">
-                        <td class="col-md-auto">Alvin</td>
-                        <td class="col-md-auto right-align"><input class="table-cell-input" type="number" value="0.87" /></td>
-                        <td class="col-md-auto">кг</td>
-                        <td class="col-md-auto"><a class="editor-header-button"><i class="material-icons editor-header">close</i></a></td>
-                    </tr>
-                    <tr class="table-row">
-                        <td class="col-md-auto">Alan</td>
-                        <td class="col-md-auto right-align"><input class="table-cell-input" type="number" value="3.76" /></td>
-                        <td class="col-md-auto">кг</td>
-                        <td class="col-md-auto"><a class="editor-header-button"><i class="material-icons editor-header">close</i></a></td>
-                    </tr>
-                    <tr class="table-row">
-                        <td class="col-md-auto">Jonathan</td>
-                        <td class="col-md-auto right-align"><input class="table-cell-input" type="number" value="7.00" /></td>
-                        <td class="col-md-auto">кг</td>
-                        <td class="col-md-auto"><a class="editor-header-button"><i class="material-icons editor-header">close</i></a></td>
-                    </tr>
-                    <tr class="table-row">
-                        <td class="col-md-auto" colspan="4"><a id="btn-add-composition" class="btn btncol"><span data-bind="text:labelAdd"></span></a></td>
-                    </tr>
-                </tbody>
+                <tbody id="product-composition-rows"></tbody>
             </table>
         </div>
     </div>
 
 
-        <div id="editor-view-product-tab-accessright">
-            <div class="section padding-0001em">
-                <h5 data-bind="text:labelAccessRight"></h5>
-            </div>
-            <div class="row row-table">
-                <div class="col s12 m12 l12 xl12 col-table">
-                    <table id="employee-rigths" class="highlight z-depth-1">
-                        <thead>
-                            <tr>
-                                <th data-bind="text:labelSalePoint"></th>
-                                <th data-bind="text:labelAccess"></th>
-                            </tr>
-                        </thead>
-                        <tbody id="product-rigths-rows"></tbody>
-                    </table>
-                </div>
+    <div id="editor-view-product-tab-accessright">
+        <div class="section padding-0001em">
+            <h5 data-bind="text:labelAccessRight"></h5>
+        </div>
+        <div class="row row-table">
+            <div class="col s12 m12 l12 xl12 col-table">
+                <table id="employee-rigths" class="highlight z-depth-1">
+                    <thead>
+                        <tr>
+                            <th data-bind="text:labelSalePoint"></th>
+                            <th data-bind="text:labelAccess"></th>
+                        </tr>
+                    </thead>
+                    <tbody id="product-rigths-rows"></tbody>
+                </table>
             </div>
         </div>
-
     </div>
+
+</div>

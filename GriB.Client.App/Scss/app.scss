@@ -192,7 +192,7 @@ td, th {
 }
 
 .table-cell-input {
-    width: 50px !important;
+    width: 100% !important;
     text-align: right;
     margin: 0 !important;
 }
@@ -247,4 +247,29 @@ input[type='number']:hover::-webkit-outer-spin-button {
 
 .input-number {
     direction: rtl;
+}
+
+.product-col-name {
+    width: 54%;
+}
+
+.product-col-quantity {
+    width: 15%;
+    text-align: right;
+}
+
+.product-col-unit {
+    width: 8%;
+}
+
+.product-col-sum {
+    width: 15%;
+    text-align: right;
+}
+
+.product-col-btn {
+    width: 8%;
+}
+.product-col-button-delete {
+    color: rgba(0, 0, 0, 0.87);
 }
