@@ -44,6 +44,7 @@ export namespace Controller.Setting.Editor {
                 "labelCostPrice": vars._statres("label$costprice"),
                 "labelSellingPrice": vars._statres("label$sellingprice"),
                 "labelPrice": vars._statres("label$price"),
+                "labelSum": vars._statres("label$sum"),
                 "labelQuantityShort": vars._statres("label$quantityshort"),
                 "labelUnitShort": vars._statres("label$unitshort"),
                 "labelAdd": vars._statres("button$label$add")
@@ -175,11 +176,20 @@ export namespace Controller.Setting.Editor {
                     $("#editor-view-product-composition").hide();
                 }
             }
+            else if (e.field.indexOf("editModel.composition[") > -1 && e.field.lastIndexOf("].quantity") > -1) {
+                let field: string = e.field;
+                let sindex: string = field.replace("editModel.composition[", "").replace("].quantity", "");
+                let index: number = +sindex;
+                let model: Interfaces.Model.IProduct = this.EditorModel;
+                model.composition[index].sum = Math.round((model.composition[index].quantity * model.composition[index].product.sellingprice) * 100) / 100;
+                this.Model.set("editModel", model);
+            }
         }
 
         public ViewResize(e: any): void {
             super.ViewResize(e);
             M.Tabs.getInstance($('#editor-view-product-tabs')).updateTabIndicator();
+            this.controlType.formSelect();
             if (this.controlPhoto)
                 this.controlPhoto.height(this.controlPhoto.width());
         }

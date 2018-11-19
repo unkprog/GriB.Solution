@@ -17,7 +17,7 @@ export namespace Controller.Setting.Card {
         protected createCardSettings(): Interfaces.ICardSettings {
             return {
                 FieldId: "id", FieldSearch: "name", ValueIdNew: -1, EditIdName: "id_category", EditController: "setting/editor/category",
-                IsAdd: true,  IsEdit: true, IsDelete: true, IsSelect: false,
+                IsAdd: true, IsAddCopy: false, IsEdit: true, IsDelete: true, IsSelect: false,
                 Load: $.proxy(this.Service.GetCategries, this.Service), Delete: $.proxy(this.Service.DelCategory, this.Service),
                 Columns: [
                     { Header: vars._statres("label$name"), Field: "name" },

@@ -34,7 +34,7 @@ define(["require", "exports", "app/common/variables", "app/controller/setting/ca
                     Unit.prototype.createCardSettings = function () {
                         return {
                             FieldId: "id", FieldSearch: "code", ValueIdNew: -1, EditIdName: "id_unit", EditController: "setting/editor/unit",
-                            IsAdd: true, IsEdit: true, IsDelete: true, IsSelect: false,
+                            IsAdd: true, IsAddCopy: false, IsEdit: true, IsDelete: true, IsSelect: false,
                             Load: $.proxy(this.Service.GetUnits, this.Service), Delete: $.proxy(this.Service.DelUnit, this.Service),
                             Columns: [
                                 { Header: vars._statres("label$code"), Field: "code" },

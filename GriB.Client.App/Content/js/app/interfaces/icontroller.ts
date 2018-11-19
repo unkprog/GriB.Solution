@@ -72,6 +72,7 @@
         ValueIdNew: number;
         EditIdName: string;
         IsAdd: boolean;
+        IsAddCopy: boolean;
         IsEdit: boolean;
         IsDelete: boolean;
         IsSelect: boolean;

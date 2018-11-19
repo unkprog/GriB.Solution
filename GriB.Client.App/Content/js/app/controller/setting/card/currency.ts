@@ -17,7 +17,7 @@ export namespace Controller.Setting.Card {
         protected createCardSettings(): Interfaces.ICardSettings {
             return {
                 FieldId: "id", FieldSearch: "code", ValueIdNew: -1, EditIdName: "id_currency", EditController: "setting/editor/currency",
-                IsAdd: true, IsEdit: true, IsDelete: true, IsSelect: false,
+                IsAdd: true, IsAddCopy: false, IsEdit: true, IsDelete: true, IsSelect: false,
                 Load: $.proxy(this.Service.GetCurrencies, this.Service), Delete: $.proxy(this.Service.DelCurrency, this.Service),
                 Columns: [
                     { Header: vars._statres("label$code"), Field: "code" },

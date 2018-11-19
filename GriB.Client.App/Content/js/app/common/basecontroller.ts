@@ -350,6 +350,8 @@ export namespace Controller {
             if(controller.EditorSettings && controller.EditorSettings.Load) {
                 let id: number = (vars._editorData[controller.EditorSettings.EditIdName] ? vars._editorData[controller.EditorSettings.EditIdName] : 0);
                 controller.EditorSettings.Load(id, (responseData) => {
+                    if (vars._editorData.isCopy === true)
+                        responseData.record.id = 0;
                     controller.Model.set("editModel", responseData.record);
                     controller.afterLoad(responseData);
                     controller.endLoad();
@@ -423,6 +425,7 @@ export namespace Controller {
 
         private navHeader: JQuery;
         private btnAdd: JQuery;
+        private btnAddCopy: JQuery;
         private btnDelete: JQuery;
         private btnEdit: JQuery;
         private btnSelect: JQuery;
@@ -451,14 +454,15 @@ export namespace Controller {
             this.navHeader = $(navbarHeader);
 
             if (this.CardSettings.IsEdit)   this.btnEdit   = $('<li><a id="card-btn-edit" class="editor-header-button"><i class="material-icons editor-header">edit</i></a></li>');
-            if (this.CardSettings.IsAdd)    this.btnAdd    = $('<li><a id="card-btn-add" class="editor-header-button"><i class="material-icons editor-header">add</i></a></li>');
+            if (this.CardSettings.IsAdd) this.btnAdd = $('<li><a id="card-btn-add" class="editor-header-button"><i class="material-icons editor-header">add</i></a></li>');
+            if (this.CardSettings.IsAddCopy) this.btnAddCopy = $('<li><a id="card-btn-addcopy" class="editor-header-button"><i class="material-icons editor-header">exposure_plus_1</i></a></li>');
             if (this.CardSettings.IsDelete) this.btnDelete = $('<li><a id="card-btn-delete" class="editor-header-button"><i class="material-icons editor-header">remove</i></a></li>');
             if (this.CardSettings.IsSelect) this.btnSelect = $('<li><a id="editor-btn-select" class="editor-header-button"><i class="material-icons editor-header">done</i></a></li>');
 
             this.btnClose = $('<li><a id="card-btn-close" class="editor-header-button"><i class="material-icons editor-header">close</i></a></li>');
 
             let cardButtons: JQuery = this.navHeader.find("#cardButtons");
-            cardButtons.append(this.btnEdit).append(this.btnAdd).append(this.btnDelete).append(this.btnSelect).append(this.btnClose);
+            cardButtons.append(this.btnEdit).append(this.btnAdd).append(this.btnAddCopy).append(this.btnDelete).append(this.btnSelect).append(this.btnClose);
 
             navbarHeader = '<nav class="card-search-nav editor-header z-depth-1">';
             navbarHeader += '   <div class="nav-wrapper">';
@@ -511,6 +515,8 @@ export namespace Controller {
                 this.btnEdit.remove();
             if (this.btnAdd)
                 this.btnAdd.remove();
+            if (this.btnAddCopy)
+                this.btnAddCopy.remove();
             if (this.btnDelete)
                 this.btnDelete.remove();
             if (this.btnClose)
@@ -523,6 +529,7 @@ export namespace Controller {
         protected createEvents(): void {
             this.EditButtonClick = this.createClickEvent(this.btnEdit, this.editButtonClick);
             this.AddButtonClick = this.createClickEvent(this.btnAdd, this.addButtonClick);
+            this.AddCopyButtonClick = this.createClickEvent(this.btnAddCopy, this.addCopyButtonClick);
             this.DeleteButtonClick = this.createClickEvent(this.btnDelete, this.deleteButtonClick);
             this.CloseButtonClick = this.createClickEvent(this.btnClose, this.closeButtonClick);
             this.SelectButtonClick = this.createClickEvent(this.btnSelect, this.selectButtonClick);
@@ -538,12 +545,13 @@ export namespace Controller {
             this.destroyClickEvent(this.btnSelect, this.SelectButtonClick);
             this.destroyClickEvent(this.btnEdit, this.EditButtonClick);
             this.destroyClickEvent(this.btnAdd, this.AddButtonClick);
+            this.destroyClickEvent(this.btnAddCopy, this.AddCopyButtonClick);
             this.destroyClickEvent(this.btnDelete, this.DeleteButtonClick);
             this.destroyClickEvent(this.btnClose, this.CloseButtonClick);
         }
 
         protected createCardSettings(): Interfaces.ICardSettings {
-            return { FieldId: "", FieldSearch: "", ValueIdNew: 0, EditIdName: "", IsAdd: false, IsEdit: false, IsDelete: false, IsSelect: false, EditController: "", Load: undefined, Delete: undefined, Columns: [] };
+            return { FieldId: "", FieldSearch: "", ValueIdNew: 0, EditIdName: "", IsAdd: false, IsAddCopy: false, IsEdit: false, IsDelete: false, IsSelect: false, EditController: "", Load: undefined, Delete: undefined, Columns: [] };
         }
 
 
@@ -690,6 +698,11 @@ export namespace Controller {
             this.Add();
         }
 
+        public AddCopyButtonClick: { (e: any): void; };
+        private addCopyButtonClick(e): void {
+            this.addCopy();
+        }
+
         public DeleteButtonClick: { (e: any): void; };
         private deleteButtonClick(e): void {
             this.Delete();
@@ -747,12 +760,27 @@ export namespace Controller {
 
         }
 
+
+        public addCopy(): void {
+            let id: any = this.getSelectedRowId();
+            if (id) {
+                let _id: number = +id;
+                if (_id > 0) {
+                    vars._editorData[this.CardSettings.EditIdName] = _id;
+                    vars._editorData["isCopy"] = true;
+                    vars._app.OpenController({ urlController: this.CardSettings.EditController, backController: this });
+                }
+            }
+        }
+        
+
         public Edit(): void {
             let id: any = this.getSelectedRowId();
             if (id) {
                 let _id: number = +id;
                 if (_id > 0) {
                     vars._editorData[this.CardSettings.EditIdName] = _id;
+                    vars._editorData["isCopy"] = false;
                     vars._app.OpenController({ urlController: this.CardSettings.EditController, backController: this });
                 }
             }

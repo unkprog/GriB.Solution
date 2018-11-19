@@ -58,6 +58,7 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                             "labelCostPrice": vars._statres("label$costprice"),
                             "labelSellingPrice": vars._statres("label$sellingprice"),
                             "labelPrice": vars._statres("label$price"),
+                            "labelSum": vars._statres("label$sum"),
                             "labelQuantityShort": vars._statres("label$quantityshort"),
                             "labelUnitShort": vars._statres("label$unitshort"),
                             "labelAdd": vars._statres("button$label$add")
@@ -161,10 +162,19 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                                 $("#editor-view-product-composition").hide();
                             }
                         }
+                        else if (e.field.indexOf("editModel.composition[") > -1 && e.field.lastIndexOf("].quantity") > -1) {
+                            var field = e.field;
+                            var sindex = field.replace("editModel.composition[", "").replace("].quantity", "");
+                            var index = +sindex;
+                            var model = this.EditorModel;
+                            model.composition[index].sum = Math.round((model.composition[index].quantity * model.composition[index].product.sellingprice) * 100) / 100;
+                            this.Model.set("editModel", model);
+                        }
                     };
                     Product.prototype.ViewResize = function (e) {
                         _super.prototype.ViewResize.call(this, e);
                         M.Tabs.getInstance($('#editor-view-product-tabs')).updateTabIndicator();
+                        this.controlType.formSelect();
                         if (this.controlPhoto)
                             this.controlPhoto.height(this.controlPhoto.width());
                     };

@@ -158,6 +158,7 @@ define({
     "label$costprice": "Себестоимость",
     "label$sellingprice": "Цена продажи",
     "label$price": "Цена",
+    "label$sum": "Сумма",
     "label$quantity": "Количество",
     "label$quantityshort": "Колич.",
     "label$unitshort": "Ед.изм.",
