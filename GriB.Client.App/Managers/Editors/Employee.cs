@@ -29,7 +29,7 @@ namespace GriB.Client.App.Managers.Editors
         //    return result;
         //}
 
-        private const string cmdGet = @"Employee\[get]";
+        private const string cmdGet = @"Editor\Employee\[get]";
         public static employee GetEmployee(this Query query, employee empl)
         {
             employee result = empl;
@@ -42,7 +42,7 @@ namespace GriB.Client.App.Managers.Editors
             return result;
         }
 
-        private const string cmdSet = @"Employee\[set]";
+        private const string cmdSet = @"Editor\Employee\[set]";
         public static employee SetEmployee(this Query query, employee empl)
         {
             employee result = empl;
@@ -54,14 +54,14 @@ namespace GriB.Client.App.Managers.Editors
             return result;
         }
 
-        private const string cmdDel = @"Employee\[del]";
+        private const string cmdDel = @"Editor\Employee\[del]";
         public static void DelEmployee(this Query query, int id, int user)
         {
             query.Execute(cmdDel, new SqlParameter[] { new SqlParameter("@id", id), new SqlParameter("@u", user) }
             , (values) => { });
         }
 
-        private const string cmdGetSalepointAcces = @"Employee\SalepointAccess\[get]";
+        private const string cmdGetSalepointAcces = @"Editor\Employee\SalepointAccess\[get]";
         public static employee GetEmployeeSalepointAccess(this Query query, employee empl)
         {
             employee result = empl;
@@ -82,7 +82,7 @@ namespace GriB.Client.App.Managers.Editors
             return result;
         }
 
-        private const string cmdSetSalepointAcces = @"Employee\SalepointAccess\[set]";
+        private const string cmdSetSalepointAcces = @"Editor\Employee\SalepointAccess\[set]";
         public static employee SetEmployeeSalepointAccess(this Query query, employee empl)
         {
             employee result = empl;

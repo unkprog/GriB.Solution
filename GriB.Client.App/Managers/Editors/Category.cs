@@ -10,7 +10,7 @@ namespace GriB.Client.App.Managers.Editors
 
         private static category readFromValues(object[] values) => new category() { id = (int)values[0], pid = (int)values[1], name = (string)values[2], photo = (string)values[3] };
 
-        private const string cmdGet = @"Category\[get]";
+        private const string cmdGet = @"Editor\Category\[get]";
         public static List<category> GetCategories(this Query query)
         {
             List<category> result = new List<category>();
@@ -24,7 +24,7 @@ namespace GriB.Client.App.Managers.Editors
         }
 
         private static category_card readFromValuesCard(object[] values) => new category_card() { id = (int)values[0], pid = (int)values[1], name = (string)values[2], photo = (string)values[3], parentname = (string)values[4] };
-        private const string cmdGetCard = @"Category\[get_card]";
+        private const string cmdGetCard = @"Editor\Category\[get_card]";
         public static List<category_card> GetCategoriesCard(this Query query)
         {
             List<category_card> result = new List<category_card>();
@@ -37,7 +37,7 @@ namespace GriB.Client.App.Managers.Editors
             return result;
         }
 
-        private const string cmdGetNotThis = @"Category\[get_not_this]";
+        private const string cmdGetNotThis = @"Editor\Category\[get_not_this]";
         public static List<category> GetCategoriesNotThis(this Query query, int id)
         {
             List<category> result = new List<category>();
@@ -62,7 +62,7 @@ namespace GriB.Client.App.Managers.Editors
             return result;
         }
 
-        private const string cmdSet = @"Category\[set]";
+        private const string cmdSet = @"Editor\Category\[set]";
         public static category SetCategory(this Query query, category category, int user)
         {
             category result = category;
@@ -75,14 +75,14 @@ namespace GriB.Client.App.Managers.Editors
             return GetCategory(query, result.id);
         }
 
-        private const string cmdDel = @"Category\[del]";
+        private const string cmdDel = @"Editor\Category\[del]";
         public static void DelCategory(this Query query, int id, int user)
         {
             query.Execute(cmdDel, new SqlParameter[] { new SqlParameter("@id", id), new SqlParameter("@u", user) }
             , (values) => { });
         }
 
-        private const string cmdGetDescription = @"Category\Description\[get]";
+        private const string cmdGetDescription = @"Editor\Category\Description\[get]";
         public static category GetCategoryDescription(this Query query, category category)
         {
             category result = category;
@@ -95,7 +95,7 @@ namespace GriB.Client.App.Managers.Editors
             return result;
         }
 
-        private const string cmdSetDescription = @"Category\Description\[set]";
+        private const string cmdSetDescription = @"Editor\Category\Description\[set]";
         public static category SetCategoryDescription(this Query query, category category)
         {
             category result = category;
@@ -104,7 +104,7 @@ namespace GriB.Client.App.Managers.Editors
             return result;
         }
 
-        private const string cmdGetSalepointAcces = @"Category\SalepointAccess\[get]";
+        private const string cmdGetSalepointAcces = @"Editor\Category\SalepointAccess\[get]";
         public static category GetCategorySalepointAccess(this Query query, category category)
         {
             category result = category;
@@ -125,7 +125,7 @@ namespace GriB.Client.App.Managers.Editors
             return result;
         }
 
-        private const string cmdSetSalepointAcces = @"Category\SalepointAccess\[set]";
+        private const string cmdSetSalepointAcces = @"Editor\Category\SalepointAccess\[set]";
         public static category SetCategorySalepointAccess(this Query query, category category)
         {
             category result = category;

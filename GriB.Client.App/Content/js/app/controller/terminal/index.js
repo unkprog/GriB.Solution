@@ -39,20 +39,37 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
                     return new kendo.data.ObservableObject({
                         "Header": " ",
                         "POSData": {
-                            "CurrentSalePoint": { "name": "ttt" }
-                        }
+                            "CurrentSalePoint": { "name": "" }
+                        },
+                        "currentCategory": 0
                     });
                 };
                 Index.prototype.ViewInit = function (view) {
                     _super.prototype.ViewInit.call(this, view);
+                    this.controlProgress = view.find("#progress-container-items");
+                    this.controlSaleProducts = view.find("#posterminal-view-items-container");
                     return this.loadData();
+                };
+                Index.prototype.ShowLoading = function () {
+                    if (this.controlProgress)
+                        this.controlProgress.show();
+                    if (this.controlSaleProducts)
+                        this.controlSaleProducts.hide();
+                };
+                Index.prototype.HideLoading = function () {
+                    if (this.controlProgress)
+                        this.controlProgress.hide();
+                    if (this.controlSaleProducts) {
+                        this.controlSaleProducts.show();
+                    }
                 };
                 Index.prototype.loadData = function () {
                     var controller = this;
-                    this.POSTerminalService.Enter(function (responseData) {
+                    controller.POSTerminalService.Enter(function (responseData) {
                         vars._identity.employee = responseData.employee;
                         controller.initNavbarHeader(controller.View);
                         controller.initControlSalePoints(controller.View);
+                        controller.loadSaleProducts();
                         variables_1._app.HideLoading();
                     });
                     return false;
@@ -60,6 +77,13 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
                 Index.prototype.ViewHide = function (e) {
                     this.navHeader.unbind();
                     _super.prototype.ViewHide.call(this, e);
+                };
+                Index.prototype.ViewShow = function (e) {
+                    return _super.prototype.ViewShow.call(this, e);
+                };
+                Index.prototype.ViewResize = function (e) {
+                    _super.prototype.ViewResize.call(this, e);
+                    this.controlSaleProducts.height($(window).height() - this.controlSaleProducts.offset().top);
                 };
                 Index.prototype.initNavbarHeader = function (view) {
                     var navbarHeader = '<div class="navbar-fixed editor-header z-depth-1">';
@@ -97,11 +121,8 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
                         }
                     }
                     this.controlSalePoints.html(html);
+                    $("#pos-btn-salepoint").dropdown({ constrainWidth: false });
                     this.createClickEvent(this.controlSalePoints.find('a'), this.SalePointButtonClick);
-                };
-                Index.prototype.ViewResize = function (e) {
-                    _super.prototype.ViewResize.call(this, e);
-                    $("#pos-btn-salepoint").dropdown({ constrainWidth: false, hover: true });
                 };
                 Index.prototype.createEvents = function () {
                 };
@@ -118,9 +139,42 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
                                 var CurrentSalePoint = this.Model.get("POSData.CurrentSalePoint").toJSON();
                                 CurrentSalePoint = salePoints[i].salepoint;
                                 this.Model.set("POSData.CurrentSalePoint", CurrentSalePoint);
+                                this.loadSaleProducts();
                             }
                         }
                     }
+                };
+                Index.prototype.loadSaleProducts = function () {
+                    var controller = this;
+                    controller.ShowLoading();
+                    var salePoint = controller.Model.get("POSData.CurrentSalePoint");
+                    var category = controller.Model.get("currentCategory");
+                    var paramsSelect = { category: category, salepoint: salePoint.id };
+                    controller.POSTerminalService.GetSaleProducts(paramsSelect, function (responseData) {
+                        controller.drawSaleProducts(responseData.items);
+                        controller.HideLoading();
+                    });
+                };
+                Index.prototype.drawSaleProducts = function (items) {
+                    var html = '';
+                    var item;
+                    for (var i = 0, icount = (items ? items.length : 0); i < icount; i++) {
+                        item = items[i];
+                        html += '<a id="saleproduct_' + item.id + '">';
+                        html += '   <div class="col s6 m4 l3 xl2">';
+                        html += '       <div class="card pos-item-card">';
+                        html += '           <div class="pos-item-card-image" style="background-image:url(' + item.photo + ')">';
+                        html += '             <div class="card-content pos-item-card-content center">';
+                        html += '                   <div class="pos-item-card-description">';
+                        html += '                       <p>' + item.name + '</p>';
+                        html += '                   </div>';
+                        html += '            </div>';
+                        html += '           </div>';
+                        html += '       </div>';
+                        html += '   </div>';
+                        html += '</a>';
+                    }
+                    this.controlSaleProducts.html(html);
                 };
                 return Index;
             }(base.Controller.Base));

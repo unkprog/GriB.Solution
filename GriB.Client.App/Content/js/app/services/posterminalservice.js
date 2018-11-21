@@ -31,6 +31,9 @@ define(["require", "exports", "app/common/baseservice"], function (require, expo
             POSTerminalService.prototype.Enter = function (Callback) {
                 this.GetApi({ Action: "/enter", Callback: Callback });
             };
+            POSTerminalService.prototype.GetSaleProducts = function (posparams, Callback) {
+                this.GetApi({ Action: "/sale_products", RequestData: posparams, Callback: Callback });
+            };
             return POSTerminalService;
         }(base.Services.BaseService));
         Services.POSTerminalService = POSTerminalService;

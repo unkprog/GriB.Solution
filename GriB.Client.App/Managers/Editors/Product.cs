@@ -9,9 +9,9 @@ namespace GriB.Client.App.Managers.Editors
     public static class Product
     {
 
-        private static product readFromValues(object[] values) => new product() { id = (int)values[0], pid = (int)values[1], type = (int)values[2], category = (int)values[3], name = (string)values[4], photo = (string)values[5] };
+        private static product readFromValues(object[] values) => new product() { id = (int)values[0], pid = (int)values[1], type = (int)values[2], category = (int)values[3], name = (string)values[4], photo = (string)values[5], putonsale = (bool)values[6] };
 
-        private const string cmdGet = @"Product\[get]";
+        private const string cmdGet = @"Editor\Product\[get]";
         public static List<product> GetProducts(this Query query)
         {
             List<product> result = new List<product>();
@@ -36,11 +36,11 @@ namespace GriB.Client.App.Managers.Editors
             return result;
         }
 
-        private const string cmdSet = @"Product\[set]";
+        private const string cmdSet = @"Editor\Product\[set]";
         public static product SetProduct(this Query query, product product, int user)
         {
             product result = product;
-            query.Execute(cmdSet, new SqlParameter[] { new SqlParameter("@id", product.id), new SqlParameter("@u", user), new SqlParameter("@pid", product.pid), new SqlParameter("@type", product.type), new SqlParameter("@category", product.category), new SqlParameter("@name", product.name), new SqlParameter("@photo", product.photo) }
+            query.Execute(cmdSet, new SqlParameter[] { new SqlParameter("@id", product.id), new SqlParameter("@u", user), new SqlParameter("@pid", product.pid), new SqlParameter("@type", product.type), new SqlParameter("@category", product.category), new SqlParameter("@name", product.name), new SqlParameter("@photo", product.photo), new SqlParameter("@putonsale", product.putonsale) }
             , (values) =>
             {
                 result.id = (int)values[0];
@@ -49,14 +49,14 @@ namespace GriB.Client.App.Managers.Editors
             return GetProduct(query, result.id);
         }
 
-        private const string cmdDel = @"Product\[del]";
+        private const string cmdDel = @"Editor\Product\[del]";
         public static void DelProduct(this Query query, int id, int user)
         {
             query.Execute(cmdDel, new SqlParameter[] { new SqlParameter("@id", id), new SqlParameter("@u", user) }
             , (values) => { });
         }
 
-        private const string cmdGetDescription = @"Product\Description\[get]";
+        private const string cmdGetDescription = @"Editor\Product\Description\[get]";
         public static product GetProductDescription(this Query query, product product)
         {
             product result = product;
@@ -69,7 +69,7 @@ namespace GriB.Client.App.Managers.Editors
             return result;
         }
 
-        private const string cmdSetDescription = @"Product\Description\[set]";
+        private const string cmdSetDescription = @"Editor\Product\Description\[set]";
         public static product SetProductDescription(this Query query, product product)
         {
             product result = product;
@@ -78,7 +78,7 @@ namespace GriB.Client.App.Managers.Editors
             return result;
         }
 
-        private const string cmdGetSalepointAcces = @"Product\SalepointAccess\[get]";
+        private const string cmdGetSalepointAcces = @"Editor\Product\SalepointAccess\[get]";
         public static product GetProductSalepointAccess(this Query query, product product)
         {
             product result = product;
@@ -99,7 +99,7 @@ namespace GriB.Client.App.Managers.Editors
             return result;
         }
 
-        private const string cmdSetSalepointAcces = @"Product\SalepointAccess\[set]";
+        private const string cmdSetSalepointAcces = @"Editor\Product\SalepointAccess\[set]";
         public static product SetProductSalepointAccess(this Query query, product product)
         {
             product result = product;
@@ -109,7 +109,7 @@ namespace GriB.Client.App.Managers.Editors
             return result;
         }
 
-        private const string cmdGetAccount = @"Product\Account\[get]";
+        private const string cmdGetAccount = @"Editor\Product\Account\[get]";
         public static product GetProductAccount(this Query query, product product)
         {
             product result = product;
@@ -126,7 +126,7 @@ namespace GriB.Client.App.Managers.Editors
             return result;
         }
 
-        private const string cmdSetAccount = @"Product\Account\[set]";
+        private const string cmdSetAccount = @"Editor\Product\Account\[set]";
         public static product SetProductAccount(this Query query, product product)
         {
             product result = product;
@@ -136,7 +136,7 @@ namespace GriB.Client.App.Managers.Editors
             return result;
         }
 
-        private const string cmdGetCost = @"Product\Cost\[get]";
+        private const string cmdGetCost = @"Editor\Product\Cost\[get]";
         public static product GetProductCost(this Query query, product product)
         {
             product result = product;
@@ -151,7 +151,7 @@ namespace GriB.Client.App.Managers.Editors
             return result;
         }
 
-        private const string cmdSetCost = @"Product\Cost\[set]";
+        private const string cmdSetCost = @"Editor\Product\Cost\[set]";
         public static product SetProductCost(this Query query, product product, int user)
         {
             product result = product;
@@ -160,7 +160,7 @@ namespace GriB.Client.App.Managers.Editors
             return result;
         }
 
-        private const string cmdGetSale = @"Product\Sale\[get]";
+        private const string cmdGetSale = @"Editor\Product\Sale\[get]";
         public static product GetProductSale(this Query query, product product)
         {
             product result = product;
@@ -175,7 +175,7 @@ namespace GriB.Client.App.Managers.Editors
             return result;
         }
 
-        private const string cmdSetSale = @"Product\Sale\[set]";
+        private const string cmdSetSale = @"Editor\Product\Sale\[set]";
         public static product SetProductSale(this Query query, product product, int user)
         {
             product result = product;
@@ -184,7 +184,7 @@ namespace GriB.Client.App.Managers.Editors
             return result;
         }
 
-        private const string cmdGetComposition = @"Product\Composition\[get]";
+        private const string cmdGetComposition = @"Editor\Product\Composition\[get]";
         public static product GetProductComposition(this Query query, product product)
         {
             product result = product;
@@ -197,7 +197,7 @@ namespace GriB.Client.App.Managers.Editors
             return result;
         }
 
-        private const string cmdGetCompositionNew = @"Product\Composition\[get_new]";
+        private const string cmdGetCompositionNew = @"Editor\Product\Composition\[get_new]";
         public static product_composition GetProductCompositionNew(this Query query, int id)
         {
             product_composition result = new product_composition();
@@ -210,7 +210,7 @@ namespace GriB.Client.App.Managers.Editors
             return result;
         }
 
-        private const string cmdSetConposition = @"Product\Composition\[set]";
+        private const string cmdSetConposition = @"Editor\Product\Composition\[set]";
         public static product SetProductComposition(this Query query, product product)
         {
             product result = product;
@@ -226,7 +226,7 @@ namespace GriB.Client.App.Managers.Editors
             return result;
         }
 
-        private const string cmdDelConposition = @"Product\Composition\[del]";
+        private const string cmdDelConposition = @"Editor\Product\Composition\[del]";
         public static product DelProductComposition(this Query query, product product)
         {
             product result = product;

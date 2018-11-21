@@ -48,6 +48,7 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                     this.destroyClickEvent("btn-forgot", this.ForgotButtonClick);
                 };
                 Login.prototype.loginButtonClick = function (e) {
+                    variables_1._app.ShowLoading();
                     var controller = this;
                     var model = {
                         phone: $('#login-phone').val(),
@@ -63,6 +64,8 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                                 variables_1._app.ShowError(responseData.error);
                         });
                     }
+                    else
+                        variables_1._app.HideLoading();
                 };
                 Login.prototype.validate = function (model) {
                     var result = true;

@@ -14,5 +14,10 @@ export namespace Services {
         public Enter(Callback: (responseData: any) => void) {
             this.GetApi({ Action: "/enter", Callback: Callback });
         }
+
+        public GetSaleProducts(posparams: Interfaces.Model.IPosParamsSelect, Callback: (responseData: any) => void) {
+            this.GetApi({ Action: "/sale_products", RequestData: posparams, Callback: Callback });
+        }
+        
     }
 }

@@ -113,4 +113,14 @@
         composition: IProductComposition[];
 
     }
+
+    export interface IPosParamsSelect {
+        category: number;
+        salepoint: number;
+    }
+
+    export interface IPOSSaleProduct extends IReferenceModel {
+        iscatagory: boolean;
+        photo: string;
+    }
 }

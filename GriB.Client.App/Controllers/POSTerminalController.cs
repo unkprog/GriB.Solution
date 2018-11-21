@@ -1,4 +1,6 @@
-﻿using GriB.Common.Models.Security;
+﻿using GriB.Client.App.Managers.POSTerminal;
+using GriB.Client.App.Models.POSTerminal;
+using GriB.Common.Models.Security;
 using System.Net;
 using System.Net.Http;
 using System.Web;
@@ -21,6 +23,17 @@ namespace GriB.Client.App.Controllers
             });
         }
 
-        
+        [HttpGet]
+        [ActionName("sale_products")]
+        public HttpResponseMessage GetSaleProducts(int category, int salepoint)
+        {
+            return TryCatchResponseQuery((query) =>
+            {
+                Principal principal = (Principal)HttpContext.Current.User;
+
+                // principal.Data.User.id
+                return Request.CreateResponse(HttpStatusCode.OK, new { items = Terminal.GetSaleProducts(query, new posparamsselect() { category = category, salepoint = salepoint }) });
+            });
+        }
     }
 }

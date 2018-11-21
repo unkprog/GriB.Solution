@@ -1,4 +1,5 @@
-﻿body, html {
+﻿@charset "UTF-8";
+body, html {
   padding: 0;
   margin: 0;
   width: 100%;
@@ -219,3 +220,57 @@ input[type='number']:hover::-webkit-outer-spin-button {
 
 .product-col-button-delete {
   color: rgba(0, 0, 0, 0.87); }
+
+.pos-items-container {
+  margin-top: 0.5%;
+  position: relative;
+  width: 100%;
+  min-height: 150px;
+  margin-bottom: 0;
+  overflow-y: auto; }
+
+.pos-item-card {
+  width: 100%;
+  padding-top: 100%; }
+
+.pos-item-card-image {
+  background-color: #e6e6e6;
+  background-image: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiI…c7Ij7QmNCX0J7QkdCg0JDQltCV0J3QmNCvPC90c3Bhbj48L3RleHQ+CiAgPC9nPgo8L3N2Zz4K);
+  background-size: cover;
+  background-position: 50% 50%;
+  background-repeat: no-repeat;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0; }
+
+.pos-item-card-content {
+  color: black;
+  padding: 0 !important;
+  height: 61px;
+  font-size: 0.9em; }
+
+.pos-item-card-description {
+  position: relative;
+  color: white;
+  background: #a1887f;
+  font-size: 1rem; }
+
+/*@media only screen and (min-width: 601px) {
+    .pos-item-card-description {
+        font-size: 1.25em;
+    }
+}
+
+@media only screen and (min-width: 993px) {
+    .pos-item-card-description {
+        font-size: 1.5em;
+    }
+}
+
+@media only screen and (min-width: 1201px) {
+    .pos-item-card-description {
+        font-size: 1.75em;
+    }
+}*/

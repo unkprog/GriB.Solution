@@ -25,8 +25,9 @@ export namespace Controller.Terminal {
             return new kendo.data.ObservableObject({
                 "Header": " ",
                 "POSData": {
-                    "CurrentSalePoint": { "name" : "ttt" }
-                }
+                    "CurrentSalePoint": { "name" : "" }
+                },
+                "currentCategory":0
             });
         }
 
@@ -34,19 +35,38 @@ export namespace Controller.Terminal {
         private btnCash: JQuery;
         private btnSalePoint: JQuery;
         private controlSalePoints: JQuery;
+        private controlProgress: JQuery;
+        private controlSaleProducts: JQuery;
         public ViewInit(view:JQuery): boolean {
-
             super.ViewInit(view);
+            this.controlProgress = view.find("#progress-container-items");
+            this.controlSaleProducts = view.find("#posterminal-view-items-container");
 
             return this.loadData();
         }
 
+        public ShowLoading() {
+            if (this.controlProgress)
+                this.controlProgress.show();
+            if (this.controlSaleProducts)
+                this.controlSaleProducts.hide();
+        }
+
+        public HideLoading() {
+            if (this.controlProgress)
+                this.controlProgress.hide();
+            if (this.controlSaleProducts) {
+                this.controlSaleProducts.show();
+            }
+        }
+
         protected loadData(): boolean {
             let controller = this;
-            this.POSTerminalService.Enter((responseData) => {
+            controller.POSTerminalService.Enter((responseData) => {
                 vars._identity.employee = responseData.employee;
                 controller.initNavbarHeader(controller.View);
                 controller.initControlSalePoints(controller.View);
+                controller.loadSaleProducts();
                 _app.HideLoading();
             });
             return false;
@@ -56,6 +76,15 @@ export namespace Controller.Terminal {
             this.navHeader.unbind();
             super.ViewHide(e);
         }
+
+        public ViewShow(e: any): boolean {
+            return super.ViewShow(e);
+        }
+        public ViewResize(e: any): void {
+            super.ViewResize(e);
+            this.controlSaleProducts.height($(window).height() - this.controlSaleProducts.offset().top);
+        }
+
 
         private initNavbarHeader(view: JQuery): void {
             let navbarHeader: string = '<div class="navbar-fixed editor-header z-depth-1">';
@@ -82,7 +111,6 @@ export namespace Controller.Terminal {
 
         private initControlSalePoints(view: JQuery): void {
             this.controlSalePoints = view.find('#posterminal-view-salepoints');
-
             let salePoints: Interfaces.Model.ISalePointAccessModel[] = vars._identity.employee.accesssalepoints;
             let html: string = '';
             for (let i = 0, icount = salePoints.length; i < icount; i++) {
@@ -102,12 +130,9 @@ export namespace Controller.Terminal {
             }
 
             this.controlSalePoints.html(html);
-            this.createClickEvent(this.controlSalePoints.find('a'), this.SalePointButtonClick);
-        }
+            $("#pos-btn-salepoint").dropdown({ constrainWidth: false });
 
-        public ViewResize(e: any): void {
-            super.ViewResize(e);
-            $("#pos-btn-salepoint").dropdown({ constrainWidth: false, hover: true });
+            this.createClickEvent(this.controlSalePoints.find('a'), this.SalePointButtonClick);
         }
 
         protected createEvents(): void {
@@ -117,7 +142,7 @@ export namespace Controller.Terminal {
             this.destroyClickEvent(this.controlSalePoints.find('a'), this.SalePointButtonClick);
         }
 
-        private SalePointButtonClick(e) {
+        private SalePointButtonClick(e): void {
             let id: string = e.currentTarget.id;
             id = id.replace("set_salepoint_", "");
 
@@ -128,9 +153,47 @@ export namespace Controller.Terminal {
                         let CurrentSalePoint = this.Model.get("POSData.CurrentSalePoint").toJSON();
                         CurrentSalePoint = salePoints[i].salepoint;
                         this.Model.set("POSData.CurrentSalePoint", CurrentSalePoint);
+                        this.loadSaleProducts();
                     }
                 }
             }
         }
+
+        private loadSaleProducts() {
+            let controller = this;
+            controller.ShowLoading();
+            let salePoint: Interfaces.Model.ISalepoint = controller.Model.get("POSData.CurrentSalePoint");
+            let category: number = controller.Model.get("currentCategory");
+            let paramsSelect: Interfaces.Model.IPosParamsSelect = { category: category, salepoint: salePoint.id };
+            controller.POSTerminalService.GetSaleProducts(paramsSelect, (responseData) => {
+                controller.drawSaleProducts(responseData.items);
+                controller.HideLoading();
+
+            });
+            
+        }
+
+        private drawSaleProducts(items: Interfaces.Model.IPOSSaleProduct[]) {
+            let html: string = '';
+            let item: Interfaces.Model.IPOSSaleProduct;
+            for (let i = 0, icount = (items ? items.length : 0); i < icount; i++) {
+                item = items[i];
+                html += '<a id="saleproduct_' + item.id + '">';
+                html += '   <div class="col s6 m4 l3 xl2">';
+                html += '       <div class="card pos-item-card">';
+                html += '           <div class="pos-item-card-image" style="background-image:url(' + item.photo + ')">';
+                html += '             <div class="card-content pos-item-card-content center">';
+                html += '                   <div class="pos-item-card-description">';
+                html += '                       <p>' + item.name + '</p>';
+                html += '                   </div>';
+                html += '            </div>';
+                html += '           </div>';
+                html += '       </div>';
+                html += '   </div>';
+                html += '</a>';
+            }
+            this.controlSaleProducts.html(html);
+        }
+
     }
 }

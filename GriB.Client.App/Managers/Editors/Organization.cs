@@ -14,7 +14,7 @@ namespace GriB.Client.App.Managers.Editors
         public const int typeDivision = 3;
         public const int typeDepartment = 4;
 
-        private const string cmdGet = @"Organization\[get]";
+        private const string cmdGet = @"Editor\Organization\[get]";
         private static t_org readFromValues(object[] values) => new t_org() { id = (int)values[0], d = (int)values[1], cd = (DateTime)values[2], cu = (int)values[3], ud = (DateTime)values[4], uu = (int)values[5], name = (string)values[6], type = (int)values[7], pid = (int)values[8] };
 
         public static List<t_org> GetOrganizations(this Query query, int type)
@@ -53,7 +53,7 @@ namespace GriB.Client.App.Managers.Editors
             return result;
         }
 
-        private const string cmdSet = @"Organization\[set]";
+        private const string cmdSet = @"Editor\Organization\[set]";
         public static t_org SetOrganization(this Query query, t_org org)
         {
             t_org result = org;
@@ -66,14 +66,14 @@ namespace GriB.Client.App.Managers.Editors
             return GetOrganization(query, result.id);
         }
 
-        private const string cmdDel = @"Organization\[del]";
+        private const string cmdDel = @"Editor\Organization\[del]";
         public static void DelOrganization(this Query query, int id, int user)
         {
             query.Execute(cmdDel, new SqlParameter[] { new SqlParameter("@id", id), new SqlParameter("@u", user) }
             , (values) => { });
         }
 
-        private const string cmdGetInfo = @"Organization\Info\[get]";
+        private const string cmdGetInfo = @"Editor\Organization\Info\[get]";
         public static t_org GetOrganizationInfo(this Query query, t_org org)
         {
             t_org result = org;
@@ -87,7 +87,7 @@ namespace GriB.Client.App.Managers.Editors
             return result;
         }
 
-        private const string cmdSetInfo = @"Organization\Info\[set]";
+        private const string cmdSetInfo = @"Editor\Organization\Info\[set]";
         public static t_org SetOrganizationInfo(this Query query, t_org org)
         {
             t_org result = org;
@@ -97,7 +97,7 @@ namespace GriB.Client.App.Managers.Editors
             return result;
         }
 
-        private const string cmdGetInfo1 = @"Organization\Info1\[get]";
+        private const string cmdGetInfo1 = @"Editor\Organization\Info1\[get]";
         public static t_org GetOrganizationInfo1(this Query query, t_org org)
         {
             t_org result = org;
@@ -111,7 +111,7 @@ namespace GriB.Client.App.Managers.Editors
             return result;
         }
 
-        private const string cmdSetInfo1 = @"Organization\Info1\[set]";
+        private const string cmdSetInfo1 = @"Editor\Organization\Info1\[set]";
         public static t_org SetOrganizationInfo1(this Query query, t_org org)
         {
             t_org result = org;
@@ -121,7 +121,7 @@ namespace GriB.Client.App.Managers.Editors
             return result;
         }
 
-        private const string cmdGetSalepoints = @"Organization\Get\[salepoints]";
+        private const string cmdGetSalepoints = @"Editor\Organization\Get\[salepoints]";
         public static List<salepoint> GetSalepoints(this Query query)
         {
             List<salepoint> result = new List<salepoint>();

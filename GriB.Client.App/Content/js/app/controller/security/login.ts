@@ -40,6 +40,7 @@ export namespace Controller.Security {
 
         public LoginButtonClick: { (e: any): void; };
         private loginButtonClick(e) {
+            _app.ShowLoading();
             let controller = this;
             let model: Interfaces.Model.ILoginModel = {
                 phone: <string>$('#login-phone').val(),
@@ -56,8 +57,8 @@ export namespace Controller.Security {
                         _app.ShowError(responseData.error);
                 });
             }
-
-            
+            else
+                _app.HideLoading();
         }
 
         private validate(model: Interfaces.Model.ILoginModel): boolean {
