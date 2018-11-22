@@ -34,11 +34,14 @@ export namespace Controller.Terminal {
         private navHeader: JQuery;
         private btnCash: JQuery;
         private btnSalePoint: JQuery;
+        private controlBreadcrumbs: JQuery;
         private controlSalePoints: JQuery;
         private controlProgress: JQuery;
         private controlSaleProducts: JQuery;
         public ViewInit(view:JQuery): boolean {
             super.ViewInit(view);
+            this.controlBreadcrumbs = view.find("#pos-items-breadcrumbs");
+
             this.controlProgress = view.find("#progress-container-items");
             this.controlSaleProducts = view.find("#posterminal-view-items-container");
 
@@ -58,6 +61,7 @@ export namespace Controller.Terminal {
             if (this.controlSaleProducts) {
                 this.controlSaleProducts.show();
             }
+            this.ViewResize({});
         }
 
         protected loadData(): boolean {
@@ -80,6 +84,7 @@ export namespace Controller.Terminal {
         public ViewShow(e: any): boolean {
             return super.ViewShow(e);
         }
+
         public ViewResize(e: any): void {
             super.ViewResize(e);
             this.controlSaleProducts.height($(window).height() - this.controlSaleProducts.offset().top);
@@ -132,14 +137,15 @@ export namespace Controller.Terminal {
             this.controlSalePoints.html(html);
             $("#pos-btn-salepoint").dropdown({ constrainWidth: false });
 
-            this.createClickEvent(this.controlSalePoints.find('a'), this.SalePointButtonClick);
+            this.createTouchClickEvent(this.controlSalePoints.find('a'), this.SalePointButtonClick);
         }
 
         protected createEvents(): void {
         }
 
         protected destroyEvents(): void {
-            this.destroyClickEvent(this.controlSalePoints.find('a'), this.SalePointButtonClick);
+            this.destroyClickEvent(this.controlSaleProducts.find('a'), this.ItemSaleButtonClick);
+            this.destroyTouchClickEvent(this.controlSalePoints.find('a'), this.SalePointButtonClick);
         }
 
         private SalePointButtonClick(e): void {
@@ -150,9 +156,8 @@ export namespace Controller.Terminal {
             for (let i = 0, icount = salePoints.length; i < icount; i++) {
                 if (salePoints[i].isaccess === true) {
                     if (+id === salePoints[i].salepoint.id) {
-                        let CurrentSalePoint = this.Model.get("POSData.CurrentSalePoint").toJSON();
-                        CurrentSalePoint = salePoints[i].salepoint;
-                        this.Model.set("POSData.CurrentSalePoint", CurrentSalePoint);
+                        this.Model.set("currentCategory", 0);
+                        this.Model.set("POSData.CurrentSalePoint", salePoints[i].salepoint);
                         this.loadSaleProducts();
                     }
                 }
@@ -168,17 +173,18 @@ export namespace Controller.Terminal {
             controller.POSTerminalService.GetSaleProducts(paramsSelect, (responseData) => {
                 controller.drawSaleProducts(responseData.items);
                 controller.HideLoading();
-
             });
             
         }
 
         private drawSaleProducts(items: Interfaces.Model.IPOSSaleProduct[]) {
+            this.destroyClickEvent(this.controlSaleProducts.find('a'), this.ItemSaleButtonClick);
+
             let html: string = '';
             let item: Interfaces.Model.IPOSSaleProduct;
             for (let i = 0, icount = (items ? items.length : 0); i < icount; i++) {
                 item = items[i];
-                html += '<a id="saleproduct_' + item.id + '">';
+                html += '<a id="saleproduct_' + item.id + '" class="pos-item-sale ' + (item.iscategory === true ? 'category' : '') + '" data-name="' + item.name + '">';
                 html += '   <div class="col s6 m4 l3 xl2">';
                 html += '       <div class="card pos-item-card">';
                 html += '           <div class="pos-item-card-image" style="background-image:url(' + item.photo + ')">';
@@ -193,7 +199,19 @@ export namespace Controller.Terminal {
                 html += '</a>';
             }
             this.controlSaleProducts.html(html);
+            this.createClickEvent(this.controlSaleProducts.find('a'), this.ItemSaleButtonClick);
         }
 
+        private ItemSaleButtonClick(e): void {
+            let targetid: string = e.currentTarget.id;
+            let id: number = + targetid.replace("saleproduct_", "");
+            if (e.currentTarget.classList.contains('category')) {
+                let breadcrum: JQuery = $('<a id="category_' + targetid + '" class="breadcrumb">' + $(e.currentTarget).data("name") + '</a>');
+                this.controlBreadcrumbs.append(breadcrum);
+
+                this.Model.set("currentCategory", id);
+                this.loadSaleProducts();
+            }
+        }
     }
 }

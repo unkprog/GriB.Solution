@@ -221,6 +221,22 @@ input[type='number']:hover::-webkit-outer-spin-button {
 .product-col-button-delete {
   color: rgba(0, 0, 0, 0.87); }
 
+#posterminal-view-breadcrumbs {
+  height: 40px;
+  line-height: 40px;
+  padding: 0 1em;
+  background: transparent;
+  border-top: 1px solid #a1887f;
+  border-bottom: 1px solid #a1887f;
+  box-shadow: none; }
+
+#pos-items-breadcrumbs > .breadcrumb, #pos-items-breadcrumbs > .breadcrumb:before {
+  color: #a1887f;
+  cursor: pointer; }
+
+#pos-items-breadcrumbs > .breadcrumb:last-child:before, #pos-items-breadcrumbs > .breadcrumb:last-child {
+  color: black; }
+
 .pos-items-container {
   margin-top: 0.5%;
   position: relative;
@@ -228,6 +244,9 @@ input[type='number']:hover::-webkit-outer-spin-button {
   min-height: 150px;
   margin-bottom: 0;
   overflow-y: auto; }
+
+.pos-item-sale {
+  cursor: pointer; }
 
 .pos-item-card {
   width: 100%;

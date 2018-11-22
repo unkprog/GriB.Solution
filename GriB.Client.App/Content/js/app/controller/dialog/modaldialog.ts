@@ -42,11 +42,11 @@ export namespace Controller.Dialog {
         }
 
         protected createEvents(): void {
-            this.Close = this.createClickEvent(this.dialogButtonOk, this.close);
+            this.Close = this.createTouchClickEvent(this.dialogButtonOk, this.close);
         }
 
         protected destroyEvents(): void {
-            this.destroyClickEvent(this.dialogButtonOk, this.Close);
+            this.destroyTouchClickEvent(this.dialogButtonOk, this.Close);
         }
 
         public Show(header:string, e: string): void {

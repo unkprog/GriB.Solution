@@ -51,10 +51,10 @@ define(["require", "exports", "app/common/variables", "app/common/basedialog"], 
                     return this.dialog;
                 };
                 ModalDialog.prototype.createEvents = function () {
-                    this.Close = this.createClickEvent(this.dialogButtonOk, this.close);
+                    this.Close = this.createTouchClickEvent(this.dialogButtonOk, this.close);
                 };
                 ModalDialog.prototype.destroyEvents = function () {
-                    this.destroyClickEvent(this.dialogButtonOk, this.Close);
+                    this.destroyTouchClickEvent(this.dialogButtonOk, this.Close);
                 };
                 ModalDialog.prototype.Show = function (header, e) {
                     if (this.dialogContent)

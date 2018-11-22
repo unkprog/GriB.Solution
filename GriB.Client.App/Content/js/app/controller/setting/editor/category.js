@@ -95,10 +95,10 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                     };
                     Category.prototype.createEvents = function () {
                         _super.prototype.createEvents.call(this);
-                        this.AddPhotoButtonClick = this.createClickEvent("editor-view-category-addphoto", this.addPhotoButtonClick);
+                        this.AddPhotoButtonClick = this.createTouchClickEvent("editor-view-category-addphoto", this.addPhotoButtonClick);
                     };
                     Category.prototype.destroyEvents = function () {
-                        this.destroyClickEvent("editor-view-category-addphoto", this.AddPhotoButtonClick);
+                        this.destroyTouchClickEvent("editor-view-category-addphoto", this.AddPhotoButtonClick);
                         this.imgDialog.unbind();
                         _super.prototype.destroyEvents.call(this);
                     };

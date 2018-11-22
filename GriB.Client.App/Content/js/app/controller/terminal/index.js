@@ -46,6 +46,7 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
                 };
                 Index.prototype.ViewInit = function (view) {
                     _super.prototype.ViewInit.call(this, view);
+                    this.controlBreadcrumbs = view.find("#pos-items-breadcrumbs");
                     this.controlProgress = view.find("#progress-container-items");
                     this.controlSaleProducts = view.find("#posterminal-view-items-container");
                     return this.loadData();
@@ -62,6 +63,7 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
                     if (this.controlSaleProducts) {
                         this.controlSaleProducts.show();
                     }
+                    this.ViewResize({});
                 };
                 Index.prototype.loadData = function () {
                     var controller = this;
@@ -122,12 +124,13 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
                     }
                     this.controlSalePoints.html(html);
                     $("#pos-btn-salepoint").dropdown({ constrainWidth: false });
-                    this.createClickEvent(this.controlSalePoints.find('a'), this.SalePointButtonClick);
+                    this.createTouchClickEvent(this.controlSalePoints.find('a'), this.SalePointButtonClick);
                 };
                 Index.prototype.createEvents = function () {
                 };
                 Index.prototype.destroyEvents = function () {
-                    this.destroyClickEvent(this.controlSalePoints.find('a'), this.SalePointButtonClick);
+                    this.destroyClickEvent(this.controlSaleProducts.find('a'), this.ItemSaleButtonClick);
+                    this.destroyTouchClickEvent(this.controlSalePoints.find('a'), this.SalePointButtonClick);
                 };
                 Index.prototype.SalePointButtonClick = function (e) {
                     var id = e.currentTarget.id;
@@ -136,9 +139,8 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
                     for (var i = 0, icount = salePoints.length; i < icount; i++) {
                         if (salePoints[i].isaccess === true) {
                             if (+id === salePoints[i].salepoint.id) {
-                                var CurrentSalePoint = this.Model.get("POSData.CurrentSalePoint").toJSON();
-                                CurrentSalePoint = salePoints[i].salepoint;
-                                this.Model.set("POSData.CurrentSalePoint", CurrentSalePoint);
+                                this.Model.set("currentCategory", 0);
+                                this.Model.set("POSData.CurrentSalePoint", salePoints[i].salepoint);
                                 this.loadSaleProducts();
                             }
                         }
@@ -156,11 +158,12 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
                     });
                 };
                 Index.prototype.drawSaleProducts = function (items) {
+                    this.destroyClickEvent(this.controlSaleProducts.find('a'), this.ItemSaleButtonClick);
                     var html = '';
                     var item;
                     for (var i = 0, icount = (items ? items.length : 0); i < icount; i++) {
                         item = items[i];
-                        html += '<a id="saleproduct_' + item.id + '">';
+                        html += '<a id="saleproduct_' + item.id + '" class="pos-item-sale ' + (item.iscategory === true ? 'category' : '') + '" data-name="' + item.name + '">';
                         html += '   <div class="col s6 m4 l3 xl2">';
                         html += '       <div class="card pos-item-card">';
                         html += '           <div class="pos-item-card-image" style="background-image:url(' + item.photo + ')">';
@@ -175,6 +178,17 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
                         html += '</a>';
                     }
                     this.controlSaleProducts.html(html);
+                    this.createClickEvent(this.controlSaleProducts.find('a'), this.ItemSaleButtonClick);
+                };
+                Index.prototype.ItemSaleButtonClick = function (e) {
+                    var targetid = e.currentTarget.id;
+                    var id = +targetid.replace("saleproduct_", "");
+                    if (e.currentTarget.classList.contains('category')) {
+                        var breadcrum = $('<a id="category_' + targetid + '" class="breadcrumb">' + $(e.currentTarget).data("name") + '</a>');
+                        this.controlBreadcrumbs.append(breadcrum);
+                        this.Model.set("currentCategory", id);
+                        this.loadSaleProducts();
+                    }
                 };
                 return Index;
             }(base.Controller.Base));

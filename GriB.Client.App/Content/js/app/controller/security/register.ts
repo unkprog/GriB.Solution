@@ -30,11 +30,11 @@ export namespace Controller.Security {
         }
 
         protected createEvents(): void {
-            this.RegisterButtonClick = this.createClickEvent("btn-register", this.registerButtonClick);
+            this.RegisterButtonClick = this.createTouchClickEvent("btn-register", this.registerButtonClick);
         }
 
         protected destroyEvents(): void {
-            this.destroyClickEvent("btn-register", this.RegisterButtonClick);
+            this.destroyTouchClickEvent("btn-register", this.RegisterButtonClick);
         }
 
         public RegisterButtonClick: { (e: any): void; };

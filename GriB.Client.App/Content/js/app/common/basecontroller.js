@@ -81,7 +81,10 @@ define(["require", "exports", "app/common/utils", "app/common/variables", "./var
             };
             Base.prototype.ViewResize = function (e) {
             };
-            Base.prototype.createClickEvent = function (elemName, clickFunc /*, controller: Interfaces.IController*/) {
+            Base.prototype.createTouchClickEvent = function (elemName, clickFunc) {
+                return utils.createTouchClickEvent(elemName, clickFunc, this, this.View);
+            };
+            Base.prototype.createClickEvent = function (elemName, clickFunc) {
                 return utils.createClickEvent(elemName, clickFunc, this, this.View);
             };
             Base.prototype.createKeyPress = function (elemName, clickFunc, controller) {
@@ -93,6 +96,9 @@ define(["require", "exports", "app/common/utils", "app/common/variables", "./var
                     }
                 });
                 return result;
+            };
+            Base.prototype.destroyTouchClickEvent = function (elemName, proxyFunc) {
+                utils.destroyTouchClickEvent(elemName, proxyFunc, this.View);
             };
             Base.prototype.destroyClickEvent = function (elemName, proxyFunc) {
                 utils.destroyClickEvent(elemName, proxyFunc, this.View);
@@ -227,7 +233,7 @@ define(["require", "exports", "app/common/utils", "app/common/variables", "./var
                         isInit = self._controller.ViewInit(view);
                         self._content.html(view[0]);
                         isInit = self._controller.ViewShow(this) && isInit;
-                        //self._controller.ViewResize(this);
+                        self._controller.ViewResize(this);
                     }
                     catch (ex) {
                         console.log(ex);
@@ -306,12 +312,12 @@ define(["require", "exports", "app/common/utils", "app/common/variables", "./var
                     this.btnCancel.remove();
             };
             BaseEditor.prototype.createEvents = function () {
-                this.SaveButtonClick = this.createClickEvent(this.btnSave, this.saveButtonClick);
-                this.CancelButtonClick = this.createClickEvent(this.btnCancel, this.cancelButtonClick);
+                this.SaveButtonClick = this.createTouchClickEvent(this.btnSave, this.saveButtonClick);
+                this.CancelButtonClick = this.createTouchClickEvent(this.btnCancel, this.cancelButtonClick);
             };
             BaseEditor.prototype.destroyEvents = function () {
-                this.destroyClickEvent(this.btnSave, this.SaveButtonClick);
-                this.destroyClickEvent(this.btnSave, this.CancelButtonClick);
+                this.destroyTouchClickEvent(this.btnSave, this.SaveButtonClick);
+                this.destroyTouchClickEvent(this.btnSave, this.CancelButtonClick);
             };
             BaseEditor.prototype.saveButtonClick = function (e) {
                 if (this.validate()) {
@@ -474,26 +480,26 @@ define(["require", "exports", "app/common/utils", "app/common/variables", "./var
                     this.btnSelect.remove();
             };
             BaseCard.prototype.createEvents = function () {
-                this.EditButtonClick = this.createClickEvent(this.btnEdit, this.editButtonClick);
-                this.AddButtonClick = this.createClickEvent(this.btnAdd, this.addButtonClick);
-                this.AddCopyButtonClick = this.createClickEvent(this.btnAddCopy, this.addCopyButtonClick);
-                this.DeleteButtonClick = this.createClickEvent(this.btnDelete, this.deleteButtonClick);
-                this.CloseButtonClick = this.createClickEvent(this.btnClose, this.closeButtonClick);
-                this.SelectButtonClick = this.createClickEvent(this.btnSelect, this.selectButtonClick);
-                this.ClearButtonClick = this.createClickEvent(this.clearSearch, this.clearButtonClick);
+                this.EditButtonClick = this.createTouchClickEvent(this.btnEdit, this.editButtonClick);
+                this.AddButtonClick = this.createTouchClickEvent(this.btnAdd, this.addButtonClick);
+                this.AddCopyButtonClick = this.createTouchClickEvent(this.btnAddCopy, this.addCopyButtonClick);
+                this.DeleteButtonClick = this.createTouchClickEvent(this.btnDelete, this.deleteButtonClick);
+                this.CloseButtonClick = this.createTouchClickEvent(this.btnClose, this.closeButtonClick);
+                this.SelectButtonClick = this.createTouchClickEvent(this.btnSelect, this.selectButtonClick);
+                this.ClearButtonClick = this.createTouchClickEvent(this.clearSearch, this.clearButtonClick);
                 this.proxySearch = $.proxy(this.search, this);
                 this.formSearch.on('submit', this.proxySearch);
             };
             BaseCard.prototype.destroyEvents = function () {
                 this.formSearch.off('submit', this.proxySearch);
-                this.destroyClickEvent(this.clearSearch, this.ClearButtonClick);
-                this.destroyClickEvent(this.rows, this.rowClick);
-                this.destroyClickEvent(this.btnSelect, this.SelectButtonClick);
-                this.destroyClickEvent(this.btnEdit, this.EditButtonClick);
-                this.destroyClickEvent(this.btnAdd, this.AddButtonClick);
-                this.destroyClickEvent(this.btnAddCopy, this.AddCopyButtonClick);
-                this.destroyClickEvent(this.btnDelete, this.DeleteButtonClick);
-                this.destroyClickEvent(this.btnClose, this.CloseButtonClick);
+                this.destroyTouchClickEvent(this.clearSearch, this.ClearButtonClick);
+                this.destroyTouchClickEvent(this.rows, this.rowClick);
+                this.destroyTouchClickEvent(this.btnSelect, this.SelectButtonClick);
+                this.destroyTouchClickEvent(this.btnEdit, this.EditButtonClick);
+                this.destroyTouchClickEvent(this.btnAdd, this.AddButtonClick);
+                this.destroyTouchClickEvent(this.btnAddCopy, this.AddCopyButtonClick);
+                this.destroyTouchClickEvent(this.btnDelete, this.DeleteButtonClick);
+                this.destroyTouchClickEvent(this.btnClose, this.CloseButtonClick);
             };
             BaseCard.prototype.createCardSettings = function () {
                 return { FieldId: "", FieldSearch: "", ValueIdNew: 0, EditIdName: "", IsAdd: false, IsAddCopy: false, IsEdit: false, IsDelete: false, IsSelect: false, EditController: "", Load: undefined, Delete: undefined, Columns: [] };
@@ -502,15 +508,15 @@ define(["require", "exports", "app/common/utils", "app/common/variables", "./var
                 this.tableHead.html(this.getTableHeaderHtml());
                 this.setupRows();
                 this.rows = this.tableBody.find('tr');
-                this.createClickEvent(this.rows, this.rowClick);
+                this.createTouchClickEvent(this.rows, this.rowClick);
             };
             BaseCard.prototype.setupRows = function () {
                 this.selectedRow = null;
                 if (this.rows)
-                    this.destroyClickEvent(this.rows, this.rowClick);
+                    this.destroyTouchClickEvent(this.rows, this.rowClick);
                 this.tableBody.html(this.getTableBodyHtml());
                 this.rows = this.tableBody.find('tr');
-                this.createClickEvent(this.rows, this.rowClick);
+                this.createTouchClickEvent(this.rows, this.rowClick);
             };
             BaseCard.prototype.search = function (e) {
                 e.preventDefault();

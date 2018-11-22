@@ -43,22 +43,22 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
                     });
                 };
                 Index.prototype.createEvents = function () {
-                    this.OrganizationButtonClick = this.createClickEvent("btn-organization", this.organizationButtonClick);
-                    this.SalePointButtonClick = this.createClickEvent("btn-salepoint", this.salePointButtonClick);
-                    this.EmployeetButtonClick = this.createClickEvent("btn-employee", this.employeetButtonClick);
-                    this.CurrencyButtonClick = this.createClickEvent("btn-currency", this.currencyButtonClick);
-                    this.UnitButtonClick = this.createClickEvent("btn-unit", this.unitButtonClick);
-                    this.CategoryButtonClick = this.createClickEvent("btn-category", this.categoryButtonClick);
-                    this.ProductButtonClick = this.createClickEvent("btn-product", this.productButtonClick);
+                    this.OrganizationButtonClick = this.createTouchClickEvent("btn-organization", this.organizationButtonClick);
+                    this.SalePointButtonClick = this.createTouchClickEvent("btn-salepoint", this.salePointButtonClick);
+                    this.EmployeetButtonClick = this.createTouchClickEvent("btn-employee", this.employeetButtonClick);
+                    this.CurrencyButtonClick = this.createTouchClickEvent("btn-currency", this.currencyButtonClick);
+                    this.UnitButtonClick = this.createTouchClickEvent("btn-unit", this.unitButtonClick);
+                    this.CategoryButtonClick = this.createTouchClickEvent("btn-category", this.categoryButtonClick);
+                    this.ProductButtonClick = this.createTouchClickEvent("btn-product", this.productButtonClick);
                 };
                 Index.prototype.destroyEvents = function () {
-                    this.destroyClickEvent("btn-organization", this.OrganizationButtonClick);
-                    this.destroyClickEvent("btn-salepoint", this.SalePointButtonClick);
-                    this.destroyClickEvent("btn-employee", this.EmployeetButtonClick);
-                    this.destroyClickEvent("btn-currency", this.CurrencyButtonClick);
-                    this.destroyClickEvent("btn-unit", this.UnitButtonClick);
-                    this.destroyClickEvent("btn-category", this.CategoryButtonClick);
-                    this.destroyClickEvent("btn-product", this.ProductButtonClick);
+                    this.destroyTouchClickEvent("btn-organization", this.OrganizationButtonClick);
+                    this.destroyTouchClickEvent("btn-salepoint", this.SalePointButtonClick);
+                    this.destroyTouchClickEvent("btn-employee", this.EmployeetButtonClick);
+                    this.destroyTouchClickEvent("btn-currency", this.CurrencyButtonClick);
+                    this.destroyTouchClickEvent("btn-unit", this.UnitButtonClick);
+                    this.destroyTouchClickEvent("btn-category", this.CategoryButtonClick);
+                    this.destroyTouchClickEvent("btn-product", this.ProductButtonClick);
                 };
                 Index.prototype.organizationButtonClick = function (e) {
                     variables_1._main.OpenController({ urlController: "setting/editor/organization", backController: this });

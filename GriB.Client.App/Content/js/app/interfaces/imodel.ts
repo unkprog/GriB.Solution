@@ -120,7 +120,7 @@
     }
 
     export interface IPOSSaleProduct extends IReferenceModel {
-        iscatagory: boolean;
+        iscategory: boolean;
         photo: string;
     }
 }

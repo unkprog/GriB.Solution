@@ -147,7 +147,7 @@ export namespace Controller.Setting.Editor {
             let onUpolad = $.proxy(this.uploudImageClick, this);
             this.imgDialog.bind("change", onUpolad);
 
-            this.AddPhotoButtonClick = this.createClickEvent("editor-view-product-addphoto", this.addPhotoButtonClick);
+            this.AddPhotoButtonClick = this.createTouchClickEvent("editor-view-product-addphoto", this.addPhotoButtonClick);
             this.Model.bind("change", $.proxy(this.changeModel, this));
         }
 
@@ -155,11 +155,11 @@ export namespace Controller.Setting.Editor {
             this.compositionRows.unbind();
             this.rightRows.unbind();
             this.Model.unbind("change");
-            this.destroyClickEvent("editor-view-product-addphoto", this.AddPhotoButtonClick);
+            this.destroyTouchClickEvent("editor-view-product-addphoto", this.AddPhotoButtonClick);
             if (this.btnAddComposition)
-                this.destroyClickEvent(this.btnAddComposition, this.addCompositionButtonClick);
+                this.destroyTouchClickEvent(this.btnAddComposition, this.addCompositionButtonClick);
             if (this.btnRemoveComposition)
-                this.destroyClickEvent(this.btnRemoveComposition, this.removeCompositionButtonClick);
+                this.destroyTouchClickEvent(this.btnRemoveComposition, this.removeCompositionButtonClick);
             this.imgDialog.unbind();
             super.destroyEvents();
 
@@ -267,7 +267,7 @@ export namespace Controller.Setting.Editor {
             let html: string = '';
 
             if (this.btnAddComposition)
-                this.destroyClickEvent(this.btnAddComposition, this.addCompositionButtonClick);  
+                this.destroyTouchClickEvent(this.btnAddComposition, this.addCompositionButtonClick);  
 
             this.compositionRows.unbind();
             if (data && data.length > 0) {
@@ -293,8 +293,8 @@ export namespace Controller.Setting.Editor {
 
             this.btnAddComposition = this.compositionRows.find("#btn-add-composition");
             this.btnRemoveComposition = this.compositionRows.find(".editor-header-button");
-            this.AddCompositionButtonClick = this.createClickEvent(this.btnAddComposition, this.addCompositionButtonClick);
-            this.RemoveCompositionButtonClick = this.createClickEvent(this.btnRemoveComposition, this.removeCompositionButtonClick);
+            this.AddCompositionButtonClick = this.createTouchClickEvent(this.btnAddComposition, this.addCompositionButtonClick);
+            this.RemoveCompositionButtonClick = this.createTouchClickEvent(this.btnRemoveComposition, this.removeCompositionButtonClick);
             kendo.bind(this.compositionRows, this.Model);
 
         }

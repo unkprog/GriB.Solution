@@ -27,15 +27,15 @@ export namespace Controller.Security {
         }
 
         protected createEvents(): void {
-            this.LoginButtonClick = this.createClickEvent("btn-login", this.loginButtonClick);
-            this.RegisterButtonClick = this.createClickEvent("btn-register", this.registerButtonClick);
-            this.ForgotButtonClick = this.createClickEvent("btn-forgot", this.forgotButtonClick);
+            this.LoginButtonClick = this.createTouchClickEvent("btn-login", this.loginButtonClick);
+            this.RegisterButtonClick = this.createTouchClickEvent("btn-register", this.registerButtonClick);
+            this.ForgotButtonClick = this.createTouchClickEvent("btn-forgot", this.forgotButtonClick);
         }
 
         protected destroyEvents(): void {
-            this.destroyClickEvent("btn-login", this.LoginButtonClick);
-            this.destroyClickEvent("btn-register", this.RegisterButtonClick);
-            this.destroyClickEvent("btn-forgot", this.ForgotButtonClick);
+            this.destroyTouchClickEvent("btn-login", this.LoginButtonClick);
+            this.destroyTouchClickEvent("btn-register", this.RegisterButtonClick);
+            this.destroyTouchClickEvent("btn-forgot", this.ForgotButtonClick);
         }
 
         public LoginButtonClick: { (e: any): void; };

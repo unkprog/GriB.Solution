@@ -270,10 +270,31 @@ input[type='number']:hover::-webkit-outer-spin-button {
 .product-col-btn {
     width: 40px;
 }
+
 .product-col-button-delete {
     color: rgba(0, 0, 0, 0.87);
 }
 
+
+#posterminal-view-breadcrumbs {
+    height: 40px;
+    line-height: 40px;
+    padding: 0 1em;
+    background: transparent;
+    // background: #efebe9;
+    border-top: 1px solid #a1887f;
+    border-bottom: 1px solid #a1887f;
+    box-shadow: none;
+}
+
+#pos-items-breadcrumbs > .breadcrumb, #pos-items-breadcrumbs > .breadcrumb:before {
+    color: #a1887f;
+    cursor: pointer;
+}
+
+#pos-items-breadcrumbs > .breadcrumb:last-child:before, #pos-items-breadcrumbs > .breadcrumb:last-child {
+    color: black;
+}
 
 .pos-items-container {
     margin-top: 0.5%;
@@ -282,6 +303,10 @@ input[type='number']:hover::-webkit-outer-spin-button {
     min-height: 150px;
     margin-bottom: 0;
     overflow-y: auto;
+}
+
+.pos-item-sale {
+    cursor: pointer;
 }
 
 .pos-item-card {
@@ -315,7 +340,6 @@ input[type='number']:hover::-webkit-outer-spin-button {
     background: #a1887f;
     font-size: 1rem;
 }
-
 /*@media only screen and (min-width: 601px) {
     .pos-item-card-description {
         font-size: 1.25em;

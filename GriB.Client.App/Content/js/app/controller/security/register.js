@@ -40,10 +40,10 @@ define(["require", "exports", "app/common/basecontroller", "app/services/account
                     });
                 };
                 Register.prototype.createEvents = function () {
-                    this.RegisterButtonClick = this.createClickEvent("btn-register", this.registerButtonClick);
+                    this.RegisterButtonClick = this.createTouchClickEvent("btn-register", this.registerButtonClick);
                 };
                 Register.prototype.destroyEvents = function () {
-                    this.destroyClickEvent("btn-register", this.RegisterButtonClick);
+                    this.destroyTouchClickEvent("btn-register", this.RegisterButtonClick);
                 };
                 Register.prototype.registerButtonClick = function (e) {
                     var controller = this;

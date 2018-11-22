@@ -24,11 +24,11 @@ export namespace Controller.Security {
         }
 
         protected createEvents(): void {
-            this.RecoveryButtonClick = this.createClickEvent("btn-recovery", this.recoveryButtonClick);
+            this.RecoveryButtonClick = this.createTouchClickEvent("btn-recovery", this.recoveryButtonClick);
         }
 
         protected destroyEvents(): void {
-            this.destroyClickEvent("btn-recovery", this.RecoveryButtonClick);
+            this.destroyTouchClickEvent("btn-recovery", this.RecoveryButtonClick);
         }
 
         public RecoveryButtonClick: { (e: any): void; };

@@ -1,18 +1,32 @@
 define(["require", "exports"], function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    function createClickEvent(elemName, clickFunc, thisObject, view) {
+    function createTouchClickEvent(elemName, clickFunc, thisObject, view) {
         var result = $.proxy(clickFunc, thisObject);
         var elem = elemName instanceof $ ? elemName : (view ? view.find("#" + elemName) : $("#" + elemName));
         for (var i = 0, iCount = elem.length; i < iCount; i++)
             elem[i].addEventListener(("ontouchstart" in window) ? "touchend" : "click", result, false);
         return result;
     }
+    exports.createTouchClickEvent = createTouchClickEvent;
+    function createClickEvent(elemName, clickFunc, thisObject, view) {
+        var result = $.proxy(clickFunc, thisObject);
+        var elem = elemName instanceof $ ? elemName : (view ? view.find("#" + elemName) : $("#" + elemName));
+        for (var i = 0, iCount = elem.length; i < iCount; i++)
+            elem[i].addEventListener("click", result, false);
+        return result;
+    }
     exports.createClickEvent = createClickEvent;
-    function destroyClickEvent(elemName, proxyFunc, view) {
+    function destroyTouchClickEvent(elemName, proxyFunc, view) {
         var elem = elemName instanceof $ ? elemName : (view ? view.find("#" + elemName) : $("#" + elemName));
         for (var i = 0, iCount = elem.length; i < iCount; i++)
             elem[i].removeEventListener(("ontouchstart" in window) ? "touchend" : "click", proxyFunc);
+    }
+    exports.destroyTouchClickEvent = destroyTouchClickEvent;
+    function destroyClickEvent(elemName, proxyFunc, view) {
+        var elem = elemName instanceof $ ? elemName : (view ? view.find("#" + elemName) : $("#" + elemName));
+        for (var i = 0, iCount = elem.length; i < iCount; i++)
+            elem[i].removeEventListener("click", proxyFunc);
     }
     exports.destroyClickEvent = destroyClickEvent;
     function isNullOrEmpty(value) {

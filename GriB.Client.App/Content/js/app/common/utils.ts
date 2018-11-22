@@ -1,4 +1,4 @@
-﻿export function createClickEvent(elemName: string | JQuery, clickFunc: any, thisObject: any, view?: JQuery): any {
+﻿export function createTouchClickEvent(elemName: string | JQuery, clickFunc: any, thisObject: any, view?: JQuery): any {
     var result = $.proxy(clickFunc, thisObject);
     var elem: JQuery = elemName instanceof $ ? <JQuery>elemName : (view ? view.find("#" + elemName) : $("#" + elemName));
     for (let i = 0, iCount = elem.length; i < iCount; i++)
@@ -6,10 +6,24 @@
     return result;
 }
 
-export function destroyClickEvent(elemName: string | JQuery, proxyFunc: any, view?: JQuery): any {
+export function createClickEvent(elemName: string | JQuery, clickFunc: any, thisObject: any, view?: JQuery): any {
+    var result = $.proxy(clickFunc, thisObject);
+    var elem: JQuery = elemName instanceof $ ? <JQuery>elemName : (view ? view.find("#" + elemName) : $("#" + elemName));
+    for (let i = 0, iCount = elem.length; i < iCount; i++)
+        elem[i].addEventListener("click", result, false);
+    return result;
+}
+
+export function destroyTouchClickEvent(elemName: string | JQuery, proxyFunc: any, view?: JQuery): any {
     let elem: JQuery = elemName instanceof $ ? <JQuery>elemName : (view ? view.find("#" + elemName) : $("#" + elemName));
     for (let i = 0, iCount = elem.length; i < iCount; i++)
         elem[i].removeEventListener(("ontouchstart" in window) ? "touchend" : "click", proxyFunc);
+}
+
+export function destroyClickEvent(elemName: string | JQuery, proxyFunc: any, view?: JQuery): any {
+    let elem: JQuery = elemName instanceof $ ? <JQuery>elemName : (view ? view.find("#" + elemName) : $("#" + elemName));
+    for (let i = 0, iCount = elem.length; i < iCount; i++)
+        elem[i].removeEventListener("click", proxyFunc);
 }
 
 export function isNullOrEmpty(value: string): boolean {

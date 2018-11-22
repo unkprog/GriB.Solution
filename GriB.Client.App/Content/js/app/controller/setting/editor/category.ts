@@ -93,11 +93,11 @@ export namespace Controller.Setting.Editor {
 
         protected createEvents(): void {
             super.createEvents();
-            this.AddPhotoButtonClick = this.createClickEvent("editor-view-category-addphoto", this.addPhotoButtonClick);
+            this.AddPhotoButtonClick = this.createTouchClickEvent("editor-view-category-addphoto", this.addPhotoButtonClick);
         }
 
         protected destroyEvents(): void {
-            this.destroyClickEvent("editor-view-category-addphoto", this.AddPhotoButtonClick);
+            this.destroyTouchClickEvent("editor-view-category-addphoto", this.AddPhotoButtonClick);
             this.imgDialog.unbind();
             super.destroyEvents();
         }

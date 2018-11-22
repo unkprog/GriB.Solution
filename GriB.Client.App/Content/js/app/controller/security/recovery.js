@@ -35,10 +35,10 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                     });
                 };
                 Recovery.prototype.createEvents = function () {
-                    this.RecoveryButtonClick = this.createClickEvent("btn-recovery", this.recoveryButtonClick);
+                    this.RecoveryButtonClick = this.createTouchClickEvent("btn-recovery", this.recoveryButtonClick);
                 };
                 Recovery.prototype.destroyEvents = function () {
-                    this.destroyClickEvent("btn-recovery", this.RecoveryButtonClick);
+                    this.destroyTouchClickEvent("btn-recovery", this.RecoveryButtonClick);
                 };
                 Recovery.prototype.recoveryButtonClick = function (e) {
                     var controller = this;
