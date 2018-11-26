@@ -32,17 +32,25 @@ export namespace Controller.Terminal {
         }
 
         private navHeader: JQuery;
+        private btnCheks: JQuery;
         private btnCash: JQuery;
         private btnSalePoint: JQuery;
         private controlBreadcrumbs: JQuery;
+        private controlItems: JQuery;
         private controlSalePoints: JQuery;
         private controlProgress: JQuery;
+        private controlMain: JQuery;
+        private controlChecks: JQuery;
         private controlSaleProducts: JQuery;
         public ViewInit(view:JQuery): boolean {
             super.ViewInit(view);
             this.controlBreadcrumbs = view.find("#pos-items-breadcrumbs");
-
+            
+            this.addCategory(0, "В начало");
             this.controlProgress = view.find("#progress-container-items");
+            this.controlMain = view.find('#posterminal-view-main');
+            this.controlItems = view.find('#posterminal-view-items');
+            this.controlChecks = view.find("#posterminal-view-checks-container");
             this.controlSaleProducts = view.find("#posterminal-view-items-container");
 
             return this.loadData();
@@ -51,15 +59,15 @@ export namespace Controller.Terminal {
         public ShowLoading() {
             if (this.controlProgress)
                 this.controlProgress.show();
-            if (this.controlSaleProducts)
-                this.controlSaleProducts.hide();
+            if (this.controlMain)
+                this.controlMain.hide();
         }
 
         public HideLoading() {
             if (this.controlProgress)
                 this.controlProgress.hide();
-            if (this.controlSaleProducts) {
-                this.controlSaleProducts.show();
+            if (this.controlMain) {
+                this.controlMain.show();
             }
             this.ViewResize({});
         }
@@ -82,12 +90,23 @@ export namespace Controller.Terminal {
         }
 
         public ViewShow(e: any): boolean {
-            return super.ViewShow(e);
+            let result: boolean = super.ViewShow(e);
+            $('.chips').chips();
+            return result;
         }
 
         public ViewResize(e: any): void {
             super.ViewResize(e);
-            this.controlSaleProducts.height($(window).height() - this.controlSaleProducts.offset().top);
+            if (this.controlChecks)
+                this.controlChecks.height($(window).height() - this.controlChecks.offset().top);
+            if (this.controlItems) {
+                this.controlItems.width($(window).width() - ($(window).width() >= 600 ? this.controlChecks.width() : 0));
+                this.controlItems.height(this.controlChecks.height()); //$(window).height() - this.controlSaleProducts.offset().top);
+            }
+
+            if (this.controlSaleProducts) {
+                this.controlSaleProducts.height($(window).height() - this.controlSaleProducts.offset().top);
+            }
         }
 
 
@@ -103,9 +122,12 @@ export namespace Controller.Terminal {
 
             this.navHeader = $(navbarHeader);
 
+            this.btnCheks = $('<li><a id="check-items" class="editor-header-button"><i class="material-icons editor-header">list</i></a></li>');
+
             this.btnCash = $('<li><a id="pos-btn-cash" class="editor-header-button"><i class="material-icons editor-header">account_balance_wallet</i></a></li>');
             this.btnSalePoint = $('<li><a id="pos-btn-salepoint" data-target="posterminal-view-salepoints" class="editor-header-button"><i class="material-icons editor-header">account_balance</i></a></li>');
 
+            this.navHeader.find("#pos-menu-buttons").append(this.btnCheks);
             this.navHeader.find("#pos-menu-buttons").append(this.btnCash);
             this.navHeader.find("#pos-menu-buttons").append(this.btnSalePoint);
 
@@ -206,12 +228,48 @@ export namespace Controller.Terminal {
             let targetid: string = e.currentTarget.id;
             let id: number = + targetid.replace("saleproduct_", "");
             if (e.currentTarget.classList.contains('category')) {
-                let breadcrum: JQuery = $('<a id="category_' + targetid + '" class="breadcrumb">' + $(e.currentTarget).data("name") + '</a>');
-                this.controlBreadcrumbs.append(breadcrum);
-
+                this.addCategory(id, $(e.currentTarget).data("name"));
                 this.Model.set("currentCategory", id);
                 this.loadSaleProducts();
             }
+        }
+
+        private breadCrumbItems: any[];
+        private addCategory(cat: number, catname: string): void {
+            if (!this.breadCrumbItems) this.breadCrumbItems = [];
+            this.breadCrumbItems.push({ id: cat, name: catname });
+            //<a id="category_0" class="breadcrumb">Начало</a>
+            let breadcrum: JQuery = (cat === -1 ? $('<a id="category_' + cat + '" class="breadcrumb"><i class="material-icons editor-header">list_alt</i></a>') : cat === 0 ? $('<a id="category_' + cat + '" class="breadcrumb"><i class="material-icons editor-header">home</i></a>') : $('<a id="category_' + cat + '" class="breadcrumb">' + catname + '</a>'));
+            this.controlBreadcrumbs.append(breadcrum);
+            this.createClickEvent(breadcrum, this.BreadCrumbButtonClick);
+        }
+
+        private backToCategory(cat: number) {
+            let item: any;
+            let itemJ: JQuery;
+            for (let i = this.breadCrumbItems.length - 1; i > 0; i--) {
+                if (this.breadCrumbItems[i].id !== cat) {
+                    item = this.breadCrumbItems.pop();
+                    itemJ = $('#category_' + item.id);
+                    this.destroyClickEvent(itemJ, this.BreadCrumbButtonClick);
+                    itemJ.remove();
+                }
+                else
+                    break;
+            }
+
+        }
+
+        private BreadCrumbButtonClick(e): void {
+            let targetid: string = e.currentTarget.id;
+            let id: number = + targetid.replace("category_", "");
+
+            if (id === -1)
+                return;
+
+            this.Model.set("currentCategory", id);
+            this.backToCategory(id);
+            this.loadSaleProducts();
         }
     }
 }

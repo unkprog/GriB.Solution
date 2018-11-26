@@ -8,6 +8,7 @@
     characterCounter(): JQuery;
     dropdown(methodName?: any, paramName?: any): JQuery;
     recalculateDimensions(): JQuery;
+    chips(): JQuery;
 }
 
 

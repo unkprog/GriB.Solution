@@ -47,21 +47,25 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
                 Index.prototype.ViewInit = function (view) {
                     _super.prototype.ViewInit.call(this, view);
                     this.controlBreadcrumbs = view.find("#pos-items-breadcrumbs");
+                    this.addCategory(0, "В начало");
                     this.controlProgress = view.find("#progress-container-items");
+                    this.controlMain = view.find('#posterminal-view-main');
+                    this.controlItems = view.find('#posterminal-view-items');
+                    this.controlChecks = view.find("#posterminal-view-checks-container");
                     this.controlSaleProducts = view.find("#posterminal-view-items-container");
                     return this.loadData();
                 };
                 Index.prototype.ShowLoading = function () {
                     if (this.controlProgress)
                         this.controlProgress.show();
-                    if (this.controlSaleProducts)
-                        this.controlSaleProducts.hide();
+                    if (this.controlMain)
+                        this.controlMain.hide();
                 };
                 Index.prototype.HideLoading = function () {
                     if (this.controlProgress)
                         this.controlProgress.hide();
-                    if (this.controlSaleProducts) {
-                        this.controlSaleProducts.show();
+                    if (this.controlMain) {
+                        this.controlMain.show();
                     }
                     this.ViewResize({});
                 };
@@ -81,11 +85,21 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
                     _super.prototype.ViewHide.call(this, e);
                 };
                 Index.prototype.ViewShow = function (e) {
-                    return _super.prototype.ViewShow.call(this, e);
+                    var result = _super.prototype.ViewShow.call(this, e);
+                    $('.chips').chips();
+                    return result;
                 };
                 Index.prototype.ViewResize = function (e) {
                     _super.prototype.ViewResize.call(this, e);
-                    this.controlSaleProducts.height($(window).height() - this.controlSaleProducts.offset().top);
+                    if (this.controlChecks)
+                        this.controlChecks.height($(window).height() - this.controlChecks.offset().top);
+                    if (this.controlItems) {
+                        this.controlItems.width($(window).width() - ($(window).width() >= 600 ? this.controlChecks.width() : 0));
+                        this.controlItems.height(this.controlChecks.height()); //$(window).height() - this.controlSaleProducts.offset().top);
+                    }
+                    if (this.controlSaleProducts) {
+                        this.controlSaleProducts.height($(window).height() - this.controlSaleProducts.offset().top);
+                    }
                 };
                 Index.prototype.initNavbarHeader = function (view) {
                     var navbarHeader = '<div class="navbar-fixed editor-header z-depth-1">';
@@ -97,8 +111,10 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
                     navbarHeader += '        </nav>';
                     navbarHeader += '    </div>';
                     this.navHeader = $(navbarHeader);
+                    this.btnCheks = $('<li><a id="check-items" class="editor-header-button"><i class="material-icons editor-header">list</i></a></li>');
                     this.btnCash = $('<li><a id="pos-btn-cash" class="editor-header-button"><i class="material-icons editor-header">account_balance_wallet</i></a></li>');
                     this.btnSalePoint = $('<li><a id="pos-btn-salepoint" data-target="posterminal-view-salepoints" class="editor-header-button"><i class="material-icons editor-header">account_balance</i></a></li>');
+                    this.navHeader.find("#pos-menu-buttons").append(this.btnCheks);
                     this.navHeader.find("#pos-menu-buttons").append(this.btnCash);
                     this.navHeader.find("#pos-menu-buttons").append(this.btnSalePoint);
                     view.prepend(this.navHeader);
@@ -184,11 +200,42 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
                     var targetid = e.currentTarget.id;
                     var id = +targetid.replace("saleproduct_", "");
                     if (e.currentTarget.classList.contains('category')) {
-                        var breadcrum = $('<a id="category_' + targetid + '" class="breadcrumb">' + $(e.currentTarget).data("name") + '</a>');
-                        this.controlBreadcrumbs.append(breadcrum);
+                        this.addCategory(id, $(e.currentTarget).data("name"));
                         this.Model.set("currentCategory", id);
                         this.loadSaleProducts();
                     }
+                };
+                Index.prototype.addCategory = function (cat, catname) {
+                    if (!this.breadCrumbItems)
+                        this.breadCrumbItems = [];
+                    this.breadCrumbItems.push({ id: cat, name: catname });
+                    //<a id="category_0" class="breadcrumb">Начало</a>
+                    var breadcrum = (cat === -1 ? $('<a id="category_' + cat + '" class="breadcrumb"><i class="material-icons editor-header">list_alt</i></a>') : cat === 0 ? $('<a id="category_' + cat + '" class="breadcrumb"><i class="material-icons editor-header">home</i></a>') : $('<a id="category_' + cat + '" class="breadcrumb">' + catname + '</a>'));
+                    this.controlBreadcrumbs.append(breadcrum);
+                    this.createClickEvent(breadcrum, this.BreadCrumbButtonClick);
+                };
+                Index.prototype.backToCategory = function (cat) {
+                    var item;
+                    var itemJ;
+                    for (var i = this.breadCrumbItems.length - 1; i > 0; i--) {
+                        if (this.breadCrumbItems[i].id !== cat) {
+                            item = this.breadCrumbItems.pop();
+                            itemJ = $('#category_' + item.id);
+                            this.destroyClickEvent(itemJ, this.BreadCrumbButtonClick);
+                            itemJ.remove();
+                        }
+                        else
+                            break;
+                    }
+                };
+                Index.prototype.BreadCrumbButtonClick = function (e) {
+                    var targetid = e.currentTarget.id;
+                    var id = +targetid.replace("category_", "");
+                    if (id === -1)
+                        return;
+                    this.Model.set("currentCategory", id);
+                    this.backToCategory(id);
+                    this.loadSaleProducts();
                 };
                 return Index;
             }(base.Controller.Base));

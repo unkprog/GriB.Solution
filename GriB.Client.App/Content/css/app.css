@@ -237,10 +237,29 @@ input[type='number']:hover::-webkit-outer-spin-button {
 #pos-items-breadcrumbs > .breadcrumb:last-child:before, #pos-items-breadcrumbs > .breadcrumb:last-child {
   color: black; }
 
+#posterminal-view-checks-container {
+  position: absolute;
+  width: 30%;
+  border-top: 1px solid #a1887f;
+  border-right: 1px solid #a1887f; }
+
+#check-items {
+  display: none; }
+
+#posterminal-view-items {
+  position: absolute;
+  left: 30%; }
+
+@media only screen and (max-width: 600px) {
+  #posterminal-view-checks-container {
+    display: none; }
+  #check-items {
+    display: block; }
+  #posterminal-view-items {
+    left: 0; } }
+
 .pos-items-container {
   margin-top: 0.5%;
-  position: relative;
-  width: 100%;
   min-height: 150px;
   margin-bottom: 0;
   overflow-y: auto; }
