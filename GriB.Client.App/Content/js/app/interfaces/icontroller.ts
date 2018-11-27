@@ -109,7 +109,11 @@
         ShowLoading(): void;
         HideLoading(): void;
 
+        Model: kendo.data.ObservableObject;
+        View: JQuery;
         CurrentSalePoint: number;
         ControlChecks: JQuery;
+
+        Reset(): void;
     }
 }

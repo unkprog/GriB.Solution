@@ -11,7 +11,7 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-define(["require", "exports", "app/common/variables", "app/common/basecontroller", "app/services/posterminalservice", "app/common/variables", "app/controller/terminal/navigation"], function (require, exports, vars, base, svc, variables_1, nav) {
+define(["require", "exports", "app/common/variables", "app/common/basecontroller", "app/services/posterminalservice", "app/common/variables", "app/controller/terminal/navigationbar", "app/controller/terminal/navigationproduct", "app/controller/terminal/navigationcheck"], function (require, exports, vars, base, svc, variables_1, navigationBar, navigationProduct, navigationCheck) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var Controller;
@@ -23,11 +23,11 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
                 function Index() {
                     return _super.call(this) || this;
                 }
-                Object.defineProperty(Index.prototype, "POSTerminalService", {
+                Object.defineProperty(Index.prototype, "Service", {
                     get: function () {
-                        if (!this.posTerminalService)
-                            this.posTerminalService = new svc.Services.POSTerminalService();
-                        return this.posTerminalService;
+                        if (!this.service)
+                            this.service = new svc.Services.POSTerminalService();
+                        return this.service;
                     },
                     enumerable: true,
                     configurable: true
@@ -41,7 +41,6 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
                         "POSData": {
                             "CurrentSalePoint": { "name": "" }
                         },
-                        "currentCategory": 0
                     });
                 };
                 Object.defineProperty(Index.prototype, "CurrentSalePoint", {
@@ -54,17 +53,18 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
                 });
                 Object.defineProperty(Index.prototype, "ControlChecks", {
                     get: function () {
-                        return this.controlChecks;
+                        return this.navCheck.ControlChecks;
                     },
                     enumerable: true,
                     configurable: true
                 });
                 Index.prototype.ViewInit = function (view) {
                     _super.prototype.ViewInit.call(this, view);
-                    this.navigation = new nav.Controller.Terminal.Navigation(view, this);
                     this.controlMain = view.find('#posterminal-view-main');
                     this.controlProgress = view.find("#progress-container-terminal");
-                    this.controlChecks = view.find("#posterminal-view-checks-container");
+                    this.navBar = new navigationBar.Controller.Terminal.NavigationBar(view, this);
+                    this.navProduct = new navigationProduct.Controller.Terminal.NavigationProduct(view, this);
+                    this.navCheck = new navigationCheck.Controller.Terminal.NavigationCheck(view, this);
                     return this.loadData();
                 };
                 Index.prototype.ShowLoading = function () {
@@ -83,92 +83,40 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
                 };
                 Index.prototype.loadData = function () {
                     var controller = this;
-                    controller.POSTerminalService.Enter(function (responseData) {
+                    controller.Service.Enter(function (responseData) {
                         vars._identity.employee = responseData.employee;
-                        controller.initNavbarHeader(controller.View);
-                        controller.initControlSalePoints(controller.View);
+                        controller.navBar.Bind();
+                        controller.Reset();
                         controller.HideLoading();
-                        controller.navigation.ResetSaleProducts();
                         variables_1._app.HideLoading();
                     });
                     return false;
                 };
                 Index.prototype.ViewHide = function (e) {
-                    this.navHeader.unbind();
+                    this.navBar.Unbind();
                     _super.prototype.ViewHide.call(this, e);
                 };
                 Index.prototype.ViewShow = function (e) {
                     var result = _super.prototype.ViewShow.call(this, e);
-                    $('.chips').chips();
+                    if (this.navCheck)
+                        this.navCheck.ViewShow(e);
                     return result;
                 };
                 Index.prototype.ViewResize = function (e) {
                     _super.prototype.ViewResize.call(this, e);
-                    if (this.controlChecks)
-                        this.controlChecks.height($(window).height() - this.controlChecks.offset().top);
-                    if (this.navigation)
-                        this.navigation.ViewResize(e);
-                };
-                Index.prototype.initNavbarHeader = function (view) {
-                    var navbarHeader = '<div class="navbar-fixed editor-header z-depth-1">';
-                    navbarHeader += '        <nav class="editor-header-nav">';
-                    navbarHeader += '            <div class="nav-wrapper editor-header">';
-                    navbarHeader += '                <a class="editor-header-title" data-bind="text:POSData.CurrentSalePoint.name"></a>';
-                    navbarHeader += '                <ul id="pos-menu-buttons" class="left"></ul>';
-                    navbarHeader += '            </div>';
-                    navbarHeader += '        </nav>';
-                    navbarHeader += '    </div>';
-                    this.navHeader = $(navbarHeader);
-                    this.btnCheks = $('<li><a id="check-items" class="editor-header-button"><i class="material-icons editor-header">list</i></a></li>');
-                    this.btnCash = $('<li><a id="pos-btn-cash" class="editor-header-button"><i class="material-icons editor-header">account_balance_wallet</i></a></li>');
-                    this.btnSalePoint = $('<li><a id="pos-btn-salepoint" data-target="posterminal-view-salepoints" class="editor-header-button"><i class="material-icons editor-header">account_balance</i></a></li>');
-                    this.navHeader.find("#pos-menu-buttons").append(this.btnCheks);
-                    this.navHeader.find("#pos-menu-buttons").append(this.btnCash);
-                    this.navHeader.find("#pos-menu-buttons").append(this.btnSalePoint);
-                    view.prepend(this.navHeader);
-                    kendo.bind(this.navHeader, this.Model);
-                };
-                // Pltcm
-                Index.prototype.initControlSalePoints = function (view) {
-                    this.controlSalePoints = view.find('#posterminal-view-salepoints');
-                    var salePoints = vars._identity.employee.accesssalepoints;
-                    var html = '';
-                    for (var i = 0, icount = salePoints.length; i < icount; i++) {
-                        if (salePoints[i].isaccess === true) {
-                            html += '<li><a id="set_salepoint_';
-                            html += salePoints[i].salepoint.id;
-                            html += '" href="#!">';
-                            html += salePoints[i].salepoint.name;
-                            html += '</a></li>';
-                            if (vars._identity.employee.defaultsalepoint === salePoints[i].salepoint.id) {
-                                var CurrentSalePoint = this.Model.get("POSData.CurrentSalePoint").toJSON();
-                                CurrentSalePoint = salePoints[i].salepoint;
-                                this.Model.set("POSData.CurrentSalePoint", CurrentSalePoint);
-                            }
-                        }
-                    }
-                    this.controlSalePoints.html(html);
-                    $("#pos-btn-salepoint").dropdown({ constrainWidth: false });
-                    this.createTouchClickEvent(this.controlSalePoints.find('a'), this.SalePointButtonClick);
+                    if (this.navCheck)
+                        this.navCheck.ViewResize(e);
+                    if (this.navProduct)
+                        this.navProduct.ViewResize(e);
                 };
                 Index.prototype.createEvents = function () {
                 };
                 Index.prototype.destroyEvents = function () {
-                    this.navigation.destroyEvents();
-                    this.destroyTouchClickEvent(this.controlSalePoints.find('a'), this.SalePointButtonClick);
+                    this.navProduct.destroyEvents();
+                    this.navBar.destroyEvents();
                 };
-                Index.prototype.SalePointButtonClick = function (e) {
-                    var id = e.currentTarget.id;
-                    id = id.replace("set_salepoint_", "");
-                    var salePoints = vars._identity.employee.accesssalepoints;
-                    for (var i = 0, icount = salePoints.length; i < icount; i++) {
-                        if (salePoints[i].isaccess === true) {
-                            if (+id === salePoints[i].salepoint.id) {
-                                this.Model.set("POSData.CurrentSalePoint", salePoints[i].salepoint);
-                                this.navigation.ResetSaleProducts();
-                            }
-                        }
-                    }
+                Index.prototype.Reset = function () {
+                    this.navProduct.ResetSaleProducts();
                 };
                 return Index;
             }(base.Controller.Base));

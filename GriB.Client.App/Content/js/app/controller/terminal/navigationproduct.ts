@@ -3,7 +3,7 @@ import utils = require('app/common/utils');
 import svc = require('app/services/posterminalservice');
 
 export namespace Controller.Terminal {
-    export class Navigation {
+    export class NavigationProduct {
         constructor(view: JQuery, terminal: Interfaces.ITerminal) {
 
             this.terminal = terminal;
@@ -117,7 +117,6 @@ export namespace Controller.Terminal {
         private addCategory(cat: number, catname: string): void {
             if (!this.breadCrumbItems) this.breadCrumbItems = [];
             this.breadCrumbItems.push({ id: cat, name: catname });
-            //<a id="category_0" class="breadcrumb">Начало</a>
             let breadcrum: JQuery = (cat === 0 ? $('<a id="category_' + cat + '" class="breadcrumb"><i class="material-icons editor-header">widgets</i></a>') : $('<a id="category_' + cat + '" class="breadcrumb">' + catname + '</a>'));
             this.controlBreadcrumbs.append(breadcrum);
             utils.createClickEvent(breadcrum, this.BreadCrumbButtonClick, this);

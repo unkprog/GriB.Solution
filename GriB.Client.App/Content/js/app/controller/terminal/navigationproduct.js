@@ -5,8 +5,8 @@ define(["require", "exports", "app/common/utils", "app/services/posterminalservi
     (function (Controller) {
         var Terminal;
         (function (Terminal) {
-            var Navigation = /** @class */ (function () {
-                function Navigation(view, terminal) {
+            var NavigationProduct = /** @class */ (function () {
+                function NavigationProduct(view, terminal) {
                     this.terminal = terminal;
                     this.controlItems = view.find('#posterminal-view-items');
                     this.controlProgress = view.find("#progress-container-items");
@@ -15,7 +15,7 @@ define(["require", "exports", "app/common/utils", "app/services/posterminalservi
                     this.currentCategory = 0;
                     this.addCategory(this.currentCategory, "В начало");
                 }
-                Object.defineProperty(Navigation.prototype, "Service", {
+                Object.defineProperty(NavigationProduct.prototype, "Service", {
                     get: function () {
                         if (!this.service)
                             this.service = new svc.Services.POSTerminalService();
@@ -24,7 +24,7 @@ define(["require", "exports", "app/common/utils", "app/services/posterminalservi
                     enumerable: true,
                     configurable: true
                 });
-                Navigation.prototype.loadSaleProducts = function () {
+                NavigationProduct.prototype.loadSaleProducts = function () {
                     var controller = this;
                     controller.ShowLoading();
                     var paramsSelect = { category: this.currentCategory, salepoint: controller.terminal.CurrentSalePoint };
@@ -33,11 +33,11 @@ define(["require", "exports", "app/common/utils", "app/services/posterminalservi
                         controller.HideLoading();
                     });
                 };
-                Navigation.prototype.ResetSaleProducts = function () {
+                NavigationProduct.prototype.ResetSaleProducts = function () {
                     this.currentCategory = 0;
                     this.loadSaleProducts();
                 };
-                Navigation.prototype.ViewResize = function (e) {
+                NavigationProduct.prototype.ViewResize = function (e) {
                     if (this.controlItems) {
                         this.controlItems.width($(window).width() - ($(window).width() >= 600 ? this.terminal.ControlChecks.width() : 0));
                         this.controlItems.height(this.terminal.ControlChecks.height());
@@ -46,16 +46,16 @@ define(["require", "exports", "app/common/utils", "app/services/posterminalservi
                         this.controlSaleProducts.height($(window).height() - this.controlSaleProducts.offset().top);
                     }
                 };
-                Navigation.prototype.destroyEvents = function () {
+                NavigationProduct.prototype.destroyEvents = function () {
                     utils.destroyClickEvent(this.controlSaleProducts.find('a'), this.ItemSaleButtonClick);
                 };
-                Navigation.prototype.ShowLoading = function () {
+                NavigationProduct.prototype.ShowLoading = function () {
                     if (this.controlItems)
                         this.controlItems.hide();
                     if (this.controlProgress)
                         this.controlProgress.show();
                 };
-                Navigation.prototype.HideLoading = function () {
+                NavigationProduct.prototype.HideLoading = function () {
                     if (this.controlProgress)
                         this.controlProgress.hide();
                     if (this.controlItems) {
@@ -63,7 +63,7 @@ define(["require", "exports", "app/common/utils", "app/services/posterminalservi
                     }
                     this.ViewResize({});
                 };
-                Navigation.prototype.drawSaleProducts = function (items) {
+                NavigationProduct.prototype.drawSaleProducts = function (items) {
                     this.destroyEvents();
                     var html = '';
                     var item;
@@ -86,7 +86,7 @@ define(["require", "exports", "app/common/utils", "app/services/posterminalservi
                     this.controlSaleProducts.html(html);
                     utils.createClickEvent(this.controlSaleProducts.find('a'), this.ItemSaleButtonClick, this);
                 };
-                Navigation.prototype.ItemSaleButtonClick = function (e) {
+                NavigationProduct.prototype.ItemSaleButtonClick = function (e) {
                     var targetid = e.currentTarget.id;
                     var id = +targetid.replace("saleproduct_", "");
                     if (e.currentTarget.classList.contains('category')) {
@@ -95,7 +95,7 @@ define(["require", "exports", "app/common/utils", "app/services/posterminalservi
                         this.loadSaleProducts();
                     }
                 };
-                Navigation.prototype.addCategory = function (cat, catname) {
+                NavigationProduct.prototype.addCategory = function (cat, catname) {
                     if (!this.breadCrumbItems)
                         this.breadCrumbItems = [];
                     this.breadCrumbItems.push({ id: cat, name: catname });
@@ -103,7 +103,7 @@ define(["require", "exports", "app/common/utils", "app/services/posterminalservi
                     this.controlBreadcrumbs.append(breadcrum);
                     utils.createClickEvent(breadcrum, this.BreadCrumbButtonClick, this);
                 };
-                Navigation.prototype.backToCategory = function (cat) {
+                NavigationProduct.prototype.backToCategory = function (cat) {
                     var item;
                     var itemJ;
                     for (var i = this.breadCrumbItems.length - 1; i > 0; i--) {
@@ -117,7 +117,7 @@ define(["require", "exports", "app/common/utils", "app/services/posterminalservi
                             break;
                     }
                 };
-                Navigation.prototype.BreadCrumbButtonClick = function (e) {
+                NavigationProduct.prototype.BreadCrumbButtonClick = function (e) {
                     var targetid = e.currentTarget.id;
                     var id = +targetid.replace("category_", "");
                     if (id === -1)
@@ -126,10 +126,10 @@ define(["require", "exports", "app/common/utils", "app/services/posterminalservi
                     this.backToCategory(id);
                     this.loadSaleProducts();
                 };
-                return Navigation;
+                return NavigationProduct;
             }());
-            Terminal.Navigation = Navigation;
+            Terminal.NavigationProduct = NavigationProduct;
         })(Terminal = Controller.Terminal || (Controller.Terminal = {}));
     })(Controller = exports.Controller || (exports.Controller = {}));
 });
-//# sourceMappingURL=navigation.js.map
+//# sourceMappingURL=navigationproduct.js.map

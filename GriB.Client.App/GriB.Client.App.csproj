@@ -365,7 +365,9 @@
     <TypeScriptCompile Include="Content\js\app\controller\setting\editor\organization.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\setting\index.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\terminal\index.ts" />
-    <TypeScriptCompile Include="Content\js\app\controller\terminal\navigation.ts" />
+    <TypeScriptCompile Include="Content\js\app\controller\terminal\navigationbar.ts" />
+    <TypeScriptCompile Include="Content\js\app\controller\terminal\navigationproduct.ts" />
+    <TypeScriptCompile Include="Content\js\app\controller\terminal\navigationcheck.ts" />
     <TypeScriptCompile Include="Content\js\app\interfaces\iapplication.ts" />
     <TypeScriptCompile Include="Content\js\app\interfaces\icontroller.ts" />
     <TypeScriptCompile Include="Content\js\app\interfaces\imodel.ts" />
