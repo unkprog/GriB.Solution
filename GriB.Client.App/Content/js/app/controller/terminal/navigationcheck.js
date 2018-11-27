@@ -7,11 +7,12 @@ define(["require", "exports"], function (require, exports) {
         (function (Terminal) {
             var NavigationCheck = /** @class */ (function () {
                 function NavigationCheck(view, terminal) {
-                    this.controlChecks = view.find("#posterminal-view-checks-container");
+                    this.controlContainerChecks = view.find("#posterminal-view-checks-container");
+                    this.controlChecks = this.controlContainerChecks.find("#posterminal-view-checks");
                 }
-                Object.defineProperty(NavigationCheck.prototype, "ControlChecks", {
+                Object.defineProperty(NavigationCheck.prototype, "ControlContainerChecks", {
                     get: function () {
-                        return this.controlChecks;
+                        return this.controlContainerChecks;
                     },
                     enumerable: true,
                     configurable: true
@@ -20,8 +21,8 @@ define(["require", "exports"], function (require, exports) {
                     $('.chips').chips();
                 };
                 NavigationCheck.prototype.ViewResize = function (e) {
-                    if (this.controlChecks)
-                        this.controlChecks.height($(window).height() - this.controlChecks.offset().top);
+                    if (this.controlContainerChecks)
+                        this.controlContainerChecks.height($(window).height() - this.controlContainerChecks.offset().top);
                 };
                 return NavigationCheck;
             }());

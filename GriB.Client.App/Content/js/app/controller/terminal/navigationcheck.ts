@@ -2,12 +2,14 @@
     export class NavigationCheck {
         constructor(view: JQuery, terminal: Interfaces.ITerminal) {
 
-            this.controlChecks = view.find("#posterminal-view-checks-container");
+            this.controlContainerChecks = view.find("#posterminal-view-checks-container");
+            this.controlChecks = this.controlContainerChecks.find("#posterminal-view-checks");
         }
 
         private controlChecks: JQuery;
-        public get ControlChecks() {
-            return this.controlChecks;
+        private controlContainerChecks: JQuery;
+        public get ControlContainerChecks() {
+            return this.controlContainerChecks;
         }
 
         public ViewShow(e: any): void {
@@ -15,8 +17,8 @@
         }
 
         public ViewResize(e: any): void {
-            if (this.controlChecks)
-                this.controlChecks.height($(window).height() - this.controlChecks.offset().top);
+            if (this.controlContainerChecks)
+                this.controlContainerChecks.height($(window).height() - this.controlContainerChecks.offset().top);
         }
     }
 }

@@ -3,10 +3,31 @@
 
     <div id="posterminal-view-main">
 
-        <div id="posterminal-view-checks-container" class="">
-            <div class="chip">Чек №1<i class="close material-icons">close</i></div>
-            <div class="chip">Чек №2<i class="close material-icons">close</i></div>
-            <div class="chip">Чек №3<i class="close material-icons">close</i></div>
+        <div id="posterminal-view-checks-container">
+            <div id="posterminal-view-checks">
+                <div class="chip check-chip">Чек №1<i class="close material-icons">close</i></div>
+                <div class="chip check-chip">Чек №  qwewe2<i class="close material-icons">close</i></div>
+                <div class="chip check-chip">Чек №3<i class="close material-icons">close</i></div>
+            </div>
+
+
+            <div class="row">
+                <div class="col s3">
+                    <a id="btn-check-person" class="btn btncol check-btn"><i class="material-icons check-icon">person</i></a>
+                </div>
+                <div class="col s3">
+                    <a id="btn-check-discount" class="btn btncol check-btn"><i class="material-icons check-icon">mood</i></a>
+                </div>
+                <div class="col s3">
+                    <a id="btn-check-comment" class="btn btncol check-btn"><i class="material-icons check-icon">message</i></a>
+                </div>
+                <div class="col s3">
+                    <a id="btn-check-menu" class="btn btncol check-btn"><i class="material-icons check-icon">menu</i></a>
+                </div>
+                <div class="col s12">
+                    <a id="btn-check-payment" class="btn btncol" data-bind="text:labelPayment"></a>
+                </div>
+            </div>
         </div>
 
         <div id="posterminal-view-items">

@@ -41,6 +41,7 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
                         "POSData": {
                             "CurrentSalePoint": { "name": "" }
                         },
+                        "labelPayment": vars._statres("label$payment"),
                     });
                 };
                 Object.defineProperty(Index.prototype, "CurrentSalePoint", {
@@ -53,7 +54,7 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
                 });
                 Object.defineProperty(Index.prototype, "ControlChecks", {
                     get: function () {
-                        return this.navCheck.ControlChecks;
+                        return this.navCheck.ControlContainerChecks;
                     },
                     enumerable: true,
                     configurable: true

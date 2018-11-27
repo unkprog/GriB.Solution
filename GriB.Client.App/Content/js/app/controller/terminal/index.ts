@@ -35,7 +35,7 @@ export namespace Controller.Terminal {
                 "POSData": {
                     "CurrentSalePoint": { "name" : "" }
                 },
-                
+                "labelPayment": vars._statres("label$payment"),
             });
         }
 
@@ -49,7 +49,7 @@ export namespace Controller.Terminal {
         private controlMain: JQuery;
        
         public get ControlChecks() {
-            return this.navCheck.ControlChecks;
+            return this.navCheck.ControlContainerChecks;
         }
 
         public ViewInit(view:JQuery): boolean {
