@@ -103,4 +103,13 @@
         Show(header: string, e: string): void;
         OnClose: () => void;
     }
+
+
+    export interface ITerminal {
+        ShowLoading(): void;
+        HideLoading(): void;
+
+        CurrentSalePoint: number;
+        ControlChecks: JQuery;
+    }
 }
