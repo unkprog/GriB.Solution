@@ -258,6 +258,11 @@ input[type='number']:hover::-webkit-outer-spin-button {
     text-align: right;
 }
 
+.product-col-quantity-auto {
+    width: auto;
+    text-align: center;
+}
+
 .product-col-unit {
     width: 8%;
 }
@@ -265,6 +270,11 @@ input[type='number']:hover::-webkit-outer-spin-button {
 .product-col-sum {
     width: 15%;
     text-align: right;
+}
+
+.product-col-sum-auto {
+    width: auto;
+    text-align: center;
 }
 
 .product-col-btn {
@@ -328,6 +338,40 @@ input[type='number']:hover::-webkit-outer-spin-button {
 #posterminal-view-items {
     position: absolute;
     left: 30%;
+}
+
+#posterminal-view-checks {
+    border-bottom: 1px solid #a1887f;
+}
+
+#posterminal-view-check-positions {
+    font-size: 0.8em;
+    font-weight: bold;
+}
+
+#posterminal-view-check-buttons, #posterminal-view-check-total, #posterminal-view-check-info {
+    margin: 5px 0;
+    padding-bottom: 0 !important;
+}
+
+.info-label {
+    margin: 0;
+    font-size: 1.3em;
+    font-weight: bold;
+    min-width: 4em;
+    float: left;
+}
+
+.info-value {
+    margin: 5px;
+    font-size: 1.3em;
+    font-weight: normal;
+}
+
+.total-text {
+    margin: 5px;
+    font-size: 2em;
+    font-weight: bold;
 }
 
 @media only screen and (max-width: 992px) {

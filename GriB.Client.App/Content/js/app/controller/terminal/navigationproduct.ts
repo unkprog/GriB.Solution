@@ -86,7 +86,7 @@ export namespace Controller.Terminal {
             for (let i = 0, icount = (items ? items.length : 0); i < icount; i++) {
                 item = items[i];
                 html += '<a id="saleproduct_' + item.id + '" class="pos-item-sale ' + (item.iscategory === true ? 'category' : '') + '" data-name="' + item.name + '">';
-                html += '   <div class="col s6 m4 l3 xl2">';
+                html += '   <div class="col s6 m6 l4 xl3">';
                 html += '       <div class="card pos-item-card">';
                 html += '           <div class="pos-item-card-image" style="background-image:url(' + item.photo + ')">';
                 html += '             <div class="card-content pos-item-card-content center">';
