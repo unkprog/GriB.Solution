@@ -254,8 +254,25 @@ input[type='number']:hover::-webkit-outer-spin-button {
 #posterminal-view-checks {
   padding: 5px; }
 
+#btn-check-new {
+  height: 36px;
+  line-height: 36px;
+  padding: 0;
+  width: 36px; }
+
 .check-chip {
-  margin-right: 0; }
+  margin-right: 0;
+  height: 36px;
+  line-height: 36px;
+  border-radius: 18px; }
+
+.check-chip .close {
+  font-size: 18px;
+  line-height: 36px; }
+
+.check-select {
+  color: #fff;
+  background-color: #8d6e63; }
 
 .check-btn {
   height: 3.2em; }

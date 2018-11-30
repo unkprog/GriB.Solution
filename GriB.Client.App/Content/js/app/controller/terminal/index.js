@@ -91,6 +91,7 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
                         controller.HideLoading();
                         variables_1._app.HideLoading();
                     });
+                    controller.navCheck.loadData();
                     return false;
                 };
                 Index.prototype.ViewHide = function (e) {
@@ -111,10 +112,16 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
                         this.navProduct.ViewResize(e);
                 };
                 Index.prototype.createEvents = function () {
+                    if (this.navCheck)
+                        this.navCheck.createEvents();
                 };
                 Index.prototype.destroyEvents = function () {
-                    this.navProduct.destroyEvents();
-                    this.navBar.destroyEvents();
+                    if (this.navCheck)
+                        this.navCheck.destroyEvents();
+                    if (this.navProduct)
+                        this.navProduct.destroyEvents();
+                    if (this.navBar)
+                        this.navBar.destroyEvents();
                 };
                 Index.prototype.Reset = function () {
                     this.navProduct.ResetSaleProducts();

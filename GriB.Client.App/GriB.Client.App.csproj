@@ -223,9 +223,12 @@
     <Content Include="Scripts\Query\Editor\Unit\[del].sql" />
     <Content Include="Scripts\Query\Editor\Unit\[get].sql" />
     <Content Include="Scripts\Query\Editor\Unit\[set].sql" />
+    <Content Include="Scripts\Query\POSTerminal\Check\[new_all].sql" />
+    <Content Include="Scripts\Query\POSTerminal\Check\[new].sql" />
     <Content Include="Scripts\Query\POSTerminal\[get].sql" />
     <Content Include="Scripts\Sql\01.001.[t_orgtype].sql" />
     <Content Include="Scripts\Sql\03.001.[t_employee].sql" />
+    <Content Include="Scripts\Sql\07.001.[t_check].sql" />
     <Content Include="Scripts\Sql\06.004.[t_product_composition].sql" />
     <Content Include="Scripts\Sql\06.003.[t_product_price].sql" />
     <Content Include="Scripts\Sql\06.002.[t_product_account].sql" />
@@ -254,6 +257,7 @@
     <Compile Include="Managers\Editors\Category.cs" />
     <Compile Include="Managers\Editors\Unit.cs" />
     <Compile Include="Managers\Editors\Organization.cs" />
+    <Compile Include="Managers\POSTerminal\Check.cs" />
     <Compile Include="Managers\POSTerminal\Terminal.cs" />
     <Compile Include="Models\Editor\Category.cs" />
     <Compile Include="Models\Editor\Employee.cs" />
@@ -261,6 +265,7 @@
     <Compile Include="Models\Editor\Product.cs" />
     <Compile Include="Models\Editor\References.cs" />
     <Compile Include="Models\Editor\Unit.cs" />
+    <Compile Include="Models\POSTerminal\Check.cs" />
     <Compile Include="Models\POSTerminal\ListProduct.cs" />
     <Compile Include="Models\t_org.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -331,6 +336,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Scripts\Query\POSTerminal\Check\Position\" />
     <Folder Include="Scripts\Sql\Data\" />
   </ItemGroup>
   <ItemGroup>

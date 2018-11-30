@@ -18,6 +18,13 @@ export namespace Services {
         public GetSaleProducts(posparams: Interfaces.Model.IPosParamsSelect, Callback: (responseData: any) => void) {
             this.GetApi({ Action: "/sale_products", RequestData: posparams, Callback: Callback });
         }
-        
+
+        public CheckNew(Callback: (responseData: any) => void) {
+            this.GetApi({ Action: "/check_new", Callback: Callback });
+        }
+
+        public CheckOpened(Callback: (responseData: any) => void) {
+            this.GetApi({ Action: "/check_opened", Callback: Callback });
+        }
     }
 }

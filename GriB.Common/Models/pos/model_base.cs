@@ -37,6 +37,21 @@ namespace GriB.Common.Models.pos
         }
     }
 
+    public class model_base_position : model_base
+    {
+        public int index { get; set; }
+
+        public model_base_position() { }
+        public model_base_position(model_base mbase) : base(mbase)
+        {
+            id = mbase.id;
+        }
+        public model_base_position(model_base_position mbase) : base(mbase)
+        {
+            index = mbase.index;
+        }
+    }
+
     public class model_login : model_base
     {
         public string user { get; set; }

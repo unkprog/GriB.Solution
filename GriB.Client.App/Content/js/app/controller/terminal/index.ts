@@ -90,6 +90,7 @@ export namespace Controller.Terminal {
                 controller.HideLoading();
                 _app.HideLoading();
             });
+            controller.navCheck.loadData();
             return false;
         }
 
@@ -111,11 +112,13 @@ export namespace Controller.Terminal {
         }
 
         protected createEvents(): void {
+            if (this.navCheck) this.navCheck.createEvents();
         }
 
         protected destroyEvents(): void {
-            this.navProduct.destroyEvents();
-            this.navBar.destroyEvents();
+            if (this.navCheck) this.navCheck.destroyEvents();
+            if (this.navProduct) this.navProduct.destroyEvents();
+            if (this.navBar) this.navBar.destroyEvents();
         }
 
         public Reset(): void {

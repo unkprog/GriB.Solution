@@ -35,5 +35,28 @@ namespace GriB.Client.App.Controllers
                 return Request.CreateResponse(HttpStatusCode.OK, new { items = Terminal.GetSaleProducts(query, new posparamsselect() { category = category, salepoint = salepoint }) });
             });
         }
+
+        [HttpGet]
+        [ActionName("check_new")]
+        public HttpResponseMessage GetCheckNew()
+        {
+            return TryCatchResponseQuery((query) =>
+            {
+                Principal principal = (Principal)HttpContext.Current.User;
+                return Request.CreateResponse(HttpStatusCode.OK, new { checknew = Check.NewCheck(query, principal.Data.User.id, 0) });
+            });
+        }
+
+        [HttpGet]
+        [ActionName("check_opened")]
+        public HttpResponseMessage GetCheckOpened()
+        {
+            return TryCatchResponseQuery((query) =>
+            {
+                Principal principal = (Principal)HttpContext.Current.User;
+                return Request.CreateResponse(HttpStatusCode.OK, new { checkopened = Check.NewAll(query, principal.Data.User.id, 0) });
+            });
+        }
+
     }
 }
