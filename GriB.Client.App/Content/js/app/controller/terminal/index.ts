@@ -23,7 +23,9 @@ export namespace Controller.Terminal {
         private navBar: navigationBar.Controller.Terminal.NavigationBar;
         private navProduct: navigationProduct.Controller.Terminal.NavigationProduct;
         private navCheck: navigationCheck.Controller.Terminal.NavigationCheck;
-
+        public get Cheks(): Interfaces.ITerminalCheks {
+            return this.navCheck;
+        }
 
         protected createOptions(): Interfaces.IControllerOptions {
             return { Url: "/Content/view/terminal/index.html", Id: "posterminal-view" };
@@ -53,14 +55,15 @@ export namespace Controller.Terminal {
         }
 
         public ViewInit(view:JQuery): boolean {
+            this.navBar = new navigationBar.Controller.Terminal.NavigationBar(view, this);
+            this.navProduct = new navigationProduct.Controller.Terminal.NavigationProduct(view, this);
+            this.navCheck = new navigationCheck.Controller.Terminal.NavigationCheck(view, this);
+
             super.ViewInit(view);
 
             this.controlMain = view.find('#posterminal-view-main');
             this.controlProgress = view.find("#progress-container-terminal");
 
-            this.navBar = new navigationBar.Controller.Terminal.NavigationBar(view, this);
-            this.navProduct = new navigationProduct.Controller.Terminal.NavigationProduct(view, this);
-            this.navCheck = new navigationCheck.Controller.Terminal.NavigationCheck(view, this);
 
             return this.loadData();
         }

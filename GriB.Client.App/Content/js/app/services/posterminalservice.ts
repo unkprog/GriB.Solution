@@ -23,8 +23,16 @@ export namespace Services {
             this.GetApi({ Action: "/check_new", Callback: Callback });
         }
 
+        public CheckDelete(check: number, Callback: (responseData: any) => void) {
+            this.GetApi({ Action: "/check_delete", RequestData: { check: check }, Callback: Callback });
+        }
+
         public CheckOpened(Callback: (responseData: any) => void) {
             this.GetApi({ Action: "/check_opened", Callback: Callback });
+        }
+
+        public AddToCheck(check: number, product: number, quantity: number, Callback: (responseData: any) => void) {
+            this.PostApi({ Action: "/check_add_pos", RequestData: JSON.stringify( { check: check, product: product, quantity: quantity }), Callback: Callback });
         }
     }
 }

@@ -94,6 +94,9 @@ define(["require", "exports", "app/common/utils", "app/services/posterminalservi
                         this.currentCategory = id;
                         this.loadSaleProducts();
                     }
+                    else {
+                        this.terminal.Cheks.AddPosition(id);
+                    }
                 };
                 NavigationProduct.prototype.addCategory = function (cat, catname) {
                     if (!this.breadCrumbItems)

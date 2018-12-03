@@ -32,6 +32,13 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
                     enumerable: true,
                     configurable: true
                 });
+                Object.defineProperty(Index.prototype, "Cheks", {
+                    get: function () {
+                        return this.navCheck;
+                    },
+                    enumerable: true,
+                    configurable: true
+                });
                 Index.prototype.createOptions = function () {
                     return { Url: "/Content/view/terminal/index.html", Id: "posterminal-view" };
                 };
@@ -60,12 +67,12 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
                     configurable: true
                 });
                 Index.prototype.ViewInit = function (view) {
-                    _super.prototype.ViewInit.call(this, view);
-                    this.controlMain = view.find('#posterminal-view-main');
-                    this.controlProgress = view.find("#progress-container-terminal");
                     this.navBar = new navigationBar.Controller.Terminal.NavigationBar(view, this);
                     this.navProduct = new navigationProduct.Controller.Terminal.NavigationProduct(view, this);
                     this.navCheck = new navigationCheck.Controller.Terminal.NavigationCheck(view, this);
+                    _super.prototype.ViewInit.call(this, view);
+                    this.controlMain = view.find('#posterminal-view-main');
+                    this.controlProgress = view.find("#progress-container-terminal");
                     return this.loadData();
                 };
                 Index.prototype.ShowLoading = function () {

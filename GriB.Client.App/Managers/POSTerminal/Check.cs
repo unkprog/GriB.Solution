@@ -29,6 +29,18 @@ namespace GriB.Client.App.Managers.POSTerminal
             return result;
         }
 
+        private const string cmdDel = @"POSTerminal\Check\[del]";
+        public static check DeleteCheck(this Query query, int user, int check)
+        {
+            check result = null;
+            query.Execute(cmdDel, new SqlParameter[] { new SqlParameter() { ParameterName = "@u", Value = user }, new SqlParameter() { ParameterName = "@id", Value = check } }
+            , (values) =>
+            {
+                result = readFromValues(values);
+            });
+
+            return result;
+        }
 
         private const string cmdNewAll = @"POSTerminal\Check\[new_all]";
         public static List<check> NewAll(this Query query, int user, int change)
@@ -42,5 +54,40 @@ namespace GriB.Client.App.Managers.POSTerminal
 
             return result;
         }
+
+        private const string cmdGetPositions = @"POSTerminal\Check\Position\[get]";
+        public static check GetPositions(this Query query, check check)
+        {
+            check result = check;
+            result.positions = new List<check_position>();
+            query.Execute(cmdGetPositions, new SqlParameter[] { new SqlParameter() { ParameterName = "@id", Value = result.id } }
+            , (values) =>
+            {
+                int c = 1;
+                result.positions.Add(new check_position() { index = (int)values[c++], product = new Models.Editor.product() { id = (int)values[c++], name = (string)values[c++] }, quantity = (double)values[c++], price = (double)values[c++] });
+            });
+
+            return result;
+        }
+
+        private const string cmdAddPosition = @"POSTerminal\Check\Position\[add]";
+        public static check_position AddPosition(this Query query, check_position position)
+        {
+            check_position result = position;
+            query.Execute(cmdAddPosition, new SqlParameter[] { new SqlParameter() { ParameterName = "@id", Value = result.id }, new SqlParameter() { ParameterName = "@product", Value = result.product.id }, new SqlParameter() { ParameterName = "@quantity", Value = result.quantity } }
+            , (values) =>
+            {
+                int c = 1;
+                result.index = (int)values[c++];
+                result.product.id = (int)values[c++];
+                result.product.name = (string)values[c++];
+                result.quantity = (double)values[c++];
+                result.price = (double)values[c++];
+            });
+
+            return result;
+        }
+
+
     }
 }

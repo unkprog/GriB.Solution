@@ -2,13 +2,15 @@
 import svc = require('app/services/posterminalservice');
 
 export namespace Controller.Terminal {
-    export class NavigationCheck {
+    export class NavigationCheck implements Interfaces.ITerminalCheks {
         constructor(view: JQuery, terminal: Interfaces.ITerminal) {
             this.terminal = terminal;
             this.controlContainerChecks = view.find("#posterminal-view-checks-container");
             this.controlChecks = this.controlContainerChecks.find("#posterminal-view-checks");
+            this.buttonNewCheck = this.ControlContainerChecks.find("#btn-check-new");
             this.controlButtons = this.controlContainerChecks.find("#posterminal-view-check-buttons");
             this.controlTablePositions = this.controlContainerChecks.find("#posterminal-view-check-positions");
+            this.controlTableBodyPositions = this.controlTablePositions.find("tbody");
             this.controlTotal = this.controlContainerChecks.find("#posterminal-view-check-total");
         }
 
@@ -22,7 +24,9 @@ export namespace Controller.Terminal {
         private terminal: Interfaces.ITerminal;
         private controlChecks: JQuery;
         private controlContainerChecks: JQuery;
+        private buttonNewCheck: JQuery;
         private controlTablePositions: JQuery;
+        private controlTableBodyPositions: JQuery;
         private controlTotal: JQuery;
         private controlButtons: JQuery;
         public get ControlContainerChecks() {
@@ -52,33 +56,42 @@ export namespace Controller.Terminal {
         }
 
         private checkData: any = {
-            currentCheck: 0,
-            checks: []
+            currentCheck: {},
+            checks:[]
         };
 
         public loadData(): void {
             let controller = this;
+          
             controller.Service.CheckOpened((responseData) => {
                 controller.checkData.checks = responseData.checkopened;
                 controller.drawChecks();
                 if (controller.checkData && controller.checkData.checks.length > 0)
-                    controller.setCurrentCheck(controller.checkData.checks[0].id);
+                    controller.setCurrentCheck(controller.checkData.checks[0]);
+                else
+                    controller.setCurrentCheck(undefined);
             });
         }
 
         public createEvents(): void {
+            this.NewCheckButtonClick = utils.createTouchClickEvent(this.buttonNewCheck, this.newCheckButtonClick, this);
         }
 
         public destroyEvents(): void {
-           
+            utils.destroyTouchClickEvent(this.buttonNewCheck, this.NewCheckButtonClick);
+            utils.destroyTouchClickEvent(this.controlChecks.find(".check-chip"), this.CheckButtonClick);
+            utils.destroyTouchClickEvent(this.controlChecks.find(".check-chip i"), this.CheckDelete);
         }
 
-        public setCurrentCheck(currentCheck:number): void {
+        public setCurrentCheck(currentCheck: Interfaces.Model.IPOSCheck): void {
             let controller = this;
-            $('#check_id_' + controller.checkData.currentCheck).removeClass(['check-select', 'z-depth-1']);
+            if (controller.checkData.currentCheck)
+                $('#check_id_' + controller.checkData.currentCheck.id).removeClass(['check-select', 'z-depth-1']);
             controller.checkData.currentCheck = currentCheck;
-            $('#check_id_' + controller.checkData.currentCheck).addClass(['check-select','z-depth-1']);  
+            if (controller.checkData.currentCheck)
+                $('#check_id_' + controller.checkData.currentCheck.id).addClass(['check-select', 'z-depth-1']);
 
+            this.drawCheckPositions();
             //controller.Service.CheckOpened((responseData) => {
             //    controller.checkData.checks = responseData.checkopened;
             //    if (controller.checkData && controller.checkData.checks.length > 0)
@@ -87,12 +100,24 @@ export namespace Controller.Terminal {
             //});
         }
 
+        public setCurrentCheckById(currentCheckId: number): void {
+            let controller = this;
+            for (let i = 0, iCount = (controller.checkData.checks ? controller.checkData.checks.length : 0); i < iCount; i++) {
+                if (controller.checkData.checks[i].id === currentCheckId) {
+                    this.setCurrentCheck(controller.checkData.checks[i]);
+                    break;
+                }
+            }
+        }
+
         private drawChecks(): void {
             let controller = this;
-            let checksArray: any[] = controller.checkData.checks;
+            let checksArray: Interfaces.Model.IPOSCheck[] = controller.checkData.checks;
             let html: string = '';
             let strId: string;
             let findId: JQuery;
+
+
             for (let i = 0, iCount = (checksArray ? checksArray.length : 0); i < iCount; i++) {
                 strId = 'check_id_' + checksArray[i].id;
                 findId = controller.controlChecks.find('#' + strId);
@@ -105,27 +130,104 @@ export namespace Controller.Terminal {
 
             findId = $(html);
 
-            utils.createTouchClickEvent(findId, this.CheckButtonClick, this);
-            utils.createTouchClickEvent(findId.find('i'), this.CheckDelete, this);
+            this.CheckButtonClick = utils.createTouchClickEvent(findId, this.checkButtonClick, this);
+            this.CheckDelete = utils.createTouchClickEvent(findId.find('i'), this.checkDelete, this);
             controller.controlChecks.append(findId);
         }
 
-        private CheckButtonClick(e): void {
-            let targetid: string = e.currentTarget.id;
-            let id: number = + targetid.replace("check_id_", "");
+        private drawCheckPositions(): void {
+            let controller = this;
+            let html: string = '';
+            let positionsArray: Interfaces.Model.IPOSCheckPosition[] = (controller.checkData.currentCheck ? controller.checkData.currentCheck.positions : []);
+            for (let i = 0, iCount = (positionsArray ? positionsArray.length : 0); i < iCount; i++) {
+                html += '<tr id="check_pos_' + i + '">';
+                html += '<td class="product-col-name">' + positionsArray[i].product.name + '</td>';
+                html += '<td class="product-col-btn"><a class="product-col-button-delete"><i class="material-icons editor-header">add_circle_outline</i></a></td>';
+                html += '<td class="product-col-quantity-auto">' + positionsArray[i].quantity + '</td>';
+                html += '<td class="product-col-btn"><a class="product-col-button-delete"><i class="material-icons editor-header">remove_circle_outline</i></a></td>';
+                html += '<td class="product-col-sum-auto">' + positionsArray[i].price + '</td>';
+                html += '</tr>';
+            }
 
-            if (id === -1)
-                return;
-
-            this.setCurrentCheck(id);
-            //this.currentCategory = id;
-            //this.backToCategory(id);
-            //this.loadSaleProducts();
+            controller.controlTableBodyPositions.html(html);
         }
 
-        private CheckDelete(e): void {
-            alert('document');
+        private NewCheckButtonClick: { (e: any): void; };
+        private newCheckButtonClick(e): void {
+            let controller = this;
+            if (controller.checkData.checks && controller.checkData.checks.length > 0) {
+                for (let i = 0, iCount = controller.checkData.checks.length; i < iCount; i++) {
+                    let currentCheck: Interfaces.Model.IPOSCheck = controller.checkData.checks[i];
+                    if (!currentCheck.positions || currentCheck.positions.length < 1) {
+                        controller.setCurrentCheck(currentCheck);
+                        return;
+                    }
+                }
+            }
+            controller.Service.CheckNew((responseData) => {
+                if (!controller.checkData.checks) controller.checkData.checks = [];
+                controller.checkData.checks.push(responseData.checknew);
+                controller.setCurrentCheck(responseData.checknew);
+            });
+        }
+
+        private CheckButtonClick: { (e: any): void; };
+        private checkButtonClick(e): void {
+            let targetid: string = e.currentTarget.id;
+            let id: number = + targetid.replace("check_id_", "");
+            if (!id || id === -1) return;
+            this.setCurrentCheckById(id);
+        }
+
+        private CheckDelete: { (e: any): void; };
+        private checkDelete(e): void {
             e.stopPropagation();
+
+            let targetid: string = e.currentTarget.parentElement.id;
+            let id: number = +targetid.replace("check_id_", "");
+            if (!id || id === -1) return;
+
+            let controller = this;
+            if (controller.checkData.checks && controller.checkData.checks.length > 0) {
+                for (let i = 0, iCount = controller.checkData.checks.length; i < iCount; i++) {
+                    let currentCheck: Interfaces.Model.IPOSCheck = controller.checkData.checks[i];
+                    if (currentCheck.id === id && (!currentCheck.positions || currentCheck.positions.length < 1)) {
+                        controller.Service.CheckDelete(currentCheck.id, (responseData) => {
+                            if (!controller.checkData.checks) controller.checkData.checks = [];
+                            $("#check_id_" + currentCheck.id).remove();
+                            controller.checkData.checks.splice(controller.checkData.checks.indexOf(currentCheck), 1);
+                            if (controller.checkData && controller.checkData.checks.length > 0)
+                                controller.setCurrentCheck(controller.checkData.checks[0]);
+                            else
+                                controller.setCurrentCheck(undefined);
+                        });
+                        return;
+                    }
+                }
+            }
+        }
+
+        public AddPosition(product: number): void {
+            let controller = this;
+            let check: Interfaces.Model.IPOSCheck = controller.checkData.currentCheck;
+            if (check) {
+                this.Service.AddToCheck(check.id, product, 1, (responseData) => {
+                    let positionsArray: Interfaces.Model.IPOSCheckPosition[] = (controller.checkData.currentCheck ? controller.checkData.currentCheck.positions : []);
+                    let newItem: Interfaces.Model.IPOSCheckPosition = responseData.newposition;
+                    let isNotFound: boolean = true;
+                    for (let i = 0, iCount = (positionsArray ? positionsArray.length : 0); i < iCount; i++) {
+                        if (newItem.index === positionsArray[i].index) {
+                            positionsArray[i] = newItem;
+                            isNotFound = false;
+                            break;
+                        }
+                    }
+                    if (isNotFound === true)
+                        positionsArray.push(newItem);
+
+                    this.drawCheckPositions();
+                });
+            }
         }
     }
 }

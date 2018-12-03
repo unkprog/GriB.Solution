@@ -104,12 +104,16 @@
         OnClose: () => void;
     }
 
+    export interface ITerminalCheks {
+        AddPosition(product: number): void;
+    }
 
     export interface ITerminal {
         ShowLoading(): void;
         HideLoading(): void;
 
         Model: kendo.data.ObservableObject;
+        Cheks: ITerminalCheks;
         View: JQuery;
         CurrentSalePoint: number;
         ControlChecks: JQuery;

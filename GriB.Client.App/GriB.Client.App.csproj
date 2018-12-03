@@ -223,6 +223,9 @@
     <Content Include="Scripts\Query\Editor\Unit\[del].sql" />
     <Content Include="Scripts\Query\Editor\Unit\[get].sql" />
     <Content Include="Scripts\Query\Editor\Unit\[set].sql" />
+    <Content Include="Scripts\Query\POSTerminal\Check\Position\[add].sql" />
+    <Content Include="Scripts\Query\POSTerminal\Check\Position\[get].sql" />
+    <Content Include="Scripts\Query\POSTerminal\Check\[del].sql" />
     <Content Include="Scripts\Query\POSTerminal\Check\[new_all].sql" />
     <Content Include="Scripts\Query\POSTerminal\Check\[new].sql" />
     <Content Include="Scripts\Query\POSTerminal\[get].sql" />
@@ -336,7 +339,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Scripts\Query\POSTerminal\Check\Position\" />
     <Folder Include="Scripts\Sql\Data\" />
   </ItemGroup>
   <ItemGroup>

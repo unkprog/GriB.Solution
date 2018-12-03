@@ -37,8 +37,14 @@ define(["require", "exports", "app/common/baseservice"], function (require, expo
             POSTerminalService.prototype.CheckNew = function (Callback) {
                 this.GetApi({ Action: "/check_new", Callback: Callback });
             };
+            POSTerminalService.prototype.CheckDelete = function (check, Callback) {
+                this.GetApi({ Action: "/check_delete", RequestData: { check: check }, Callback: Callback });
+            };
             POSTerminalService.prototype.CheckOpened = function (Callback) {
                 this.GetApi({ Action: "/check_opened", Callback: Callback });
+            };
+            POSTerminalService.prototype.AddToCheck = function (check, product, quantity, Callback) {
+                this.PostApi({ Action: "/check_add_pos", RequestData: JSON.stringify({ check: check, product: product, quantity: quantity }), Callback: Callback });
             };
             return POSTerminalService;
         }(base.Services.BaseService));

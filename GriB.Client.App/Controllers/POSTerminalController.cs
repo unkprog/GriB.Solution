@@ -1,6 +1,7 @@
 ﻿using GriB.Client.App.Managers.POSTerminal;
 using GriB.Client.App.Models.POSTerminal;
 using GriB.Common.Models.Security;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Web;
@@ -48,13 +49,43 @@ namespace GriB.Client.App.Controllers
         }
 
         [HttpGet]
+        [ActionName("check_delete")]
+        public HttpResponseMessage GetCheckDelete(int check)
+        {
+            return TryCatchResponseQuery((query) =>
+            {
+                Principal principal = (Principal)HttpContext.Current.User;
+                return Request.CreateResponse(HttpStatusCode.OK, new { checkdelete = Check.DeleteCheck(query, principal.Data.User.id, check) });
+            });
+        }
+
+        
+
+        [HttpGet]
         [ActionName("check_opened")]
         public HttpResponseMessage GetCheckOpened()
         {
             return TryCatchResponseQuery((query) =>
             {
                 Principal principal = (Principal)HttpContext.Current.User;
-                return Request.CreateResponse(HttpStatusCode.OK, new { checkopened = Check.NewAll(query, principal.Data.User.id, 0) });
+                List<check> checks = Check.NewAll(query, principal.Data.User.id, 0);
+                foreach (var item in checks)
+                {
+                    Check.GetPositions(query, item);
+                }
+                return Request.CreateResponse(HttpStatusCode.OK, new { checkopened = checks });
+            });
+        }
+
+        [HttpPost]
+        [ActionName("check_add_pos")]
+        public HttpResponseMessage PostCheckAddPos(add_pos_params addposparams)
+        {
+            return TryCatchResponseQuery((query) =>
+            {
+                Principal principal = (Principal)HttpContext.Current.User;
+                check_position position = Check.AddPosition(query, new check_position() { id = addposparams.check, product = new Models.Editor.product() { id = addposparams.product }, quantity = addposparams.quantity });
+                return Request.CreateResponse(HttpStatusCode.OK, new { newposition = position });
             });
         }
 

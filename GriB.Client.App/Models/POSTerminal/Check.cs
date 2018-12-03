@@ -5,6 +5,13 @@ using System.Collections.Generic;
 
 namespace GriB.Client.App.Models.POSTerminal
 {
+    public class add_pos_params
+    {
+        public int check { get; set; }
+        public int product { get; set; }
+        public double quantity { get; set; }
+    }
+
     public class check : model_sys
     {
         public check()
@@ -24,6 +31,7 @@ namespace GriB.Client.App.Models.POSTerminal
 
     public class check_position : model_base_position
     {
+        public int     index    { get; set; }
         public product product  { get; set; }
         public double  quantity { get; set; }
         public double  price    { get; set; }

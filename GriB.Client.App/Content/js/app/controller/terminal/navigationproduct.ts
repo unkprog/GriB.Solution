@@ -111,6 +111,9 @@ export namespace Controller.Terminal {
                 this.currentCategory = id;
                 this.loadSaleProducts();
             }
+            else {
+                this.terminal.Cheks.AddPosition(id);
+            }
         }
 
         private breadCrumbItems: any[];

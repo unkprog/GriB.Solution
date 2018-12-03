@@ -50,7 +50,7 @@
     }
 
     export interface ISalePointAccessModel {
-        salepoint: ISalepoint; 
+        salepoint: ISalepoint;
         isaccess: boolean;
     }
 
@@ -122,5 +122,25 @@
     export interface IPOSSaleProduct extends IReferenceModel {
         iscategory: boolean;
         photo: string;
+    }
+
+
+    export interface IPOSCheck extends IBaseModel {
+        //public int options { get; set; }
+        //public int client  { get; set; }
+        //public int change  { get; set; }
+        number: number;
+        discount: number;
+        comment: string;
+        positions: IPOSCheckPosition[];
+        sum: number;
+    }
+
+    export interface IPOSCheckPosition {
+        index: number;
+        product: IProduct;
+        quantity: number;
+        price: number;
+        sum: number;
     }
 }
