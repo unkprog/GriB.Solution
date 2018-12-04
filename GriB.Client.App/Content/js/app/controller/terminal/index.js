@@ -98,7 +98,6 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
                         controller.HideLoading();
                         variables_1._app.HideLoading();
                     });
-                    controller.navCheck.loadData();
                     return false;
                 };
                 Index.prototype.ViewHide = function (e) {
@@ -131,7 +130,8 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
                         this.navBar.destroyEvents();
                 };
                 Index.prototype.Reset = function () {
-                    this.navProduct.ResetSaleProducts();
+                    this.navProduct.Reset();
+                    this.navCheck.Reset();
                 };
                 return Index;
             }(base.Controller.Base));

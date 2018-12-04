@@ -19,6 +19,7 @@ namespace GriB.Client.App.Models.POSTerminal
             comment = string.Empty;
             positions = new List<check_position>();
         }
+        public int salepoint { get; set; }
         public int options { get; set; }
         public int client  { get; set; }
         public int number  { get; set; }

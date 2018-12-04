@@ -39,12 +39,12 @@ namespace GriB.Client.App.Controllers
 
         [HttpGet]
         [ActionName("check_new")]
-        public HttpResponseMessage GetCheckNew()
+        public HttpResponseMessage GetCheckNew(int salepoint)
         {
             return TryCatchResponseQuery((query) =>
             {
                 Principal principal = (Principal)HttpContext.Current.User;
-                return Request.CreateResponse(HttpStatusCode.OK, new { checknew = Check.NewCheck(query, principal.Data.User.id, 0) });
+                return Request.CreateResponse(HttpStatusCode.OK, new { checknew = Check.NewCheck(query, principal.Data.User.id, salepoint, 0) });
             });
         }
 
@@ -63,12 +63,12 @@ namespace GriB.Client.App.Controllers
 
         [HttpGet]
         [ActionName("check_opened")]
-        public HttpResponseMessage GetCheckOpened()
+        public HttpResponseMessage GetCheckOpened(int salepoint)
         {
             return TryCatchResponseQuery((query) =>
             {
                 Principal principal = (Principal)HttpContext.Current.User;
-                List<check> checks = Check.NewAll(query, principal.Data.User.id, 0);
+                List<check> checks = Check.NewAll(query, principal.Data.User.id, salepoint, 0);
                 foreach (var item in checks)
                 {
                     Check.GetPositions(query, item);

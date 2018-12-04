@@ -19,16 +19,16 @@ export namespace Services {
             this.GetApi({ Action: "/sale_products", RequestData: posparams, Callback: Callback });
         }
 
-        public CheckNew(Callback: (responseData: any) => void) {
-            this.GetApi({ Action: "/check_new", Callback: Callback });
+        public CheckNew(salepoint: number, Callback: (responseData: any) => void) {
+            this.GetApi({ Action: "/check_new", RequestData: { salepoint: salepoint }, Callback: Callback });
         }
 
         public CheckDelete(check: number, Callback: (responseData: any) => void) {
             this.GetApi({ Action: "/check_delete", RequestData: { check: check }, Callback: Callback });
         }
 
-        public CheckOpened(Callback: (responseData: any) => void) {
-            this.GetApi({ Action: "/check_opened", Callback: Callback });
+        public CheckOpened(salepoint: number, Callback: (responseData: any) => void) {
+            this.GetApi({ Action: "/check_opened", RequestData: { salepoint: salepoint }, Callback: Callback });
         }
 
         public AddToCheck(check: number, product: number, quantity: number, Callback: (responseData: any) => void) {

@@ -230,8 +230,9 @@ input[type='number']:hover::-webkit-outer-spin-button {
   color: rgba(0, 0, 0, 0.87); }
 
 #posterminal-view-breadcrumbs {
-  height: 40px;
-  line-height: 40px;
+  height: 42px;
+  line-height: 42px;
+  overflow: auto;
   padding: 0 1em;
   background: transparent;
   border-top: 1px solid #a1887f;
@@ -266,6 +267,7 @@ input[type='number']:hover::-webkit-outer-spin-button {
   height: 36px;
   line-height: 36px;
   border-radius: 18px;
+  margin-bottom: 0;
   cursor: pointer; }
 
 .check-chip .close {

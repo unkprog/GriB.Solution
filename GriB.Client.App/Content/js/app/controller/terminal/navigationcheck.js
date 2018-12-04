@@ -7,10 +7,8 @@ define(["require", "exports", "app/common/utils", "app/services/posterminalservi
         (function (Terminal) {
             var NavigationCheck = /** @class */ (function () {
                 function NavigationCheck(view, terminal) {
-                    this.checkData = {
-                        currentCheck: {},
-                        checks: []
-                    };
+                    this.openedChecks = [];
+                    this.currentCheck = undefined;
                     this.terminal = terminal;
                     this.controlContainerChecks = view.find("#posterminal-view-checks-container");
                     this.controlChecks = this.controlContainerChecks.find("#posterminal-view-checks");
@@ -19,12 +17,22 @@ define(["require", "exports", "app/common/utils", "app/services/posterminalservi
                     this.controlTablePositions = this.controlContainerChecks.find("#posterminal-view-check-positions");
                     this.controlTableBodyPositions = this.controlTablePositions.find("tbody");
                     this.controlTotal = this.controlContainerChecks.find("#posterminal-view-check-total");
+                    this.model = new kendo.data.ObservableObject({
+                        "Sum": 0,
+                    });
                 }
                 Object.defineProperty(NavigationCheck.prototype, "Service", {
                     get: function () {
                         if (!this.service)
                             this.service = new svc.Services.POSTerminalService();
                         return this.service;
+                    },
+                    enumerable: true,
+                    configurable: true
+                });
+                Object.defineProperty(NavigationCheck.prototype, "Model", {
+                    get: function () {
+                        return this.model;
                     },
                     enumerable: true,
                     configurable: true
@@ -37,7 +45,7 @@ define(["require", "exports", "app/common/utils", "app/services/posterminalservi
                     configurable: true
                 });
                 NavigationCheck.prototype.ViewShow = function (e) {
-                    var controller = this;
+                    //let controller = this;
                     $('.chips').chips(); //{ onChipDelete: $.proxy(controller.CheckDelete, controller) }
                 };
                 NavigationCheck.prototype.ViewResize = function (e) {
@@ -54,13 +62,18 @@ define(["require", "exports", "app/common/utils", "app/services/posterminalservi
                         //    this.controlButtons.css({ "position": "absolute", "top": "" + (height - btnheight) + "px", "width": "" + this.controlContainerChecks.width() + "px" });
                     }
                 };
+                NavigationCheck.prototype.Reset = function () {
+                    this.openedChecks = [];
+                    this.currentCheck = undefined;
+                    this.loadData();
+                };
                 NavigationCheck.prototype.loadData = function () {
                     var controller = this;
-                    controller.Service.CheckOpened(function (responseData) {
-                        controller.checkData.checks = responseData.checkopened;
-                        controller.drawChecks();
-                        if (controller.checkData && controller.checkData.checks.length > 0)
-                            controller.setCurrentCheck(controller.checkData.checks[0]);
+                    controller.Service.CheckOpened(controller.terminal.CurrentSalePoint, function (responseData) {
+                        controller.openedChecks = responseData.checkopened;
+                        controller.drawChecks(true);
+                        if (controller.openedChecks && controller.openedChecks.length > 0)
+                            controller.setCurrentCheck(controller.openedChecks[0]);
                         else
                             controller.setCurrentCheck(undefined);
                     });
@@ -70,46 +83,44 @@ define(["require", "exports", "app/common/utils", "app/services/posterminalservi
                 };
                 NavigationCheck.prototype.destroyEvents = function () {
                     utils.destroyTouchClickEvent(this.buttonNewCheck, this.NewCheckButtonClick);
+                    this.destroyEventsChecks();
+                };
+                NavigationCheck.prototype.destroyEventsChecks = function () {
                     utils.destroyTouchClickEvent(this.controlChecks.find(".check-chip"), this.CheckButtonClick);
                     utils.destroyTouchClickEvent(this.controlChecks.find(".check-chip i"), this.CheckDelete);
                 };
                 NavigationCheck.prototype.setCurrentCheck = function (currentCheck) {
                     var controller = this;
-                    if (controller.checkData.currentCheck)
-                        $('#check_id_' + controller.checkData.currentCheck.id).removeClass(['check-select', 'z-depth-1']);
-                    controller.checkData.currentCheck = currentCheck;
-                    if (controller.checkData.currentCheck)
-                        $('#check_id_' + controller.checkData.currentCheck.id).addClass(['check-select', 'z-depth-1']);
+                    if (controller.currentCheck)
+                        $('#check_id_' + controller.currentCheck.id).removeClass(['check-select', 'z-depth-1']);
+                    controller.currentCheck = currentCheck;
+                    if (controller.currentCheck)
+                        $('#check_id_' + controller.currentCheck.id).addClass(['check-select', 'z-depth-1']);
                     this.drawCheckPositions();
-                    //controller.Service.CheckOpened((responseData) => {
-                    //    controller.checkData.checks = responseData.checkopened;
-                    //    if (controller.checkData && controller.checkData.checks.length > 0)
-                    //        controller.checkData.currentCheck = 0;
-                    //    controller.drawChecks();
-                    //});
                 };
                 NavigationCheck.prototype.setCurrentCheckById = function (currentCheckId) {
                     var controller = this;
-                    for (var i = 0, iCount = (controller.checkData.checks ? controller.checkData.checks.length : 0); i < iCount; i++) {
-                        if (controller.checkData.checks[i].id === currentCheckId) {
-                            this.setCurrentCheck(controller.checkData.checks[i]);
+                    for (var i = 0, iCount = (controller.openedChecks ? controller.openedChecks.length : 0); i < iCount; i++) {
+                        if (controller.openedChecks[i].id === currentCheckId) {
+                            this.setCurrentCheck(controller.openedChecks[i]);
                             break;
                         }
                     }
                 };
-                NavigationCheck.prototype.drawChecks = function () {
+                NavigationCheck.prototype.drawChecks = function (isReset) {
                     var controller = this;
-                    var checksArray = controller.checkData.checks;
                     var html = '';
                     var strId;
                     var findId;
-                    for (var i = 0, iCount = (checksArray ? checksArray.length : 0); i < iCount; i++) {
-                        strId = 'check_id_' + checksArray[i].id;
+                    if (isReset) {
+                        this.destroyEventsChecks();
+                        this.controlChecks.find(".check-chip").remove();
+                    }
+                    for (var i = 0, iCount = (controller.openedChecks ? controller.openedChecks.length : 0); i < iCount; i++) {
+                        strId = 'check_id_' + controller.openedChecks[i].id;
                         findId = controller.controlChecks.find('#' + strId);
-                        if (findId && findId.length > 0) { }
-                        else {
-                            html += '<div id="check_id_' + checksArray[i].id + '" class="chip check-chip">Чек №' + checksArray[i].number + '<i class="close material-icons">close</i></div>';
-                        }
+                        if (!(findId && findId.length > 0))
+                            html += '<div id="check_id_' + controller.openedChecks[i].id + '" class="chip check-chip">Чек №' + controller.openedChecks[i].number + '<i class="close material-icons">close</i></div>';
                     }
                     findId = $(html);
                     this.CheckButtonClick = utils.createTouchClickEvent(findId, this.checkButtonClick, this);
@@ -119,7 +130,7 @@ define(["require", "exports", "app/common/utils", "app/services/posterminalservi
                 NavigationCheck.prototype.drawCheckPositions = function () {
                     var controller = this;
                     var html = '';
-                    var positionsArray = (controller.checkData.currentCheck ? controller.checkData.currentCheck.positions : []);
+                    var positionsArray = (controller.currentCheck && controller.currentCheck.positions ? controller.currentCheck.positions : []);
                     for (var i = 0, iCount = (positionsArray ? positionsArray.length : 0); i < iCount; i++) {
                         html += '<tr id="check_pos_' + i + '">';
                         html += '<td class="product-col-name">' + positionsArray[i].product.name + '</td>';
@@ -133,19 +144,20 @@ define(["require", "exports", "app/common/utils", "app/services/posterminalservi
                 };
                 NavigationCheck.prototype.newCheckButtonClick = function (e) {
                     var controller = this;
-                    if (controller.checkData.checks && controller.checkData.checks.length > 0) {
-                        for (var i = 0, iCount = controller.checkData.checks.length; i < iCount; i++) {
-                            var currentCheck = controller.checkData.checks[i];
+                    if (controller.openedChecks && controller.openedChecks.length > 0) {
+                        for (var i = 0, iCount = controller.openedChecks.length; i < iCount; i++) {
+                            var currentCheck = controller.openedChecks[i];
                             if (!currentCheck.positions || currentCheck.positions.length < 1) {
                                 controller.setCurrentCheck(currentCheck);
                                 return;
                             }
                         }
                     }
-                    controller.Service.CheckNew(function (responseData) {
-                        if (!controller.checkData.checks)
-                            controller.checkData.checks = [];
-                        controller.checkData.checks.push(responseData.checknew);
+                    controller.Service.CheckNew(controller.terminal.CurrentSalePoint, function (responseData) {
+                        if (!controller.openedChecks)
+                            controller.openedChecks = [];
+                        controller.openedChecks.push(responseData.checknew);
+                        controller.drawChecks(false);
                         controller.setCurrentCheck(responseData.checknew);
                     });
                 };
@@ -163,24 +175,22 @@ define(["require", "exports", "app/common/utils", "app/services/posterminalservi
                     if (!id || id === -1)
                         return;
                     var controller = this;
-                    if (controller.checkData.checks && controller.checkData.checks.length > 0) {
+                    if (controller.openedChecks && controller.openedChecks.length > 0) {
                         var _loop_1 = function (i, iCount) {
-                            var currentCheck = controller.checkData.checks[i];
+                            var currentCheck = controller.openedChecks[i];
                             if (currentCheck.id === id && (!currentCheck.positions || currentCheck.positions.length < 1)) {
                                 controller.Service.CheckDelete(currentCheck.id, function (responseData) {
-                                    if (!controller.checkData.checks)
-                                        controller.checkData.checks = [];
                                     $("#check_id_" + currentCheck.id).remove();
-                                    controller.checkData.checks.splice(controller.checkData.checks.indexOf(currentCheck), 1);
-                                    if (controller.checkData && controller.checkData.checks.length > 0)
-                                        controller.setCurrentCheck(controller.checkData.checks[0]);
+                                    controller.openedChecks.splice(controller.openedChecks.indexOf(currentCheck), 1);
+                                    if (controller.openedChecks.length > 0)
+                                        controller.setCurrentCheck(controller.openedChecks[0]);
                                     else
                                         controller.setCurrentCheck(undefined);
                                 });
                                 return { value: void 0 };
                             }
                         };
-                        for (var i = 0, iCount = controller.checkData.checks.length; i < iCount; i++) {
+                        for (var i = 0, iCount = controller.openedChecks.length; i < iCount; i++) {
                             var state_1 = _loop_1(i, iCount);
                             if (typeof state_1 === "object")
                                 return state_1.value;
@@ -190,10 +200,9 @@ define(["require", "exports", "app/common/utils", "app/services/posterminalservi
                 NavigationCheck.prototype.AddPosition = function (product) {
                     var _this = this;
                     var controller = this;
-                    var check = controller.checkData.currentCheck;
-                    if (check) {
-                        this.Service.AddToCheck(check.id, product, 1, function (responseData) {
-                            var positionsArray = (controller.checkData.currentCheck ? controller.checkData.currentCheck.positions : []);
+                    if (controller.currentCheck) {
+                        this.Service.AddToCheck(controller.currentCheck.id, product, 1, function (responseData) {
+                            var positionsArray = (controller.currentCheck.positions ? controller.currentCheck.positions : []);
                             var newItem = responseData.newposition;
                             var isNotFound = true;
                             for (var i = 0, iCount = (positionsArray ? positionsArray.length : 0); i < iCount; i++) {

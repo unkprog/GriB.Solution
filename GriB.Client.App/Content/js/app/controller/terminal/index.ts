@@ -93,7 +93,6 @@ export namespace Controller.Terminal {
                 controller.HideLoading();
                 _app.HideLoading();
             });
-            controller.navCheck.loadData();
             return false;
         }
 
@@ -125,7 +124,8 @@ export namespace Controller.Terminal {
         }
 
         public Reset(): void {
-            this.navProduct.ResetSaleProducts();
+            this.navProduct.Reset();
+            this.navCheck.Reset();
         }
         
     }

@@ -31,7 +31,7 @@ export namespace Controller.Terminal {
 
         private currentCategory: number;
 
-        public loadSaleProducts() {
+        public loadData() {
             let controller = this;
             controller.ShowLoading();
             let paramsSelect: Interfaces.Model.IPosParamsSelect = { category: this.currentCategory, salepoint: controller.terminal.CurrentSalePoint };
@@ -42,9 +42,10 @@ export namespace Controller.Terminal {
 
         }
 
-        public ResetSaleProducts() {
+        public Reset() {
             this.currentCategory = 0;
-            this.loadSaleProducts();
+            this.clearBreadCrumb();
+            this.loadData();
         }
 
         public ViewResize(e: any): void {
@@ -109,7 +110,7 @@ export namespace Controller.Terminal {
             if (e.currentTarget.classList.contains('category')) {
                 this.addCategory(id, $(e.currentTarget).data("name"));
                 this.currentCategory = id;
-                this.loadSaleProducts();
+                this.loadData();
             }
             else {
                 this.terminal.Cheks.AddPosition(id);
@@ -123,6 +124,17 @@ export namespace Controller.Terminal {
             let breadcrum: JQuery = (cat === 0 ? $('<a id="category_' + cat + '" class="breadcrumb"><i class="material-icons editor-header">widgets</i></a>') : $('<a id="category_' + cat + '" class="breadcrumb">' + catname + '</a>'));
             this.controlBreadcrumbs.append(breadcrum);
             utils.createClickEvent(breadcrum, this.BreadCrumbButtonClick, this);
+        }
+
+        private clearBreadCrumb() {
+            let item: any;
+            let itemJ: JQuery;
+            for (let i = this.breadCrumbItems.length - 1; i > 0; i--) {
+                item = this.breadCrumbItems.pop();
+                itemJ = $('#category_' + item.id);
+                utils.destroyClickEvent(itemJ, this.BreadCrumbButtonClick);
+                itemJ.remove();
+            }
         }
 
         private backToCategory(cat: number) {
@@ -150,7 +162,7 @@ export namespace Controller.Terminal {
 
             this.currentCategory = id;
             this.backToCategory(id);
-            this.loadSaleProducts();
+            this.loadData();
         }
     }
 }

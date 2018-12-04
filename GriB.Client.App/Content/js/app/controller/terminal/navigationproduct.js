@@ -24,7 +24,7 @@ define(["require", "exports", "app/common/utils", "app/services/posterminalservi
                     enumerable: true,
                     configurable: true
                 });
-                NavigationProduct.prototype.loadSaleProducts = function () {
+                NavigationProduct.prototype.loadData = function () {
                     var controller = this;
                     controller.ShowLoading();
                     var paramsSelect = { category: this.currentCategory, salepoint: controller.terminal.CurrentSalePoint };
@@ -33,9 +33,10 @@ define(["require", "exports", "app/common/utils", "app/services/posterminalservi
                         controller.HideLoading();
                     });
                 };
-                NavigationProduct.prototype.ResetSaleProducts = function () {
+                NavigationProduct.prototype.Reset = function () {
                     this.currentCategory = 0;
-                    this.loadSaleProducts();
+                    this.clearBreadCrumb();
+                    this.loadData();
                 };
                 NavigationProduct.prototype.ViewResize = function (e) {
                     if (this.controlItems) {
@@ -92,7 +93,7 @@ define(["require", "exports", "app/common/utils", "app/services/posterminalservi
                     if (e.currentTarget.classList.contains('category')) {
                         this.addCategory(id, $(e.currentTarget).data("name"));
                         this.currentCategory = id;
-                        this.loadSaleProducts();
+                        this.loadData();
                     }
                     else {
                         this.terminal.Cheks.AddPosition(id);
@@ -105,6 +106,16 @@ define(["require", "exports", "app/common/utils", "app/services/posterminalservi
                     var breadcrum = (cat === 0 ? $('<a id="category_' + cat + '" class="breadcrumb"><i class="material-icons editor-header">widgets</i></a>') : $('<a id="category_' + cat + '" class="breadcrumb">' + catname + '</a>'));
                     this.controlBreadcrumbs.append(breadcrum);
                     utils.createClickEvent(breadcrum, this.BreadCrumbButtonClick, this);
+                };
+                NavigationProduct.prototype.clearBreadCrumb = function () {
+                    var item;
+                    var itemJ;
+                    for (var i = this.breadCrumbItems.length - 1; i > 0; i--) {
+                        item = this.breadCrumbItems.pop();
+                        itemJ = $('#category_' + item.id);
+                        utils.destroyClickEvent(itemJ, this.BreadCrumbButtonClick);
+                        itemJ.remove();
+                    }
                 };
                 NavigationProduct.prototype.backToCategory = function (cat) {
                     var item;
@@ -127,7 +138,7 @@ define(["require", "exports", "app/common/utils", "app/services/posterminalservi
                         return;
                     this.currentCategory = id;
                     this.backToCategory(id);
-                    this.loadSaleProducts();
+                    this.loadData();
                 };
                 return NavigationProduct;
             }());
