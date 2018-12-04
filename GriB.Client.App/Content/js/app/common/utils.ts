@@ -48,3 +48,8 @@ export function stringFormat(...args1:any[]): string {
         return args[index];
     });
 };
+
+
+export function dateToLongString(date:Date) {
+    return date.toLocaleString();
+}

@@ -1,4 +1,5 @@
-﻿import utils = require('app/common/utils');
+﻿import vars = require('app/common/variables');
+import utils = require('app/common/utils');
 import svc = require('app/services/posterminalservice');
 
 export namespace Controller.Terminal {
@@ -14,8 +15,16 @@ export namespace Controller.Terminal {
             this.controlTotal = this.controlContainerChecks.find("#posterminal-view-check-total");
 
             this.model = new kendo.data.ObservableObject({
+                "visibleCheck": false,
+                "visibleCheck1": "none",
+                "labelTime": vars._statres("label$time"),
+                "checkTime": "",
+                "visibleClient": false,
+                "labelClient": vars._statres("label$client"),
+                "checkClient": "",
                 "Sum": 0,
             });
+
         }
 
         private service: svc.Services.POSTerminalService;
@@ -92,6 +101,7 @@ export namespace Controller.Terminal {
         }
 
         public destroyEvents(): void {
+            this.controlContainerChecks.unbind();
             utils.destroyTouchClickEvent(this.buttonNewCheck, this.NewCheckButtonClick);
             this.destroyEventsChecks();
         }
@@ -101,13 +111,40 @@ export namespace Controller.Terminal {
             utils.destroyTouchClickEvent(this.controlChecks.find(".check-chip i"), this.CheckDelete);
         }
 
+        private changeModel(e) {
+            if (e.field === "checkTime") {
+                let checkTime: string = this.model.get("checkTime");
+                let isVisible: boolean = this.model.get("visibleCheck");
+                isVisible = (checkTime && checkTime !== "");
+                this.model.set("visibleCheck1", isVisible === true ? "display" : "none");
+                this.model.set("visibleCheck", isVisible);
+
+            }
+            else if (e.field === "checkClient") {
+                let checkClient: string = this.model.get("checkClient");
+                this.model.set("visibleClient", (checkClient && checkClient !== ""));
+            }
+        }
+
+
         public setCurrentCheck(currentCheck: Interfaces.Model.IPOSCheck): void {
             let controller = this;
             if (controller.currentCheck)
                 $('#check_id_' + controller.currentCheck.id).removeClass(['check-select', 'z-depth-1']);
             controller.currentCheck = currentCheck;
-            if (controller.currentCheck)
+            if (controller.currentCheck) {
                 $('#check_id_' + controller.currentCheck.id).addClass(['check-select', 'z-depth-1']);
+                this.model.set("checkTime", utils.dateToLongString(controller.currentCheck.cd));
+                //this.model.set("checkClient", "");
+            }
+            else {
+                this.model.set("checkTime", "");
+                this.model.set("checkClient", "");
+            }
+
+            this.controlContainerChecks.unbind();
+            kendo.bind(this.controlContainerChecks, this.model);
+            this.model.bind("change", $.proxy(this.changeModel, this));
 
             this.drawCheckPositions();
         }

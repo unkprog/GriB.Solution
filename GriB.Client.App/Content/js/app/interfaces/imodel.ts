@@ -126,6 +126,7 @@
 
 
     export interface IPOSCheck extends IBaseModel {
+        cd: Date;
         //public int options { get; set; }
         //public int client  { get; set; }
         //public int change  { get; set; }

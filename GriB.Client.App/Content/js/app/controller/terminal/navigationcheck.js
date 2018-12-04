@@ -1,4 +1,4 @@
-define(["require", "exports", "app/common/utils", "app/services/posterminalservice"], function (require, exports, utils, svc) {
+define(["require", "exports", "app/common/variables", "app/common/utils", "app/services/posterminalservice"], function (require, exports, vars, utils, svc) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var Controller;
@@ -18,6 +18,13 @@ define(["require", "exports", "app/common/utils", "app/services/posterminalservi
                     this.controlTableBodyPositions = this.controlTablePositions.find("tbody");
                     this.controlTotal = this.controlContainerChecks.find("#posterminal-view-check-total");
                     this.model = new kendo.data.ObservableObject({
+                        "visibleCheck": false,
+                        "visibleCheck1": "none",
+                        "labelTime": vars._statres("label$time"),
+                        "checkTime": "",
+                        "visibleClient": false,
+                        "labelClient": vars._statres("label$client"),
+                        "checkClient": "",
                         "Sum": 0,
                     });
                 }
@@ -82,6 +89,7 @@ define(["require", "exports", "app/common/utils", "app/services/posterminalservi
                     this.NewCheckButtonClick = utils.createTouchClickEvent(this.buttonNewCheck, this.newCheckButtonClick, this);
                 };
                 NavigationCheck.prototype.destroyEvents = function () {
+                    this.controlContainerChecks.unbind();
                     utils.destroyTouchClickEvent(this.buttonNewCheck, this.NewCheckButtonClick);
                     this.destroyEventsChecks();
                 };
@@ -89,13 +97,36 @@ define(["require", "exports", "app/common/utils", "app/services/posterminalservi
                     utils.destroyTouchClickEvent(this.controlChecks.find(".check-chip"), this.CheckButtonClick);
                     utils.destroyTouchClickEvent(this.controlChecks.find(".check-chip i"), this.CheckDelete);
                 };
+                NavigationCheck.prototype.changeModel = function (e) {
+                    if (e.field === "checkTime") {
+                        var checkTime = this.model.get("checkTime");
+                        var isVisible = this.model.get("visibleCheck");
+                        isVisible = (checkTime && checkTime !== "");
+                        this.model.set("visibleCheck1", isVisible === true ? "display" : "none");
+                        this.model.set("visibleCheck", isVisible);
+                    }
+                    else if (e.field === "checkClient") {
+                        var checkClient = this.model.get("checkClient");
+                        this.model.set("visibleClient", (checkClient && checkClient !== ""));
+                    }
+                };
                 NavigationCheck.prototype.setCurrentCheck = function (currentCheck) {
                     var controller = this;
                     if (controller.currentCheck)
                         $('#check_id_' + controller.currentCheck.id).removeClass(['check-select', 'z-depth-1']);
                     controller.currentCheck = currentCheck;
-                    if (controller.currentCheck)
+                    if (controller.currentCheck) {
                         $('#check_id_' + controller.currentCheck.id).addClass(['check-select', 'z-depth-1']);
+                        this.model.set("checkTime", utils.dateToLongString(controller.currentCheck.cd));
+                        //this.model.set("checkClient", "");
+                    }
+                    else {
+                        this.model.set("checkTime", "");
+                        this.model.set("checkClient", "");
+                    }
+                    this.controlContainerChecks.unbind();
+                    kendo.bind(this.controlContainerChecks, this.model);
+                    this.model.bind("change", $.proxy(this.changeModel, this));
                     this.drawCheckPositions();
                 };
                 NavigationCheck.prototype.setCurrentCheckById = function (currentCheckId) {

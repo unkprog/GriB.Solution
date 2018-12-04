@@ -59,5 +59,9 @@ define(["require", "exports"], function (require, exports) {
     }
     exports.stringFormat = stringFormat;
     ;
+    function dateToLongString(date) {
+        return date.toLocaleString();
+    }
+    exports.dateToLongString = dateToLongString;
 });
 //# sourceMappingURL=utils.js.map
