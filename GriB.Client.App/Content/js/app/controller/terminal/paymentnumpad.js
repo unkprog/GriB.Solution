@@ -38,10 +38,14 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
                 PaymentNumPad.prototype.createModel = function () {
                     return new kendo.data.ObservableObject({
                         "Header": " ",
-                        "POSData": {
-                            "CurrentSalePoint": { "name": "" }
+                        "editModel": {
+                            totalSum: 253,
+                            receivedSum: 500,
+                            surrenderSum: 247
                         },
-                        "labelPayment": vars._statres("label$payment"),
+                        "labelTotalToPay": vars._statres("label$topay"),
+                        "labelReceiveSum": vars._statres("label$received"),
+                        "labelSurrenderSum": vars._statres("label$surrender"),
                     });
                 };
                 PaymentNumPad.prototype.ViewInit = function (view) {

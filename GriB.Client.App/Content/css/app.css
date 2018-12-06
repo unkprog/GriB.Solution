@@ -400,14 +400,34 @@ input[type='number']:hover::-webkit-outer-spin-button {
   margin: 0 0.2em;
   font-size: 2.5em !important; }
 
+.input-numpad {
+  text-align: right;
+  font-size: 3em !important;
+  font-weight: bold; }
+
+.col-input-numpad {
+  margin-bottom: 0; }
+
 .btn-numpad, #btn-num-cancel, #btn-num-apply {
-  margin: 12px 0;
+  margin: 0.1rem 0;
+  padding: 0 0.1rem;
   width: 100%;
   vertical-align: middle;
   padding: 0;
-  height: 80px;
-  line-height: 80px;
+  height: 50px;
+  line-height: 50px;
   font-weight: bold; }
+
+@media only screen and (min-height: 736px) {
+  .btn-numpad, #btn-num-cancel, #btn-num-apply {
+    height: 80px;
+    line-height: 80px; } }
 
 .btn-numpad {
   font-size: 2em; }
+
+.row-btn-numpad {
+  padding: 0 0.5rem !important; }
+
+.col-btn-numpad {
+  padding: 0 0.1rem !important; }

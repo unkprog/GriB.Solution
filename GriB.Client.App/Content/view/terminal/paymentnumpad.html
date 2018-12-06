@@ -1,50 +1,64 @@
 ﻿<div id="paymentnumpad-view">
-    <div class="row">
-        <div class="col s4 m4 l4 xl4">
+    <div class="row row-inputs">
+        <div class="input-field col s12 m12 l6 xl6 offset-l3 offset-xl3 col-input-numpad">
+            <input id="paymentnumpad-view-totalsum" type="number" class="input-numpad" data-bind="value:editModel.totalSum">
+            <label for="paymentnumpad-view-totalsum" data-bind="text:labelTotalToPay"></label>
+        </div>
+        <div class="input-field col s12 m12 l6 xl6 offset-l3 offset-xl3 col-input-numpad">
+            <input id="paymentnumpad-view-received" type="number" class="input-numpad" data-bind="value:editModel.receivedSum">
+            <label for="paymentnumpad-view-received" data-bind="text:labelReceiveSum"></label>
+        </div>
+        <div class="input-field col s12 m12 l6 xl6 offset-l3 offset-xl3 col-input-numpad">
+            <input id="paymentnumpad-view-received" type="number" class="input-numpad" data-bind="value:editModel.surrenderSum">
+            <label for="paymentnumpad-view-received" data-bind="text:labelSurrenderSum"></label>
+        </div>
+    </div>
+    <div class="row row-btn-numpad">
+        <div class="col s4 m4 l2 xl2 offset-l3 offset-xl3 col-btn-numpad">
             <a id="btn-num-1" class="btn btncol btn-numpad">1</a>
         </div>
-        <div class="col s4 m4 l4 xl4">
+        <div class="col s4 m4 l2 xl2 col-btn-numpad">
             <a id="btn-num-2" class="btn btncol btn-numpad">2</a>
         </div>
-        <div class="col s4 m4 l4 xl4">
+        <div class="col s4 m4 l2 xl2 col-btn-numpad">
             <a id="btn-num-3" class="btn btncol btn-numpad">3</a>
         </div>
 
-        <div class="col s4 m4 l4 xl4">
+        <div class="col s4 m4 l2 xl2 offset-l3 offset-xl3 col-btn-numpad">
             <a id="btn-num-4" class="btn btncol btn-numpad">4</a>
         </div>
-        <div class="col s4 m4 l4 xl4">
+        <div class="col s4 m4 l2 xl2 col-btn-numpad">
             <a id="btn-num-5" class="btn btncol btn-numpad">5</a>
         </div>
-        <div class="col s4 m4 l4 xl4">
+        <div class="col s4 m4 l2 xl2 col-btn-numpad">
             <a id="btn-num-6" class="btn btncol btn-numpad">6</a>
         </div>
 
-        <div class="col s4 m4 l4 xl4">
+        <div class="col s4 m4 l2 xl2 offset-l3 offset-xl3 col-btn-numpad">
             <a id="btn-num-7" class="btn btncol btn-numpad">7</a>
         </div>
-        <div class="col s4 m4 l4 xl4">
+        <div class="col s4 m4 l2 xl2 col-btn-numpad">
             <a id="btn-num-8" class="btn btncol btn-numpad">8</a>
         </div>
-        <div class="col s4 m4 l4 xl4">
+        <div class="col s4 m4 l2 xl2 col-btn-numpad">
             <a id="btn-num-9" class="btn btncol btn-numpad">9</a>
         </div>
 
-        <div class="col s4 m4 l4 xl4">
+        <div class="col s4 m4 l2 xl2 offset-l3 offset-xl3 col-btn-numpad">
             <a id="btn-num-colon" class="btn btncol btn-numpad">,</a>
         </div>
-        <div class="col s4 m4 l4 xl4">
+        <div class="col s4 m4 l2 xl2 col-btn-numpad">
             <a id="btn-num-0" class="btn btncol btn-numpad">0</a>
         </div>
-        <div class="col s4 m4 l4 xl4">
-            <a id="btn-num-bspace" class="btn btncol btn-numpad"><i class="material-icons check-icon-num">keyboard_backspace</i></a>
+        <div class="col s4 m4 l2 xl2 col-btn-numpad">
+            <a id="btn-num-bspace" class="btn btncol btn-numpad col-btn-numpad"><i class="material-icons check-icon-num">keyboard_backspace</i></a>
         </div>
 
 
-        <div class="col s4 m4 l4 xl4">
+        <div class="col s4 m4 l2 xl2 offset-l3 offset-xl3 col-btn-numpad">
             <a id="btn-num-cancel" class="btn btncol">Отмена</a>
         </div>
-        <div class="col s8 m8 l8 xl8">
+        <div class="col s8 m8 l4 xl4 col-btn-numpad">
             <a id="btn-num-apply" class="btn btncol green darken-1">Оплата</a>
         </div>
     </div>

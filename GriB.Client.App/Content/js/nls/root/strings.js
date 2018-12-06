@@ -174,5 +174,9 @@ define({
     "label$cash": "Наличный расчет",
     "label$noncash": "Безналичный расчет",
     "label$withoutpayment": "Без оплаты",
+
+    "label$topay": "К оплате",
+    "label$received": "Получено",
+    "label$surrender": "Сдача",
   
 });

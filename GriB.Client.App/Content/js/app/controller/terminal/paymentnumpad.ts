@@ -27,10 +27,14 @@ export namespace Controller.Terminal {
         protected createModel(): kendo.data.ObservableObject {
             return new kendo.data.ObservableObject({
                 "Header": " ",
-                "POSData": {
-                    "CurrentSalePoint": { "name" : "" }
+                "editModel": {
+                    totalSum: 253,
+                    receivedSum: 500,
+                    surrenderSum: 247
                 },
-                "labelPayment": vars._statres("label$payment"),
+                "labelTotalToPay": vars._statres("label$topay"),
+                "labelReceiveSum": vars._statres("label$received"),
+                "labelSurrenderSum": vars._statres("label$surrender"),
             });
         }
 
