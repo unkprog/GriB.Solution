@@ -9,6 +9,7 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/s
                 function NavigationCheck(view, terminal) {
                     this.openedChecks = [];
                     this.currentCheck = undefined;
+                    this.paymentData = { paymentType: 0 };
                     this.terminal = terminal;
                     this.controlContainerChecks = view.find("#posterminal-view-checks-container");
                     this.controlChecks = this.controlContainerChecks.find("#posterminal-view-checks");
@@ -17,15 +18,16 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/s
                     this.controlTablePositions = this.controlContainerChecks.find("#posterminal-view-check-positions");
                     this.controlTableBodyPositions = this.controlTablePositions.find("tbody");
                     this.controlTotal = this.controlContainerChecks.find("#posterminal-view-check-total");
+                    this.buttonCheckPayment = this.controlContainerChecks.find("#btn-check-payment");
                     this.model = new kendo.data.ObservableObject({
-                        "visibleCheck": false,
-                        "visibleCheck1": "none",
+                        "visibleCheck": "none",
                         "labelTime": vars._statres("label$time"),
                         "checkTime": "",
                         "visibleClient": false,
                         "labelClient": vars._statres("label$client"),
                         "checkClient": "",
-                        "Sum": 0,
+                        "labelPayment": vars._statres("label$payment"),
+                        "checkSum": 0,
                     });
                 }
                 Object.defineProperty(NavigationCheck.prototype, "Service", {
@@ -87,10 +89,12 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/s
                 };
                 NavigationCheck.prototype.createEvents = function () {
                     this.NewCheckButtonClick = utils.createTouchClickEvent(this.buttonNewCheck, this.newCheckButtonClick, this);
+                    this.PaymentButtonClick = utils.createTouchClickEvent(this.buttonCheckPayment, this.paymentButtonClick, this);
                 };
                 NavigationCheck.prototype.destroyEvents = function () {
                     this.controlContainerChecks.unbind();
                     utils.destroyTouchClickEvent(this.buttonNewCheck, this.NewCheckButtonClick);
+                    utils.destroyTouchClickEvent(this.buttonCheckPayment, this.PaymentButtonClick);
                     this.destroyEventsChecks();
                 };
                 NavigationCheck.prototype.destroyEventsChecks = function () {
@@ -100,10 +104,8 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/s
                 NavigationCheck.prototype.changeModel = function (e) {
                     if (e.field === "checkTime") {
                         var checkTime = this.model.get("checkTime");
-                        var isVisible = this.model.get("visibleCheck");
-                        isVisible = (checkTime && checkTime !== "");
-                        this.model.set("visibleCheck1", isVisible === true ? "display" : "none");
-                        this.model.set("visibleCheck", isVisible);
+                        var isVisible = (checkTime && checkTime !== "");
+                        this.model.set("visibleCheck", isVisible === true ? "display" : "none");
                     }
                     else if (e.field === "checkClient") {
                         var checkClient = this.model.get("checkClient");
@@ -117,8 +119,8 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/s
                     controller.currentCheck = currentCheck;
                     if (controller.currentCheck) {
                         $('#check_id_' + controller.currentCheck.id).addClass(['check-select', 'z-depth-1']);
+                        this.model.set("checkSum", this.calcCheckSum());
                         this.model.set("checkTime", utils.dateToLongString(controller.currentCheck.cd));
-                        //this.model.set("checkClient", "");
                     }
                     else {
                         this.model.set("checkTime", "");
@@ -128,6 +130,18 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/s
                     kendo.bind(this.controlContainerChecks, this.model);
                     this.model.bind("change", $.proxy(this.changeModel, this));
                     this.drawCheckPositions();
+                };
+                NavigationCheck.prototype.calcCheckSum = function () {
+                    var controller = this;
+                    var result = 0;
+                    if (controller.currentCheck) {
+                        var positionsArray = (controller.currentCheck.positions ? controller.currentCheck.positions : []);
+                        for (var i = 0, iCount = (positionsArray ? positionsArray.length : 0); i < iCount; i++) {
+                            positionsArray[i].sum = (positionsArray[i].quantity * positionsArray[i].price);
+                            result += positionsArray[i].sum;
+                        }
+                    }
+                    return result;
                 };
                 NavigationCheck.prototype.setCurrentCheckById = function (currentCheckId) {
                     var controller = this;
@@ -248,6 +262,30 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/s
                             _this.drawCheckPositions();
                         });
                     }
+                };
+                NavigationCheck.prototype.paymentButtonClick = function (e) {
+                    var self = this;
+                    vars._app.OpenController({
+                        urlController: 'terminal/paymenttype', isModal: true, onLoadController: function (controller) {
+                            var ctrlTypePayment = controller;
+                            ctrlTypePayment.EditorSettings.ButtonSetings = { IsSave: false, IsCancel: false };
+                            ctrlTypePayment.OnSelectPaymentType = $.proxy(self.selectTypePayment, self);
+                        }
+                    });
+                    //require(["/Content/js/app/controller/setting/card/product.js"], function (module) {
+                };
+                NavigationCheck.prototype.selectTypePayment = function (controller) {
+                    this.paymentData.paymentType = controller.SelectedPaymentType;
+                    vars._app.OpenController({
+                        urlController: 'terminal/paymentnumpad', isModal: true, onLoadController: function (controller) {
+                            //let ctrlTypePayment: Interfaces.IControllerPaymentType = controller as Interfaces.IControllerPaymentType;
+                            ////ctrlProduct.CardSettings.IsAdd = false;
+                            ////ctrlProduct.CardSettings.IsEdit = false;
+                            ////ctrlProduct.CardSettings.IsDelete = false;
+                            ////ctrlProduct.CardSettings.IsSelect = true;
+                            //ctrlTypePayment.OnSelectPaymentType = $.proxy(self.selectTypePayment, self);
+                        }
+                    });
                 };
                 return NavigationCheck;
             }());

@@ -179,6 +179,8 @@
     <Content Include="Content\view\setting\editor\salepoint.html" />
     <Content Include="Content\view\setting\editor\organization.html" />
     <Content Include="Content\view\setting\index.html" />
+    <Content Include="Content\view\terminal\paymenttype.html" />
+    <Content Include="Content\view\terminal\paymentnumpad.html" />
     <Content Include="Content\view\terminal\index.html" />
     <Content Include="Global.asax" />
     <Content Include="Scripts\Query\Editor\Category\Description\[get].sql" />
@@ -372,6 +374,8 @@
     <TypeScriptCompile Include="Content\js\app\controller\setting\editor\salepoint.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\setting\editor\organization.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\setting\index.ts" />
+    <TypeScriptCompile Include="Content\js\app\controller\terminal\paymenttype.ts" />
+    <TypeScriptCompile Include="Content\js\app\controller\terminal\paymentnumpad.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\terminal\index.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\terminal\navigationbar.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\terminal\navigationproduct.ts" />

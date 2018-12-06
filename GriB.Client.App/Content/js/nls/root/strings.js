@@ -169,4 +169,10 @@ define({
     "label$time": "Время",
     "label$client": "Клиент",
     "label$payment": "Оплата",
+
+    "label$methodpayment": "Способ оплаты",
+    "label$cash": "Наличный расчет",
+    "label$noncash": "Безналичный расчет",
+    "label$withoutpayment": "Без оплаты",
+  
 });

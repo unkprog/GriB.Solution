@@ -8,7 +8,7 @@
                 <a id="btn-check-new" class="btn"><i class="material-icons">add</i></a>
             </div>
 
-            <div id="posterminal-view-check-info" class="row" data-bind="css:{display: visibleCheck1}">
+            <div id="posterminal-view-check-info" class="row" data-bind="css:{display: visibleCheck}">
                 <div class="col s12 m12 l12 xl12">
                     <span class="info-label" data-bind="text:labelTime"></span><span class="info-value" data-bind="text:checkTime"></span>
                 </div>
@@ -17,18 +17,18 @@
                 </div>
             </div>
 
-            <table id="posterminal-view-check-positions" data-bind="visible:visibleCheck">
+            <table id="posterminal-view-check-positions" data-bind="css:{display: visibleCheck}">
                 <tbody>
                 </tbody>
             </table>
 
-            <div id="posterminal-view-check-total" class="row" data-bind="visible:visibleCheck">
+            <div id="posterminal-view-check-total" class="row" data-bind="css:{display: visibleCheck}">
                 <div class="col s12 m12 l12 xl12">
-                    <span class="total-text">Итого</span><span class="total-text">1000</span>
+                    <span class="total-text">Итого</span><span class="total-text"  data-bind="text:checkSum"></span>
                 </div>
             </div>
 
-            <div id="posterminal-view-check-buttons" class="row" data-bind="visible:visibleCheck">
+            <div id="posterminal-view-check-buttons" class="row" data-bind="css:{display: visibleCheck}">
                 <div class="col s3 m3 l3 xl3">
                     <a id="btn-check-person" class="btn btncol check-btn"><i class="material-icons check-icon">person</i></a>
                 </div>
@@ -42,7 +42,7 @@
                     <a id="btn-check-menu" class="btn btncol check-btn"><i class="material-icons check-icon">menu</i></a>
                 </div>
                 <div class="col s12 m12 l12 xl12">
-                    <a id="btn-check-payment" class="btn btncol" data-bind="text:labelPayment"></a>
+                    <a id="btn-check-payment" class="btn btncol green darken-1" data-bind="text:labelPayment"></a>
                 </div>
             </div>
 

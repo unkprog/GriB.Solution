@@ -271,6 +271,8 @@ export namespace Controller {
         constructor() {
             super();
             this.editorSettings = this.createEditorSettings();
+            if (!this.editorSettings.ButtonSetings)
+                this.editorSettings.ButtonSetings = { IsSave: true, IsCancel: true };
         }
 
         protected createModel(): kendo.data.ObservableObject {
@@ -312,10 +314,11 @@ export namespace Controller {
             this.btnSave = $('<li><a id="editor-btn-save" class="editor-header-button"><i class="material-icons editor-header">done</i></a></li>');
             this.btnCancel = $('<li><a id="editor-btn-cancel" class="editor-header-button"><i class="material-icons editor-header">close</i></a></li>');
 
-            this.navHeader.find("#editButtons").append(this.btnSave);
-            this.navHeader.find("#editButtons").append(this.btnCancel);
+            if (this.editorSettings.ButtonSetings.IsSave === true) this.navHeader.find("#editButtons").append(this.btnSave);
+            if (this.editorSettings.ButtonSetings.IsCancel === true) this.navHeader.find("#editButtons").append(this.btnCancel);
 
-            view.prepend(this.navHeader);
+            if (this.editorSettings.ButtonSetings.IsSave === true || this.editorSettings.ButtonSetings.IsCancel === true)
+                view.prepend(this.navHeader);
 
             super.ViewInit(view);
 

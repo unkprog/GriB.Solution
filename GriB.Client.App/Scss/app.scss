@@ -157,14 +157,6 @@ td, th {
     padding: 0.5em 0.5em;
 }
 
-thead {
-    background-color: #efebe9;
-}
-
-td, th {
-    padding: 0.5em 0.5em;
-}
-
 .table {
     display: table;
     width: 100%;
@@ -278,7 +270,9 @@ input[type='number']:hover::-webkit-outer-spin-button {
 }
 
 .product-col-btn {
-    width: 40px;
+    width: 25px;
+    padding: 0;
+    text-align: center;
 }
 
 .product-col-button-delete {
@@ -485,3 +479,34 @@ input[type='number']:hover::-webkit-outer-spin-button {
         font-size: 1.75em;
     }
 }*/
+
+
+.check-btn-typepayment {
+    margin: 8px 0;
+    width: 100%;
+    vertical-align: middle;
+    font-size: 1.5em;
+    padding: 0;
+    height: 60px;
+    line-height: 60px;
+}
+
+.check-icon-typepayment {
+    margin: 0 0.2em;
+    font-size: 2.5em !important;
+}
+
+.btn-numpad, #btn-num-cancel, #btn-num-apply {
+    margin: 12px 0;
+    width: 100%;
+    vertical-align: middle;
+    padding: 0;
+    height: 80px;
+    line-height: 80px;
+    font-weight: bold;
+}
+
+.btn-numpad {
+    font-size: 2em;
+}
+

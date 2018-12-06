@@ -26,6 +26,8 @@ define(["require", "exports", "i18n!nls/strings"], function (require, exports) {
     //export declare let _maincontrollers: any;
     //_maincontrollers = {};
     exports._controllers["terminal/index"] = function (module) { return new module.Controller.Terminal.Index(); };
+    exports._controllers["terminal/paymenttype"] = function (module) { return new module.Controller.Terminal.PaymentType(); };
+    exports._controllers["terminal/paymentnumpad"] = function (module) { return new module.Controller.Terminal.PaymentNumPad(); };
     exports._controllers["setting/index"] = function (module) { return new module.Controller.Setting.Index(); };
     exports._controllers["report/index"] = function (module) { return new module.Controller.Report.Index(); };
     exports._controllers["about/index"] = function (module) { return new module.Controller.About.Index(); };

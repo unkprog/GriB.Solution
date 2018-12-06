@@ -14,15 +14,17 @@ export namespace Controller.Terminal {
             this.controlTableBodyPositions = this.controlTablePositions.find("tbody");
             this.controlTotal = this.controlContainerChecks.find("#posterminal-view-check-total");
 
+            this.buttonCheckPayment = this.controlContainerChecks.find("#btn-check-payment");
+
             this.model = new kendo.data.ObservableObject({
-                "visibleCheck": false,
-                "visibleCheck1": "none",
+                "visibleCheck": "none",
                 "labelTime": vars._statres("label$time"),
                 "checkTime": "",
                 "visibleClient": false,
                 "labelClient": vars._statres("label$client"),
                 "checkClient": "",
-                "Sum": 0,
+                "labelPayment": vars._statres("label$payment"),
+                "checkSum": 0,
             });
 
         }
@@ -51,6 +53,8 @@ export namespace Controller.Terminal {
         private controlTableBodyPositions: JQuery;
         private controlTotal: JQuery;
         private controlButtons: JQuery;
+        private buttonCheckPayment: JQuery;
+
         public get ControlContainerChecks() {
             return this.controlContainerChecks;
         }
@@ -98,11 +102,13 @@ export namespace Controller.Terminal {
 
         public createEvents(): void {
             this.NewCheckButtonClick = utils.createTouchClickEvent(this.buttonNewCheck, this.newCheckButtonClick, this);
+            this.PaymentButtonClick = utils.createTouchClickEvent(this.buttonCheckPayment, this.paymentButtonClick, this);
         }
 
         public destroyEvents(): void {
             this.controlContainerChecks.unbind();
             utils.destroyTouchClickEvent(this.buttonNewCheck, this.NewCheckButtonClick);
+            utils.destroyTouchClickEvent(this.buttonCheckPayment, this.PaymentButtonClick);
             this.destroyEventsChecks();
         }
 
@@ -114,11 +120,8 @@ export namespace Controller.Terminal {
         private changeModel(e) {
             if (e.field === "checkTime") {
                 let checkTime: string = this.model.get("checkTime");
-                let isVisible: boolean = this.model.get("visibleCheck");
-                isVisible = (checkTime && checkTime !== "");
-                this.model.set("visibleCheck1", isVisible === true ? "display" : "none");
-                this.model.set("visibleCheck", isVisible);
-
+                let isVisible: boolean = (checkTime && checkTime !== "");
+                this.model.set("visibleCheck", isVisible === true ? "display" : "none");
             }
             else if (e.field === "checkClient") {
                 let checkClient: string = this.model.get("checkClient");
@@ -134,8 +137,8 @@ export namespace Controller.Terminal {
             controller.currentCheck = currentCheck;
             if (controller.currentCheck) {
                 $('#check_id_' + controller.currentCheck.id).addClass(['check-select', 'z-depth-1']);
+                this.model.set("checkSum", this.calcCheckSum());
                 this.model.set("checkTime", utils.dateToLongString(controller.currentCheck.cd));
-                //this.model.set("checkClient", "");
             }
             else {
                 this.model.set("checkTime", "");
@@ -149,6 +152,18 @@ export namespace Controller.Terminal {
             this.drawCheckPositions();
         }
 
+        private calcCheckSum():number {
+            let controller = this;
+            let result: number = 0;
+            if (controller.currentCheck) {
+                let positionsArray: Interfaces.Model.IPOSCheckPosition[] = (controller.currentCheck.positions ? controller.currentCheck.positions : []);
+                for (let i = 0, iCount = (positionsArray ? positionsArray.length : 0); i < iCount; i++) {
+                    positionsArray[i].sum = (positionsArray[i].quantity * positionsArray[i].price);
+                    result += positionsArray[i].sum;
+                }
+            }
+            return result;
+        }
         public setCurrentCheckById(currentCheckId: number): void {
             let controller = this;
             for (let i = 0, iCount = (controller.openedChecks ? controller.openedChecks.length : 0); i < iCount; i++) {
@@ -275,6 +290,36 @@ export namespace Controller.Terminal {
                     this.drawCheckPositions();
                 });
             }
+        }
+
+        public PaymentButtonClick: { (e: any): void; };
+        private paymentButtonClick(e) {
+            let self = this;
+
+            vars._app.OpenController({
+                urlController: 'terminal/paymenttype', isModal: true, onLoadController: (controller: Interfaces.IController) => {
+                    let ctrlTypePayment: Interfaces.IControllerPaymentType = controller as Interfaces.IControllerPaymentType;
+                    ctrlTypePayment.EditorSettings.ButtonSetings = { IsSave: false, IsCancel: false };
+                    ctrlTypePayment.OnSelectPaymentType = $.proxy(self.selectTypePayment, self);
+                }
+            });
+            //require(["/Content/js/app/controller/setting/card/product.js"], function (module) {
+
+        }
+
+        private paymentData = { paymentType: 0 };
+        private selectTypePayment(controller: Interfaces.IControllerPaymentType) {
+            this.paymentData.paymentType = controller.SelectedPaymentType;
+            vars._app.OpenController({
+                urlController: 'terminal/paymentnumpad', isModal: true, onLoadController: (controller: Interfaces.IController) => {
+                    //let ctrlTypePayment: Interfaces.IControllerPaymentType = controller as Interfaces.IControllerPaymentType;
+                    ////ctrlProduct.CardSettings.IsAdd = false;
+                    ////ctrlProduct.CardSettings.IsEdit = false;
+                    ////ctrlProduct.CardSettings.IsDelete = false;
+                    ////ctrlProduct.CardSettings.IsSelect = true;
+                    //ctrlTypePayment.OnSelectPaymentType = $.proxy(self.selectTypePayment, self);
+                }
+            });
         }
     }
 }

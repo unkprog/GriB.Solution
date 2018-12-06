@@ -261,6 +261,8 @@ define(["require", "exports", "app/common/utils", "app/common/variables", "./var
             function BaseEditor() {
                 var _this = _super.call(this) || this;
                 _this.editorSettings = _this.createEditorSettings();
+                if (!_this.editorSettings.ButtonSetings)
+                    _this.editorSettings.ButtonSetings = { IsSave: true, IsCancel: true };
                 return _this;
             }
             BaseEditor.prototype.createModel = function () {
@@ -298,9 +300,12 @@ define(["require", "exports", "app/common/utils", "app/common/variables", "./var
                 this.navHeader = $(navbarHeader);
                 this.btnSave = $('<li><a id="editor-btn-save" class="editor-header-button"><i class="material-icons editor-header">done</i></a></li>');
                 this.btnCancel = $('<li><a id="editor-btn-cancel" class="editor-header-button"><i class="material-icons editor-header">close</i></a></li>');
-                this.navHeader.find("#editButtons").append(this.btnSave);
-                this.navHeader.find("#editButtons").append(this.btnCancel);
-                view.prepend(this.navHeader);
+                if (this.editorSettings.ButtonSetings.IsSave === true)
+                    this.navHeader.find("#editButtons").append(this.btnSave);
+                if (this.editorSettings.ButtonSetings.IsCancel === true)
+                    this.navHeader.find("#editButtons").append(this.btnCancel);
+                if (this.editorSettings.ButtonSetings.IsSave === true || this.editorSettings.ButtonSetings.IsCancel === true)
+                    view.prepend(this.navHeader);
                 _super.prototype.ViewInit.call(this, view);
                 return this.loadData();
             };

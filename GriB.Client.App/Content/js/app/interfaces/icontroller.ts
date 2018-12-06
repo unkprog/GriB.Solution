@@ -82,8 +82,14 @@
         Delete: (id: number, callback: (responseData: any) => void) => void;
     }
 
+    export interface IEditorButtonSettings {
+        IsSave?: boolean;
+        IsCancel?: boolean;
+    }
+
     export interface IEditorSettings {
         EditIdName: string;
+        ButtonSetings?: IEditorButtonSettings;
         Load: (id: number, callback: (responseData: any) => void) => void;
         Save: (model: Interfaces.Model.IEditorModel, callback: (responseData: any) => void) => void;
     }
@@ -119,5 +125,10 @@
         ControlChecks: JQuery;
 
         Reset(): void;
+    }
+
+    export interface IControllerPaymentType extends IControllerEditor {
+        OnSelectPaymentType(controller: IControllerPaymentType): void;
+        SelectedPaymentType: number;
     }
 }
