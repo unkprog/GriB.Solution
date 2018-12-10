@@ -131,4 +131,22 @@
         OnSelectPaymentType(controller: IControllerPaymentType): void;
         SelectedPaymentType: number;
     }
+
+    export interface IControllerPayment extends IControllerEditor {
+        OnPaymentApply(controller: IControllerPaymentNumPad): void;
+        TotalSum: number;
+        ReceivedSum: number;
+        SurrenderSum: number;
+        EditorModel: Interfaces.Model.IPaymentModel;
+    }
+
+    export interface IControllerPaymentNumPad extends IControllerPayment {
+    }
+
+    export interface IControllerPaymentNonCash extends IControllerPayment {
+    }
+
+    export interface IControllerPaymentWithOut extends IControllerPayment {
+    }
+
 }

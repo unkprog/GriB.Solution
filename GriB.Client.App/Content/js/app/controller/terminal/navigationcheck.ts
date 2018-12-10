@@ -303,23 +303,42 @@ export namespace Controller.Terminal {
                     ctrlTypePayment.OnSelectPaymentType = $.proxy(self.selectTypePayment, self);
                 }
             });
-            //require(["/Content/js/app/controller/setting/card/product.js"], function (module) {
-
         }
 
         private paymentData = { paymentType: 0 };
         private selectTypePayment(controller: Interfaces.IControllerPaymentType) {
             this.paymentData.paymentType = controller.SelectedPaymentType;
-            vars._app.OpenController({
-                urlController: 'terminal/paymentnumpad', isModal: true, onLoadController: (controller: Interfaces.IController) => {
-                    //let ctrlTypePayment: Interfaces.IControllerPaymentType = controller as Interfaces.IControllerPaymentType;
-                    ////ctrlProduct.CardSettings.IsAdd = false;
-                    ////ctrlProduct.CardSettings.IsEdit = false;
-                    ////ctrlProduct.CardSettings.IsDelete = false;
-                    ////ctrlProduct.CardSettings.IsSelect = true;
-                    //ctrlTypePayment.OnSelectPaymentType = $.proxy(self.selectTypePayment, self);
-                }
-            });
+            if (this.paymentData.paymentType === 1) {
+                vars._app.OpenController({
+                    urlController: 'terminal/paymentnumpad', isModal: true, onLoadController: (controller: Interfaces.IController) => {
+                        let ctrlPaymentPinPad: Interfaces.IControllerPaymentNumPad = controller as Interfaces.IControllerPaymentNumPad;
+                        ctrlPaymentPinPad.EditorSettings.ButtonSetings = { IsSave: false, IsCancel: false };
+                        ctrlPaymentPinPad.TotalSum = this.model.get("checkSum");
+                        ctrlPaymentPinPad.ReceivedSum = undefined;
+                        ctrlPaymentPinPad.SurrenderSum = undefined;
+                    }
+                });
+            } else if (this.paymentData.paymentType === 2) {
+                vars._app.OpenController({
+                    urlController: 'terminal/paymentnoncash', isModal: true, onLoadController: (controller: Interfaces.IController) => {
+                        let ctrlPaymentPinPad: Interfaces.IControllerPaymentNonCash = controller as Interfaces.IControllerPaymentNonCash;
+                        ctrlPaymentPinPad.EditorSettings.ButtonSetings = { IsSave: false, IsCancel: false };
+                        ctrlPaymentPinPad.TotalSum = this.model.get("checkSum");
+                        ctrlPaymentPinPad.ReceivedSum = undefined;
+                        ctrlPaymentPinPad.SurrenderSum = undefined;
+                    }
+                });
+            } else if (this.paymentData.paymentType === 3) {
+                vars._app.OpenController({
+                    urlController: 'terminal/paymentwithout', isModal: true, onLoadController: (controller: Interfaces.IController) => {
+                        let ctrlPaymentPinPad: Interfaces.IControllerPaymentWithOut = controller as Interfaces.IControllerPaymentWithOut;
+                        ctrlPaymentPinPad.EditorSettings.ButtonSetings = { IsSave: false, IsCancel: false };
+                        ctrlPaymentPinPad.TotalSum = this.model.get("checkSum");
+                        ctrlPaymentPinPad.ReceivedSum = undefined;
+                        ctrlPaymentPinPad.SurrenderSum = undefined;
+                    }
+                });
+            }
         }
     }
 }

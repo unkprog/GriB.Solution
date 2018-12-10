@@ -144,4 +144,10 @@
         price: number;
         sum: number;
     }
+
+    export interface IPaymentModel extends IEditorModel {
+        totalSum: number;
+        receivedSum: number;
+        surrenderSum: number;
+    }
 }

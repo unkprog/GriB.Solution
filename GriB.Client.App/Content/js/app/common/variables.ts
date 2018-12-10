@@ -48,6 +48,8 @@ _controllers["main"] = function (module: any): Interfaces.IController { return n
 _controllers["terminal/index"] = function (module: any): Interfaces.IController { return new module.Controller.Terminal.Index(); };
 _controllers["terminal/paymenttype"] = function (module: any): Interfaces.IController { return new module.Controller.Terminal.PaymentType(); };
 _controllers["terminal/paymentnumpad"] = function (module: any): Interfaces.IController { return new module.Controller.Terminal.PaymentNumPad(); };
+_controllers["terminal/paymentnoncash"] = function (module: any): Interfaces.IController { return new module.Controller.Terminal.PaymentNonCash(); };
+_controllers["terminal/paymentwithout"] = function (module: any): Interfaces.IController { return new module.Controller.Terminal.PaymentWithOut(); };
 
 _controllers["setting/index"] = function (module: any): Interfaces.IController { return new module.Controller.Setting.Index(); };
 _controllers["report/index"] = function (module: any): Interfaces.IController { return new module.Controller.Report.Index(); };

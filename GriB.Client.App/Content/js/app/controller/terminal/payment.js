@@ -11,7 +11,7 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-define(["require", "exports", "app/common/variables", "app/common/basecontroller", "app/services/posterminalservice"], function (require, exports, vars, base, svc) {
+define(["require", "exports", "app/common/variables", "app/common/utils", "app/common/basecontroller"], function (require, exports, vars, utils, base) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var Controller;
@@ -23,45 +23,118 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
                 function Payment() {
                     return _super.call(this) || this;
                 }
-                Object.defineProperty(Payment.prototype, "Service", {
+                Object.defineProperty(Payment.prototype, "EditorModel", {
                     get: function () {
-                        if (!this.service)
-                            this.service = new svc.Services.POSTerminalService();
-                        return this.service;
+                        return this.Model.get("editModel").toJSON();
                     },
                     enumerable: true,
                     configurable: true
                 });
-                Payment.prototype.createOptions = function () {
-                    return { Url: "/Content/view/terminal/payment.html", Id: "payment-view" };
-                };
                 Payment.prototype.createModel = function () {
-                    return new kendo.data.ObservableObject({
-                        "Header": " ",
-                        "POSData": {
-                            "CurrentSalePoint": { "name": "" }
+                    var result = new kendo.data.ObservableObject({
+                        "Header": "",
+                        "editModel": {
+                            totalSum: 0,
+                            receivedSum: undefined,
+                            surrenderSum: undefined
                         },
-                        "labelPayment": vars._statres("label$payment"),
+                        "totalSumText": "0.00",
+                        "receivedSumText": "",
+                        "surrenderSumText": "",
+                        "labelTotalToPay": vars._statres("label$topay"),
+                        "labelReceiveSum": vars._statres("label$received"),
+                        "labelSurrenderSum": vars._statres("label$surrender"),
                     });
-                };
-                Payment.prototype.ViewInit = function (view) {
-                    return _super.prototype.ViewInit.call(this, view);
-                };
-                Payment.prototype.ViewHide = function (e) {
-                    _super.prototype.ViewHide.call(this, e);
-                };
-                Payment.prototype.ViewShow = function (e) {
-                    var result = _super.prototype.ViewShow.call(this, e);
+                    result.bind("change", $.proxy(this.changeModel, this));
                     return result;
                 };
-                Payment.prototype.ViewResize = function (e) {
-                    _super.prototype.ViewResize.call(this, e);
+                Object.defineProperty(Payment.prototype, "TotalSum", {
+                    get: function () { return this.Model.get("editModel.totalSum"); },
+                    set: function (value) { this.Model.set("editModel.totalSum", value); },
+                    enumerable: true,
+                    configurable: true
+                });
+                Object.defineProperty(Payment.prototype, "ReceivedSum", {
+                    get: function () { return this.Model.get("editModel.receivedSum"); },
+                    set: function (value) { this.Model.set("editModel.receivedSum", value); },
+                    enumerable: true,
+                    configurable: true
+                });
+                Object.defineProperty(Payment.prototype, "SurrenderSum", {
+                    get: function () { return this.Model.get("editModel.surrenderSum"); },
+                    set: function (value) { this.Model.set("editModel.surrenderSum", value); },
+                    enumerable: true,
+                    configurable: true
+                });
+                Payment.prototype.changeModel = function (e) {
+                    if (e.field === "editModel.totalSum") {
+                        this.Model.set("totalSumText", utils.numberToString(this.TotalSum, 2));
+                    }
+                    else if (e.field === "editModel.receivedSum") {
+                        this.SurrenderSum = this.ReceivedSum - this.TotalSum;
+                        if (this.inputReceivedSum) {
+                            this.inputReceivedSum.val(utils.numberToString(this.ReceivedSum, 2));
+                            M.updateTextFields();
+                        }
+                    }
+                    else if (e.field === "editModel.surrenderSum") {
+                        if (this.SurrenderSum < 0) {
+                            if (this.inputSurrenderSum) {
+                                this.inputSurrenderSum.removeClass("green-text");
+                                this.inputSurrenderSum.addClass("red-text");
+                                this.inputSurrenderSum.val(utils.numberToString(this.SurrenderSum, 2));
+                                M.updateTextFields();
+                            }
+                        }
+                        else {
+                            if (this.inputSurrenderSum) {
+                                this.inputSurrenderSum.removeClass("red-text");
+                                this.inputSurrenderSum.addClass("green-text");
+                            }
+                        }
+                        if (this.inputSurrenderSum)
+                            this.inputSurrenderSum.val(utils.numberToString(this.SurrenderSum, 2));
+                        M.updateTextFields();
+                    }
                 };
                 Payment.prototype.createEvents = function () {
                     _super.prototype.createEvents.call(this);
+                    this.PaymentButtonClick = this.createTouchClickEvent(this.btnPayment, this.paymentButtonClick);
+                    this.PaymentCancelButtonClick = this.createTouchClickEvent(this.btnPaymentCancel, this.paymentCancelButtonClick);
                 };
                 Payment.prototype.destroyEvents = function () {
+                    this.Model.unbind("change");
+                    if (this.btnPayment)
+                        this.destroyTouchClickEvent(this.btnPayment, this.PaymentButtonClick);
+                    if (this.btnPaymentCancel)
+                        this.destroyTouchClickEvent(this.btnPaymentCancel, this.PaymentCancelButtonClick);
                     _super.prototype.destroyEvents.call(this);
+                };
+                Payment.prototype.paymentButtonClick = function (e) {
+                    this.SaveButtonClick(e);
+                };
+                Payment.prototype.validate = function () {
+                    var controller = this;
+                    var result = _super.prototype.validate.call(this);
+                    var curValue = (this.inputReceivedSum ? "" + this.inputReceivedSum.val() : ""); // this.Model.get("receivedSumText");
+                    try {
+                        this.ReceivedSum = parseFloat(curValue);
+                    }
+                    catch (_a) {
+                        this.ReceivedSum = 0;
+                    }
+                    if (isNaN(this.ReceivedSum))
+                        this.ReceivedSum = 0;
+                    if (this.TotalSum > this.ReceivedSum) {
+                        M.toast({ html: vars._statres('error$numpad$amountinsufficient') });
+                        result = false;
+                    }
+                    if (result === true && this.OnPaymentApply)
+                        this.OnPaymentApply(controller);
+                    return result;
+                };
+                Payment.prototype.paymentCancelButtonClick = function (e) {
+                    this.CancelButtonClick(e);
                 };
                 return Payment;
             }(base.Controller.BaseEditor));

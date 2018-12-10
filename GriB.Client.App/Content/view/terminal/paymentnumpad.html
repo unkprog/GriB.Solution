@@ -1,16 +1,20 @@
 ﻿<div id="paymentnumpad-view">
+    <div class="row numpad-header">
+        <h3 class="center-align numpad-header" data-bind="text:Header"></h3>
+    </div>
+
     <div class="row row-inputs">
         <div class="input-field col s12 m12 l6 xl6 offset-l3 offset-xl3 col-input-numpad">
-            <input id="paymentnumpad-view-totalsum" type="number" class="input-numpad" data-bind="value:editModel.totalSum">
+            <input id="paymentnumpad-view-totalsum" disabled type="text" class="input-numpad" data-bind="value:totalSumText">
             <label for="paymentnumpad-view-totalsum" data-bind="text:labelTotalToPay"></label>
         </div>
         <div class="input-field col s12 m12 l6 xl6 offset-l3 offset-xl3 col-input-numpad">
-            <input id="paymentnumpad-view-received" type="number" class="input-numpad" data-bind="value:editModel.receivedSum">
+            <input id="paymentnumpad-view-received" disabled type="text" class="input-numpad">
             <label for="paymentnumpad-view-received" data-bind="text:labelReceiveSum"></label>
         </div>
         <div class="input-field col s12 m12 l6 xl6 offset-l3 offset-xl3 col-input-numpad">
-            <input id="paymentnumpad-view-received" type="number" class="input-numpad" data-bind="value:editModel.surrenderSum">
-            <label for="paymentnumpad-view-received" data-bind="text:labelSurrenderSum"></label>
+            <input id="paymentnumpad-view-surrender" disabled type="text" class="input-numpad">
+            <label for="paymentnumpad-view-surrender" data-bind="text:labelSurrenderSum"></label>
         </div>
     </div>
     <div class="row row-btn-numpad">

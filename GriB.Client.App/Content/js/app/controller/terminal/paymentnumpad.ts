@@ -1,45 +1,30 @@
 ﻿import vars = require('app/common/variables');
 import utils = require('app/common/utils');
-import base = require('app/common/basecontroller');
-import svc = require('app/services/posterminalservice');
-import { _app } from 'app/common/variables';
-import navigationBar = require('app/controller/terminal/navigationbar');
-import navigationProduct = require('app/controller/terminal/navigationproduct');
-import navigationCheck = require('app/controller/terminal/navigationcheck');
+import payment = require('app/controller/terminal/payment');
 
 export namespace Controller.Terminal {
-    export class PaymentNumPad extends base.Controller.BaseEditor {
+    export class PaymentNumPad extends payment.Controller.Terminal.Payment implements Interfaces.IControllerPaymentNumPad {
         constructor() {
-           super();
-        }
-
-        private service: svc.Services.POSTerminalService;
-        protected get Service(): svc.Services.POSTerminalService {
-            if (!this.service)
-                this.service = new svc.Services.POSTerminalService();
-            return this.service;
+            super();
+            this.Model.set("Header", vars._statres("label$payment"));
         }
 
         protected createOptions(): Interfaces.IControllerOptions {
             return { Url: "/Content/view/terminal/paymentnumpad.html", Id: "paymentnumpad-view" };
         }
 
-        protected createModel(): kendo.data.ObservableObject {
-            return new kendo.data.ObservableObject({
-                "Header": " ",
-                "editModel": {
-                    totalSum: 253,
-                    receivedSum: 500,
-                    surrenderSum: 247
-                },
-                "labelTotalToPay": vars._statres("label$topay"),
-                "labelReceiveSum": vars._statres("label$received"),
-                "labelSurrenderSum": vars._statres("label$surrender"),
-            });
-        }
+        private btnNumPad: JQuery;
 
-       
-        public ViewInit(view:JQuery): boolean {
+        public ViewInit(view: JQuery): boolean {
+            this.btnNumPad = view.find(".btn-numpad");
+
+            this.inputTotalSum = view.find("#paymentnumpad-view-totalsum");
+            this.inputReceivedSum = view.find("#paymentnumpad-view-received");
+            this.inputSurrenderSum = view.find("#paymentnumpad-view-surrender");
+
+            this.btnPayment = view.find("#btn-num-apply");
+            this.btnPaymentCancel = view.find("#btn-num-cancel");
+
             return super.ViewInit(view);
         }
 
@@ -58,12 +43,39 @@ export namespace Controller.Terminal {
 
         protected createEvents(): void {
             super.createEvents();
+            this.NumberButtonClick = this.createTouchClickEvent(this.btnNumPad, this.numberButtonClick);
         }
 
         protected destroyEvents(): void {
+            this.destroyTouchClickEvent(this.btnNumPad, this.createEvents);
             super.destroyEvents();
         }
 
-       
+        public NumberButtonClick: { (e: any): void; };
+        private numberButtonClick(e): void {
+            let targetid: string = e.currentTarget.id;
+            let strValue: string = targetid.replace("btn-num-", "");
+            let curValue: string = this.Model.get("receivedSumText");
+            let prevValue: string = curValue;
+            let numValue: number;
+            if (strValue === "colon")
+                curValue += ".";
+            else if (strValue === "bspace") {
+                if (curValue.length > 0)
+                    curValue = curValue.substring(0, curValue.length - 1);
+            }
+            else 
+                curValue += strValue;
+
+            try { numValue = parseFloat(curValue); } catch { curValue = prevValue; }
+            if (isNaN(numValue)) {
+                numValue = 0;
+                curValue = "";
+            }
+
+            this.ReceivedSum = numValue;
+            this.Model.set("receivedSumText", curValue);
+            //this.SurrenderSum = numValue - this.TotalSum;
+        }
     }
 }

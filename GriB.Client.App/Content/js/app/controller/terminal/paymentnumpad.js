@@ -11,7 +11,7 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-define(["require", "exports", "app/common/variables", "app/common/basecontroller", "app/services/posterminalservice"], function (require, exports, vars, base, svc) {
+define(["require", "exports", "app/common/variables", "app/controller/terminal/payment"], function (require, exports, vars, payment) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var Controller;
@@ -21,34 +21,20 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
             var PaymentNumPad = /** @class */ (function (_super) {
                 __extends(PaymentNumPad, _super);
                 function PaymentNumPad() {
-                    return _super.call(this) || this;
+                    var _this = _super.call(this) || this;
+                    _this.Model.set("Header", vars._statres("label$payment"));
+                    return _this;
                 }
-                Object.defineProperty(PaymentNumPad.prototype, "Service", {
-                    get: function () {
-                        if (!this.service)
-                            this.service = new svc.Services.POSTerminalService();
-                        return this.service;
-                    },
-                    enumerable: true,
-                    configurable: true
-                });
                 PaymentNumPad.prototype.createOptions = function () {
                     return { Url: "/Content/view/terminal/paymentnumpad.html", Id: "paymentnumpad-view" };
                 };
-                PaymentNumPad.prototype.createModel = function () {
-                    return new kendo.data.ObservableObject({
-                        "Header": " ",
-                        "editModel": {
-                            totalSum: 253,
-                            receivedSum: 500,
-                            surrenderSum: 247
-                        },
-                        "labelTotalToPay": vars._statres("label$topay"),
-                        "labelReceiveSum": vars._statres("label$received"),
-                        "labelSurrenderSum": vars._statres("label$surrender"),
-                    });
-                };
                 PaymentNumPad.prototype.ViewInit = function (view) {
+                    this.btnNumPad = view.find(".btn-numpad");
+                    this.inputTotalSum = view.find("#paymentnumpad-view-totalsum");
+                    this.inputReceivedSum = view.find("#paymentnumpad-view-received");
+                    this.inputSurrenderSum = view.find("#paymentnumpad-view-surrender");
+                    this.btnPayment = view.find("#btn-num-apply");
+                    this.btnPaymentCancel = view.find("#btn-num-cancel");
                     return _super.prototype.ViewInit.call(this, view);
                 };
                 PaymentNumPad.prototype.ViewHide = function (e) {
@@ -63,12 +49,42 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
                 };
                 PaymentNumPad.prototype.createEvents = function () {
                     _super.prototype.createEvents.call(this);
+                    this.NumberButtonClick = this.createTouchClickEvent(this.btnNumPad, this.numberButtonClick);
                 };
                 PaymentNumPad.prototype.destroyEvents = function () {
+                    this.destroyTouchClickEvent(this.btnNumPad, this.createEvents);
                     _super.prototype.destroyEvents.call(this);
                 };
+                PaymentNumPad.prototype.numberButtonClick = function (e) {
+                    var targetid = e.currentTarget.id;
+                    var strValue = targetid.replace("btn-num-", "");
+                    var curValue = this.Model.get("receivedSumText");
+                    var prevValue = curValue;
+                    var numValue;
+                    if (strValue === "colon")
+                        curValue += ".";
+                    else if (strValue === "bspace") {
+                        if (curValue.length > 0)
+                            curValue = curValue.substring(0, curValue.length - 1);
+                    }
+                    else
+                        curValue += strValue;
+                    try {
+                        numValue = parseFloat(curValue);
+                    }
+                    catch (_a) {
+                        curValue = prevValue;
+                    }
+                    if (isNaN(numValue)) {
+                        numValue = 0;
+                        curValue = "";
+                    }
+                    this.ReceivedSum = numValue;
+                    this.Model.set("receivedSumText", curValue);
+                    //this.SurrenderSum = numValue - this.TotalSum;
+                };
                 return PaymentNumPad;
-            }(base.Controller.BaseEditor));
+            }(payment.Controller.Terminal.Payment));
             Terminal.PaymentNumPad = PaymentNumPad;
         })(Terminal = Controller.Terminal || (Controller.Terminal = {}));
     })(Controller = exports.Controller || (exports.Controller = {}));

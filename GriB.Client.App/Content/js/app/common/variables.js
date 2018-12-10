@@ -28,6 +28,8 @@ define(["require", "exports", "i18n!nls/strings"], function (require, exports) {
     exports._controllers["terminal/index"] = function (module) { return new module.Controller.Terminal.Index(); };
     exports._controllers["terminal/paymenttype"] = function (module) { return new module.Controller.Terminal.PaymentType(); };
     exports._controllers["terminal/paymentnumpad"] = function (module) { return new module.Controller.Terminal.PaymentNumPad(); };
+    exports._controllers["terminal/paymentnoncash"] = function (module) { return new module.Controller.Terminal.PaymentNonCash(); };
+    exports._controllers["terminal/paymentwithout"] = function (module) { return new module.Controller.Terminal.PaymentWithOut(); };
     exports._controllers["setting/index"] = function (module) { return new module.Controller.Setting.Index(); };
     exports._controllers["report/index"] = function (module) { return new module.Controller.Report.Index(); };
     exports._controllers["about/index"] = function (module) { return new module.Controller.About.Index(); };

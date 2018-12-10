@@ -1,0 +1,45 @@
+﻿<div id="paymentwithout-view">
+    <div class="row numpad-header">
+        <h3 class="center-align numpad-header" data-bind="text:Header"></h3>
+    </div>
+    <div class="row row-inputs">
+        <div class="input-field col s12 m12 l6 xl6 offset-l3 offset-xl3 col-input-numpad">
+            <input id="paymentwithout-view-totalsum" type="text" class="input-numpad" data-bind="value:totalSumText">
+            <label for="paymentwithout-view-totalsum" data-bind="text:labelTotalToPay"></label>
+        </div>
+        <div class="input-field col s12 m12 l6 xl6 offset-l3 offset-xl3 col-input-numpad">
+            <p>
+                <label>
+                    <input class="with-gap" name="group1" type="radio" />
+                    <span>В долг</span>
+                </label>
+            </p>
+        </div>
+        <div class="input-field col s12 m12 l6 xl6 offset-l3 offset-xl3 col-input-numpad">
+            <p>
+                <label>
+                    <input class="with-gap" name="group1" type="radio" />
+                    <span>За счет заведения</span>
+                </label>
+            </p>
+        </div>
+        <div class="input-field col s12 m12 l6 xl6 offset-l3 offset-xl3 col-input-numpad">
+            <p>
+                <label>
+                    <input class="with-gap" name="group1" type="radio" />
+                    <span>Клиент ушел</span>
+                </label>
+            </p>
+        </div>
+    </div>
+    <div class="row row-btn-numpad">
+
+        <div class="col s4 m4 l2 xl2 offset-l3 offset-xl3 col-btn-numpad">
+            <a id="btn-num-cancel" class="btn btncol">Отмена</a>
+        </div>
+        <div class="col s8 m8 l4 xl4 col-btn-numpad">
+            <a id="btn-num-apply" class="btn btncol green darken-1">Оплата</a>
+        </div>
+    </div>
+</div>
+

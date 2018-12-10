@@ -63,5 +63,12 @@ define(["require", "exports"], function (require, exports) {
         return date.toLocaleString();
     }
     exports.dateToLongString = dateToLongString;
+    function numberToString(value, decimal) {
+        var result = "";
+        if (value)
+            result = value.toFixed(decimal); // parseFloat(value).toFixed(2);
+        return result;
+    }
+    exports.numberToString = numberToString;
 });
 //# sourceMappingURL=utils.js.map

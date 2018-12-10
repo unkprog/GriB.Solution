@@ -502,6 +502,13 @@ input[type='number']:hover::-webkit-outer-spin-button {
     font-weight: bold;
 }
 
+@media only screen and (max-height: 481px) {
+    .input-numpad {
+        font-size: 1.6rem !important;
+        height: 1.6rem !important;
+    }
+}
+
 .col-input-numpad {
     margin-bottom: 0;
 }
@@ -512,15 +519,48 @@ input[type='number']:hover::-webkit-outer-spin-button {
     width: 100%;
     vertical-align: middle;
     padding: 0;
-    height: 50px;
-    line-height: 50px;
+    font-size: 2em;
+    height: 80px;
+    line-height: 80px;
     font-weight: bold;
 }
 
-@media only screen and (min-height: 736px) {
+@media only screen and (max-height: 1024px) {
     .btn-numpad, #btn-num-cancel, #btn-num-apply {
+        font-size: 2em;
+        height: 95px;
+        line-height: 95px;
+    }
+}
+
+@media only screen and (max-height: 812px) {
+    .btn-numpad, #btn-num-cancel, #btn-num-apply {
+        font-size: 1.5em;
         height: 80px;
         line-height: 80px;
+    }
+}
+@media only screen and (max-height: 667px) {
+    .btn-numpad, #btn-num-cancel, #btn-num-apply {
+        font-size: 1.3em;
+        height: 70px;
+        line-height: 70px;
+    }
+}
+
+@media only screen and (max-height: 568px) {
+    .btn-numpad, #btn-num-cancel, #btn-num-apply {
+        font-size: 1em;
+        height: 50px;
+        line-height: 50px;
+    }
+}
+
+@media only screen and (max-height: 480px) {
+    .btn-numpad, #btn-num-cancel, #btn-num-apply {
+        font-size: 1em;
+        height: 46px;
+        line-height: 46px;
     }
 }
 
@@ -536,4 +576,10 @@ input[type='number']:hover::-webkit-outer-spin-button {
     padding: 0 0.1rem !important;
 }
 
-
+@media only screen and (max-height: 736px) {
+    .numpad-header {
+        padding: 0;
+        margin: 0.2rem;
+        font-size: 2rem;
+    }
+}

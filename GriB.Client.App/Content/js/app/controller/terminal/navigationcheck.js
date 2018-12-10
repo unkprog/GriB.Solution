@@ -272,20 +272,43 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/s
                             ctrlTypePayment.OnSelectPaymentType = $.proxy(self.selectTypePayment, self);
                         }
                     });
-                    //require(["/Content/js/app/controller/setting/card/product.js"], function (module) {
                 };
                 NavigationCheck.prototype.selectTypePayment = function (controller) {
+                    var _this = this;
                     this.paymentData.paymentType = controller.SelectedPaymentType;
-                    vars._app.OpenController({
-                        urlController: 'terminal/paymentnumpad', isModal: true, onLoadController: function (controller) {
-                            //let ctrlTypePayment: Interfaces.IControllerPaymentType = controller as Interfaces.IControllerPaymentType;
-                            ////ctrlProduct.CardSettings.IsAdd = false;
-                            ////ctrlProduct.CardSettings.IsEdit = false;
-                            ////ctrlProduct.CardSettings.IsDelete = false;
-                            ////ctrlProduct.CardSettings.IsSelect = true;
-                            //ctrlTypePayment.OnSelectPaymentType = $.proxy(self.selectTypePayment, self);
-                        }
-                    });
+                    if (this.paymentData.paymentType === 1) {
+                        vars._app.OpenController({
+                            urlController: 'terminal/paymentnumpad', isModal: true, onLoadController: function (controller) {
+                                var ctrlPaymentPinPad = controller;
+                                ctrlPaymentPinPad.EditorSettings.ButtonSetings = { IsSave: false, IsCancel: false };
+                                ctrlPaymentPinPad.TotalSum = _this.model.get("checkSum");
+                                ctrlPaymentPinPad.ReceivedSum = undefined;
+                                ctrlPaymentPinPad.SurrenderSum = undefined;
+                            }
+                        });
+                    }
+                    else if (this.paymentData.paymentType === 2) {
+                        vars._app.OpenController({
+                            urlController: 'terminal/paymentnoncash', isModal: true, onLoadController: function (controller) {
+                                var ctrlPaymentPinPad = controller;
+                                ctrlPaymentPinPad.EditorSettings.ButtonSetings = { IsSave: false, IsCancel: false };
+                                ctrlPaymentPinPad.TotalSum = _this.model.get("checkSum");
+                                ctrlPaymentPinPad.ReceivedSum = undefined;
+                                ctrlPaymentPinPad.SurrenderSum = undefined;
+                            }
+                        });
+                    }
+                    else if (this.paymentData.paymentType === 3) {
+                        vars._app.OpenController({
+                            urlController: 'terminal/paymentwithout', isModal: true, onLoadController: function (controller) {
+                                var ctrlPaymentPinPad = controller;
+                                ctrlPaymentPinPad.EditorSettings.ButtonSetings = { IsSave: false, IsCancel: false };
+                                ctrlPaymentPinPad.TotalSum = _this.model.get("checkSum");
+                                ctrlPaymentPinPad.ReceivedSum = undefined;
+                                ctrlPaymentPinPad.SurrenderSum = undefined;
+                            }
+                        });
+                    }
                 };
                 return NavigationCheck;
             }());

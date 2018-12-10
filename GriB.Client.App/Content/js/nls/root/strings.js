@@ -178,5 +178,7 @@ define({
     "label$topay": "К оплате",
     "label$received": "Получено",
     "label$surrender": "Сдача",
+
+    "error$numpad$amountinsufficient": "Полученная сумма недостаточна для закрытия чека",
   
 });
