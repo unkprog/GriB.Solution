@@ -194,6 +194,14 @@
     <Content Include="Scripts\Query\Editor\Category\[get_not_this].sql" />
     <Content Include="Scripts\Query\Editor\Category\[get].sql" />
     <Content Include="Scripts\Query\Editor\Category\[set].sql" />
+    <Content Include="Scripts\Query\Editor\Client\Person\[clients].sql" />
+    <Content Include="Scripts\Query\Editor\Client\Person\[client].sql" />
+    <Content Include="Scripts\Query\Editor\Client\Person\[get].sql" />
+    <Content Include="Scripts\Query\Editor\Client\Person\[set].sql" />
+    <Content Include="Scripts\Query\Editor\Client\[del].sql" />
+    <Content Include="Scripts\Query\Editor\Client\[get].sql" />
+    <Content Include="Scripts\Query\Editor\Client\[ins].sql" />
+    <Content Include="Scripts\Query\Editor\Client\[set].sql" />
     <Content Include="Scripts\Query\Editor\Employee\SalepointAccess\[get].sql" />
     <Content Include="Scripts\Query\Editor\Employee\SalepointAccess\[set].sql" />
     <Content Include="Scripts\Query\Editor\Employee\[get].sql" />
@@ -234,7 +242,9 @@
     <Content Include="Scripts\Query\POSTerminal\Check\[new].sql" />
     <Content Include="Scripts\Query\POSTerminal\[get].sql" />
     <Content Include="Scripts\Sql\01.001.[t_orgtype].sql" />
+    <Content Include="Scripts\Sql\08.001.[t_client].sql" />
     <Content Include="Scripts\Sql\03.001.[t_employee].sql" />
+    <Content Include="Scripts\Sql\09.001.[t_payment].sql" />
     <Content Include="Scripts\Sql\07.001.[t_check].sql" />
     <Content Include="Scripts\Sql\06.004.[t_product_composition].sql" />
     <Content Include="Scripts\Sql\06.003.[t_product_price].sql" />
@@ -259,6 +269,7 @@
     <Compile Include="Handlers\AuthorizationHeaderHandler.cs" />
     <Compile Include="Managers\AppSettings.cs" />
     <Compile Include="Managers\AuthUser.cs" />
+    <Compile Include="Managers\Editors\Client.cs" />
     <Compile Include="Managers\Editors\Product.cs" />
     <Compile Include="Managers\Editors\Employee.cs" />
     <Compile Include="Managers\Editors\Category.cs" />
@@ -267,6 +278,7 @@
     <Compile Include="Managers\POSTerminal\Check.cs" />
     <Compile Include="Managers\POSTerminal\Terminal.cs" />
     <Compile Include="Models\Editor\Category.cs" />
+    <Compile Include="Models\Editor\Client.cs" />
     <Compile Include="Models\Editor\Employee.cs" />
     <Compile Include="Models\Editor\Organization.cs" />
     <Compile Include="Models\Editor\Product.cs" />
@@ -274,6 +286,7 @@
     <Compile Include="Models\Editor\Unit.cs" />
     <Compile Include="Models\POSTerminal\Check.cs" />
     <Compile Include="Models\POSTerminal\ListProduct.cs" />
+    <Compile Include="Models\POSTerminal\Payment.cs" />
     <Compile Include="Models\t_org.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

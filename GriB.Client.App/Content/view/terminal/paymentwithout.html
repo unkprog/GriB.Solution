@@ -2,34 +2,38 @@
     <div class="row numpad-header">
         <h3 class="center-align numpad-header" data-bind="text:Header"></h3>
     </div>
-    <div class="row row-inputs">
+    <div class="row">
         <div class="input-field col s12 m12 l6 xl6 offset-l3 offset-xl3 col-input-numpad">
             <input id="paymentwithout-view-totalsum" type="text" class="input-numpad" data-bind="value:totalSumText">
             <label for="paymentwithout-view-totalsum" data-bind="text:labelTotalToPay"></label>
         </div>
         <div class="input-field col s12 m12 l6 xl6 offset-l3 offset-xl3 col-input-numpad">
-            <p>
+            <p class="margin-0">
                 <label>
-                    <input class="with-gap" name="group1" type="radio" />
+                    <input class="with-gap" name="group1" type="radio" value="1" data-bind="checked: editModel.typeWithOut"/>
                     <span>В долг</span>
                 </label>
             </p>
         </div>
         <div class="input-field col s12 m12 l6 xl6 offset-l3 offset-xl3 col-input-numpad">
-            <p>
+            <p class="margin-0">
                 <label>
-                    <input class="with-gap" name="group1" type="radio" />
+                    <input class="with-gap" name="group1" type="radio" value="2" data-bind="checked: editModel.typeWithOut"/>
                     <span>За счет заведения</span>
                 </label>
             </p>
         </div>
         <div class="input-field col s12 m12 l6 xl6 offset-l3 offset-xl3 col-input-numpad">
-            <p>
+            <p class="margin-0">
                 <label>
-                    <input class="with-gap" name="group1" type="radio" />
+                    <input class="with-gap" name="group1" type="radio" value="3" data-bind="checked: editModel.typeWithOut"/>
                     <span>Клиент ушел</span>
                 </label>
             </p>
+        </div>
+        <div class="input-field col s12 m12 l6 xl6 offset-l3 offset-xl3 col-input-numpad">
+            <textarea id="paymentwithout-view-description" class="materialize-textarea" data-length="3098" data-bind="value:editModel.comment"></textarea>
+            <label for="paymentwithout-view-description" data-bind="text:labelComment"></label>
         </div>
     </div>
     <div class="row row-btn-numpad">

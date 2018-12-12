@@ -137,6 +137,7 @@
         TotalSum: number;
         ReceivedSum: number;
         SurrenderSum: number;
+        Comment: string;
         EditorModel: Interfaces.Model.IPaymentModel;
     }
 

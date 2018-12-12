@@ -18,7 +18,9 @@ export namespace Controller.Terminal {
                 "editModel": {
                     totalSum: 0,
                     receivedSum: undefined,
-                    surrenderSum: undefined
+                    surrenderSum: undefined,
+                    typeWithOut: 1,
+                    comment: ""
                 },
                 "totalSumText": "0.00",
                 "receivedSumText": "",
@@ -26,6 +28,7 @@ export namespace Controller.Terminal {
                 "labelTotalToPay": vars._statres("label$topay"),
                 "labelReceiveSum": vars._statres("label$received"),
                 "labelSurrenderSum": vars._statres("label$surrender"),
+                "labelComment": vars._statres("label$comment"),
                 
             });
             result.bind("change", $.proxy(this.changeModel, this));
@@ -42,6 +45,9 @@ export namespace Controller.Terminal {
 
         public get SurrenderSum(): number { return this.Model.get("editModel.surrenderSum"); }
         public set SurrenderSum(value: number) { this.Model.set("editModel.surrenderSum", value); }
+        
+        public get Comment(): string { return this.Model.get("editModel.comment"); }
+        public set Comment(value: string) { this.Model.set("editModel.comment", value); }
 
         protected btnPayment: JQuery;
         protected btnPaymentCancel: JQuery;
@@ -101,7 +107,7 @@ export namespace Controller.Terminal {
         }
 
         public validate(): boolean {
-            let controller: Interfaces.IControllerPaymentNumPad = this;
+            let controller: Interfaces.IControllerPayment = this;
             let result: boolean = super.validate();
 
             let curValue: string = (this.inputReceivedSum ? "" + this.inputReceivedSum.val() : "");// this.Model.get("receivedSumText");

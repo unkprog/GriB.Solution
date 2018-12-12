@@ -36,7 +36,9 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                         "editModel": {
                             totalSum: 0,
                             receivedSum: undefined,
-                            surrenderSum: undefined
+                            surrenderSum: undefined,
+                            typeWithOut: 1,
+                            comment: ""
                         },
                         "totalSumText": "0.00",
                         "receivedSumText": "",
@@ -44,6 +46,7 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                         "labelTotalToPay": vars._statres("label$topay"),
                         "labelReceiveSum": vars._statres("label$received"),
                         "labelSurrenderSum": vars._statres("label$surrender"),
+                        "labelComment": vars._statres("label$comment"),
                     });
                     result.bind("change", $.proxy(this.changeModel, this));
                     return result;
@@ -63,6 +66,12 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                 Object.defineProperty(Payment.prototype, "SurrenderSum", {
                     get: function () { return this.Model.get("editModel.surrenderSum"); },
                     set: function (value) { this.Model.set("editModel.surrenderSum", value); },
+                    enumerable: true,
+                    configurable: true
+                });
+                Object.defineProperty(Payment.prototype, "Comment", {
+                    get: function () { return this.Model.get("editModel.comment"); },
+                    set: function (value) { this.Model.set("editModel.comment", value); },
                     enumerable: true,
                     configurable: true
                 });

@@ -23,5 +23,14 @@ export namespace Controller.Terminal {
 
             return super.ViewInit(view);
         }
+
+        public validate(): boolean {
+            let controller: Interfaces.IControllerPaymentWithOut = this;
+            let result: boolean = true;
+
+            if (result === true && this.OnPaymentApply)
+                this.OnPaymentApply(controller);
+            return result;
+        }
     }
 }

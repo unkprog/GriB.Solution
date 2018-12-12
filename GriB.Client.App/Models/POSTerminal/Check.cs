@@ -1,5 +1,4 @@
-﻿
-using GriB.Client.App.Models.Editor;
+﻿using GriB.Client.App.Models.Editor;
 using GriB.Common.Models.pos;
 using System.Collections.Generic;
 

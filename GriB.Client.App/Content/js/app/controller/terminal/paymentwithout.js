@@ -35,6 +35,13 @@ define(["require", "exports", "app/common/variables", "app/controller/terminal/p
                     this.btnPaymentCancel = view.find("#btn-num-cancel");
                     return _super.prototype.ViewInit.call(this, view);
                 };
+                PaymentWithOut.prototype.validate = function () {
+                    var controller = this;
+                    var result = true;
+                    if (result === true && this.OnPaymentApply)
+                        this.OnPaymentApply(controller);
+                    return result;
+                };
                 return PaymentWithOut;
             }(payment.Controller.Terminal.Payment));
             Terminal.PaymentWithOut = PaymentWithOut;

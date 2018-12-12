@@ -304,8 +304,8 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/s
                                 var ctrlPaymentPinPad = controller;
                                 ctrlPaymentPinPad.EditorSettings.ButtonSetings = { IsSave: false, IsCancel: false };
                                 ctrlPaymentPinPad.TotalSum = _this.model.get("checkSum");
-                                ctrlPaymentPinPad.ReceivedSum = undefined;
-                                ctrlPaymentPinPad.SurrenderSum = undefined;
+                                ctrlPaymentPinPad.ReceivedSum = _this.model.get("checkSum");
+                                ctrlPaymentPinPad.SurrenderSum = 0;
                             }
                         });
                     }

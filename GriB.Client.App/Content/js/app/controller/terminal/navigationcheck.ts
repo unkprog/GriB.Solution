@@ -334,8 +334,8 @@ export namespace Controller.Terminal {
                         let ctrlPaymentPinPad: Interfaces.IControllerPaymentWithOut = controller as Interfaces.IControllerPaymentWithOut;
                         ctrlPaymentPinPad.EditorSettings.ButtonSetings = { IsSave: false, IsCancel: false };
                         ctrlPaymentPinPad.TotalSum = this.model.get("checkSum");
-                        ctrlPaymentPinPad.ReceivedSum = undefined;
-                        ctrlPaymentPinPad.SurrenderSum = undefined;
+                        ctrlPaymentPinPad.ReceivedSum = this.model.get("checkSum");
+                        ctrlPaymentPinPad.SurrenderSum = 0;
                     }
                 });
             }

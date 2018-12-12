@@ -504,5 +504,53 @@ namespace GriB.Client.App.Controllers
                 return Request.CreateResponse(HttpStatusCode.OK, result);
             });
         }
+
+
+        #region Клиенты
+        [HttpGet]
+        [ActionName("get_clients")]
+        public HttpResponseMessage GetClients()
+        {
+            return TryCatchResponseQuery((query) =>
+            {
+                return Request.CreateResponse(HttpStatusCode.OK, Managers.Editors.Client.GetClients(query));
+            });
+        }
+
+        [HttpGet]
+        [ActionName("get_client")]
+        public HttpResponseMessage GetClient(int id)
+        {
+            return TryCatchResponseQuery((query) =>
+            {
+                client result = Managers.Editors.Client.GetClient(query, id);
+                return Request.CreateResponse(HttpStatusCode.OK, new { record = result });
+            });
+        }
+
+        [HttpPost]
+        [ActionName("post_client")]
+        public HttpResponseMessage PostClient(client client)
+        {
+            return TryCatchResponseQuery((query) =>
+            {
+                Principal principal = (Principal)HttpContext.Current.User;
+                client result = Managers.Editors.Client.SetClientPerson(query, client, principal.Data.User.id);
+               
+                return Request.CreateResponse(HttpStatusCode.OK, "Ok");
+            });
+        }
+
+        [HttpGet]
+        [ActionName("del_category")]
+        public HttpResponseMessage DeleteCategory(int id)
+        {
+            return TryCatchResponseQuery((query) =>
+            {
+                Client.DelClient(query, id, ((Principal)HttpContext.Current.User).Data.User.id);
+                return Request.CreateResponse(HttpStatusCode.OK, "Ok");
+            });
+        }
+        #endregion
     }
 }
