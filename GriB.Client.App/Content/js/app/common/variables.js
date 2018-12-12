@@ -40,6 +40,7 @@ define(["require", "exports", "i18n!nls/strings"], function (require, exports) {
     exports._controllers["setting/editor/unit"] = function (module) { return new module.Controller.Setting.Editor.Unit(); };
     exports._controllers["setting/editor/category"] = function (module) { return new module.Controller.Setting.Editor.Category(); };
     exports._controllers["setting/editor/product"] = function (module) { return new module.Controller.Setting.Editor.Product(); };
+    //_controllers["setting/editor/client"] = function (module: any): Interfaces.IController { return new module.Controller.Setting.Editor.Client(); };
     exports._controllers["setting/card/salepoint"] = function (module) { return new module.Controller.Setting.Card.SalePoint(); };
     exports._controllers["setting/card/employee"] = function (module) { return new module.Controller.Setting.Card.Employee(); };
     exports._controllers["setting/card/currency"] = function (module) { return new module.Controller.Setting.Card.Currency(); };
@@ -47,6 +48,17 @@ define(["require", "exports", "i18n!nls/strings"], function (require, exports) {
     exports._controllers["setting/card/category"] = function (module) { return new module.Controller.Setting.Card.Category(); };
     exports._controllers["setting/card/product"] = function (module) { return new module.Controller.Setting.Card.Product(); };
     exports._controllers["setting/card/productselect"] = function (module) { return new module.Controller.Setting.Card.ProductSelect(); };
+    exports._controllers["setting/card/client"] = function (module) { return new module.Controller.Setting.Card.Client(); };
+    function registerController(crtlId, funcConstructor) {
+        if (!exports._controllers[crtlId])
+            exports._controllers[crtlId] = funcConstructor;
+    }
+    exports.registerController = registerController;
+    function unRegisterController(crtlId) {
+        if (exports._controllers[crtlId])
+            delete exports._controllers[crtlId];
+    }
+    exports.unRegisterController = unRegisterController;
     exports._editorData = {};
 });
 //# sourceMappingURL=variables.js.map

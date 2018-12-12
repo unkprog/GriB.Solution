@@ -62,6 +62,7 @@ _controllers["setting/editor/currency"] = function (module: any): Interfaces.ICo
 _controllers["setting/editor/unit"] = function (module: any): Interfaces.IController { return new module.Controller.Setting.Editor.Unit(); };
 _controllers["setting/editor/category"] = function (module: any): Interfaces.IController { return new module.Controller.Setting.Editor.Category(); };
 _controllers["setting/editor/product"] = function (module: any): Interfaces.IController { return new module.Controller.Setting.Editor.Product(); };
+//_controllers["setting/editor/client"] = function (module: any): Interfaces.IController { return new module.Controller.Setting.Editor.Client(); };
 
 _controllers["setting/card/salepoint"] = function (module: any): Interfaces.IController { return new module.Controller.Setting.Card.SalePoint(); };
 _controllers["setting/card/employee"] = function (module: any): Interfaces.IController { return new module.Controller.Setting.Card.Employee(); };
@@ -70,7 +71,17 @@ _controllers["setting/card/unit"] = function (module: any): Interfaces.IControll
 _controllers["setting/card/category"] = function (module: any): Interfaces.IController { return new module.Controller.Setting.Card.Category(); };
 _controllers["setting/card/product"] = function (module: any): Interfaces.IController { return new module.Controller.Setting.Card.Product(); };
 _controllers["setting/card/productselect"] = function (module: any): Interfaces.IController { return new module.Controller.Setting.Card.ProductSelect(); };
+_controllers["setting/card/client"] = function (module: any): Interfaces.IController { return new module.Controller.Setting.Card.Client(); };
 
+export function registerController(crtlId: string, funcConstructor: (module: any) => Interfaces.IController): void {
+    if (!_controllers[crtlId])
+        _controllers[crtlId] = funcConstructor;
+}
+
+export function unRegisterController(crtlId: string): void {
+    if (_controllers[crtlId])
+        delete _controllers[crtlId];
+}
 
 export declare let _editorData: any;
 _editorData = {};

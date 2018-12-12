@@ -146,5 +146,22 @@ export module Services {
                 }
             });
         }
+
+        // Клиенты
+        public GetClients(Callback: (responseData: any) => void) {
+            this.GetApi({ Action: "/get_clients", Callback: Callback });
+        }
+
+        public GetClient(id: number, Callback: (responseData: any) => void) {
+            this.GetApi({ Action: "/get_client", RequestData: { id: id }, Callback: Callback });
+        }
+
+        public SetClient(model: Interfaces.Model.IClientModel, Callback: (responseData: any) => void) {
+            this.PostApi({ Action: "/post_client", RequestData: JSON.stringify(model), Callback: Callback });
+        }
+
+        public DelClient(id: number, Callback: (responseData: any) => void) {
+            this.GetApi({ Action: "/del_client", RequestData: { id: id }, Callback: Callback });
+        }
     }
 }

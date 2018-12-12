@@ -171,6 +171,7 @@
     <Content Include="Content\view\setting\card\currency.html" />
     <Content Include="Content\view\setting\card\employee.html" />
     <Content Include="Content\view\setting\card\salepoint.html" />
+    <Content Include="Content\view\setting\editor\client.html" />
     <Content Include="Content\view\setting\editor\product.html" />
     <Content Include="Content\view\setting\editor\category.html" />
     <Content Include="Content\view\setting\editor\unit.html" />
@@ -374,12 +375,14 @@
     <TypeScriptCompile Include="Content\js\app\controller\security\register.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\security\login.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\setting\card\card.ts" />
+    <TypeScriptCompile Include="Content\js\app\controller\setting\card\client.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\setting\card\product.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\setting\card\category.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\setting\card\unit.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\setting\card\employee.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\setting\card\currency.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\setting\card\salepoint.ts" />
+    <TypeScriptCompile Include="Content\js\app\controller\setting\editor\client.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\setting\editor\product.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\setting\editor\category.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\setting\editor\unit.ts" />

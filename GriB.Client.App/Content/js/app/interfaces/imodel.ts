@@ -71,6 +71,15 @@
         datebirth: Date;
     }
 
+    export interface IClientModel extends IReferenceModel, IEditorModel, IEditorSalePointAccess {
+        fname: string;
+        mname: string;
+        lname: string;
+        sex: number;
+        datebirth: Date;
+        phone: string;
+    }
+
     export interface IBaseUnit extends IReferenceModel, IEditorModel {
         code: string;
         nameshort: string;

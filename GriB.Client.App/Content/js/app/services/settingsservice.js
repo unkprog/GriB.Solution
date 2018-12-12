@@ -135,6 +135,19 @@ define(["require", "exports", "app/common/baseservice"], function (require, expo
                     }
                 });
             };
+            // Клиенты
+            SettingsService.prototype.GetClients = function (Callback) {
+                this.GetApi({ Action: "/get_clients", Callback: Callback });
+            };
+            SettingsService.prototype.GetClient = function (id, Callback) {
+                this.GetApi({ Action: "/get_client", RequestData: { id: id }, Callback: Callback });
+            };
+            SettingsService.prototype.SetClient = function (model, Callback) {
+                this.PostApi({ Action: "/post_client", RequestData: JSON.stringify(model), Callback: Callback });
+            };
+            SettingsService.prototype.DelClient = function (id, Callback) {
+                this.GetApi({ Action: "/del_client", RequestData: { id: id }, Callback: Callback });
+            };
             return SettingsService;
         }(base.Services.BaseService));
         Services.SettingsService = SettingsService;

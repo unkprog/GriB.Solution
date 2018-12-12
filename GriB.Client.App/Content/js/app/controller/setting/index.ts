@@ -27,6 +27,7 @@ export namespace Controller.Setting {
                 "labelCategoriesProducts": vars._statres("label$categoriesproducts"),
                 "labelCategories": vars._statres("label$categories"),
                 "labelProducts": vars._statres("label$products"),
+                "labelClients": vars._statres("label$clients"),
             });
         }
 
@@ -38,6 +39,7 @@ export namespace Controller.Setting {
             this.UnitButtonClick = this.createTouchClickEvent("btn-unit", this.unitButtonClick);
             this.CategoryButtonClick = this.createTouchClickEvent("btn-category", this.categoryButtonClick);
             this.ProductButtonClick = this.createTouchClickEvent("btn-product", this.productButtonClick);
+            this.ClientButtonClick = this.createTouchClickEvent("btn-client", this.clientButtonClick);
         }
 
         protected destroyEvents(): void {
@@ -48,6 +50,7 @@ export namespace Controller.Setting {
             this.destroyTouchClickEvent("btn-unit", this.UnitButtonClick);
             this.destroyTouchClickEvent("btn-category", this.CategoryButtonClick);
             this.destroyTouchClickEvent("btn-product", this.ProductButtonClick);
+            this.destroyTouchClickEvent("btn-client", this.ClientButtonClick);
         }
 
         public OrganizationButtonClick: { (e: any): void; };
@@ -83,6 +86,11 @@ export namespace Controller.Setting {
         public ProductButtonClick: { (e: any): void; };
         private productButtonClick(e) {
             _main.OpenController({ urlController: "setting/card/product", backController: this });
+        }
+
+        public ClientButtonClick: { (e: any): void; };
+        private clientButtonClick(e) {
+            _main.OpenController({ urlController: "setting/card/client", backController: this });
         }
     }
 }

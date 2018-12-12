@@ -101,9 +101,9 @@ namespace GriB.Client.App.Managers.Editors
         }
 
         private const string cmdDelClient = @"Editor\Client\[del]";
-        public static void DelClient(this Query query, int id)
+        public static void DelClient(this Query query, int id, int user)
         {
-            query.Execute(cmdDelClient, new SqlParameter[] { new SqlParameter("@id", id) }
+            query.Execute(cmdDelClient, new SqlParameter[] { new SqlParameter("@id", id), new SqlParameter("@u", user) }
             , (values) => { });
         }
 

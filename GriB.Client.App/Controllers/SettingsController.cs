@@ -542,12 +542,12 @@ namespace GriB.Client.App.Controllers
         }
 
         [HttpGet]
-        [ActionName("del_category")]
-        public HttpResponseMessage DeleteCategory(int id)
+        [ActionName("del_client")]
+        public HttpResponseMessage DeleteClient(int id)
         {
             return TryCatchResponseQuery((query) =>
             {
-                Client.DelClient(query, id, ((Principal)HttpContext.Current.User).Data.User.id);
+                Managers.Editors.Client.DelClient(query, id, ((Principal)HttpContext.Current.User).Data.User.id);
                 return Request.CreateResponse(HttpStatusCode.OK, "Ok");
             });
         }
