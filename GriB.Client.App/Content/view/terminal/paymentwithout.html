@@ -4,21 +4,25 @@
     </div>
     <div class="row">
         <div class="input-field col s12 m12 l6 xl6 offset-l3 offset-xl3 col-input-numpad">
-            <input id="paymentwithout-view-totalsum" type="text" class="input-numpad" data-bind="value:totalSumText">
+            <input id="paymentwithout-view-totalsum" type="text" disabled class="input-numpad" data-bind="value:totalSumText">
             <label for="paymentwithout-view-totalsum" data-bind="text:labelTotalToPay"></label>
         </div>
         <div class="input-field col s12 m12 l6 xl6 offset-l3 offset-xl3 col-input-numpad">
             <p class="margin-0">
                 <label>
-                    <input class="with-gap" name="group1" type="radio" value="1" data-bind="checked: editModel.typeWithOut"/>
+                    <input class="with-gap" name="group1" type="radio" value="1" data-bind="checked: editModel.typeWithOut" />
                     <span>В долг</span>
                 </label>
             </p>
         </div>
+        <div id="paymentwithout-view-client-row" class="input-field col s12 m12 l6 xl6 offset-l3 offset-xl3 col-input-numpad" style="display:none;">
+            <input id="paymentwithout-view-client" type="text" disabled class="truncate black-text" data-bind="value: editModel.client.name" style="cursor:pointer;font-weight:bold;">
+            <label for="paymentwithout-view-client" data-bind="text:labelClient"></label>
+        </div>
         <div class="input-field col s12 m12 l6 xl6 offset-l3 offset-xl3 col-input-numpad">
             <p class="margin-0">
                 <label>
-                    <input class="with-gap" name="group1" type="radio" value="2" data-bind="checked: editModel.typeWithOut"/>
+                    <input class="with-gap" name="group1" type="radio" value="2" data-bind="checked: editModel.typeWithOut" />
                     <span>За счет заведения</span>
                 </label>
             </p>
@@ -26,7 +30,7 @@
         <div class="input-field col s12 m12 l6 xl6 offset-l3 offset-xl3 col-input-numpad">
             <p class="margin-0">
                 <label>
-                    <input class="with-gap" name="group1" type="radio" value="3" data-bind="checked: editModel.typeWithOut"/>
+                    <input class="with-gap" name="group1" type="radio" value="3" data-bind="checked: editModel.typeWithOut" />
                     <span>Клиент ушел</span>
                 </label>
             </p>

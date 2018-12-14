@@ -305,8 +305,9 @@ export namespace Controller.Terminal {
             });
         }
 
-        private paymentData = { paymentType: 0 };
+        private paymentData = { paymentType: 0,  paymentOption: 0, paymentSum: 0 };
         private selectTypePayment(controller: Interfaces.IControllerPaymentType) {
+            let self = this;
             this.paymentData.paymentType = controller.SelectedPaymentType;
             if (this.paymentData.paymentType === 1) {
                 vars._app.OpenController({
@@ -316,29 +317,53 @@ export namespace Controller.Terminal {
                         ctrlPaymentPinPad.TotalSum = this.model.get("checkSum");
                         ctrlPaymentPinPad.ReceivedSum = undefined;
                         ctrlPaymentPinPad.SurrenderSum = undefined;
+                        ctrlPaymentPinPad.OnPaymentApply = $.proxy(self.applyPayment, self);
                     }
                 });
             } else if (this.paymentData.paymentType === 2) {
                 vars._app.OpenController({
                     urlController: 'terminal/paymentnoncash', isModal: true, onLoadController: (controller: Interfaces.IController) => {
-                        let ctrlPaymentPinPad: Interfaces.IControllerPaymentNonCash = controller as Interfaces.IControllerPaymentNonCash;
-                        ctrlPaymentPinPad.EditorSettings.ButtonSetings = { IsSave: false, IsCancel: false };
-                        ctrlPaymentPinPad.TotalSum = this.model.get("checkSum");
-                        ctrlPaymentPinPad.ReceivedSum = undefined;
-                        ctrlPaymentPinPad.SurrenderSum = undefined;
+                        let ctrlPaymentNonCash: Interfaces.IControllerPaymentNonCash = controller as Interfaces.IControllerPaymentNonCash;
+                        ctrlPaymentNonCash.EditorSettings.ButtonSetings = { IsSave: false, IsCancel: false };
+                        ctrlPaymentNonCash.TotalSum = this.model.get("checkSum");
+                        ctrlPaymentNonCash.ReceivedSum = undefined;
+                        ctrlPaymentNonCash.SurrenderSum = undefined;
+                        ctrlPaymentNonCash.OnPaymentApply = $.proxy(self.applyPayment, self);
                     }
                 });
             } else if (this.paymentData.paymentType === 3) {
                 vars._app.OpenController({
                     urlController: 'terminal/paymentwithout', isModal: true, onLoadController: (controller: Interfaces.IController) => {
-                        let ctrlPaymentPinPad: Interfaces.IControllerPaymentWithOut = controller as Interfaces.IControllerPaymentWithOut;
-                        ctrlPaymentPinPad.EditorSettings.ButtonSetings = { IsSave: false, IsCancel: false };
-                        ctrlPaymentPinPad.TotalSum = this.model.get("checkSum");
-                        ctrlPaymentPinPad.ReceivedSum = this.model.get("checkSum");
-                        ctrlPaymentPinPad.SurrenderSum = 0;
+                        let ctrlPaymentWithOut: Interfaces.IControllerPaymentWithOut = controller as Interfaces.IControllerPaymentWithOut;
+                        ctrlPaymentWithOut.EditorSettings.ButtonSetings = { IsSave: false, IsCancel: false };
+                        ctrlPaymentWithOut.TotalSum = this.model.get("checkSum");
+                        ctrlPaymentWithOut.ReceivedSum = this.model.get("checkSum");
+                        ctrlPaymentWithOut.SurrenderSum = 0;
+                        ctrlPaymentWithOut.OnPaymentApply = $.proxy(self.applyWithOut, self)
                     }
                 });
             }
+        }
+
+        private applyPayment(controller: Interfaces.IControllerPayment) {
+            if (this.currentCheck) {
+                this.paymentData.paymentOption = controller.TypeWithOut;
+                this.paymentData.paymentSum = this.model.get("checkSum");
+                this.closeCheck();
+            }
+        }
+
+        private applyWithOut(controller: Interfaces.IControllerPayment) {
+            if (this.currentCheck) {
+                this.currentCheck.client = controller.Client;
+                this.model.set("checkClient", (this.currentCheck.client ? this.currentCheck.client.name : ""));
+            }
+            this.applyPayment(controller);
+        }
+
+
+        private closeCheck() {
+           
         }
     }
 }

@@ -112,8 +112,11 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
                     var controllerModal = this._controllersModalStack.Last;
                     controllerModal.ViewHide(this);
                     contentModal.remove();
-                    this.contentControl.show();
                     this._controllersModalStack.Pop();
+                    if (this.IsModal)
+                        this._controllersModalStack.Last.View.parent().show();
+                    else
+                        this.contentControl.show();
                     return;
                 }
                 else {
@@ -135,16 +138,16 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
             };
             Application.prototype.OpenController = function (options) {
                 var self = this;
-                var ctrlCreate = vars._controllers[options.urlController];
-                if (ctrlCreate) {
-                    var url = "/Content/js/app/controller/" + options.urlController + ".js";
-                    require([url], function (module) {
+                var url = "/Content/js/app/controller/" + options.urlController + ".js";
+                require([url], function (module) {
+                    var ctrlCreate = vars._controllers[options.urlController];
+                    if (ctrlCreate) {
                         var controller = ctrlCreate(module);
                         if (options.onLoadController)
                             options.onLoadController(controller);
                         self.OpenView({ controller: controller, isModal: options.isModal, backController: options.backController });
-                    });
-                }
+                    }
+                });
             };
             Application.prototype.SetHeader = function (controller) {
                 var header = controller.Header;
@@ -192,6 +195,10 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
                 try {
                     if (!isModal && self._controller)
                         self._controller.ViewHide(this);
+                    //if (isModal && self._controller) {
+                    //    if (this.IsModal)
+                    //        self._controllersModalStack.Current.View.hide();
+                    //}
                     //if (!isModal)
                     self._controller = options.controller;
                     if (!isModal && !options.isRestore)
@@ -201,6 +208,8 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
                     var view = $(options.template);
                     isInit = self._controller.ViewInit(view);
                     if (isModal) {
+                        if (this.IsModal)
+                            self._controllersModalStack.Last.View.parent().hide();
                         content = $('<div class="main-view-content-modal"></div>');
                         content.height(self.contentControl.height());
                         self.contentModals.push(content);

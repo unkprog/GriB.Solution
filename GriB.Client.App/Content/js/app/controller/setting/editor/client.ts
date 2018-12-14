@@ -82,10 +82,10 @@ export namespace Controller.Setting.Editor {
                 result = false;
             }
 
-            if (!utils.validatePhone(model.phone)) {
-                M.toast({ html: vars._statres('msg$error$phoneNumberIncorrect') });
-                result = false;
-            }
+            //if (!utils.validatePhone(model.phone)) {
+            //    M.toast({ html: vars._statres('msg$error$phoneNumberIncorrect') });
+            //    result = false;
+            //}
 
             return result;
         }

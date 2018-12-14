@@ -277,6 +277,7 @@
     <Compile Include="Managers\Editors\Unit.cs" />
     <Compile Include="Managers\Editors\Organization.cs" />
     <Compile Include="Managers\POSTerminal\Check.cs" />
+    <Compile Include="Managers\POSTerminal\Paymentcs.cs" />
     <Compile Include="Managers\POSTerminal\Terminal.cs" />
     <Compile Include="Models\Editor\Category.cs" />
     <Compile Include="Models\Editor\Client.cs" />

@@ -705,6 +705,22 @@ export namespace Controller {
             }
         }
 
+        public getSelectedRecord(): Interfaces.Model.IBaseModel {
+            let result: Interfaces.Model.IBaseModel;
+            let id: any = this.getSelectedRowId();
+            if (id) {
+                let _id: number = +id;
+                let data: Interfaces.Model.IBaseModel[] = this.Model.get("cardModel");
+                for (let i = 0, icount = (data && data.length ? data.length : 0); i < icount; i++) {
+                    if (data[i].id == _id) {
+                        result = data[i];
+                        break;
+                    }
+                }
+            }
+            return result;
+        }
+
         public AddButtonClick: { (e: any): void; };
         private addButtonClick(e): void {
             this.Add();

@@ -37,7 +37,8 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                             totalSum: 0,
                             receivedSum: undefined,
                             surrenderSum: undefined,
-                            typeWithOut: 1,
+                            typeWithOut: 0,
+                            client: { id: 0, name: "" },
                             comment: ""
                         },
                         "totalSumText": "0.00",
@@ -47,6 +48,7 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                         "labelReceiveSum": vars._statres("label$received"),
                         "labelSurrenderSum": vars._statres("label$surrender"),
                         "labelComment": vars._statres("label$comment"),
+                        "visibleClient": "none",
                     });
                     result.bind("change", $.proxy(this.changeModel, this));
                     return result;
@@ -66,6 +68,18 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                 Object.defineProperty(Payment.prototype, "SurrenderSum", {
                     get: function () { return this.Model.get("editModel.surrenderSum"); },
                     set: function (value) { this.Model.set("editModel.surrenderSum", value); },
+                    enumerable: true,
+                    configurable: true
+                });
+                Object.defineProperty(Payment.prototype, "TypeWithOut", {
+                    get: function () { return this.Model.get("editModel.typeWithOut"); },
+                    set: function (value) { this.Model.set("editModel.typeWithOut", value); },
+                    enumerable: true,
+                    configurable: true
+                });
+                Object.defineProperty(Payment.prototype, "Client", {
+                    get: function () { return this.Model.get("editModel.client"); },
+                    set: function (value) { this.Model.set("editModel.client", value); },
                     enumerable: true,
                     configurable: true
                 });

@@ -624,6 +624,21 @@ define(["require", "exports", "app/common/utils", "app/common/variables", "./var
                     return this.selectedRow[0].id.replace("table-row-", "");
                 }
             };
+            BaseCard.prototype.getSelectedRecord = function () {
+                var result;
+                var id = this.getSelectedRowId();
+                if (id) {
+                    var _id = +id;
+                    var data = this.Model.get("cardModel");
+                    for (var i = 0, icount = (data && data.length ? data.length : 0); i < icount; i++) {
+                        if (data[i].id == _id) {
+                            result = data[i];
+                            break;
+                        }
+                    }
+                }
+                return result;
+            };
             BaseCard.prototype.addButtonClick = function (e) {
                 this.Add();
             };

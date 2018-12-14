@@ -186,5 +186,6 @@ define({
     "label$comment": "Комментарий",
 
     "error$numpad$amountinsufficient": "Полученная сумма недостаточна для закрытия чека",
-  
+    "error$without$reasonnotspecified": "Не указана прична неоплаты",
+    "error$without$clientnotspecified": "Не указан клиент",
 });

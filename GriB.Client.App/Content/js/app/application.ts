@@ -123,8 +123,11 @@ export module App {
                 let controllerModal: Interfaces.IController = this._controllersModalStack.Last;
                 controllerModal.ViewHide(this);
                 contentModal.remove();
-                this.contentControl.show();
                 this._controllersModalStack.Pop();
+                if (this.IsModal)
+                    this._controllersModalStack.Last.View.parent().show();
+                else
+                    this.contentControl.show();
                 return;
             }
             else {
@@ -148,16 +151,18 @@ export module App {
 
         public OpenController(options: Interfaces.IOpenControllerOptions) { //urlController: string, backController?: Interfaces.IController, onLoadController?: (controller: Interfaces.IController) => void) {
             var self = this;
-            let ctrlCreate: any = vars._controllers[options.urlController]
-            if (ctrlCreate) {
-                let url: string = "/Content/js/app/controller/" + options.urlController + ".js";
-                require([url], function (module) {
+
+            let url: string = "/Content/js/app/controller/" + options.urlController + ".js";
+            require([url], function (module) {
+                let ctrlCreate: any = vars._controllers[options.urlController]
+                if (ctrlCreate) {
                     let controller: Interfaces.IController = ctrlCreate(module);
                     if (options.onLoadController)
                         options.onLoadController(controller);
                     self.OpenView({ controller: controller, isModal: options.isModal, backController: options.backController });
-                });
-            }
+                }
+            });
+
         }
 
         protected SetHeader(controller: Interfaces.IController) {
@@ -224,6 +229,10 @@ export module App {
                 if (!isModal && self._controller)
                     self._controller.ViewHide(this);
 
+                //if (isModal && self._controller) {
+                //    if (this.IsModal)
+                //        self._controllersModalStack.Current.View.hide();
+                //}
                 //if (!isModal)
                     self._controller = options.controller;
                 if (!isModal && !options.isRestore) 
@@ -237,6 +246,8 @@ export module App {
                
 
                 if (isModal) {
+                    if (this.IsModal)
+                        self._controllersModalStack.Last.View.parent().hide();
                     content = $('<div class="main-view-content-modal"></div>');
                     content.height(self.contentControl.height());
                     self.contentModals.push(content);

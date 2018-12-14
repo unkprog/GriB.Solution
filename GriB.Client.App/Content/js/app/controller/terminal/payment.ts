@@ -19,8 +19,10 @@ export namespace Controller.Terminal {
                     totalSum: 0,
                     receivedSum: undefined,
                     surrenderSum: undefined,
-                    typeWithOut: 1,
+                    typeWithOut: 0,
+                    client: { id: 0, name: "" },
                     comment: ""
+
                 },
                 "totalSumText": "0.00",
                 "receivedSumText": "",
@@ -29,7 +31,8 @@ export namespace Controller.Terminal {
                 "labelReceiveSum": vars._statres("label$received"),
                 "labelSurrenderSum": vars._statres("label$surrender"),
                 "labelComment": vars._statres("label$comment"),
-                
+                "visibleClient": "none",
+
             });
             result.bind("change", $.proxy(this.changeModel, this));
             return result;
@@ -45,7 +48,13 @@ export namespace Controller.Terminal {
 
         public get SurrenderSum(): number { return this.Model.get("editModel.surrenderSum"); }
         public set SurrenderSum(value: number) { this.Model.set("editModel.surrenderSum", value); }
-        
+
+        public get TypeWithOut(): number { return this.Model.get("editModel.typeWithOut"); }
+        public set TypeWithOut(value: number) { this.Model.set("editModel.typeWithOut", value); }
+
+        public get Client(): Interfaces.Model.IReferenceModel { return this.Model.get("editModel.client"); }
+        public set Client(value: Interfaces.Model.IReferenceModel) { this.Model.set("editModel.client", value); }
+
         public get Comment(): string { return this.Model.get("editModel.comment"); }
         public set Comment(value: string) { this.Model.set("editModel.comment", value); }
 

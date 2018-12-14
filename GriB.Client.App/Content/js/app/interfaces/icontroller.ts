@@ -102,6 +102,7 @@
         Edit(): void;
         Close(): void;
         getSelectedRowId(): any;
+        getSelectedRecord(): Interfaces.Model.IBaseModel;
         OnSelect(controller: IControllerCard): void;
     }
 
@@ -133,10 +134,12 @@
     }
 
     export interface IControllerPayment extends IControllerEditor {
-        OnPaymentApply(controller: IControllerPaymentNumPad): void;
+        OnPaymentApply(controller: IControllerPayment): void;
         TotalSum: number;
         ReceivedSum: number;
         SurrenderSum: number;
+        TypeWithOut: number;
+        Client: Interfaces.Model.IReferenceModel;
         Comment: string;
         EditorModel: Interfaces.Model.IPaymentModel;
     }

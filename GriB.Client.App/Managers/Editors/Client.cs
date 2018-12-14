@@ -31,7 +31,7 @@ namespace GriB.Client.App.Managers.Editors
             {
                 result = readClientFromValues(values);
             });
-            return result;
+            return (result == null ? new client() : result);
         }
 
         private const string cmdIns = @"Editor\Client\[ins]";

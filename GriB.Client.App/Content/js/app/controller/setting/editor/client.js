@@ -91,10 +91,10 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                             M.toast({ html: utils.stringFormat(vars._statres("msg$error$fieldexceedscharacters"), vars._statres("label$patronymic"), 60) });
                             result = false;
                         }
-                        if (!utils.validatePhone(model.phone)) {
-                            M.toast({ html: vars._statres('msg$error$phoneNumberIncorrect') });
-                            result = false;
-                        }
+                        //if (!utils.validatePhone(model.phone)) {
+                        //    M.toast({ html: vars._statres('msg$error$phoneNumberIncorrect') });
+                        //    result = false;
+                        //}
                         return result;
                     };
                     return Client;

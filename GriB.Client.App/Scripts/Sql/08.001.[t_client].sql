@@ -6,6 +6,7 @@ begin
   create table [t_client]
   (
     [id]    [int]          identity(1,1) not null,
+	[pid]   [int]          not null default (0),
 	[d]     [int]          not null default (0),
 	[cd]    [datetime]     not null default (getdate()),
 	[cu]    [int]          not null default (0),
@@ -22,7 +23,7 @@ if not exists (select * from [sys].[objects] where [object_id] = object_id(N'[t_
 begin
   create table [t_client_person]
   (
-    [id]    [int]          identity(1,1) not null,
+    [id]    [int]          not null default (0),
 	[sex]   [int]          not null default (0),
 	[birth] [datetime]     not null default ('18991230'),
 	[fname] [nvarchar](62) not null default (N''),

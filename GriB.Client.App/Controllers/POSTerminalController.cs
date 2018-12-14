@@ -79,7 +79,7 @@ namespace GriB.Client.App.Controllers
 
         [HttpPost]
         [ActionName("check_add_pos")]
-        public HttpResponseMessage PostCheckAddPos(add_pos_params addposparams)
+        public HttpResponseMessage PostCheckAddPos(check_add_pos_params addposparams)
         {
             return TryCatchResponseQuery((query) =>
             {
@@ -89,5 +89,17 @@ namespace GriB.Client.App.Controllers
             });
         }
 
+        [HttpPost]
+        [ActionName("check_close")]
+        public HttpResponseMessage PostChecClose(check_close_params closeparams)
+        {
+            return TryCatchResponseQuery((query) =>
+            {
+                Principal principal = (Principal)HttpContext.Current.User;
+                payment payment = new payment() { check = new check() { id = closeparams.check }, type = closeparams.paymentType, option = closeparams.paymentOption, sum = closeparams.paymentSum };
+                //check_position position = Check.AddPosition(query, new check_position() { id = addposparams.check, product = new Models.Editor.product() { id = addposparams.product }, quantity = addposparams.quantity });
+                return Request.CreateResponse(HttpStatusCode.OK, "Ok");// new { newposition = position });
+            });
+        }
     }
 }

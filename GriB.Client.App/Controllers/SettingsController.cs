@@ -523,7 +523,7 @@ namespace GriB.Client.App.Controllers
         {
             return TryCatchResponseQuery((query) =>
             {
-                client result = Managers.Editors.Client.GetClient(query, id);
+                client result = Managers.Editors.Client.GetClientPerson(query, id);
                 return Request.CreateResponse(HttpStatusCode.OK, new { record = result });
             });
         }

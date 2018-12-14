@@ -48,7 +48,7 @@ define(["require", "exports", "i18n!nls/strings"], function (require, exports) {
     exports._controllers["setting/card/category"] = function (module) { return new module.Controller.Setting.Card.Category(); };
     exports._controllers["setting/card/product"] = function (module) { return new module.Controller.Setting.Card.Product(); };
     exports._controllers["setting/card/productselect"] = function (module) { return new module.Controller.Setting.Card.ProductSelect(); };
-    exports._controllers["setting/card/client"] = function (module) { return new module.Controller.Setting.Card.Client(); };
+    //_controllers["setting/card/client"] = function (module: any): Interfaces.IController { return new module.Controller.Setting.Card.Client(); };
     function registerController(crtlId, funcConstructor) {
         if (!exports._controllers[crtlId])
             exports._controllers[crtlId] = funcConstructor;

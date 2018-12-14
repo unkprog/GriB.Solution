@@ -1,4 +1,5 @@
 ﻿namespace Interfaces.Model {
+
     export interface IBaseModel {
         id: number;
     }
@@ -72,6 +73,7 @@
     }
 
     export interface IClientModel extends IReferenceModel, IEditorModel, IEditorSalePointAccess {
+        name: string;
         fname: string;
         mname: string;
         lname: string;
@@ -136,6 +138,7 @@
 
     export interface IPOSCheck extends IBaseModel {
         cd: Date;
+        client: IReferenceModel;
         //public int options { get; set; }
         //public int client  { get; set; }
         //public int change  { get; set; }

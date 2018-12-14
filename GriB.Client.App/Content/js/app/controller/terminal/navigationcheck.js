@@ -9,7 +9,7 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/s
                 function NavigationCheck(view, terminal) {
                     this.openedChecks = [];
                     this.currentCheck = undefined;
-                    this.paymentData = { paymentType: 0 };
+                    this.paymentData = { paymentType: 0, paymentOption: 0, paymentSum: 0 };
                     this.terminal = terminal;
                     this.controlContainerChecks = view.find("#posterminal-view-checks-container");
                     this.controlChecks = this.controlContainerChecks.find("#posterminal-view-checks");
@@ -275,6 +275,7 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/s
                 };
                 NavigationCheck.prototype.selectTypePayment = function (controller) {
                     var _this = this;
+                    var self = this;
                     this.paymentData.paymentType = controller.SelectedPaymentType;
                     if (this.paymentData.paymentType === 1) {
                         vars._app.OpenController({
@@ -284,31 +285,50 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/s
                                 ctrlPaymentPinPad.TotalSum = _this.model.get("checkSum");
                                 ctrlPaymentPinPad.ReceivedSum = undefined;
                                 ctrlPaymentPinPad.SurrenderSum = undefined;
+                                ctrlPaymentPinPad.OnPaymentApply = $.proxy(self.applyPayment, self);
                             }
                         });
                     }
                     else if (this.paymentData.paymentType === 2) {
                         vars._app.OpenController({
                             urlController: 'terminal/paymentnoncash', isModal: true, onLoadController: function (controller) {
-                                var ctrlPaymentPinPad = controller;
-                                ctrlPaymentPinPad.EditorSettings.ButtonSetings = { IsSave: false, IsCancel: false };
-                                ctrlPaymentPinPad.TotalSum = _this.model.get("checkSum");
-                                ctrlPaymentPinPad.ReceivedSum = undefined;
-                                ctrlPaymentPinPad.SurrenderSum = undefined;
+                                var ctrlPaymentNonCash = controller;
+                                ctrlPaymentNonCash.EditorSettings.ButtonSetings = { IsSave: false, IsCancel: false };
+                                ctrlPaymentNonCash.TotalSum = _this.model.get("checkSum");
+                                ctrlPaymentNonCash.ReceivedSum = undefined;
+                                ctrlPaymentNonCash.SurrenderSum = undefined;
+                                ctrlPaymentNonCash.OnPaymentApply = $.proxy(self.applyPayment, self);
                             }
                         });
                     }
                     else if (this.paymentData.paymentType === 3) {
                         vars._app.OpenController({
                             urlController: 'terminal/paymentwithout', isModal: true, onLoadController: function (controller) {
-                                var ctrlPaymentPinPad = controller;
-                                ctrlPaymentPinPad.EditorSettings.ButtonSetings = { IsSave: false, IsCancel: false };
-                                ctrlPaymentPinPad.TotalSum = _this.model.get("checkSum");
-                                ctrlPaymentPinPad.ReceivedSum = _this.model.get("checkSum");
-                                ctrlPaymentPinPad.SurrenderSum = 0;
+                                var ctrlPaymentWithOut = controller;
+                                ctrlPaymentWithOut.EditorSettings.ButtonSetings = { IsSave: false, IsCancel: false };
+                                ctrlPaymentWithOut.TotalSum = _this.model.get("checkSum");
+                                ctrlPaymentWithOut.ReceivedSum = _this.model.get("checkSum");
+                                ctrlPaymentWithOut.SurrenderSum = 0;
+                                ctrlPaymentWithOut.OnPaymentApply = $.proxy(self.applyWithOut, self);
                             }
                         });
                     }
+                };
+                NavigationCheck.prototype.applyPayment = function (controller) {
+                    if (this.currentCheck) {
+                        this.paymentData.paymentOption = controller.TypeWithOut;
+                        this.paymentData.paymentSum = this.model.get("checkSum");
+                        this.closeCheck();
+                    }
+                };
+                NavigationCheck.prototype.applyWithOut = function (controller) {
+                    if (this.currentCheck) {
+                        this.currentCheck.client = controller.Client;
+                        this.model.set("checkClient", (this.currentCheck.client ? this.currentCheck.client.name : ""));
+                    }
+                    this.applyPayment(controller);
+                };
+                NavigationCheck.prototype.closeCheck = function () {
                 };
                 return NavigationCheck;
             }());
