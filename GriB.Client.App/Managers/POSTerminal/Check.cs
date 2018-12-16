@@ -29,6 +29,20 @@ namespace GriB.Client.App.Managers.POSTerminal
             return result;
         }
 
+
+        private const string cmdGet = @"POSTerminal\Check\[get]";
+        public static check GetCheck(this Query query, int check)
+        {
+            check result = null;
+            query.Execute(cmdGet, new SqlParameter[] { new SqlParameter() { ParameterName = "@id", Value = check } }
+            , (values) =>
+            {
+                result = readFromValues(values);
+            });
+
+            return result;
+        }
+
         private const string cmdDel = @"POSTerminal\Check\[del]";
         public static check DeleteCheck(this Query query, int user, int check)
         {
@@ -88,6 +102,16 @@ namespace GriB.Client.App.Managers.POSTerminal
             return result;
         }
 
+        private const string cmdClose = @"POSTerminal\Check\[close]";
+        public static check Close(this Query query, check check, int user)
+        {
+            check result = check;
+            query.Execute(cmdGetPositions, new SqlParameter[] { new SqlParameter() { ParameterName = "@id", Value = result.id }, new SqlParameter("@u", user), new SqlParameter() { ParameterName = "@salepoint", Value = result.salepoint }
+            , new SqlParameter() { ParameterName = "@options", Value = result.options }, new SqlParameter() { ParameterName = "@client", Value = result.client }, new SqlParameter() { ParameterName = "@discount", Value = result.discount }
+            , new SqlParameter() { ParameterName = "@number", Value = result.number }, new SqlParameter() { ParameterName = "@change", Value = result.change }, new SqlParameter() { ParameterName = "@comment", Value = result.comment } }
+            , (values) => { });
 
+            return result;
+        }
     }
 }

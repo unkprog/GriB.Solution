@@ -42,6 +42,7 @@ namespace GriB.Client.App.Models.POSTerminal
         public int paymentType   { get; set; }
         public int paymentOption { get; set; }
         public double paymentSum { get; set; }
+        public string comment    { get; set; }
     }
 
 }

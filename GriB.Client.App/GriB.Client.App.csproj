@@ -238,9 +238,14 @@
     <Content Include="Scripts\Query\Editor\Unit\[set].sql" />
     <Content Include="Scripts\Query\POSTerminal\Check\Position\[add].sql" />
     <Content Include="Scripts\Query\POSTerminal\Check\Position\[get].sql" />
+    <Content Include="Scripts\Query\POSTerminal\Check\[close].sql" />
+    <Content Include="Scripts\Query\POSTerminal\Check\[get].sql" />
     <Content Include="Scripts\Query\POSTerminal\Check\[del].sql" />
     <Content Include="Scripts\Query\POSTerminal\Check\[new_all].sql" />
     <Content Include="Scripts\Query\POSTerminal\Check\[new].sql" />
+    <Content Include="Scripts\Query\POSTerminal\Payment\[del].sql" />
+    <Content Include="Scripts\Query\POSTerminal\Payment\[get].sql" />
+    <Content Include="Scripts\Query\POSTerminal\Payment\[set].sql" />
     <Content Include="Scripts\Query\POSTerminal\[get].sql" />
     <Content Include="Scripts\Sql\01.001.[t_orgtype].sql" />
     <Content Include="Scripts\Sql\08.001.[t_client].sql" />
@@ -277,7 +282,7 @@
     <Compile Include="Managers\Editors\Unit.cs" />
     <Compile Include="Managers\Editors\Organization.cs" />
     <Compile Include="Managers\POSTerminal\Check.cs" />
-    <Compile Include="Managers\POSTerminal\Paymentcs.cs" />
+    <Compile Include="Managers\POSTerminal\Payment.cs" />
     <Compile Include="Managers\POSTerminal\Terminal.cs" />
     <Compile Include="Models\Editor\Category.cs" />
     <Compile Include="Models\Editor\Client.cs" />
