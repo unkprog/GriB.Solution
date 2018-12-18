@@ -46,6 +46,9 @@ define(["require", "exports", "app/common/baseservice"], function (require, expo
             POSTerminalService.prototype.AddToCheck = function (check, product, quantity, Callback) {
                 this.PostApi({ Action: "/check_add_pos", RequestData: JSON.stringify({ check: check, product: product, quantity: quantity }), Callback: Callback });
             };
+            POSTerminalService.prototype.CheckClose = function (checkParamsClose, Callback) {
+                this.PostApi({ Action: "/check_close", RequestData: JSON.stringify(checkParamsClose), Callback: Callback });
+            };
             return POSTerminalService;
         }(base.Services.BaseService));
         Services.POSTerminalService = POSTerminalService;

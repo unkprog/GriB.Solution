@@ -6,7 +6,7 @@ namespace GriB.Client.App.Models.POSTerminal
     public class payment : model_sys
     {
         public check  check   { get; set; }
-        public int    type    { get; set; }
+        public int    ptype   { get; set; }
         public double sum     { get; set; }
         public int    option  { get; set; }
         public client client  { get; set; }

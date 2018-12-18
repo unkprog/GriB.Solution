@@ -13,7 +13,7 @@ begin
 	[uu]       [int]           not null default (0),
 	[check]    [int]           not null default (0),
 	[type]     [int]           not null default (0),
-	[sum]      [int]           not null default (0),
+	[sum]      [float]         not null default (0),
 	[option]   [int]           not null default (0),
 	[client]   [int]           not null default (0),
 	[comment]  [nvarchar](228) not null default (N''),

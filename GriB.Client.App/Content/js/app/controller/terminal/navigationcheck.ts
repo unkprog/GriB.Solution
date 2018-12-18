@@ -235,6 +235,25 @@ export namespace Controller.Terminal {
             });
         }
 
+        private steCurrentOrNew(onSetCurrent: function) {
+            let controller = this;
+            if (controller.openedChecks && controller.openedChecks.length > 0) {
+                for (let i = 0, iCount = controller.openedChecks.length; i < iCount; i++) {
+                    let currentCheck: Interfaces.Model.IPOSCheck = controller.openedChecks[i];
+                    if (!currentCheck.positions || currentCheck.positions.length < 1) {
+                        controller.setCurrentCheck(currentCheck);
+                        return;
+                    }
+                }
+            }
+            controller.Service.CheckNew(controller.terminal.CurrentSalePoint, (responseData) => {
+                if (!controller.openedChecks) controller.openedChecks = [];
+                controller.openedChecks.push(responseData.checknew);
+                controller.drawChecks(false);
+                controller.setCurrentCheck(responseData.checknew);
+            });
+        }
+
         private CheckButtonClick: { (e: any): void; };
         private checkButtonClick(e): void {
             let targetid: string = e.currentTarget.id;
@@ -257,17 +276,24 @@ export namespace Controller.Terminal {
                     let currentCheck: Interfaces.Model.IPOSCheck = controller.openedChecks[i];
                     if (currentCheck.id === id && (!currentCheck.positions || currentCheck.positions.length < 1)) {
                         controller.Service.CheckDelete(currentCheck.id, (responseData) => {
-                            $("#check_id_" + currentCheck.id).remove();
-                            controller.openedChecks.splice(controller.openedChecks.indexOf(currentCheck), 1);
-                            if (controller.openedChecks.length > 0)
-                                controller.setCurrentCheck(controller.openedChecks[0]);
-                            else
-                                controller.setCurrentCheck(undefined);
+                            controller.removeCurrentCheck(currentCheck);
                         });
                         return;
                     }
                 }
             }
+        }
+
+        private removeCurrentCheck(currentCheck: Interfaces.Model.IPOSCheck) {
+            if (!currentCheck) return;
+
+            let controller = this;
+            $("#check_id_" + currentCheck.id).remove();
+            controller.openedChecks.splice(controller.openedChecks.indexOf(currentCheck), 1);
+            if (controller.openedChecks.length > 0)
+                controller.setCurrentCheck(controller.openedChecks[0]);
+            else
+                controller.setCurrentCheck(undefined);
         }
 
         public AddPosition(product: number): void {
@@ -305,51 +331,54 @@ export namespace Controller.Terminal {
             });
         }
 
-        private paymentData = { paymentType: 0,  paymentOption: 0, paymentSum: 0 };
+        private paymentData: Interfaces.Model.ICheckCloseParams = { check: 0, paymentType: 0, paymentOption: 0, paymentSum: 0, comment: '' };
         private selectTypePayment(controller: Interfaces.IControllerPaymentType) {
             let self = this;
-            this.paymentData.paymentType = controller.SelectedPaymentType;
-            if (this.paymentData.paymentType === 1) {
-                vars._app.OpenController({
-                    urlController: 'terminal/paymentnumpad', isModal: true, onLoadController: (controller: Interfaces.IController) => {
-                        let ctrlPaymentPinPad: Interfaces.IControllerPaymentNumPad = controller as Interfaces.IControllerPaymentNumPad;
-                        ctrlPaymentPinPad.EditorSettings.ButtonSetings = { IsSave: false, IsCancel: false };
-                        ctrlPaymentPinPad.TotalSum = this.model.get("checkSum");
-                        ctrlPaymentPinPad.ReceivedSum = undefined;
-                        ctrlPaymentPinPad.SurrenderSum = undefined;
-                        ctrlPaymentPinPad.OnPaymentApply = $.proxy(self.applyPayment, self);
-                    }
-                });
-            } else if (this.paymentData.paymentType === 2) {
-                vars._app.OpenController({
-                    urlController: 'terminal/paymentnoncash', isModal: true, onLoadController: (controller: Interfaces.IController) => {
-                        let ctrlPaymentNonCash: Interfaces.IControllerPaymentNonCash = controller as Interfaces.IControllerPaymentNonCash;
-                        ctrlPaymentNonCash.EditorSettings.ButtonSetings = { IsSave: false, IsCancel: false };
-                        ctrlPaymentNonCash.TotalSum = this.model.get("checkSum");
-                        ctrlPaymentNonCash.ReceivedSum = undefined;
-                        ctrlPaymentNonCash.SurrenderSum = undefined;
-                        ctrlPaymentNonCash.OnPaymentApply = $.proxy(self.applyPayment, self);
-                    }
-                });
-            } else if (this.paymentData.paymentType === 3) {
-                vars._app.OpenController({
-                    urlController: 'terminal/paymentwithout', isModal: true, onLoadController: (controller: Interfaces.IController) => {
-                        let ctrlPaymentWithOut: Interfaces.IControllerPaymentWithOut = controller as Interfaces.IControllerPaymentWithOut;
-                        ctrlPaymentWithOut.EditorSettings.ButtonSetings = { IsSave: false, IsCancel: false };
-                        ctrlPaymentWithOut.TotalSum = this.model.get("checkSum");
-                        ctrlPaymentWithOut.ReceivedSum = this.model.get("checkSum");
-                        ctrlPaymentWithOut.SurrenderSum = 0;
-                        ctrlPaymentWithOut.OnPaymentApply = $.proxy(self.applyWithOut, self)
-                    }
-                });
+            if (self.currentCheck) {
+                self.paymentData = { check: self.currentCheck.id, paymentType: controller.SelectedPaymentType, paymentOption: 0, paymentSum: 0, comment: '' };
+                if (this.paymentData.paymentType === 1) {
+                    vars._app.OpenController({
+                        urlController: 'terminal/paymentnumpad', isModal: true, onLoadController: (controller: Interfaces.IController) => {
+                            let ctrlPaymentPinPad: Interfaces.IControllerPaymentNumPad = controller as Interfaces.IControllerPaymentNumPad;
+                            ctrlPaymentPinPad.EditorSettings.ButtonSetings = { IsSave: false, IsCancel: false };
+                            ctrlPaymentPinPad.TotalSum = this.model.get("checkSum");
+                            ctrlPaymentPinPad.ReceivedSum = undefined;
+                            ctrlPaymentPinPad.SurrenderSum = undefined;
+                            ctrlPaymentPinPad.OnPaymentApply = $.proxy(self.applyPayment, self);
+                        }
+                    });
+                } else if (this.paymentData.paymentType === 2) {
+                    vars._app.OpenController({
+                        urlController: 'terminal/paymentnoncash', isModal: true, onLoadController: (controller: Interfaces.IController) => {
+                            let ctrlPaymentNonCash: Interfaces.IControllerPaymentNonCash = controller as Interfaces.IControllerPaymentNonCash;
+                            ctrlPaymentNonCash.EditorSettings.ButtonSetings = { IsSave: false, IsCancel: false };
+                            ctrlPaymentNonCash.TotalSum = this.model.get("checkSum");
+                            ctrlPaymentNonCash.ReceivedSum = undefined;
+                            ctrlPaymentNonCash.SurrenderSum = undefined;
+                            ctrlPaymentNonCash.OnPaymentApply = $.proxy(self.applyPayment, self);
+                        }
+                    });
+                } else if (this.paymentData.paymentType === 3) {
+                    vars._app.OpenController({
+                        urlController: 'terminal/paymentwithout', isModal: true, onLoadController: (controller: Interfaces.IController) => {
+                            let ctrlPaymentWithOut: Interfaces.IControllerPaymentWithOut = controller as Interfaces.IControllerPaymentWithOut;
+                            ctrlPaymentWithOut.EditorSettings.ButtonSetings = { IsSave: false, IsCancel: false };
+                            ctrlPaymentWithOut.TotalSum = this.model.get("checkSum");
+                            ctrlPaymentWithOut.ReceivedSum = this.model.get("checkSum");
+                            ctrlPaymentWithOut.SurrenderSum = 0;
+                            ctrlPaymentWithOut.OnPaymentApply = $.proxy(self.applyWithOut, self)
+                        }
+                    });
+                }
             }
         }
 
         private applyPayment(controller: Interfaces.IControllerPayment) {
             if (this.currentCheck) {
                 this.paymentData.paymentOption = controller.TypeWithOut;
-                this.paymentData.paymentSum = this.model.get("checkSum");
-                this.closeCheck();
+                this.paymentData.paymentSum = (this.paymentData.paymentType === 3 ? 0 : controller.TotalSum);
+                this.paymentData.comment = controller.Comment;
+                this.closeCheck(this.paymentData);
             }
         }
 
@@ -362,8 +391,13 @@ export namespace Controller.Terminal {
         }
 
 
-        private closeCheck() {
-           
+        private closeCheck(paymentData: Interfaces.Model.ICheckCloseParams) {
+            let controller = this;
+            if (controller.currentCheck) {
+                this.Service.CheckClose(paymentData, (responseData) => {
+                    controller.removeCurrentCheck(controller.currentCheck);
+                });
+            }
         }
     }
 }

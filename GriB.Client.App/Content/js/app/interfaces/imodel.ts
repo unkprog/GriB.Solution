@@ -162,4 +162,12 @@
         receivedSum: number;
         surrenderSum: number;
     }
+
+    export interface ICheckCloseParams {
+        check: number;
+        paymentType: number;
+        paymentOption: number;
+        paymentSum: number;
+        comment: string;
+    }
 }

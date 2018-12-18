@@ -9,7 +9,7 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/s
                 function NavigationCheck(view, terminal) {
                     this.openedChecks = [];
                     this.currentCheck = undefined;
-                    this.paymentData = { paymentType: 0, paymentOption: 0, paymentSum: 0 };
+                    this.paymentData = { check: 0, paymentType: 0, paymentOption: 0, paymentSum: 0, comment: '' };
                     this.terminal = terminal;
                     this.controlContainerChecks = view.find("#posterminal-view-checks-container");
                     this.controlChecks = this.controlContainerChecks.find("#posterminal-view-checks");
@@ -225,12 +225,7 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/s
                             var currentCheck = controller.openedChecks[i];
                             if (currentCheck.id === id && (!currentCheck.positions || currentCheck.positions.length < 1)) {
                                 controller.Service.CheckDelete(currentCheck.id, function (responseData) {
-                                    $("#check_id_" + currentCheck.id).remove();
-                                    controller.openedChecks.splice(controller.openedChecks.indexOf(currentCheck), 1);
-                                    if (controller.openedChecks.length > 0)
-                                        controller.setCurrentCheck(controller.openedChecks[0]);
-                                    else
-                                        controller.setCurrentCheck(undefined);
+                                    controller.removeCurrentCheck(currentCheck);
                                 });
                                 return { value: void 0 };
                             }
@@ -241,6 +236,17 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/s
                                 return state_1.value;
                         }
                     }
+                };
+                NavigationCheck.prototype.removeCurrentCheck = function (currentCheck) {
+                    if (!currentCheck)
+                        return;
+                    var controller = this;
+                    $("#check_id_" + currentCheck.id).remove();
+                    controller.openedChecks.splice(controller.openedChecks.indexOf(currentCheck), 1);
+                    if (controller.openedChecks.length > 0)
+                        controller.setCurrentCheck(controller.openedChecks[0]);
+                    else
+                        controller.setCurrentCheck(undefined);
                 };
                 NavigationCheck.prototype.AddPosition = function (product) {
                     var _this = this;
@@ -276,49 +282,52 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/s
                 NavigationCheck.prototype.selectTypePayment = function (controller) {
                     var _this = this;
                     var self = this;
-                    this.paymentData.paymentType = controller.SelectedPaymentType;
-                    if (this.paymentData.paymentType === 1) {
-                        vars._app.OpenController({
-                            urlController: 'terminal/paymentnumpad', isModal: true, onLoadController: function (controller) {
-                                var ctrlPaymentPinPad = controller;
-                                ctrlPaymentPinPad.EditorSettings.ButtonSetings = { IsSave: false, IsCancel: false };
-                                ctrlPaymentPinPad.TotalSum = _this.model.get("checkSum");
-                                ctrlPaymentPinPad.ReceivedSum = undefined;
-                                ctrlPaymentPinPad.SurrenderSum = undefined;
-                                ctrlPaymentPinPad.OnPaymentApply = $.proxy(self.applyPayment, self);
-                            }
-                        });
-                    }
-                    else if (this.paymentData.paymentType === 2) {
-                        vars._app.OpenController({
-                            urlController: 'terminal/paymentnoncash', isModal: true, onLoadController: function (controller) {
-                                var ctrlPaymentNonCash = controller;
-                                ctrlPaymentNonCash.EditorSettings.ButtonSetings = { IsSave: false, IsCancel: false };
-                                ctrlPaymentNonCash.TotalSum = _this.model.get("checkSum");
-                                ctrlPaymentNonCash.ReceivedSum = undefined;
-                                ctrlPaymentNonCash.SurrenderSum = undefined;
-                                ctrlPaymentNonCash.OnPaymentApply = $.proxy(self.applyPayment, self);
-                            }
-                        });
-                    }
-                    else if (this.paymentData.paymentType === 3) {
-                        vars._app.OpenController({
-                            urlController: 'terminal/paymentwithout', isModal: true, onLoadController: function (controller) {
-                                var ctrlPaymentWithOut = controller;
-                                ctrlPaymentWithOut.EditorSettings.ButtonSetings = { IsSave: false, IsCancel: false };
-                                ctrlPaymentWithOut.TotalSum = _this.model.get("checkSum");
-                                ctrlPaymentWithOut.ReceivedSum = _this.model.get("checkSum");
-                                ctrlPaymentWithOut.SurrenderSum = 0;
-                                ctrlPaymentWithOut.OnPaymentApply = $.proxy(self.applyWithOut, self);
-                            }
-                        });
+                    if (self.currentCheck) {
+                        self.paymentData = { check: self.currentCheck.id, paymentType: controller.SelectedPaymentType, paymentOption: 0, paymentSum: 0, comment: '' };
+                        if (this.paymentData.paymentType === 1) {
+                            vars._app.OpenController({
+                                urlController: 'terminal/paymentnumpad', isModal: true, onLoadController: function (controller) {
+                                    var ctrlPaymentPinPad = controller;
+                                    ctrlPaymentPinPad.EditorSettings.ButtonSetings = { IsSave: false, IsCancel: false };
+                                    ctrlPaymentPinPad.TotalSum = _this.model.get("checkSum");
+                                    ctrlPaymentPinPad.ReceivedSum = undefined;
+                                    ctrlPaymentPinPad.SurrenderSum = undefined;
+                                    ctrlPaymentPinPad.OnPaymentApply = $.proxy(self.applyPayment, self);
+                                }
+                            });
+                        }
+                        else if (this.paymentData.paymentType === 2) {
+                            vars._app.OpenController({
+                                urlController: 'terminal/paymentnoncash', isModal: true, onLoadController: function (controller) {
+                                    var ctrlPaymentNonCash = controller;
+                                    ctrlPaymentNonCash.EditorSettings.ButtonSetings = { IsSave: false, IsCancel: false };
+                                    ctrlPaymentNonCash.TotalSum = _this.model.get("checkSum");
+                                    ctrlPaymentNonCash.ReceivedSum = undefined;
+                                    ctrlPaymentNonCash.SurrenderSum = undefined;
+                                    ctrlPaymentNonCash.OnPaymentApply = $.proxy(self.applyPayment, self);
+                                }
+                            });
+                        }
+                        else if (this.paymentData.paymentType === 3) {
+                            vars._app.OpenController({
+                                urlController: 'terminal/paymentwithout', isModal: true, onLoadController: function (controller) {
+                                    var ctrlPaymentWithOut = controller;
+                                    ctrlPaymentWithOut.EditorSettings.ButtonSetings = { IsSave: false, IsCancel: false };
+                                    ctrlPaymentWithOut.TotalSum = _this.model.get("checkSum");
+                                    ctrlPaymentWithOut.ReceivedSum = _this.model.get("checkSum");
+                                    ctrlPaymentWithOut.SurrenderSum = 0;
+                                    ctrlPaymentWithOut.OnPaymentApply = $.proxy(self.applyWithOut, self);
+                                }
+                            });
+                        }
                     }
                 };
                 NavigationCheck.prototype.applyPayment = function (controller) {
                     if (this.currentCheck) {
                         this.paymentData.paymentOption = controller.TypeWithOut;
-                        this.paymentData.paymentSum = this.model.get("checkSum");
-                        this.closeCheck();
+                        this.paymentData.paymentSum = (this.paymentData.paymentType === 3 ? 0 : controller.TotalSum);
+                        this.paymentData.comment = controller.Comment;
+                        this.closeCheck(this.paymentData);
                     }
                 };
                 NavigationCheck.prototype.applyWithOut = function (controller) {
@@ -328,7 +337,13 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/s
                     }
                     this.applyPayment(controller);
                 };
-                NavigationCheck.prototype.closeCheck = function () {
+                NavigationCheck.prototype.closeCheck = function (paymentData) {
+                    var controller = this;
+                    if (controller.currentCheck) {
+                        this.Service.CheckClose(paymentData, function (responseData) {
+                            controller.removeCurrentCheck(controller.currentCheck);
+                        });
+                    }
                 };
                 return NavigationCheck;
             }());
