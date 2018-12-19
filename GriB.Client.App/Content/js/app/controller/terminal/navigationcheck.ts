@@ -17,7 +17,7 @@ export namespace Controller.Terminal {
             this.buttonCheckPayment = this.controlContainerChecks.find("#btn-check-payment");
 
             this.model = new kendo.data.ObservableObject({
-                "visibleCheck": "none",
+                "visibleCheck": false,
                 "labelTime": vars._statres("label$time"),
                 "checkTime": "",
                 "visibleClient": false,
@@ -93,10 +93,10 @@ export namespace Controller.Terminal {
             controller.Service.CheckOpened(controller.terminal.CurrentSalePoint, (responseData) => {
                 controller.openedChecks = responseData.checkopened;
                 controller.drawChecks(true);
-                if (controller.openedChecks && controller.openedChecks .length > 0)
-                    controller.setCurrentCheck(controller.openedChecks[0]);
+                if (controller.openedChecks && controller.openedChecks.length > 0)
+                    controller.setCurrentCheck(controller.openedChecks[0], undefined);
                 else
-                    controller.setCurrentCheck(undefined);
+                    controller.setCurrentCheck(undefined, undefined);
             });
         }
 
@@ -121,54 +121,55 @@ export namespace Controller.Terminal {
             if (e.field === "checkTime") {
                 let checkTime: string = this.model.get("checkTime");
                 let isVisible: boolean = (checkTime && checkTime !== "");
-                this.model.set("visibleCheck", isVisible === true ? "display" : "none");
+                this.model.set("visibleCheck", isVisible);
+                if (isVisible === true)
+                    this.ViewResize({});
             }
             else if (e.field === "checkClient") {
                 let checkClient: string = this.model.get("checkClient");
                 this.model.set("visibleClient", (checkClient && checkClient !== ""));
             }
+            else if (e.field === "visibleCheck") {
+                if (this.model.get("visibleCheck") === true)
+                    this.ViewResize({});
+            }
         }
 
 
-        public setCurrentCheck(currentCheck: Interfaces.Model.IPOSCheck): void {
+        public setCurrentCheck(currentCheck: Interfaces.Model.IPOSCheck, onSetCurrent: () => void): void {
             let controller = this;
             if (controller.currentCheck)
                 $('#check_id_' + controller.currentCheck.id).removeClass(['check-select', 'z-depth-1']);
             controller.currentCheck = currentCheck;
             if (controller.currentCheck) {
                 $('#check_id_' + controller.currentCheck.id).addClass(['check-select', 'z-depth-1']);
-                this.model.set("checkSum", this.calcCheckSum());
+                //this.model.set("checkSum", this.calcCheckSum());
                 this.model.set("checkTime", utils.dateToLongString(controller.currentCheck.cd));
             }
             else {
                 this.model.set("checkTime", "");
                 this.model.set("checkClient", "");
+                this.model.set("visibleCheck", false);
             }
 
             this.controlContainerChecks.unbind();
+            this.drawCheckPositions();
+
             kendo.bind(this.controlContainerChecks, this.model);
             this.model.bind("change", $.proxy(this.changeModel, this));
 
-            this.drawCheckPositions();
+            if (onSetCurrent)
+                onSetCurrent();
+            if (controller.currentCheck)
+                this.model.set("visibleCheck", true);
+
         }
 
-        private calcCheckSum():number {
-            let controller = this;
-            let result: number = 0;
-            if (controller.currentCheck) {
-                let positionsArray: Interfaces.Model.IPOSCheckPosition[] = (controller.currentCheck.positions ? controller.currentCheck.positions : []);
-                for (let i = 0, iCount = (positionsArray ? positionsArray.length : 0); i < iCount; i++) {
-                    positionsArray[i].sum = (positionsArray[i].quantity * positionsArray[i].price);
-                    result += positionsArray[i].sum;
-                }
-            }
-            return result;
-        }
         public setCurrentCheckById(currentCheckId: number): void {
             let controller = this;
             for (let i = 0, iCount = (controller.openedChecks ? controller.openedChecks.length : 0); i < iCount; i++) {
                 if (controller.openedChecks[i].id === currentCheckId) {
-                    this.setCurrentCheck(controller.openedChecks[i]);
+                    this.setCurrentCheck(controller.openedChecks[i], undefined);
                     break;
                 }
             }
@@ -201,6 +202,7 @@ export namespace Controller.Terminal {
         private drawCheckPositions(): void {
             let controller = this;
             let html: string = '';
+            let sum: number = 0;
             let positionsArray: Interfaces.Model.IPOSCheckPosition[] = (controller.currentCheck && controller.currentCheck.positions ? controller.currentCheck.positions : []);
             for (let i = 0, iCount = (positionsArray ? positionsArray.length : 0); i < iCount; i++) {
                 html += '<tr id="check_pos_' + i + '">';
@@ -210,38 +212,39 @@ export namespace Controller.Terminal {
                 html += '<td class="product-col-btn"><a class="product-col-button-delete"><i class="material-icons editor-header">remove_circle_outline</i></a></td>';
                 html += '<td class="product-col-sum-auto">' + positionsArray[i].price + '</td>';
                 html += '</tr>';
+                positionsArray[i].sum = (positionsArray[i].quantity ? positionsArray[i].quantity : 0) * (positionsArray[i].price ? positionsArray[i].price : 0);
+                sum += positionsArray[i].sum;
             }
 
             controller.controlTableBodyPositions.html(html);
+            this.model.set("checkSum", sum);
         }
+
+        //private calcCheckSum(): number {
+        //    let controller = this;
+        //    let result: number = 0;
+        //    if (controller.currentCheck) {
+        //        let positionsArray: Interfaces.Model.IPOSCheckPosition[] = (controller.currentCheck.positions ? controller.currentCheck.positions : []);
+        //        for (let i = 0, iCount = (positionsArray ? positionsArray.length : 0); i < iCount; i++) {
+        //            positionsArray[i].sum = (positionsArray[i].quantity * positionsArray[i].price);
+        //            result += positionsArray[i].sum;
+        //        }
+        //    }
+        //    return result;
+        //}
 
         private NewCheckButtonClick: { (e: any): void; };
         private newCheckButtonClick(e): void {
-            let controller = this;
-            if (controller.openedChecks && controller.openedChecks.length > 0) {
-                for (let i = 0, iCount = controller.openedChecks.length; i < iCount; i++) {
-                    let currentCheck: Interfaces.Model.IPOSCheck = controller.openedChecks[i];
-                    if (!currentCheck.positions || currentCheck.positions.length < 1) {
-                        controller.setCurrentCheck(currentCheck);
-                        return;
-                    }
-                }
-            }
-            controller.Service.CheckNew(controller.terminal.CurrentSalePoint, (responseData) => {
-                if (!controller.openedChecks) controller.openedChecks = [];
-                controller.openedChecks.push(responseData.checknew);
-                controller.drawChecks(false);
-                controller.setCurrentCheck(responseData.checknew);
-            });
+            this.setCurrentOrNew(undefined);
         }
 
-        private steCurrentOrNew(onSetCurrent: function) {
+        private setCurrentOrNew(onSetCurrent: () => void) {
             let controller = this;
             if (controller.openedChecks && controller.openedChecks.length > 0) {
                 for (let i = 0, iCount = controller.openedChecks.length; i < iCount; i++) {
                     let currentCheck: Interfaces.Model.IPOSCheck = controller.openedChecks[i];
                     if (!currentCheck.positions || currentCheck.positions.length < 1) {
-                        controller.setCurrentCheck(currentCheck);
+                        controller.setCurrentCheck(currentCheck, onSetCurrent);
                         return;
                     }
                 }
@@ -250,7 +253,7 @@ export namespace Controller.Terminal {
                 if (!controller.openedChecks) controller.openedChecks = [];
                 controller.openedChecks.push(responseData.checknew);
                 controller.drawChecks(false);
-                controller.setCurrentCheck(responseData.checknew);
+                controller.setCurrentCheck(responseData.checknew, onSetCurrent);
             });
         }
 
@@ -291,12 +294,22 @@ export namespace Controller.Terminal {
             $("#check_id_" + currentCheck.id).remove();
             controller.openedChecks.splice(controller.openedChecks.indexOf(currentCheck), 1);
             if (controller.openedChecks.length > 0)
-                controller.setCurrentCheck(controller.openedChecks[0]);
+                controller.setCurrentCheck(controller.openedChecks[0], undefined);
             else
-                controller.setCurrentCheck(undefined);
+                controller.setCurrentCheck(undefined, undefined);
         }
 
         public AddPosition(product: number): void {
+            let controller = this;
+            if (!controller.currentCheck)
+                controller.setCurrentOrNew(function () {
+                    controller._AddPosition(product);
+                });
+            else
+                controller._AddPosition(product);
+        }
+
+        public _AddPosition(product: number): void {
             let controller = this;
             if (controller.currentCheck) {
                 this.Service.AddToCheck(controller.currentCheck.id, product, 1, (responseData) => {
@@ -331,7 +344,7 @@ export namespace Controller.Terminal {
             });
         }
 
-        private paymentData: Interfaces.Model.ICheckCloseParams = { check: 0, paymentType: 0, paymentOption: 0, paymentSum: 0, comment: '' };
+        private paymentData: Interfaces.Model.ICheckCloseParams = { check: 0, paymentType: 0, paymentOption: 0, paymentSum: 0, client: 0, comment: '' };
         private selectTypePayment(controller: Interfaces.IControllerPaymentType) {
             let self = this;
             if (self.currentCheck) {
@@ -376,7 +389,7 @@ export namespace Controller.Terminal {
         private applyPayment(controller: Interfaces.IControllerPayment) {
             if (this.currentCheck) {
                 this.paymentData.paymentOption = controller.TypeWithOut;
-                this.paymentData.paymentSum = (this.paymentData.paymentType === 3 ? 0 : controller.TotalSum);
+                this.paymentData.paymentSum = controller.TotalSum; //(this.paymentData.paymentType === 3 ? 0 : controller.TotalSum);
                 this.paymentData.comment = controller.Comment;
                 this.closeCheck(this.paymentData);
             }

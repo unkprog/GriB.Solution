@@ -106,7 +106,7 @@ namespace GriB.Client.App.Managers.POSTerminal
         public static check Close(this Query query, check check, int user)
         {
             check result = check;
-            query.Execute(cmdGetPositions, new SqlParameter[] { new SqlParameter() { ParameterName = "@id", Value = result.id }, new SqlParameter("@u", user), new SqlParameter() { ParameterName = "@salepoint", Value = result.salepoint }
+            query.Execute(cmdClose, new SqlParameter[] { new SqlParameter() { ParameterName = "@id", Value = result.id }, new SqlParameter("@u", user), new SqlParameter() { ParameterName = "@salepoint", Value = result.salepoint }
             , new SqlParameter() { ParameterName = "@options", Value = result.options }, new SqlParameter() { ParameterName = "@client", Value = result.client }, new SqlParameter() { ParameterName = "@discount", Value = result.discount }
             , new SqlParameter() { ParameterName = "@number", Value = result.number }, new SqlParameter() { ParameterName = "@change", Value = result.change }, new SqlParameter() { ParameterName = "@comment", Value = result.comment } }
             , (values) => { });

@@ -20,7 +20,7 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/s
                     this.controlTotal = this.controlContainerChecks.find("#posterminal-view-check-total");
                     this.buttonCheckPayment = this.controlContainerChecks.find("#btn-check-payment");
                     this.model = new kendo.data.ObservableObject({
-                        "visibleCheck": "none",
+                        "visibleCheck": false,
                         "labelTime": vars._statres("label$time"),
                         "checkTime": "",
                         "visibleClient": false,
@@ -82,9 +82,9 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/s
                         controller.openedChecks = responseData.checkopened;
                         controller.drawChecks(true);
                         if (controller.openedChecks && controller.openedChecks.length > 0)
-                            controller.setCurrentCheck(controller.openedChecks[0]);
+                            controller.setCurrentCheck(controller.openedChecks[0], undefined);
                         else
-                            controller.setCurrentCheck(undefined);
+                            controller.setCurrentCheck(undefined, undefined);
                     });
                 };
                 NavigationCheck.prototype.createEvents = function () {
@@ -105,49 +105,48 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/s
                     if (e.field === "checkTime") {
                         var checkTime = this.model.get("checkTime");
                         var isVisible = (checkTime && checkTime !== "");
-                        this.model.set("visibleCheck", isVisible === true ? "display" : "none");
+                        this.model.set("visibleCheck", isVisible);
+                        if (isVisible === true)
+                            this.ViewResize({});
                     }
                     else if (e.field === "checkClient") {
                         var checkClient = this.model.get("checkClient");
                         this.model.set("visibleClient", (checkClient && checkClient !== ""));
                     }
+                    else if (e.field === "visibleCheck") {
+                        if (this.model.get("visibleCheck") === true)
+                            this.ViewResize({});
+                    }
                 };
-                NavigationCheck.prototype.setCurrentCheck = function (currentCheck) {
+                NavigationCheck.prototype.setCurrentCheck = function (currentCheck, onSetCurrent) {
                     var controller = this;
                     if (controller.currentCheck)
                         $('#check_id_' + controller.currentCheck.id).removeClass(['check-select', 'z-depth-1']);
                     controller.currentCheck = currentCheck;
                     if (controller.currentCheck) {
                         $('#check_id_' + controller.currentCheck.id).addClass(['check-select', 'z-depth-1']);
-                        this.model.set("checkSum", this.calcCheckSum());
+                        //this.model.set("checkSum", this.calcCheckSum());
                         this.model.set("checkTime", utils.dateToLongString(controller.currentCheck.cd));
                     }
                     else {
                         this.model.set("checkTime", "");
                         this.model.set("checkClient", "");
+                        this.model.set("visibleCheck", false);
                     }
                     this.controlContainerChecks.unbind();
+                    this.drawCheckPositions();
                     kendo.bind(this.controlContainerChecks, this.model);
                     this.model.bind("change", $.proxy(this.changeModel, this));
-                    this.drawCheckPositions();
-                };
-                NavigationCheck.prototype.calcCheckSum = function () {
-                    var controller = this;
-                    var result = 0;
-                    if (controller.currentCheck) {
-                        var positionsArray = (controller.currentCheck.positions ? controller.currentCheck.positions : []);
-                        for (var i = 0, iCount = (positionsArray ? positionsArray.length : 0); i < iCount; i++) {
-                            positionsArray[i].sum = (positionsArray[i].quantity * positionsArray[i].price);
-                            result += positionsArray[i].sum;
-                        }
-                    }
-                    return result;
+                    if (onSetCurrent)
+                        onSetCurrent();
+                    if (controller.currentCheck)
+                        this.model.set("visibleCheck", true);
                 };
                 NavigationCheck.prototype.setCurrentCheckById = function (currentCheckId) {
                     var controller = this;
                     for (var i = 0, iCount = (controller.openedChecks ? controller.openedChecks.length : 0); i < iCount; i++) {
                         if (controller.openedChecks[i].id === currentCheckId) {
-                            this.setCurrentCheck(controller.openedChecks[i]);
+                            this.setCurrentCheck(controller.openedChecks[i], undefined);
                             break;
                         }
                     }
@@ -175,6 +174,7 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/s
                 NavigationCheck.prototype.drawCheckPositions = function () {
                     var controller = this;
                     var html = '';
+                    var sum = 0;
                     var positionsArray = (controller.currentCheck && controller.currentCheck.positions ? controller.currentCheck.positions : []);
                     for (var i = 0, iCount = (positionsArray ? positionsArray.length : 0); i < iCount; i++) {
                         html += '<tr id="check_pos_' + i + '">';
@@ -184,16 +184,22 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/s
                         html += '<td class="product-col-btn"><a class="product-col-button-delete"><i class="material-icons editor-header">remove_circle_outline</i></a></td>';
                         html += '<td class="product-col-sum-auto">' + positionsArray[i].price + '</td>';
                         html += '</tr>';
+                        positionsArray[i].sum = (positionsArray[i].quantity ? positionsArray[i].quantity : 0) * (positionsArray[i].price ? positionsArray[i].price : 0);
+                        sum += positionsArray[i].sum;
                     }
                     controller.controlTableBodyPositions.html(html);
+                    this.model.set("checkSum", sum);
                 };
                 NavigationCheck.prototype.newCheckButtonClick = function (e) {
+                    this.setCurrentOrNew(undefined);
+                };
+                NavigationCheck.prototype.setCurrentOrNew = function (onSetCurrent) {
                     var controller = this;
                     if (controller.openedChecks && controller.openedChecks.length > 0) {
                         for (var i = 0, iCount = controller.openedChecks.length; i < iCount; i++) {
                             var currentCheck = controller.openedChecks[i];
                             if (!currentCheck.positions || currentCheck.positions.length < 1) {
-                                controller.setCurrentCheck(currentCheck);
+                                controller.setCurrentCheck(currentCheck, onSetCurrent);
                                 return;
                             }
                         }
@@ -203,7 +209,7 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/s
                             controller.openedChecks = [];
                         controller.openedChecks.push(responseData.checknew);
                         controller.drawChecks(false);
-                        controller.setCurrentCheck(responseData.checknew);
+                        controller.setCurrentCheck(responseData.checknew, onSetCurrent);
                     });
                 };
                 NavigationCheck.prototype.checkButtonClick = function (e) {
@@ -244,11 +250,20 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/s
                     $("#check_id_" + currentCheck.id).remove();
                     controller.openedChecks.splice(controller.openedChecks.indexOf(currentCheck), 1);
                     if (controller.openedChecks.length > 0)
-                        controller.setCurrentCheck(controller.openedChecks[0]);
+                        controller.setCurrentCheck(controller.openedChecks[0], undefined);
                     else
-                        controller.setCurrentCheck(undefined);
+                        controller.setCurrentCheck(undefined, undefined);
                 };
                 NavigationCheck.prototype.AddPosition = function (product) {
+                    var controller = this;
+                    if (!controller.currentCheck)
+                        controller.setCurrentOrNew(function () {
+                            controller._AddPosition(product);
+                        });
+                    else
+                        controller._AddPosition(product);
+                };
+                NavigationCheck.prototype._AddPosition = function (product) {
                     var _this = this;
                     var controller = this;
                     if (controller.currentCheck) {
@@ -325,7 +340,7 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/s
                 NavigationCheck.prototype.applyPayment = function (controller) {
                     if (this.currentCheck) {
                         this.paymentData.paymentOption = controller.TypeWithOut;
-                        this.paymentData.paymentSum = (this.paymentData.paymentType === 3 ? 0 : controller.TotalSum);
+                        this.paymentData.paymentSum = controller.TotalSum; //(this.paymentData.paymentType === 3 ? 0 : controller.TotalSum);
                         this.paymentData.comment = controller.Comment;
                         this.closeCheck(this.paymentData);
                     }

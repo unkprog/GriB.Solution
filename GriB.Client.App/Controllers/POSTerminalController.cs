@@ -99,9 +99,9 @@ namespace GriB.Client.App.Controllers
                 payment payment = new payment() { ptype = closeparams.paymentType, option = closeparams.paymentOption, sum = closeparams.paymentSum, comment = closeparams.comment };
                 payment.check = Check.GetCheck(query, closeparams.check);
                 payment.check.options = ((payment.check.options & 1) == 1 ? payment.check.options : payment.check.options + 1);
+                payment.check = Check.Close(query, payment.check, principal.Data.User.id);
                 payment.client = new Models.Editor.client() { id = payment.check.client };
                 payment = Payment.SetPayment(query, payment, principal.Data.User.id);
-                Check.Close(query, payment.check, principal.Data.User.id);
                 return Request.CreateResponse(HttpStatusCode.OK, "Ok");
             });
         }

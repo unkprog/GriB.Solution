@@ -52,7 +52,7 @@ export namespace Controller.Terminal {
         public get TypeWithOut(): number { return this.Model.get("editModel.typeWithOut"); }
         public set TypeWithOut(value: number) { this.Model.set("editModel.typeWithOut", value); }
 
-        public get Client(): Interfaces.Model.IReferenceModel { return this.Model.get("editModel.client"); }
+        public get Client(): Interfaces.Model.IReferenceModel { return this.Model.get("editModel.client").toJSON(); }
         public set Client(value: Interfaces.Model.IReferenceModel) { this.Model.set("editModel.client", value); }
 
         public get Comment(): string { return this.Model.get("editModel.comment"); }

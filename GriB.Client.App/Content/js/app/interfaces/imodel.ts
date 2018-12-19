@@ -165,6 +165,7 @@
 
     export interface ICheckCloseParams {
         check: number;
+        client: number;
         paymentType: number;
         paymentOption: number;
         paymentSum: number;

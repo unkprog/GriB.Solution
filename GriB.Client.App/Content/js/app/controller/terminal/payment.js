@@ -78,7 +78,7 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                     configurable: true
                 });
                 Object.defineProperty(Payment.prototype, "Client", {
-                    get: function () { return this.Model.get("editModel.client"); },
+                    get: function () { return this.Model.get("editModel.client").toJSON(); },
                     set: function (value) { this.Model.set("editModel.client", value); },
                     enumerable: true,
                     configurable: true
