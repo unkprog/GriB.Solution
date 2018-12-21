@@ -31,6 +31,10 @@ export namespace Services {
             this.GetApi({ Action: "/check_opened", RequestData: { salepoint: salepoint }, Callback: Callback });
         }
 
+        public CheckSetClient(check: number, client: number, Callback: (responseData: any) => void) {
+            this.PostApi({ Action: "/check_setclient", RequestData: { check: check, client: client}, Callback: Callback });
+        }
+
         public AddToCheck(check: number, product: number, quantity: number, Callback: (responseData: any) => void) {
             this.PostApi({ Action: "/check_add_pos", RequestData: JSON.stringify( { check: check, product: product, quantity: quantity }), Callback: Callback });
         }

@@ -305,6 +305,7 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/s
                     var record = controller.getSelectedRecord();
                     if (record) {
                         this.currentCheck.client = { id: record.id, name: record.name + (utils.isNullOrEmpty(record.phone) ? "" : " (" + record.phone + ")") };
+                        this.Service.CheckDelete;
                         this.model.set("checkClient", (this.currentCheck.client ? this.currentCheck.client.name : ""));
                     }
                 };

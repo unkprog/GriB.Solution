@@ -4,6 +4,24 @@ using System.Collections.Generic;
 
 namespace GriB.Client.App.Models.POSTerminal
 {
+    public class check_setclient_params
+    {
+        public int check { get; set; }
+        public int client { get; set; }
+    }
+
+    public class check_setcomment_params
+    {
+        public int check { get; set; }
+        public string comment { get; set; }
+    }
+
+    public class check_setdiscount_params
+    {
+        public int check { get; set; }
+        public double discount { get; set; }
+    }
+
     public class check_add_pos_params
     {
         public int check { get; set; }

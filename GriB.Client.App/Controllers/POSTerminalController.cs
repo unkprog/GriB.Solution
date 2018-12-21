@@ -77,6 +77,19 @@ namespace GriB.Client.App.Controllers
             });
         }
 
+
+        [HttpPost]
+        [ActionName("check_setclient")]
+        public HttpResponseMessage PostCheckSetClient(check_setclient_params setclientparams)
+        {
+            return TryCatchResponseQuery((query) =>
+            {
+                Principal principal = (Principal)HttpContext.Current.User;
+                check_position position = Check.AddPosition(query, new check_position() { id = addposparams.check, product = new Models.Editor.product() { id = addposparams.product }, quantity = addposparams.quantity });
+                return Request.CreateResponse(HttpStatusCode.OK, new { newposition = position });
+            });
+        }
+
         [HttpPost]
         [ActionName("check_add_pos")]
         public HttpResponseMessage PostCheckAddPos(check_add_pos_params addposparams)

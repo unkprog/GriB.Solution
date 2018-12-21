@@ -166,7 +166,6 @@ export module App {
                     self.OpenView({ controller: controller, isModal: options.isModal, backController: options.backController });
                 }
             });
-
         }
 
         protected SetHeader(controller: Interfaces.IController) {
