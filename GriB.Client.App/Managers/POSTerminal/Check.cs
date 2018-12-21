@@ -113,5 +113,26 @@ namespace GriB.Client.App.Managers.POSTerminal
 
             return result;
         }
+
+        private const string cmdSetClient = @"POSTerminal\Check\[setclient]";
+        public static void SetClient(this Query query, int check, int client, int user)
+        {
+            query.Execute(cmdSetClient, new SqlParameter[] { new SqlParameter() { ParameterName = "@id", Value = check }, new SqlParameter("@u", user), new SqlParameter() { ParameterName = "@client", Value = client } }
+            , (values) => { });
+        }
+
+        private const string cmdSetDiscount = @"POSTerminal\Check\[setdiscount]";
+        public static void SetDiscount(this Query query, int check, double discount, int user)
+        {
+            query.Execute(cmdSetDiscount, new SqlParameter[] { new SqlParameter() { ParameterName = "@id", Value = check }, new SqlParameter("@u", user), new SqlParameter() { ParameterName = "@discount", Value = discount } }
+            , (values) => { });
+        }
+
+        private const string cmdSetComment = @"POSTerminal\Check\[setcomment]";
+        public static void SetComment(this Query query, int check, string comment, int user)
+        {
+            query.Execute(cmdSetDiscount, new SqlParameter[] { new SqlParameter() { ParameterName = "@id", Value = check }, new SqlParameter("@u", user), new SqlParameter() { ParameterName = "@comment", Value = comment } }
+            , (values) => { });
+        }
     }
 }

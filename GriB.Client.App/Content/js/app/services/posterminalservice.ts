@@ -32,11 +32,19 @@ export namespace Services {
         }
 
         public CheckSetClient(check: number, client: number, Callback: (responseData: any) => void) {
-            this.PostApi({ Action: "/check_setclient", RequestData: { check: check, client: client}, Callback: Callback });
+            this.PostApi({ Action: "/check_setclient", RequestData: JSON.stringify({ check: check, client: client }), Callback: Callback });
+        }
+
+        public CheckSetDiscount(check: number, discount: number, Callback: (responseData: any) => void) {
+            this.PostApi({ Action: "/check_setdiscount", RequestData: JSON.stringify({ check: check, discount: discount }), Callback: Callback });
+        }
+
+        public CheckSetComment(check: number, comment: string, Callback: (responseData: any) => void) {
+            this.PostApi({ Action: "/check_setcomment", RequestData: JSON.stringify({ check: check, comment: comment }), Callback: Callback });
         }
 
         public AddToCheck(check: number, product: number, quantity: number, Callback: (responseData: any) => void) {
-            this.PostApi({ Action: "/check_add_pos", RequestData: JSON.stringify( { check: check, product: product, quantity: quantity }), Callback: Callback });
+            this.PostApi({ Action: "/check_add_pos", RequestData: JSON.stringify({ check: check, product: product, quantity: quantity }), Callback: Callback });
         }
 
         public CheckClose(checkParamsClose: Interfaces.Model.ICheckCloseParams, Callback: (responseData: any) => void) {

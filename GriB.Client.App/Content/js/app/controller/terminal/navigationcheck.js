@@ -304,9 +304,11 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/s
                 NavigationCheck.prototype.selectClient = function (controller) {
                     var record = controller.getSelectedRecord();
                     if (record) {
-                        this.currentCheck.client = { id: record.id, name: record.name + (utils.isNullOrEmpty(record.phone) ? "" : " (" + record.phone + ")") };
-                        this.Service.CheckDelete;
-                        this.model.set("checkClient", (this.currentCheck.client ? this.currentCheck.client.name : ""));
+                        var controller_1 = this;
+                        controller_1.currentCheck.client = { id: record.id, name: record.name + (utils.isNullOrEmpty(record.phone) ? "" : " (" + record.phone + ")") };
+                        controller_1.Service.CheckSetClient(controller_1.currentCheck.id, controller_1.currentCheck.client.id, function (responseData) {
+                            controller_1.model.set("checkClient", (controller_1.currentCheck.client ? controller_1.currentCheck.client.name : ""));
+                        });
                     }
                 };
                 NavigationCheck.prototype.paymentButtonClick = function (e) {

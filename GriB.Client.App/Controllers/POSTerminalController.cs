@@ -85,8 +85,32 @@ namespace GriB.Client.App.Controllers
             return TryCatchResponseQuery((query) =>
             {
                 Principal principal = (Principal)HttpContext.Current.User;
-                check_position position = Check.AddPosition(query, new check_position() { id = addposparams.check, product = new Models.Editor.product() { id = addposparams.product }, quantity = addposparams.quantity });
-                return Request.CreateResponse(HttpStatusCode.OK, new { newposition = position });
+                Check.SetClient(query, setclientparams.check, setclientparams.client, principal.Data.User.id);
+                return Request.CreateResponse(HttpStatusCode.OK, "Ok");
+            });
+        }
+
+        [HttpPost]
+        [ActionName("check_setdiscount")]
+        public HttpResponseMessage PostCheckSetDiscount(check_setdiscount_params setdiscountparams)
+        {
+            return TryCatchResponseQuery((query) =>
+            {
+                Principal principal = (Principal)HttpContext.Current.User;
+                Check.SetDiscount(query, setdiscountparams.check, setdiscountparams.discount, principal.Data.User.id);
+                return Request.CreateResponse(HttpStatusCode.OK, "Ok");
+            });
+        }
+
+        [HttpPost]
+        [ActionName("check_setcomment")]
+        public HttpResponseMessage PostCheckSetCommet(check_setcomment_params setcommentparams)
+        {
+            return TryCatchResponseQuery((query) =>
+            {
+                Principal principal = (Principal)HttpContext.Current.User;
+                Check.SetComment(query, setcommentparams.check, setcommentparams.comment, principal.Data.User.id);
+                return Request.CreateResponse(HttpStatusCode.OK, "Ok");
             });
         }
 

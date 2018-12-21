@@ -44,7 +44,13 @@ define(["require", "exports", "app/common/baseservice"], function (require, expo
                 this.GetApi({ Action: "/check_opened", RequestData: { salepoint: salepoint }, Callback: Callback });
             };
             POSTerminalService.prototype.CheckSetClient = function (check, client, Callback) {
-                this.PostApi({ Action: "/check_setclient", RequestData: { check: check, client: client }, Callback: Callback });
+                this.PostApi({ Action: "/check_setclient", RequestData: JSON.stringify({ check: check, client: client }), Callback: Callback });
+            };
+            POSTerminalService.prototype.CheckSetDiscount = function (check, discount, Callback) {
+                this.PostApi({ Action: "/check_setdiscount", RequestData: JSON.stringify({ check: check, discount: discount }), Callback: Callback });
+            };
+            POSTerminalService.prototype.CheckSetComment = function (check, comment, Callback) {
+                this.PostApi({ Action: "/check_setcomment", RequestData: JSON.stringify({ check: check, comment: comment }), Callback: Callback });
             };
             POSTerminalService.prototype.AddToCheck = function (check, product, quantity, Callback) {
                 this.PostApi({ Action: "/check_add_pos", RequestData: JSON.stringify({ check: check, product: product, quantity: quantity }), Callback: Callback });

@@ -356,9 +356,12 @@ export namespace Controller.Terminal {
         private selectClient(controller: Interfaces.IControllerCard) {
             let record: Interfaces.Model.IClientModel = controller.getSelectedRecord() as Interfaces.Model.IClientModel;
             if (record) {
-                this.currentCheck.client = { id: record.id, name: record.name + (utils.isNullOrEmpty(record.phone) ? "" : " (" + record.phone + ")") };
-                this.Service.CheckDelete
-                this.model.set("checkClient", (this.currentCheck.client ? this.currentCheck.client.name : ""));
+                let controller = this;
+                controller.currentCheck.client = { id: record.id, name: record.name + (utils.isNullOrEmpty(record.phone) ? "" : " (" + record.phone + ")") };
+                controller.Service.CheckSetClient(controller.currentCheck.id, controller.currentCheck.client.id, (responseData) => {
+                    controller.model.set("checkClient", (controller.currentCheck.client ? controller.currentCheck.client.name : ""));
+                });
+              
             }
         }
 
