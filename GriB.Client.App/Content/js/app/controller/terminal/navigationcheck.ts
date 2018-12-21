@@ -14,6 +14,7 @@ export namespace Controller.Terminal {
             this.controlTableBodyPositions = this.controlTablePositions.find("tbody");
             this.controlTotal = this.controlContainerChecks.find("#posterminal-view-check-total");
 
+            this.buttonCheckClient = this.controlContainerChecks.find("#btn-check-person");
             this.buttonCheckPayment = this.controlContainerChecks.find("#btn-check-payment");
 
             this.model = new kendo.data.ObservableObject({
@@ -53,6 +54,7 @@ export namespace Controller.Terminal {
         private controlTableBodyPositions: JQuery;
         private controlTotal: JQuery;
         private controlButtons: JQuery;
+        private buttonCheckClient: JQuery;
         private buttonCheckPayment: JQuery;
 
         public get ControlContainerChecks() {
@@ -62,6 +64,8 @@ export namespace Controller.Terminal {
         public ViewShow(e: any): void {
             //let controller = this;
             $('.chips').chips(); //{ onChipDelete: $.proxy(controller.CheckDelete, controller) }
+            this.ViewResize({});
+
         }
 
         public ViewResize(e: any): void {
@@ -102,12 +106,14 @@ export namespace Controller.Terminal {
 
         public createEvents(): void {
             this.NewCheckButtonClick = utils.createTouchClickEvent(this.buttonNewCheck, this.newCheckButtonClick, this);
+            this.ClientButtonClick = utils.createTouchClickEvent(this.buttonCheckClient, this.clientButtonClick, this);
             this.PaymentButtonClick = utils.createTouchClickEvent(this.buttonCheckPayment, this.paymentButtonClick, this);
         }
 
         public destroyEvents(): void {
             this.controlContainerChecks.unbind();
             utils.destroyTouchClickEvent(this.buttonNewCheck, this.NewCheckButtonClick);
+            utils.destroyTouchClickEvent(this.buttonCheckClient, this.ClientButtonClick);
             utils.destroyTouchClickEvent(this.buttonCheckPayment, this.PaymentButtonClick);
             this.destroyEventsChecks();
         }
@@ -331,6 +337,30 @@ export namespace Controller.Terminal {
             }
         }
 
+        public ClientButtonClick: { (e: any): void; };
+        private clientButtonClick(e): void {
+            let self = this;
+
+            vars._app.OpenController({
+                urlController: 'setting/card/client', isModal: true, onLoadController: (controller: Interfaces.IController) => {
+                    let ctrlProduct: Interfaces.IControllerCard = controller as Interfaces.IControllerCard;
+                    ctrlProduct.CardSettings.IsAdd = false;
+                    ctrlProduct.CardSettings.IsEdit = false;
+                    ctrlProduct.CardSettings.IsDelete = false;
+                    ctrlProduct.CardSettings.IsSelect = true;
+                    ctrlProduct.OnSelect = $.proxy(self.selectClient, self);
+                }
+            });
+        }
+
+        private selectClient(controller: Interfaces.IControllerCard) {
+            let record: Interfaces.Model.IClientModel = controller.getSelectedRecord() as Interfaces.Model.IClientModel;
+            if (record) {
+                this.currentCheck.client = { id: record.id, name: record.name + (utils.isNullOrEmpty(record.phone) ? "" : " (" + record.phone + ")") };
+                this.model.set("checkClient", (this.currentCheck.client ? this.currentCheck.client.name : ""));
+            }
+        }
+
         public PaymentButtonClick: { (e: any): void; };
         private paymentButtonClick(e) {
             let self = this;
@@ -348,7 +378,7 @@ export namespace Controller.Terminal {
         private selectTypePayment(controller: Interfaces.IControllerPaymentType) {
             let self = this;
             if (self.currentCheck) {
-                self.paymentData = { check: self.currentCheck.id, paymentType: controller.SelectedPaymentType, paymentOption: 0, paymentSum: 0, comment: '' };
+                self.paymentData = { check: self.currentCheck.id, client: self.currentCheck.client.id, paymentType: controller.SelectedPaymentType, paymentOption: 0, paymentSum: 0, comment: '' };
                 if (this.paymentData.paymentType === 1) {
                     vars._app.OpenController({
                         urlController: 'terminal/paymentnumpad', isModal: true, onLoadController: (controller: Interfaces.IController) => {
@@ -379,6 +409,8 @@ export namespace Controller.Terminal {
                             ctrlPaymentWithOut.TotalSum = this.model.get("checkSum");
                             ctrlPaymentWithOut.ReceivedSum = this.model.get("checkSum");
                             ctrlPaymentWithOut.SurrenderSum = 0;
+                            if (self.currentCheck.client)
+                                ctrlPaymentWithOut.Client = self.currentCheck.client;
                             ctrlPaymentWithOut.OnPaymentApply = $.proxy(self.applyWithOut, self)
                         }
                     });
@@ -398,6 +430,7 @@ export namespace Controller.Terminal {
         private applyWithOut(controller: Interfaces.IControllerPayment) {
             if (this.currentCheck) {
                 this.currentCheck.client = controller.Client;
+                this.paymentData.client = this.currentCheck.client.id;
                 this.model.set("checkClient", (this.currentCheck.client ? this.currentCheck.client.name : ""));
             }
             this.applyPayment(controller);

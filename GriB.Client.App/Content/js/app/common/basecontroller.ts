@@ -231,19 +231,20 @@ export namespace Controller {
             let isInit: boolean = false;
             try {
                 if (self._controller)
-                    self._controller.ViewHide(this);
+                    self._controller.ViewHide(self);
 
                 self._controller = options.controller;
                 if (!options.isRestore)
-                    self._controllersStack.Push(options.backController);
+                    if (options.backController)
+                        self._controllersStack.Push(options.backController);
 
                 self.SetHeader(self._controller);
                 try {
                     let view: any = $(options.template);
                     isInit = self._controller.ViewInit(view);
                     self._content.html(view[0]);
-                    isInit = self._controller.ViewShow(this) && isInit;
-                    self._controller.ViewResize(this);
+                    isInit = self._controller.ViewShow(self) && isInit;
+                    self._controller.ViewResize(self);
                 }
                 catch (ex) {
                     console.log(ex);

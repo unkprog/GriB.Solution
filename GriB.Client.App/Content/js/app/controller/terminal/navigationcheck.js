@@ -9,7 +9,7 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/s
                 function NavigationCheck(view, terminal) {
                     this.openedChecks = [];
                     this.currentCheck = undefined;
-                    this.paymentData = { check: 0, paymentType: 0, paymentOption: 0, paymentSum: 0, comment: '' };
+                    this.paymentData = { check: 0, paymentType: 0, paymentOption: 0, paymentSum: 0, client: 0, comment: '' };
                     this.terminal = terminal;
                     this.controlContainerChecks = view.find("#posterminal-view-checks-container");
                     this.controlChecks = this.controlContainerChecks.find("#posterminal-view-checks");
@@ -18,6 +18,7 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/s
                     this.controlTablePositions = this.controlContainerChecks.find("#posterminal-view-check-positions");
                     this.controlTableBodyPositions = this.controlTablePositions.find("tbody");
                     this.controlTotal = this.controlContainerChecks.find("#posterminal-view-check-total");
+                    this.buttonCheckClient = this.controlContainerChecks.find("#btn-check-person");
                     this.buttonCheckPayment = this.controlContainerChecks.find("#btn-check-payment");
                     this.model = new kendo.data.ObservableObject({
                         "visibleCheck": false,
@@ -56,6 +57,7 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/s
                 NavigationCheck.prototype.ViewShow = function (e) {
                     //let controller = this;
                     $('.chips').chips(); //{ onChipDelete: $.proxy(controller.CheckDelete, controller) }
+                    this.ViewResize({});
                 };
                 NavigationCheck.prototype.ViewResize = function (e) {
                     if (this.controlContainerChecks) {
@@ -89,11 +91,13 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/s
                 };
                 NavigationCheck.prototype.createEvents = function () {
                     this.NewCheckButtonClick = utils.createTouchClickEvent(this.buttonNewCheck, this.newCheckButtonClick, this);
+                    this.ClientButtonClick = utils.createTouchClickEvent(this.buttonCheckClient, this.clientButtonClick, this);
                     this.PaymentButtonClick = utils.createTouchClickEvent(this.buttonCheckPayment, this.paymentButtonClick, this);
                 };
                 NavigationCheck.prototype.destroyEvents = function () {
                     this.controlContainerChecks.unbind();
                     utils.destroyTouchClickEvent(this.buttonNewCheck, this.NewCheckButtonClick);
+                    utils.destroyTouchClickEvent(this.buttonCheckClient, this.ClientButtonClick);
                     utils.destroyTouchClickEvent(this.buttonCheckPayment, this.PaymentButtonClick);
                     this.destroyEventsChecks();
                 };
@@ -284,6 +288,26 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/s
                         });
                     }
                 };
+                NavigationCheck.prototype.clientButtonClick = function (e) {
+                    var self = this;
+                    vars._app.OpenController({
+                        urlController: 'setting/card/client', isModal: true, onLoadController: function (controller) {
+                            var ctrlProduct = controller;
+                            ctrlProduct.CardSettings.IsAdd = false;
+                            ctrlProduct.CardSettings.IsEdit = false;
+                            ctrlProduct.CardSettings.IsDelete = false;
+                            ctrlProduct.CardSettings.IsSelect = true;
+                            ctrlProduct.OnSelect = $.proxy(self.selectClient, self);
+                        }
+                    });
+                };
+                NavigationCheck.prototype.selectClient = function (controller) {
+                    var record = controller.getSelectedRecord();
+                    if (record) {
+                        this.currentCheck.client = { id: record.id, name: record.name + (utils.isNullOrEmpty(record.phone) ? "" : " (" + record.phone + ")") };
+                        this.model.set("checkClient", (this.currentCheck.client ? this.currentCheck.client.name : ""));
+                    }
+                };
                 NavigationCheck.prototype.paymentButtonClick = function (e) {
                     var self = this;
                     vars._app.OpenController({
@@ -298,7 +322,7 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/s
                     var _this = this;
                     var self = this;
                     if (self.currentCheck) {
-                        self.paymentData = { check: self.currentCheck.id, paymentType: controller.SelectedPaymentType, paymentOption: 0, paymentSum: 0, comment: '' };
+                        self.paymentData = { check: self.currentCheck.id, client: self.currentCheck.client.id, paymentType: controller.SelectedPaymentType, paymentOption: 0, paymentSum: 0, comment: '' };
                         if (this.paymentData.paymentType === 1) {
                             vars._app.OpenController({
                                 urlController: 'terminal/paymentnumpad', isModal: true, onLoadController: function (controller) {
@@ -331,6 +355,8 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/s
                                     ctrlPaymentWithOut.TotalSum = _this.model.get("checkSum");
                                     ctrlPaymentWithOut.ReceivedSum = _this.model.get("checkSum");
                                     ctrlPaymentWithOut.SurrenderSum = 0;
+                                    if (self.currentCheck.client)
+                                        ctrlPaymentWithOut.Client = self.currentCheck.client;
                                     ctrlPaymentWithOut.OnPaymentApply = $.proxy(self.applyWithOut, self);
                                 }
                             });
@@ -348,6 +374,7 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/s
                 NavigationCheck.prototype.applyWithOut = function (controller) {
                     if (this.currentCheck) {
                         this.currentCheck.client = controller.Client;
+                        this.paymentData.client = this.currentCheck.client.id;
                         this.model.set("checkClient", (this.currentCheck.client ? this.currentCheck.client.name : ""));
                     }
                     this.applyPayment(controller);

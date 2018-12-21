@@ -118,16 +118,20 @@ export module App {
 
         public ControllerBack: { (e: any): void; };
         private controllerBack(e): void {
-            if (this.IsModal) {
+            if (this.IsModal === true) {
                 let contentModal: JQuery = this.contentModals.pop();
                 let controllerModal: Interfaces.IController = this._controllersModalStack.Last;
                 controllerModal.ViewHide(this);
                 contentModal.remove();
                 this._controllersModalStack.Pop();
-                if (this.IsModal)
+                if (this.IsModal === true)
                     this._controllersModalStack.Last.View.parent().show();
-                else
+                else {
+
+                    this._controllersStack.Pop();
+                    this._controller = this._controllersStack.Current;
                     this.contentControl.show();
+                }
                 return;
             }
             else {
@@ -227,17 +231,22 @@ export module App {
             try {
 
                 if (!isModal && self._controller)
-                    self._controller.ViewHide(this);
+                    self._controller.ViewHide(self);
 
                 //if (isModal && self._controller) {
                 //    if (this.IsModal)
                 //        self._controllersModalStack.Current.View.hide();
                 //}
                 //if (!isModal)
-                    self._controller = options.controller;
-                if (!isModal && !options.isRestore) 
+                if (isModal === true && self.IsModal === false)
+                    self._controllersStack.Push(self._controller);
+
+                self._controller = options.controller;
+
+                if (isModal === false && options.isRestore === false) 
                     self._controllersStack.Push(options.backController);
-                
+            
+                  
                 if (!isModal)
                     self.SetHeader(self._controller);
 

@@ -107,16 +107,19 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
                     this._controllerNavigation = controlNavigation;
             };
             Application.prototype.controllerBack = function (e) {
-                if (this.IsModal) {
+                if (this.IsModal === true) {
                     var contentModal = this.contentModals.pop();
                     var controllerModal = this._controllersModalStack.Last;
                     controllerModal.ViewHide(this);
                     contentModal.remove();
                     this._controllersModalStack.Pop();
-                    if (this.IsModal)
+                    if (this.IsModal === true)
                         this._controllersModalStack.Last.View.parent().show();
-                    else
+                    else {
+                        this._controllersStack.Pop();
+                        this._controller = this._controllersStack.Current;
                         this.contentControl.show();
+                    }
                     return;
                 }
                 else {
@@ -194,14 +197,16 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
                 var content = self.contentControl;
                 try {
                     if (!isModal && self._controller)
-                        self._controller.ViewHide(this);
+                        self._controller.ViewHide(self);
                     //if (isModal && self._controller) {
                     //    if (this.IsModal)
                     //        self._controllersModalStack.Current.View.hide();
                     //}
                     //if (!isModal)
+                    if (isModal === true && self.IsModal === false)
+                        self._controllersStack.Push(self._controller);
                     self._controller = options.controller;
-                    if (!isModal && !options.isRestore)
+                    if (isModal === false && options.isRestore === false)
                         self._controllersStack.Push(options.backController);
                     if (!isModal)
                         self.SetHeader(self._controller);
