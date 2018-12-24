@@ -40,6 +40,7 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
                         "labelCategoriesProducts": vars._statres("label$categoriesproducts"),
                         "labelCategories": vars._statres("label$categories"),
                         "labelProducts": vars._statres("label$products"),
+                        "labelDiscounts": vars._statres("label$discounts"),
                         "labelClients": vars._statres("label$clients"),
                     });
                 };
@@ -51,6 +52,7 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
                     this.UnitButtonClick = this.createTouchClickEvent("btn-unit", this.unitButtonClick);
                     this.CategoryButtonClick = this.createTouchClickEvent("btn-category", this.categoryButtonClick);
                     this.ProductButtonClick = this.createTouchClickEvent("btn-product", this.productButtonClick);
+                    this.DiscountButtonClick = this.createTouchClickEvent("btn-discount", this.discountButtonClick);
                     this.ClientButtonClick = this.createTouchClickEvent("btn-client", this.clientButtonClick);
                 };
                 Index.prototype.destroyEvents = function () {
@@ -61,6 +63,7 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
                     this.destroyTouchClickEvent("btn-unit", this.UnitButtonClick);
                     this.destroyTouchClickEvent("btn-category", this.CategoryButtonClick);
                     this.destroyTouchClickEvent("btn-product", this.ProductButtonClick);
+                    this.destroyTouchClickEvent("btn-discount", this.DiscountButtonClick);
                     this.destroyTouchClickEvent("btn-client", this.ClientButtonClick);
                 };
                 Index.prototype.organizationButtonClick = function (e) {
@@ -83,6 +86,9 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
                 };
                 Index.prototype.productButtonClick = function (e) {
                     variables_1._main.OpenController({ urlController: "setting/card/product", backController: this });
+                };
+                Index.prototype.discountButtonClick = function (e) {
+                    variables_1._main.OpenController({ urlController: "setting/card/discount", backController: this });
                 };
                 Index.prototype.clientButtonClick = function (e) {
                     variables_1._main.OpenController({ urlController: "setting/card/client", backController: this });

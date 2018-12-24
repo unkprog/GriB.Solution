@@ -165,12 +165,6 @@
     <Content Include="Content\view\security\login.html" />
     <Content Include="Content\view\app.html" />
     <Content Include="Content\view\setting\card\card.html" />
-    <Content Include="Content\view\setting\card\product.html" />
-    <Content Include="Content\view\setting\card\category.html" />
-    <Content Include="Content\view\setting\card\unit.html" />
-    <Content Include="Content\view\setting\card\currency.html" />
-    <Content Include="Content\view\setting\card\employee.html" />
-    <Content Include="Content\view\setting\card\salepoint.html" />
     <Content Include="Content\view\setting\editor\client.html" />
     <Content Include="Content\view\setting\editor\product.html" />
     <Content Include="Content\view\setting\editor\category.html" />
@@ -203,6 +197,11 @@
     <Content Include="Scripts\Query\Editor\Client\[get].sql" />
     <Content Include="Scripts\Query\Editor\Client\[ins].sql" />
     <Content Include="Scripts\Query\Editor\Client\[set].sql" />
+    <Content Include="Scripts\Query\Editor\Discount\SalepointAccess\[get].sql" />
+    <Content Include="Scripts\Query\Editor\Discount\SalepointAccess\[set].sql" />
+    <Content Include="Scripts\Query\Editor\Discount\[del].sql" />
+    <Content Include="Scripts\Query\Editor\Discount\[get].sql" />
+    <Content Include="Scripts\Query\Editor\Discount\[set].sql" />
     <Content Include="Scripts\Query\Editor\Employee\SalepointAccess\[get].sql" />
     <Content Include="Scripts\Query\Editor\Employee\SalepointAccess\[set].sql" />
     <Content Include="Scripts\Query\Editor\Employee\[get].sql" />
@@ -253,6 +252,7 @@
     <Content Include="Scripts\Sql\01.001.[t_orgtype].sql" />
     <Content Include="Scripts\Sql\08.001.[t_client].sql" />
     <Content Include="Scripts\Sql\03.001.[t_employee].sql" />
+    <Content Include="Scripts\Sql\10.001.[t_discount].sql" />
     <Content Include="Scripts\Sql\09.001.[t_payment].sql" />
     <Content Include="Scripts\Sql\07.001.[t_check].sql" />
     <Content Include="Scripts\Sql\06.004.[t_product_composition].sql" />
@@ -279,6 +279,7 @@
     <Compile Include="Managers\AppSettings.cs" />
     <Compile Include="Managers\AuthUser.cs" />
     <Compile Include="Managers\Editors\Client.cs" />
+    <Compile Include="Managers\Editors\Discount.cs" />
     <Compile Include="Managers\Editors\Product.cs" />
     <Compile Include="Managers\Editors\Employee.cs" />
     <Compile Include="Managers\Editors\Category.cs" />
@@ -289,6 +290,7 @@
     <Compile Include="Managers\POSTerminal\Terminal.cs" />
     <Compile Include="Models\Editor\Category.cs" />
     <Compile Include="Models\Editor\Client.cs" />
+    <Compile Include="Models\Editor\Discount.cs" />
     <Compile Include="Models\Editor\Employee.cs" />
     <Compile Include="Models\Editor\Organization.cs" />
     <Compile Include="Models\Editor\Product.cs" />
@@ -385,6 +387,7 @@
     <TypeScriptCompile Include="Content\js\app\controller\security\login.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\setting\card\card.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\setting\card\client.ts" />
+    <TypeScriptCompile Include="Content\js\app\controller\setting\card\discount.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\setting\card\product.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\setting\card\category.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\setting\card\unit.ts" />

@@ -148,6 +148,19 @@ define(["require", "exports", "app/common/baseservice"], function (require, expo
             SettingsService.prototype.DelClient = function (id, Callback) {
                 this.GetApi({ Action: "/del_client", RequestData: { id: id }, Callback: Callback });
             };
+            // Скидки
+            SettingsService.prototype.GetDiscounts = function (Callback) {
+                this.GetApi({ Action: "/get_discounts", Callback: Callback });
+            };
+            SettingsService.prototype.GetDiscount = function (id, Callback) {
+                this.GetApi({ Action: "/get_discount", RequestData: { id: id }, Callback: Callback });
+            };
+            SettingsService.prototype.SetDiscount = function (model, Callback) {
+                this.PostApi({ Action: "/post_discount", RequestData: JSON.stringify(model), Callback: Callback });
+            };
+            SettingsService.prototype.DelDiscount = function (id, Callback) {
+                this.GetApi({ Action: "/del_discount", RequestData: { id: id }, Callback: Callback });
+            };
             return SettingsService;
         }(base.Services.BaseService));
         Services.SettingsService = SettingsService;

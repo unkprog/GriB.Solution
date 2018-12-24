@@ -27,6 +27,7 @@ export namespace Controller.Setting {
                 "labelCategoriesProducts": vars._statres("label$categoriesproducts"),
                 "labelCategories": vars._statres("label$categories"),
                 "labelProducts": vars._statres("label$products"),
+                "labelDiscounts": vars._statres("label$discounts"),
                 "labelClients": vars._statres("label$clients"),
             });
         }
@@ -39,6 +40,7 @@ export namespace Controller.Setting {
             this.UnitButtonClick = this.createTouchClickEvent("btn-unit", this.unitButtonClick);
             this.CategoryButtonClick = this.createTouchClickEvent("btn-category", this.categoryButtonClick);
             this.ProductButtonClick = this.createTouchClickEvent("btn-product", this.productButtonClick);
+            this.DiscountButtonClick = this.createTouchClickEvent("btn-discount", this.discountButtonClick);
             this.ClientButtonClick = this.createTouchClickEvent("btn-client", this.clientButtonClick);
         }
 
@@ -50,6 +52,7 @@ export namespace Controller.Setting {
             this.destroyTouchClickEvent("btn-unit", this.UnitButtonClick);
             this.destroyTouchClickEvent("btn-category", this.CategoryButtonClick);
             this.destroyTouchClickEvent("btn-product", this.ProductButtonClick);
+            this.destroyTouchClickEvent("btn-discount", this.DiscountButtonClick);
             this.destroyTouchClickEvent("btn-client", this.ClientButtonClick);
         }
 
@@ -86,6 +89,11 @@ export namespace Controller.Setting {
         public ProductButtonClick: { (e: any): void; };
         private productButtonClick(e) {
             _main.OpenController({ urlController: "setting/card/product", backController: this });
+        }
+
+        public DiscountButtonClick: { (e: any): void; };
+        private discountButtonClick(e) {
+            _main.OpenController({ urlController: "setting/card/discount", backController: this });
         }
 
         public ClientButtonClick: { (e: any): void; };

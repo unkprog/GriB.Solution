@@ -171,4 +171,8 @@
         paymentSum: number;
         comment: string;
     }
+
+    export interface IDiscount extends IReferenceModel, IEditorModel, IEditorSalePointAccess {
+        value: number;
+    }
 }

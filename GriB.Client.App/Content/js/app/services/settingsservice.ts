@@ -163,5 +163,22 @@ export module Services {
         public DelClient(id: number, Callback: (responseData: any) => void) {
             this.GetApi({ Action: "/del_client", RequestData: { id: id }, Callback: Callback });
         }
+
+        // Скидки
+        public GetDiscounts(Callback: (responseData: any) => void) {
+            this.GetApi({ Action: "/get_discounts", Callback: Callback });
+        }
+
+        public GetDiscount(id: number, Callback: (responseData: any) => void) {
+            this.GetApi({ Action: "/get_discount", RequestData: { id: id }, Callback: Callback });
+        }
+
+        public SetDiscount(model: Interfaces.Model.IClientModel, Callback: (responseData: any) => void) {
+            this.PostApi({ Action: "/post_discount", RequestData: JSON.stringify(model), Callback: Callback });
+        }
+
+        public DelDiscount(id: number, Callback: (responseData: any) => void) {
+            this.GetApi({ Action: "/del_discount", RequestData: { id: id }, Callback: Callback });
+        }
     }
 }

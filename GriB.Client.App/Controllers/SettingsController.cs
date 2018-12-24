@@ -552,5 +552,62 @@ namespace GriB.Client.App.Controllers
             });
         }
         #endregion
+
+        #region Crblrf
+        [HttpGet]
+        [ActionName("get_discounts")]
+        public HttpResponseMessage GetDiscounts()
+        {
+            return TryCatchResponseQuery((query) =>
+            {
+                return Request.CreateResponse(HttpStatusCode.OK, Discount.GetDiscounts(query));
+
+            });
+        }
+
+        [HttpGet]
+        [ActionName("get_discount")]
+        public HttpResponseMessage GetDiscount(int id)
+        {
+            return TryCatchResponseQuery((query) =>
+            {
+                List<t_org> orgs = Organization.GetOrganizations(query, Organization.typeCompany);
+                t_org org = Organization.GetOrganization(query, id);
+                if (org == null || org.id == 0)
+                    org = new t_org() { type = Organization.typeDivision };
+                org = Organization.GetOrganizationInfo1(query, org);
+                org.parent = Organization.GetOrganization(query, org.pid);
+
+                discount result = Discount.GetDiscount(query, id);
+                result = Discount.GetDiscountSalepointAccess(query, result);
+                return Request.CreateResponse(HttpStatusCode.OK, new { record = result });
+
+            });
+        }
+
+        [HttpPost]
+        [ActionName("post_discount")]
+        public HttpResponseMessage PostDisocunt(discount discount)
+        {
+            return TryCatchResponseQuery((query) =>
+            {
+                Principal principal = (Principal)HttpContext.Current.User;
+                Discount.SetDiscount(query, discount, principal.Data.User.id);
+                Discount.SetDiscountSalepointAccess(query, discount);
+                return Request.CreateResponse(HttpStatusCode.OK, "Ok");
+            });
+        }
+
+        [HttpGet]
+        [ActionName("del_discount")]
+        public HttpResponseMessage DeleteDiscount(int id)
+        {
+            return TryCatchResponseQuery((query) =>
+            {
+                Discount.DelDiscount(query, id, ((Principal)HttpContext.Current.User).Data.User.id);
+                return Request.CreateResponse(HttpStatusCode.OK, "Ok");
+            });
+        }
+        #endregion
     }
 }
