@@ -19,6 +19,10 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/s
                     this.controlTableBodyPositions = this.controlTablePositions.find("tbody");
                     this.controlTotal = this.controlContainerChecks.find("#posterminal-view-check-total");
                     this.buttonCheckClient = this.controlContainerChecks.find("#btn-check-person");
+                    this.buttonCheckDiscount = this.controlContainerChecks.find("#btn-check-discount-item");
+                    this.buttonCheckNoDiscount = this.controlContainerChecks.find("#btn-check-nodiscount-item");
+                    this.buttonCheckComment = this.controlContainerChecks.find("#btn-check-comment");
+                    this.buttonCheckMenu = this.controlContainerChecks.find("#btn-check-menu");
                     this.buttonCheckPayment = this.controlContainerChecks.find("#btn-check-payment");
                     this.model = new kendo.data.ObservableObject({
                         "visibleCheck": false,
@@ -29,6 +33,11 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/s
                         "checkClient": "",
                         "labelPayment": vars._statres("label$payment"),
                         "checkSum": 0,
+                        "labelDiscount": vars._statres("label$discount"),
+                        "labelNoDiscount": vars._statres("label$withoutdiscount"),
+                        "labelCancelOrder": vars._statres("label$cancelorder"),
+                        "labelSplitCheck": vars._statres("label$splitcheck"),
+                        "labelPrintPreCheck": vars._statres("label$printprecheck")
                     });
                 }
                 Object.defineProperty(NavigationCheck.prototype, "Service", {
@@ -57,6 +66,8 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/s
                 NavigationCheck.prototype.ViewShow = function (e) {
                     //let controller = this;
                     $('.chips').chips(); //{ onChipDelete: $.proxy(controller.CheckDelete, controller) }
+                    $('#btn-check-discount').dropdown();
+                    $('#btn-check-menu').dropdown();
                     this.ViewResize({});
                 };
                 NavigationCheck.prototype.ViewResize = function (e) {
@@ -92,12 +103,18 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/s
                 NavigationCheck.prototype.createEvents = function () {
                     this.NewCheckButtonClick = utils.createTouchClickEvent(this.buttonNewCheck, this.newCheckButtonClick, this);
                     this.ClientButtonClick = utils.createTouchClickEvent(this.buttonCheckClient, this.clientButtonClick, this);
+                    this.DiscountButtonClick = utils.createTouchClickEvent(this.buttonCheckDiscount, this.discountButtonClick, this);
+                    this.NoDiscountButtonClick = utils.createTouchClickEvent(this.buttonCheckNoDiscount, this.noDiscountButtonClick, this);
+                    this.CommentButtonClick = utils.createTouchClickEvent(this.buttonCheckComment, this.commentButtonClick, this);
                     this.PaymentButtonClick = utils.createTouchClickEvent(this.buttonCheckPayment, this.paymentButtonClick, this);
                 };
                 NavigationCheck.prototype.destroyEvents = function () {
                     this.controlContainerChecks.unbind();
                     utils.destroyTouchClickEvent(this.buttonNewCheck, this.NewCheckButtonClick);
                     utils.destroyTouchClickEvent(this.buttonCheckClient, this.ClientButtonClick);
+                    utils.destroyTouchClickEvent(this.buttonCheckDiscount, this.DiscountButtonClick);
+                    utils.destroyTouchClickEvent(this.buttonCheckNoDiscount, this.NoDiscountButtonClick);
+                    utils.destroyTouchClickEvent(this.buttonCheckComment, this.CommentButtonClick);
                     utils.destroyTouchClickEvent(this.buttonCheckPayment, this.PaymentButtonClick);
                     this.destroyEventsChecks();
                 };
@@ -189,7 +206,7 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/s
                         html += '<td class="product-col-sum-auto">' + positionsArray[i].price + '</td>';
                         html += '</tr>';
                         positionsArray[i].sum = (positionsArray[i].quantity ? positionsArray[i].quantity : 0) * (positionsArray[i].price ? positionsArray[i].price : 0);
-                        sum += positionsArray[i].sum;
+                        sum += (positionsArray[i].sum - ((controller.currentCheck.discount / 100) * positionsArray[i].sum));
                     }
                     controller.controlTableBodyPositions.html(html);
                     this.model.set("checkSum", sum);
@@ -308,6 +325,58 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/s
                         controller_1.currentCheck.client = { id: record.id, name: record.name + (utils.isNullOrEmpty(record.phone) ? "" : " (" + record.phone + ")") };
                         controller_1.Service.CheckSetClient(controller_1.currentCheck.id, controller_1.currentCheck.client.id, function (responseData) {
                             controller_1.model.set("checkClient", (controller_1.currentCheck.client ? controller_1.currentCheck.client.name : ""));
+                        });
+                    }
+                };
+                NavigationCheck.prototype.discountButtonClick = function (e) {
+                    var self = this;
+                    vars._app.OpenController({
+                        urlController: 'setting/card/discount', isModal: true, onLoadController: function (controller) {
+                            var ctrlProduct = controller;
+                            ctrlProduct.CardSettings.IsAdd = false;
+                            ctrlProduct.CardSettings.IsEdit = false;
+                            ctrlProduct.CardSettings.IsDelete = false;
+                            ctrlProduct.CardSettings.IsSelect = true;
+                            ctrlProduct.OnSelect = $.proxy(self.selectDiscount, self);
+                        }
+                    });
+                };
+                NavigationCheck.prototype.selectDiscount = function (controller) {
+                    var record = controller.getSelectedRecord();
+                    if (record) {
+                        var controller_2 = this;
+                        controller_2.currentCheck.discount = record.value;
+                        controller_2.Service.CheckSetDiscount(controller_2.currentCheck.id, controller_2.currentCheck.discount, function (responseData) {
+                            controller_2.drawCheckPositions();
+                        });
+                    }
+                };
+                NavigationCheck.prototype.noDiscountButtonClick = function (e) {
+                    var controller = this;
+                    if (controller.currentCheck) {
+                        controller.Service.CheckSetDiscount(controller.currentCheck.id, 0, function (responseData) {
+                            controller.currentCheck.discount = 0;
+                            controller.drawCheckPositions();
+                        });
+                    }
+                };
+                NavigationCheck.prototype.commentButtonClick = function (e) {
+                    var self = this;
+                    if (self.currentCheck) {
+                        vars._app.OpenController({
+                            urlController: 'terminal/checkcomment', isModal: true, onLoadController: function (controller) {
+                                var ctrlComment = controller;
+                                ctrlComment.Comment = self.currentCheck.comment;
+                                ctrlComment.OnApply = $.proxy(self.applyCheckComment, self);
+                            }
+                        });
+                    }
+                };
+                NavigationCheck.prototype.applyCheckComment = function (controller) {
+                    var self = this;
+                    if (self.currentCheck) {
+                        self.Service.CheckSetComment(self.currentCheck.id, controller.Comment, function (responseData) {
+                            self.currentCheck.comment = controller.Comment;
                         });
                     }
                 };

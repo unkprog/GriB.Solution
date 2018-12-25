@@ -15,6 +15,10 @@ export namespace Controller.Terminal {
             this.controlTotal = this.controlContainerChecks.find("#posterminal-view-check-total");
 
             this.buttonCheckClient = this.controlContainerChecks.find("#btn-check-person");
+            this.buttonCheckDiscount = this.controlContainerChecks.find("#btn-check-discount-item");
+            this.buttonCheckNoDiscount = this.controlContainerChecks.find("#btn-check-nodiscount-item");
+            this.buttonCheckComment = this.controlContainerChecks.find("#btn-check-comment");
+            this.buttonCheckMenu = this.controlContainerChecks.find("#btn-check-menu");
             this.buttonCheckPayment = this.controlContainerChecks.find("#btn-check-payment");
 
             this.model = new kendo.data.ObservableObject({
@@ -26,7 +30,14 @@ export namespace Controller.Terminal {
                 "checkClient": "",
                 "labelPayment": vars._statres("label$payment"),
                 "checkSum": 0,
+                "labelDiscount": vars._statres("label$discount"),
+                "labelNoDiscount": vars._statres("label$withoutdiscount"),
+                "labelCancelOrder": vars._statres("label$cancelorder"),
+                "labelSplitCheck": vars._statres("label$splitcheck"),
+                "labelPrintPreCheck": vars._statres("label$printprecheck")
             });
+
+           
 
         }
 
@@ -55,6 +66,10 @@ export namespace Controller.Terminal {
         private controlTotal: JQuery;
         private controlButtons: JQuery;
         private buttonCheckClient: JQuery;
+        private buttonCheckDiscount: JQuery;
+        private buttonCheckNoDiscount: JQuery;
+        private buttonCheckComment: JQuery;
+        private buttonCheckMenu: JQuery;
         private buttonCheckPayment: JQuery;
 
         public get ControlContainerChecks() {
@@ -64,6 +79,8 @@ export namespace Controller.Terminal {
         public ViewShow(e: any): void {
             //let controller = this;
             $('.chips').chips(); //{ onChipDelete: $.proxy(controller.CheckDelete, controller) }
+            $('#btn-check-discount').dropdown();
+            $('#btn-check-menu').dropdown();
             this.ViewResize({});
 
         }
@@ -107,6 +124,9 @@ export namespace Controller.Terminal {
         public createEvents(): void {
             this.NewCheckButtonClick = utils.createTouchClickEvent(this.buttonNewCheck, this.newCheckButtonClick, this);
             this.ClientButtonClick = utils.createTouchClickEvent(this.buttonCheckClient, this.clientButtonClick, this);
+            this.DiscountButtonClick = utils.createTouchClickEvent(this.buttonCheckDiscount, this.discountButtonClick, this);
+            this.NoDiscountButtonClick = utils.createTouchClickEvent(this.buttonCheckNoDiscount, this.noDiscountButtonClick, this);
+            this.CommentButtonClick = utils.createTouchClickEvent(this.buttonCheckComment, this.commentButtonClick, this);
             this.PaymentButtonClick = utils.createTouchClickEvent(this.buttonCheckPayment, this.paymentButtonClick, this);
         }
 
@@ -114,6 +134,9 @@ export namespace Controller.Terminal {
             this.controlContainerChecks.unbind();
             utils.destroyTouchClickEvent(this.buttonNewCheck, this.NewCheckButtonClick);
             utils.destroyTouchClickEvent(this.buttonCheckClient, this.ClientButtonClick);
+            utils.destroyTouchClickEvent(this.buttonCheckDiscount, this.DiscountButtonClick);
+            utils.destroyTouchClickEvent(this.buttonCheckNoDiscount, this.NoDiscountButtonClick);
+            utils.destroyTouchClickEvent(this.buttonCheckComment, this.CommentButtonClick);
             utils.destroyTouchClickEvent(this.buttonCheckPayment, this.PaymentButtonClick);
             this.destroyEventsChecks();
         }
@@ -219,7 +242,7 @@ export namespace Controller.Terminal {
                 html += '<td class="product-col-sum-auto">' + positionsArray[i].price + '</td>';
                 html += '</tr>';
                 positionsArray[i].sum = (positionsArray[i].quantity ? positionsArray[i].quantity : 0) * (positionsArray[i].price ? positionsArray[i].price : 0);
-                sum += positionsArray[i].sum;
+                sum += (positionsArray[i].sum - ((controller.currentCheck.discount / 100) * positionsArray[i].sum));
             }
 
             controller.controlTableBodyPositions.html(html);
@@ -362,6 +385,68 @@ export namespace Controller.Terminal {
                     controller.model.set("checkClient", (controller.currentCheck.client ? controller.currentCheck.client.name : ""));
                 });
               
+            }
+        }
+
+        public DiscountButtonClick: { (e: any): void; };
+        private discountButtonClick(e) {
+            let self = this;
+
+            vars._app.OpenController({
+                urlController: 'setting/card/discount', isModal: true, onLoadController: (controller: Interfaces.IController) => {
+                    let ctrlProduct: Interfaces.IControllerCard = controller as Interfaces.IControllerCard;
+                    ctrlProduct.CardSettings.IsAdd = false;
+                    ctrlProduct.CardSettings.IsEdit = false;
+                    ctrlProduct.CardSettings.IsDelete = false;
+                    ctrlProduct.CardSettings.IsSelect = true;
+                    ctrlProduct.OnSelect = $.proxy(self.selectDiscount, self);
+                }
+            });
+        }
+
+        private selectDiscount(controller: Interfaces.IControllerCard) {
+            let record: Interfaces.Model.IDiscountModel = controller.getSelectedRecord() as Interfaces.Model.IDiscountModel;
+            if (record) {
+                let controller = this;
+                controller.currentCheck.discount = record.value;
+                controller.Service.CheckSetDiscount(controller.currentCheck.id, controller.currentCheck.discount, (responseData) => {
+                    controller.drawCheckPositions();
+                });
+
+            }
+        }
+
+        public NoDiscountButtonClick: { (e: any): void; };
+        private noDiscountButtonClick(e) {
+            let controller = this;
+            if (controller.currentCheck) {
+                controller.Service.CheckSetDiscount(controller.currentCheck.id, 0, (responseData) => {
+                    controller.currentCheck.discount = 0;
+                    controller.drawCheckPositions();
+                });
+            }
+        }
+
+        public CommentButtonClick: { (e: any): void; };
+        private commentButtonClick(e) {
+            let self = this;
+            if (self.currentCheck) {
+                vars._app.OpenController({
+                    urlController: 'terminal/checkcomment', isModal: true, onLoadController: (controller: Interfaces.IController) => {
+                        let ctrlComment: Interfaces.IControllerCheckComment = controller as Interfaces.IControllerCheckComment;
+                        ctrlComment.Comment = self.currentCheck.comment;
+                        ctrlComment.OnApply = $.proxy(self.applyCheckComment, self);
+                    }
+                });
+            }
+        }
+
+        private applyCheckComment(controller: Interfaces.IControllerCheckComment) {
+            let self = this;
+            if (self.currentCheck) {
+                self.Service.CheckSetComment(self.currentCheck.id, controller.Comment, (responseData) => {
+                    self.currentCheck.comment = controller.Comment;
+                });
             }
         }
 

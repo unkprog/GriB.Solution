@@ -82,16 +82,6 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
                     if (this.OnSelectPaymentType)
                         this.OnSelectPaymentType(controller);
                     this.SaveButtonClick(e);
-                    //vars._app.OpenController({
-                    //    urlController: 'terminal/paymentnumpad', isModal: true, onLoadController: (controller: Interfaces.IController) => {
-                    //        //let ctrlTypePayment: Interfaces.IControllerPaymentType = controller as Interfaces.IControllerPaymentType;
-                    //        ////ctrlProduct.CardSettings.IsAdd = false;
-                    //        ////ctrlProduct.CardSettings.IsEdit = false;
-                    //        ////ctrlProduct.CardSettings.IsDelete = false;
-                    //        ////ctrlProduct.CardSettings.IsSelect = true;
-                    //        //ctrlTypePayment.OnSelectPaymentType = $.proxy(self.selectTypePayment, self);
-                    //    }
-                    //});
                 };
                 PaymentType.prototype.paymentCashButtonClick = function (e) {
                     this.selectedPaymentType = 1;
@@ -110,5 +100,6 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
             Terminal.PaymentType = PaymentType;
         })(Terminal = Controller.Terminal || (Controller.Terminal = {}));
     })(Controller = exports.Controller || (exports.Controller = {}));
+    vars.registerController("terminal/paymenttype", function (module) { return new module.Controller.Terminal.PaymentType(); });
 });
 //# sourceMappingURL=paymenttype.js.map

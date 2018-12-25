@@ -1,11 +1,5 @@
 ﻿import vars = require('app/common/variables');
-import utils = require('app/common/utils');
 import base = require('app/common/basecontroller');
-import svc = require('app/services/posterminalservice');
-import { _app } from 'app/common/variables';
-import navigationBar = require('app/controller/terminal/navigationbar');
-import navigationProduct = require('app/controller/terminal/navigationproduct');
-import navigationCheck = require('app/controller/terminal/navigationcheck');
 
 export namespace Controller.Terminal {
     export class PaymentType extends base.Controller.BaseEditor implements Interfaces.IControllerPaymentType {
@@ -88,16 +82,6 @@ export namespace Controller.Terminal {
             if (this.OnSelectPaymentType)
                 this.OnSelectPaymentType(controller);
             this.SaveButtonClick(e);
-            //vars._app.OpenController({
-            //    urlController: 'terminal/paymentnumpad', isModal: true, onLoadController: (controller: Interfaces.IController) => {
-            //        //let ctrlTypePayment: Interfaces.IControllerPaymentType = controller as Interfaces.IControllerPaymentType;
-            //        ////ctrlProduct.CardSettings.IsAdd = false;
-            //        ////ctrlProduct.CardSettings.IsEdit = false;
-            //        ////ctrlProduct.CardSettings.IsDelete = false;
-            //        ////ctrlProduct.CardSettings.IsSelect = true;
-            //        //ctrlTypePayment.OnSelectPaymentType = $.proxy(self.selectTypePayment, self);
-            //    }
-            //});
         }
 
         public PaymentCashButtonClick: { (e: any): void; };
@@ -120,3 +104,5 @@ export namespace Controller.Terminal {
 
     }
 }
+
+vars.registerController("terminal/paymenttype", function (module: any): Interfaces.IController { return new module.Controller.Terminal.PaymentType(); });

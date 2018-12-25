@@ -153,4 +153,10 @@
     export interface IControllerPaymentWithOut extends IControllerPayment {
     }
 
+
+    export interface IControllerCheckComment extends IControllerEditor {
+        Comment: string;
+
+        OnApply(controller: IControllerCheckComment): void;
+    }
 }

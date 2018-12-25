@@ -170,8 +170,12 @@ define({
     /////////////////////////////////////////////////////////////////////////////////////////////
     //              Редактор скидок                                                            //
     /////////////////////////////////////////////////////////////////////////////////////////////
+    "label$discount": "Скидка",
     "label$value": "Значение",
+    "label$valuepercent": "Значение в %",
+    "label$discountinformation": "Информация о скидке",
 
+    "msg$error$discountrange": "Скидка должна быть в диапазоне от 0 до 100", //Discount should be in the range of 0 to 100
     /////////////////////////////////////////////////////////////////////////////////////////////
     //              Терминал                                                                   //
     /////////////////////////////////////////////////////////////////////////////////////////////
@@ -183,13 +187,18 @@ define({
     "label$cash": "Наличный расчет",
     "label$noncash": "Безналичный расчет",
     "label$withoutpayment": "Без оплаты",
+    "label$withoutdiscount": "Без скидки",
+    "label$cancelorder": "Отменить заказ",
+    "label$splitcheck": "Разделить чек",
+    "label$printprecheck": "Печать пречека",
 
     "label$topay": "К оплате",
     "label$received": "Получено",
     "label$surrender": "Сдача",
     "label$comment": "Комментарий",
+    "label$commenttoorder": "Комментарий к заказу",
 
     "error$numpad$amountinsufficient": "Полученная сумма недостаточна для закрытия чека",
     "error$without$reasonnotspecified": "Не указана прична неоплаты",
-    "error$without$clientnotspecified": "Не указан клиент",
+    "error$without$clientnotspecified": "Не указан клиент"
 });

@@ -113,7 +113,10 @@ export namespace Controller.Setting.Editor {
             //this.controlTabs.tabs();
             this.controlPhoto.css("backgroundImage", "url(" + this.EditorModel.photo + ")");
             this.setupListCategory(responseData);
-            this.setupTableAccess();
+
+            let model: Interfaces.Model.ICategory = this.EditorModel;
+            let data: Interfaces.Model.ISalePointAccessModel[] = model.accesssalepoints;
+            this.setupTableAccess($("#category-rigths-rows"), data);
         }
 
         private setupListCategory(responseData: any) {
@@ -130,35 +133,35 @@ export namespace Controller.Setting.Editor {
             this.categoryList.formSelect();
         }
 
-        private setupTableAccess(): void {
-            let model: Interfaces.Model.ICategory = this.EditorModel;
-            let data: Interfaces.Model.ISalePointAccessModel[] = model.accesssalepoints;
-            let html: string = '';
+        //private setupTableAccess(): void {
+        //    let model: Interfaces.Model.ICategory = this.EditorModel;
+        //    let data: Interfaces.Model.ISalePointAccessModel[] = model.accesssalepoints;
+        //    let html: string = '';
 
-            if (data && data.length > 0) {
-                let item: Interfaces.Model.ISalePointAccessModel;
-                for (let i = 0, icount = (data && data.length ? data.length : 0); i < icount; i++) {
-                    item = data[i];
-                    item
+        //    if (data && data.length > 0) {
+        //        let item: Interfaces.Model.ISalePointAccessModel;
+        //        for (let i = 0, icount = (data && data.length ? data.length : 0); i < icount; i++) {
+        //            item = data[i];
+        //            item
 
-                    html += '<tr>';
-                    html += '<td data-bind="text:editModel.accesssalepoints[' + i + '].salepoint.name"></td>';
+        //            html += '<tr>';
+        //            html += '<td data-bind="text:editModel.accesssalepoints[' + i + '].salepoint.name"></td>';
 
-                    html += '<td>';
-                    html += '<div class="switch valign-wrapper">';
-                    html += '    <label>';
-                    html += '        <input type="checkbox" data-bind="checked:editModel.accesssalepoints[' + i + '].isaccess">';
-                    html += '        <span class="lever"></span>';
-                    html += '     </label>';
-                    html += '</div>';
-                    html += '</td>';
-                    html += '</tr>';
-                }
-            }
+        //            html += '<td>';
+        //            html += '<div class="switch valign-wrapper">';
+        //            html += '    <label>';
+        //            html += '        <input type="checkbox" data-bind="checked:editModel.accesssalepoints[' + i + '].isaccess">';
+        //            html += '        <span class="lever"></span>';
+        //            html += '     </label>';
+        //            html += '</div>';
+        //            html += '</td>';
+        //            html += '</tr>';
+        //        }
+        //    }
 
-            $("#category-rigths-rows").html(html);
-            kendo.bind($("#category-rigths-rows"), this.Model);
-        }
+        //    $("#category-rigths-rows").html(html);
+        //    kendo.bind($("#category-rigths-rows"), this.Model);
+        //}
 
         public AddPhotoButtonClick: { (e: any): void; };
         private addPhotoButtonClick(e) {
@@ -195,3 +198,5 @@ export namespace Controller.Setting.Editor {
        
     }
 }
+
+vars.registerController("setting/editor/category", function (module: any): Interfaces.IController { return new module.Controller.Setting.Editor.Category(); });

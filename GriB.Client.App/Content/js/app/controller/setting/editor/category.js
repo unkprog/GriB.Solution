@@ -112,7 +112,9 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                         //this.controlTabs.tabs();
                         this.controlPhoto.css("backgroundImage", "url(" + this.EditorModel.photo + ")");
                         this.setupListCategory(responseData);
-                        this.setupTableAccess();
+                        var model = this.EditorModel;
+                        var data = model.accesssalepoints;
+                        this.setupTableAccess($("#category-rigths-rows"), data);
                     };
                     Category.prototype.setupListCategory = function (responseData) {
                         var html = '';
@@ -126,31 +128,6 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                         else
                             this.categoryList.html('');
                         this.categoryList.formSelect();
-                    };
-                    Category.prototype.setupTableAccess = function () {
-                        var model = this.EditorModel;
-                        var data = model.accesssalepoints;
-                        var html = '';
-                        if (data && data.length > 0) {
-                            var item = void 0;
-                            for (var i = 0, icount = (data && data.length ? data.length : 0); i < icount; i++) {
-                                item = data[i];
-                                item;
-                                html += '<tr>';
-                                html += '<td data-bind="text:editModel.accesssalepoints[' + i + '].salepoint.name"></td>';
-                                html += '<td>';
-                                html += '<div class="switch valign-wrapper">';
-                                html += '    <label>';
-                                html += '        <input type="checkbox" data-bind="checked:editModel.accesssalepoints[' + i + '].isaccess">';
-                                html += '        <span class="lever"></span>';
-                                html += '     </label>';
-                                html += '</div>';
-                                html += '</td>';
-                                html += '</tr>';
-                            }
-                        }
-                        $("#category-rigths-rows").html(html);
-                        kendo.bind($("#category-rigths-rows"), this.Model);
                     };
                     Category.prototype.addPhotoButtonClick = function (e) {
                         $("#editor-view-image-input").trigger("click");
@@ -184,5 +161,6 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
             })(Editor = Setting.Editor || (Setting.Editor = {}));
         })(Setting = Controller.Setting || (Controller.Setting = {}));
     })(Controller = exports.Controller || (exports.Controller = {}));
+    vars.registerController("setting/editor/category", function (module) { return new module.Controller.Setting.Editor.Category(); });
 });
 //# sourceMappingURL=category.js.map

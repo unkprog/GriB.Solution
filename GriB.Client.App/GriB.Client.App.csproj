@@ -165,6 +165,7 @@
     <Content Include="Content\view\security\login.html" />
     <Content Include="Content\view\app.html" />
     <Content Include="Content\view\setting\card\card.html" />
+    <Content Include="Content\view\setting\editor\discount.html" />
     <Content Include="Content\view\setting\editor\client.html" />
     <Content Include="Content\view\setting\editor\product.html" />
     <Content Include="Content\view\setting\editor\category.html" />
@@ -175,6 +176,7 @@
     <Content Include="Content\view\setting\editor\organization.html" />
     <Content Include="Content\view\setting\index.html" />
     <Content Include="Content\view\terminal\paymentwithout.html" />
+    <Content Include="Content\view\terminal\checkcomment.html" />
     <Content Include="Content\view\terminal\paymentnoncash.html" />
     <Content Include="Content\view\terminal\paymenttype.html" />
     <Content Include="Content\view\terminal\paymentnumpad.html" />
@@ -394,6 +396,7 @@
     <TypeScriptCompile Include="Content\js\app\controller\setting\card\employee.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\setting\card\currency.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\setting\card\salepoint.ts" />
+    <TypeScriptCompile Include="Content\js\app\controller\setting\editor\discount.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\setting\editor\client.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\setting\editor\product.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\setting\editor\category.ts" />
@@ -406,6 +409,7 @@
     <TypeScriptCompile Include="Content\js\app\controller\setting\index.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\terminal\paymentnoncash.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\terminal\payment.ts" />
+    <TypeScriptCompile Include="Content\js\app\controller\terminal\checkcomment.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\terminal\paymentwithout.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\terminal\paymenttype.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\terminal\paymentnumpad.ts" />

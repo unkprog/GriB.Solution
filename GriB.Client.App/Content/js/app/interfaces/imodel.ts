@@ -172,7 +172,11 @@
         comment: string;
     }
 
-    export interface IDiscount extends IReferenceModel, IEditorModel, IEditorSalePointAccess {
+    export interface IDiscountModel extends IReferenceModel, IEditorModel, IEditorSalePointAccess {
         value: number;
+    }
+
+    export interface ICheckCommetModel extends IEditorModel {
+        comment: string;
     }
 }

@@ -79,3 +79,5 @@ export namespace Controller.Terminal {
         }
     }
 }
+
+vars.registerController("terminal/paymentnumpad", function (module: any): Interfaces.IController { return new module.Controller.Terminal.PaymentNumPad(); });

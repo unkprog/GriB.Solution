@@ -1,0 +1,23 @@
+﻿<div id="editor-view-discount">
+    <div id="editor-view-tab-discount" class="padding-0001em">
+        <div class="section editor-section">
+            <h5 data-bind="text:labelDiscountInformation"></h5>
+        </div>
+        <div class="row row-inputs">
+            <div class="col s12 m6 l4 xl3">
+                <div class="input-field">
+                    <input id="discount-name" type="text" data-length="60" data-bind="value:editModel.name">
+                    <label for="discount-name" data-bind="text:labelName"></label>
+                </div>
+            </div>
+        </div>
+        <div class="row row-inputs">
+            <div class="col s12 m6 l4 xl3">
+                <div class="input-field">
+                    <input id="discount-value" type="text" class="right-align" data-bind="value:editModel.value">
+                    <label for="discount-value" data-bind="text:labelValuePercent"></label>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

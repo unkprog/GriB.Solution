@@ -46,5 +46,6 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
             Terminal.PaymentNonCash = PaymentNonCash;
         })(Terminal = Controller.Terminal || (Controller.Terminal = {}));
     })(Controller = exports.Controller || (exports.Controller = {}));
+    vars.registerController("terminal/paymentnoncash", function (module) { return new module.Controller.Terminal.PaymentNonCash(); });
 });
 //# sourceMappingURL=paymentnoncash.js.map

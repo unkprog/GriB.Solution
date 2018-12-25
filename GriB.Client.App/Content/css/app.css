@@ -471,3 +471,9 @@ input[type='number']:hover::-webkit-outer-spin-button {
     padding: 0;
     margin: 0.2rem;
     font-size: 2rem; } }
+
+#btn-check-discount-dropdown {
+  min-width: 120px !important; }
+
+#btn-check-menu-dropdown {
+  min-width: 150px !important; }

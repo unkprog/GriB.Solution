@@ -33,13 +33,24 @@
                     <a id="btn-check-person" class="btn btncol check-btn"><i class="material-icons check-icon">person</i></a>
                 </div>
                 <div class="col s3 m3 l3 xl3">
-                    <a id="btn-check-discount" class="btn btncol check-btn"><i class="material-icons check-icon">mood</i></a>
+                    <a id="btn-check-discount" class="btn btncol check-btn dropdown-trigger" data-target="btn-check-discount-dropdown"><i class="material-icons check-icon">mood</i></a>
+                    <!-- Dropdown Structure -->
+                    <ul id='btn-check-discount-dropdown' class='dropdown-content'>
+                        <li><a id="btn-check-discount-item" data-bind="text:labelDiscount"></a></li>
+                        <li><a id="btn-check-nodiscount-item" data-bind="text:labelNoDiscount"></a></li>
+                    </ul>
                 </div>
                 <div class="col s3 m3 l3 xl3">
                     <a id="btn-check-comment" class="btn btncol check-btn"><i class="material-icons check-icon">message</i></a>
                 </div>
                 <div class="col s3 m3 l3 xl3">
-                    <a id="btn-check-menu" class="btn btncol check-btn"><i class="material-icons check-icon">menu</i></a>
+                    <a id="btn-check-menu" class="btn btncol check-btn dropdown-trigger" data-target="btn-check-menu-dropdown"><i class="material-icons check-icon">menu</i></a>
+                    <!-- Dropdown Structure -->
+                    <ul id='btn-check-menu-dropdown' class='dropdown-content'>
+                        <li><a id="btn-check-cancel-item" data-bind="text:labelCancelOrder"></a></li>
+                        <li><a id="btn-check-split-item" data-bind="text:labelSplitCheck"></a></li>
+                        <li><a id="btn-check-printpre-item" data-bind="text:labelPrintPreCheck"></a></li>
+                    </ul>
                 </div>
                 <div class="col s12 m12 l12 xl12">
                     <a id="btn-check-payment" class="btn btncol green darken-1" data-bind="text:labelPayment"></a>

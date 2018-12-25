@@ -1,8 +1,6 @@
 ﻿import vars = require('app/common/variables');
-import utils = require('app/common/utils');
 import base = require('app/common/basecontroller');
 import svc = require('app/services/posterminalservice');
-import { _app } from 'app/common/variables';
 import navigationBar = require('app/controller/terminal/navigationbar');
 import navigationProduct = require('app/controller/terminal/navigationproduct');
 import navigationCheck = require('app/controller/terminal/navigationcheck');
@@ -130,3 +128,5 @@ export namespace Controller.Terminal {
         
     }
 }
+
+vars.registerController("terminal/index", function (module: any): Interfaces.IController { return new module.Controller.Terminal.Index(); });

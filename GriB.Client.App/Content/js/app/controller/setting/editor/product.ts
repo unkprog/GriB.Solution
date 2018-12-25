@@ -215,7 +215,10 @@ export namespace Controller.Setting.Editor {
             this.setupListCurrencies(responseData);
             this.changeModel({ field: "editModel.type" });
             this.setupTableComposition();
-            this.setupTableAccess();
+
+            let model: Interfaces.Model.IProduct = this.EditorModel;
+            let data: Interfaces.Model.ISalePointAccessModel[] = model.accesssalepoints;
+            this.setupTableAccess(this.rightRows, data);
         }
 
         private setupListCategory(responseData: any) {
@@ -299,30 +302,30 @@ export namespace Controller.Setting.Editor {
 
         }
 
-        private setupTableAccess(): void {
-            let model: Interfaces.Model.IProduct = this.EditorModel;
-            let data: Interfaces.Model.ISalePointAccessModel[] = model.accesssalepoints;
-            let html: string = '';
+        //private setupTableAccess(): void {
+        //    let model: Interfaces.Model.IProduct = this.EditorModel;
+        //    let data: Interfaces.Model.ISalePointAccessModel[] = model.accesssalepoints;
+        //    let html: string = '';
 
-            if (data && data.length > 0) {
-                for (let i = 0, icount = (data && data.length ? data.length : 0); i < icount; i++) {
-                    html += '<tr>';
-                    html += '<td data-bind="text:editModel.accesssalepoints[' + i + '].salepoint.name"></td>';
+        //    if (data && data.length > 0) {
+        //        for (let i = 0, icount = (data && data.length ? data.length : 0); i < icount; i++) {
+        //            html += '<tr>';
+        //            html += '<td data-bind="text:editModel.accesssalepoints[' + i + '].salepoint.name"></td>';
 
-                    html += '<td>';
-                    html += '<div class="switch valign-wrapper">';
-                    html += '    <label>';
-                    html += '        <input type="checkbox" data-bind="checked:editModel.accesssalepoints[' + i + '].isaccess">';
-                    html += '        <span class="lever"></span>';
-                    html += '     </label>';
-                    html += '</div>';
-                    html += '</td>';
-                    html += '</tr>';
-                }
-            }
-            this.rightRows.html(html);
-            kendo.bind(this.rightRows, this.Model);
-        }
+        //            html += '<td>';
+        //            html += '<div class="switch valign-wrapper">';
+        //            html += '    <label>';
+        //            html += '        <input type="checkbox" data-bind="checked:editModel.accesssalepoints[' + i + '].isaccess">';
+        //            html += '        <span class="lever"></span>';
+        //            html += '     </label>';
+        //            html += '</div>';
+        //            html += '</td>';
+        //            html += '</tr>';
+        //        }
+        //    }
+        //    this.rightRows.html(html);
+        //    kendo.bind(this.rightRows, this.Model);
+        //}
 
         public AddPhotoButtonClick: { (e: any): void; };
         private addPhotoButtonClick(e) {

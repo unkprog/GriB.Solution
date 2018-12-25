@@ -89,3 +89,5 @@ export namespace Controller.Terminal {
 
     }
 }
+
+vars.registerController("terminal/paymentwithout", function (module: any): Interfaces.IController { return new module.Controller.Terminal.PaymentWithOut(); });

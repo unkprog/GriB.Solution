@@ -88,5 +88,6 @@ define(["require", "exports", "app/common/variables", "app/controller/terminal/p
             Terminal.PaymentNumPad = PaymentNumPad;
         })(Terminal = Controller.Terminal || (Controller.Terminal = {}));
     })(Controller = exports.Controller || (exports.Controller = {}));
+    vars.registerController("terminal/paymentnumpad", function (module) { return new module.Controller.Terminal.PaymentNumPad(); });
 });
 //# sourceMappingURL=paymentnumpad.js.map

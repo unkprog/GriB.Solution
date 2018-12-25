@@ -91,5 +91,6 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
             Terminal.PaymentWithOut = PaymentWithOut;
         })(Terminal = Controller.Terminal || (Controller.Terminal = {}));
     })(Controller = exports.Controller || (exports.Controller = {}));
+    vars.registerController("terminal/paymentwithout", function (module) { return new module.Controller.Terminal.PaymentWithOut(); });
 });
 //# sourceMappingURL=paymentwithout.js.map

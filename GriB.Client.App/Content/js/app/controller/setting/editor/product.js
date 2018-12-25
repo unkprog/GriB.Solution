@@ -197,7 +197,9 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                         this.setupListCurrencies(responseData);
                         this.changeModel({ field: "editModel.type" });
                         this.setupTableComposition();
-                        this.setupTableAccess();
+                        var model = this.EditorModel;
+                        var data = model.accesssalepoints;
+                        this.setupTableAccess(this.rightRows, data);
                     };
                     Product.prototype.setupListCategory = function (responseData) {
                         var html = '';
@@ -268,28 +270,6 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                         this.AddCompositionButtonClick = this.createTouchClickEvent(this.btnAddComposition, this.addCompositionButtonClick);
                         this.RemoveCompositionButtonClick = this.createTouchClickEvent(this.btnRemoveComposition, this.removeCompositionButtonClick);
                         kendo.bind(this.compositionRows, this.Model);
-                    };
-                    Product.prototype.setupTableAccess = function () {
-                        var model = this.EditorModel;
-                        var data = model.accesssalepoints;
-                        var html = '';
-                        if (data && data.length > 0) {
-                            for (var i = 0, icount = (data && data.length ? data.length : 0); i < icount; i++) {
-                                html += '<tr>';
-                                html += '<td data-bind="text:editModel.accesssalepoints[' + i + '].salepoint.name"></td>';
-                                html += '<td>';
-                                html += '<div class="switch valign-wrapper">';
-                                html += '    <label>';
-                                html += '        <input type="checkbox" data-bind="checked:editModel.accesssalepoints[' + i + '].isaccess">';
-                                html += '        <span class="lever"></span>';
-                                html += '     </label>';
-                                html += '</div>';
-                                html += '</td>';
-                                html += '</tr>';
-                            }
-                        }
-                        this.rightRows.html(html);
-                        kendo.bind(this.rightRows, this.Model);
                     };
                     Product.prototype.addPhotoButtonClick = function (e) {
                         $("#editor-view-image-input").trigger("click");

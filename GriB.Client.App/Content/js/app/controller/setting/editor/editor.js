@@ -34,6 +34,29 @@ define(["require", "exports", "app/common/basecontroller", "app/services/setting
                         enumerable: true,
                         configurable: true
                     });
+                    Editor.prototype.setupTableAccess = function (control, data) {
+                        var html = '';
+                        if (data && data.length > 0) {
+                            var item = void 0;
+                            for (var i = 0, icount = (data && data.length ? data.length : 0); i < icount; i++) {
+                                item = data[i];
+                                item;
+                                html += '<tr>';
+                                html += '<td data-bind="text:editModel.accesssalepoints[' + i + '].salepoint.name"></td>';
+                                html += '<td>';
+                                html += '<div class="switch valign-wrapper">';
+                                html += '    <label>';
+                                html += '        <input type="checkbox" data-bind="checked:editModel.accesssalepoints[' + i + '].isaccess">';
+                                html += '        <span class="lever"></span>';
+                                html += '     </label>';
+                                html += '</div>';
+                                html += '</td>';
+                                html += '</tr>';
+                            }
+                        }
+                        control.html(html);
+                        kendo.bind(control, this.Model);
+                    };
                     return Editor;
                 }(base.Controller.BaseEditor));
                 Editor_1.Editor = Editor;

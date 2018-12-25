@@ -33,3 +33,5 @@ export namespace Controller.Terminal {
         }
     }
 }
+
+vars.registerController("terminal/paymentnoncash", function (module: any): Interfaces.IController { return new module.Controller.Terminal.PaymentNonCash(); });

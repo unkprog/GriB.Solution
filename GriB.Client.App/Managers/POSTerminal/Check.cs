@@ -131,7 +131,7 @@ namespace GriB.Client.App.Managers.POSTerminal
         private const string cmdSetComment = @"POSTerminal\Check\[setcomment]";
         public static void SetComment(this Query query, int check, string comment, int user)
         {
-            query.Execute(cmdSetDiscount, new SqlParameter[] { new SqlParameter() { ParameterName = "@id", Value = check }, new SqlParameter("@u", user), new SqlParameter() { ParameterName = "@comment", Value = comment } }
+            query.Execute(cmdSetComment, new SqlParameter[] { new SqlParameter() { ParameterName = "@id", Value = check }, new SqlParameter("@u", user), new SqlParameter() { ParameterName = "@comment", Value = comment } }
             , (values) => { });
         }
     }
