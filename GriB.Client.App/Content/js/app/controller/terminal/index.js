@@ -11,7 +11,7 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-define(["require", "exports", "app/common/variables", "app/common/basecontroller", "app/services/posterminalservice", "app/common/variables", "app/controller/terminal/navigationbar", "app/controller/terminal/navigationproduct", "app/controller/terminal/navigationcheck"], function (require, exports, vars, base, svc, variables_1, navigationBar, navigationProduct, navigationCheck) {
+define(["require", "exports", "app/common/variables", "app/common/basecontroller", "app/services/posterminalservice", "app/controller/terminal/navigationbar", "app/controller/terminal/navigationproduct", "app/controller/terminal/navigationcheck"], function (require, exports, vars, base, svc, navigationBar, navigationProduct, navigationCheck) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var Controller;
@@ -96,7 +96,7 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
                         controller.navBar.Bind();
                         controller.Reset();
                         controller.HideLoading();
-                        variables_1._app.HideLoading();
+                        vars._app.HideLoading();
                     });
                     return false;
                 };
@@ -138,5 +138,6 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
             Terminal.Index = Index;
         })(Terminal = Controller.Terminal || (Controller.Terminal = {}));
     })(Controller = exports.Controller || (exports.Controller = {}));
+    vars.registerController("terminal/index", function (module) { return new module.Controller.Terminal.Index(); });
 });
 //# sourceMappingURL=index.js.map

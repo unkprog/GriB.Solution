@@ -28,3 +28,5 @@ export namespace Controller.Setting.Card {
         }
     }
 }
+
+vars.registerController("setting/card/unit", function (module: any): Interfaces.IController { return new module.Controller.Setting.Card.Unit(); });

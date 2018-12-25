@@ -36,32 +36,7 @@ _showError = (error: string) => { _app.ShowError(error); }
 
 export declare let _controllers: any;
 _controllers = {};
-
-_controllers["security/login"]    = function (module: any): Interfaces.IController { _app.SetControlNavigation(_app); return new module.Controller.Security.Login(); };
-_controllers["security/register"] = function (module: any): Interfaces.IController { _app.SetControlNavigation(_app); return new module.Controller.Security.Register(); };
-_controllers["security/recovery"] = function (module: any): Interfaces.IController { _app.SetControlNavigation(_app); return new module.Controller.Security.Recovery(); };
 _controllers["main"] = function (module: any): Interfaces.IController { return new module.Controller.Main(); };
-
-//export declare let _maincontrollers: any;
-//_maincontrollers = {};
-
-_controllers["setting/index"] = function (module: any): Interfaces.IController { return new module.Controller.Setting.Index(); };
-_controllers["report/index"] = function (module: any): Interfaces.IController { return new module.Controller.Report.Index(); };
-_controllers["about/index"] = function (module: any): Interfaces.IController { return new module.Controller.About.Index(); };
-
-_controllers["setting/editor/organization"] = function (module: any): Interfaces.IController { return new module.Controller.Setting.Editor.Organization(); };
-_controllers["setting/editor/salepoint"] = function (module: any): Interfaces.IController { return new module.Controller.Setting.Editor.SalePoint(); };
-_controllers["setting/editor/employee"] = function (module: any): Interfaces.IController { return new module.Controller.Setting.Editor.Employee(); };
-_controllers["setting/editor/currency"] = function (module: any): Interfaces.IController { return new module.Controller.Setting.Editor.Currency(); };
-_controllers["setting/editor/unit"] = function (module: any): Interfaces.IController { return new module.Controller.Setting.Editor.Unit(); };
-_controllers["setting/editor/product"] = function (module: any): Interfaces.IController { return new module.Controller.Setting.Editor.Product(); };
-
-_controllers["setting/card/salepoint"] = function (module: any): Interfaces.IController { return new module.Controller.Setting.Card.SalePoint(); };
-_controllers["setting/card/employee"] = function (module: any): Interfaces.IController { return new module.Controller.Setting.Card.Employee(); };
-_controllers["setting/card/currency"] = function (module: any): Interfaces.IController { return new module.Controller.Setting.Card.Currency(); };
-_controllers["setting/card/unit"] = function (module: any): Interfaces.IController { return new module.Controller.Setting.Card.Unit(); };
-_controllers["setting/card/product"] = function (module: any): Interfaces.IController { return new module.Controller.Setting.Card.Product(); };
-_controllers["setting/card/productselect"] = function (module: any): Interfaces.IController { return new module.Controller.Setting.Card.ProductSelect(); };
 
 export function registerController(crtlId: string, funcConstructor: (module: any) => Interfaces.IController): void {
     if (!_controllers[crtlId])

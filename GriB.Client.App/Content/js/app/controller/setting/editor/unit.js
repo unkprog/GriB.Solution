@@ -80,5 +80,6 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
             })(Editor = Setting.Editor || (Setting.Editor = {}));
         })(Setting = Controller.Setting || (Controller.Setting = {}));
     })(Controller = exports.Controller || (exports.Controller = {}));
+    vars.registerController("setting/editor/unit", function (module) { return new module.Controller.Setting.Editor.Unit(); });
 });
 //# sourceMappingURL=unit.js.map

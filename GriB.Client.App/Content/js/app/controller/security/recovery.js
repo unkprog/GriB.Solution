@@ -11,7 +11,7 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-define(["require", "exports", "app/common/variables", "app/common/utils", "app/controller/security/account", "app/common/variables"], function (require, exports, vars, utils, acc, variables_1) {
+define(["require", "exports", "app/common/variables", "app/common/utils", "app/controller/security/account"], function (require, exports, vars, utils, acc) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var Controller;
@@ -48,9 +48,9 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                     if (this.validate(model)) {
                         controller.AccountService.Recovery(model, function (responseData) {
                             if (responseData.result == "Ok")
-                                variables_1._app.ShowMessage(vars._statres("label$passwordRecovery"), vars._statres("msg$success$Recovery"), function () { variables_1._app.OpenController({ urlController: "security/login" }); });
+                                vars._app.ShowMessage(vars._statres("label$passwordRecovery"), vars._statres("msg$success$Recovery"), function () { vars._app.OpenController({ urlController: "security/login" }); });
                             else
-                                variables_1._app.ShowError(responseData);
+                                vars._app.ShowError(responseData);
                         });
                     }
                 };
@@ -67,5 +67,6 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
             Security.Recovery = Recovery;
         })(Security = Controller.Security || (Controller.Security = {}));
     })(Controller = exports.Controller || (exports.Controller = {}));
+    vars.registerController("security/recovery", function (module) { vars._app.SetControlNavigation(vars._app); return new module.Controller.Security.Recovery(); });
 });
 //# sourceMappingURL=recovery.js.map

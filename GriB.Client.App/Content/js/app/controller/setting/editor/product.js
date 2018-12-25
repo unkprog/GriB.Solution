@@ -11,7 +11,7 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-define(["require", "exports", "app/common/variables", "app/common/utils", "app/controller/setting/editor/editor", "app/common/variables"], function (require, exports, vars, utils, edit, variables_1) {
+define(["require", "exports", "app/common/variables", "app/common/utils", "app/controller/setting/editor/editor"], function (require, exports, vars, utils, edit) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var Controller;
@@ -279,7 +279,7 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                     };
                     Product.prototype.addCompositionButtonClick = function (e) {
                         var self = this;
-                        variables_1._app.OpenController({
+                        vars._app.OpenController({
                             urlController: 'setting/card/product', isModal: true, onLoadController: function (controller) {
                                 var ctrlProduct = controller;
                                 ctrlProduct.CardSettings.IsAdd = false;
@@ -335,5 +335,6 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
             })(Editor = Setting.Editor || (Setting.Editor = {}));
         })(Setting = Controller.Setting || (Controller.Setting = {}));
     })(Controller = exports.Controller || (exports.Controller = {}));
+    vars.registerController("setting/editor/product", function (module) { return new module.Controller.Setting.Editor.Product(); });
 });
 //# sourceMappingURL=product.js.map

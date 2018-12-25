@@ -1,7 +1,6 @@
 ﻿import vars = require('app/common/variables');
 import utils = require('app/common/utils');
 import acc = require('app/controller/security/account');
-import { _app } from 'app/common/variables';
 
 export namespace Controller.Security {
     export class Recovery extends acc.Controller.Security.Account {
@@ -41,9 +40,9 @@ export namespace Controller.Security {
             if (this.validate(model)) {
                 controller.AccountService.Recovery(model, (responseData) => {
                     if (responseData.result == "Ok")
-                        _app.ShowMessage(vars._statres("label$passwordRecovery"), vars._statres("msg$success$Recovery"), () => { _app.OpenController({ urlController: "security/login" }); });
+                        vars._app.ShowMessage(vars._statres("label$passwordRecovery"), vars._statres("msg$success$Recovery"), () => { vars._app.OpenController({ urlController: "security/login" }); });
                     else
-                        _app.ShowError(responseData);
+                        vars._app.ShowError(responseData);
                 });
             }
         }
@@ -60,3 +59,5 @@ export namespace Controller.Security {
         }
     }
 }
+
+vars.registerController("security/recovery", function (module: any): Interfaces.IController { vars._app.SetControlNavigation(vars._app); return new module.Controller.Security.Recovery(); });

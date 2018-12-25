@@ -95,5 +95,6 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
             })(Editor = Setting.Editor || (Setting.Editor = {}));
         })(Setting = Controller.Setting || (Controller.Setting = {}));
     })(Controller = exports.Controller || (exports.Controller = {}));
+    vars.registerController("setting/editor/organization", function (module) { return new module.Controller.Setting.Editor.Organization(); });
 });
 //# sourceMappingURL=organization.js.map

@@ -11,7 +11,7 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-define(["require", "exports", "app/common/variables", "app/common/utils", "app/controller/security/account", "app/common/variables"], function (require, exports, vars, utils, acc, variables_1) {
+define(["require", "exports", "app/common/variables", "app/common/utils", "app/controller/security/account"], function (require, exports, vars, utils, acc) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var Controller;
@@ -48,7 +48,7 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                     this.destroyTouchClickEvent("btn-forgot", this.ForgotButtonClick);
                 };
                 Login.prototype.loginButtonClick = function (e) {
-                    variables_1._app.ShowLoading();
+                    vars._app.ShowLoading();
                     var controller = this;
                     var model = {
                         phone: $('#login-phone').val(),
@@ -58,14 +58,14 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                         controller.AccountService.Login(model, function (responseData) {
                             if (responseData.result == "Ok") {
                                 vars._identity = responseData.indetity;
-                                variables_1._app.OpenController({ urlController: "main" });
+                                vars._app.OpenController({ urlController: "main" });
                             }
                             else
-                                variables_1._app.ShowError(responseData.error);
+                                vars._app.ShowError(responseData.error);
                         });
                     }
                     else
-                        variables_1._app.HideLoading();
+                        vars._app.HideLoading();
                 };
                 Login.prototype.validate = function (model) {
                     var result = true;
@@ -90,5 +90,6 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
             Security.Login = Login;
         })(Security = Controller.Security || (Controller.Security = {}));
     })(Controller = exports.Controller || (exports.Controller = {}));
+    vars.registerController("security/login", function (module) { vars._app.SetControlNavigation(vars._app); return new module.Controller.Security.Login(); });
 });
 //# sourceMappingURL=login.js.map

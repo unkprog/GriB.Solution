@@ -32,3 +32,4 @@ export namespace Controller.Setting.Card {
         }
     }
 }
+vars.registerController("setting/card/employee", function (module: any): Interfaces.IController { return new module.Controller.Setting.Card.Employee(); });

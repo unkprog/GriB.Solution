@@ -2,7 +2,6 @@
 import acc = require('app/services/accountservice');
 import vars = require('app/common/variables');
 import utils = require('app/common/utils');
-import { _app } from 'app/common/variables';
 
 export namespace Controller.Security {
     export class Register extends bc.Controller.Base {
@@ -47,9 +46,9 @@ export namespace Controller.Security {
             if (this.validate(model)) {
                 controller.accountService.Register(model, (responseData) => {
                     if (responseData.result == "Ok")
-                        _app.ShowMessage(vars._statres("label$passwordRecovery"), vars._statres("msg$success$Register"), () => { _app.OpenController({ urlController: "security/login" }); });
+                        vars._app.ShowMessage(vars._statres("label$passwordRecovery"), vars._statres("msg$success$Register"), () => { vars._app.OpenController({ urlController: "security/login" }); });
                     else
-                        _app.ShowError(responseData);
+                        vars._app.ShowError(responseData);
                 });
             }
            
@@ -71,3 +70,5 @@ export namespace Controller.Security {
         }
     }
 }
+
+vars.registerController("security/register", function (module: any): Interfaces.IController { vars._app.SetControlNavigation(vars._app); return new module.Controller.Security.Register(); });

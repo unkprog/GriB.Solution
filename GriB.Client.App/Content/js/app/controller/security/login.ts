@@ -1,7 +1,6 @@
 ﻿import vars = require('app/common/variables');
 import utils = require('app/common/utils');
 import acc = require('app/controller/security/account');
-import { _app } from 'app/common/variables';
 
 export namespace Controller.Security {
     export class Login extends acc.Controller.Security.Account {
@@ -40,7 +39,7 @@ export namespace Controller.Security {
 
         public LoginButtonClick: { (e: any): void; };
         private loginButtonClick(e) {
-            _app.ShowLoading();
+            vars._app.ShowLoading();
             let controller = this;
             let model: Interfaces.Model.ILoginModel = {
                 phone: <string>$('#login-phone').val(),
@@ -51,14 +50,14 @@ export namespace Controller.Security {
                 controller.AccountService.Login(model, (responseData) => {
                     if (responseData.result == "Ok") {
                         vars._identity = responseData.indetity;
-                        _app.OpenController({ urlController: "main" });
+                        vars._app.OpenController({ urlController: "main" });
                     }
                     else
-                        _app.ShowError(responseData.error);
+                        vars._app.ShowError(responseData.error);
                 });
             }
             else
-                _app.HideLoading();
+                vars._app.HideLoading();
         }
 
         private validate(model: Interfaces.Model.ILoginModel): boolean {
@@ -88,3 +87,5 @@ export namespace Controller.Security {
         }
     }
 }
+
+vars.registerController("security/login", function (module: any): Interfaces.IController { vars._app.SetControlNavigation(vars._app); return new module.Controller.Security.Login(); });

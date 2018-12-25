@@ -1,7 +1,6 @@
 ﻿import vars = require('app/common/variables');
 import utils = require('app/common/utils');
 import edit = require('app/controller/setting/editor/editor');
-import { _app } from 'app/common/variables';
 
 export namespace Controller.Setting.Editor {
     export class Employee extends edit.Controller.Setting.Editor.Editor {
@@ -171,3 +170,5 @@ export namespace Controller.Setting.Editor {
         }
     }
 }
+
+vars.registerController("setting/editor/employee", function (module: any): Interfaces.IController { return new module.Controller.Setting.Editor.Employee(); });

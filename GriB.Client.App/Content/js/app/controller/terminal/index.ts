@@ -89,7 +89,7 @@ export namespace Controller.Terminal {
                 controller.navBar.Bind();
                 controller.Reset();
                 controller.HideLoading();
-                _app.HideLoading();
+                vars._app.HideLoading();
             });
             return false;
         }

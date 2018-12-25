@@ -54,5 +54,6 @@ define(["require", "exports", "app/common/variables", "app/controller/setting/ca
             })(Card = Setting.Card || (Setting.Card = {}));
         })(Setting = Controller.Setting || (Controller.Setting = {}));
     })(Controller = exports.Controller || (exports.Controller = {}));
+    vars.registerController("setting/card/product", function (module) { return new module.Controller.Setting.Card.Product(); });
 });
 //# sourceMappingURL=product.js.map

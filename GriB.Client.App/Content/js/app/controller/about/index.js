@@ -11,7 +11,7 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-define(["require", "exports", "app/common/basecontroller"], function (require, exports, base) {
+define(["require", "exports", "app/common/variables", "app/common/basecontroller"], function (require, exports, vars, base) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var Controller;
@@ -42,5 +42,6 @@ define(["require", "exports", "app/common/basecontroller"], function (require, e
             About.Index = Index;
         })(About = Controller.About || (Controller.About = {}));
     })(Controller = exports.Controller || (exports.Controller = {}));
+    vars.registerController("about/index", function (module) { return new module.Controller.About.Index(); });
 });
 //# sourceMappingURL=index.js.map

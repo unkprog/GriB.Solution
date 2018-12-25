@@ -11,7 +11,7 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-define(["require", "exports", "app/common/variables", "app/common/basecontroller", "app/common/variables"], function (require, exports, vars, base, variables_1) {
+define(["require", "exports", "app/common/variables", "app/common/basecontroller"], function (require, exports, vars, base) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var Controller;
@@ -67,36 +67,37 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
                     this.destroyTouchClickEvent("btn-client", this.ClientButtonClick);
                 };
                 Index.prototype.organizationButtonClick = function (e) {
-                    variables_1._main.OpenController({ urlController: "setting/editor/organization", backController: this });
+                    vars._main.OpenController({ urlController: "setting/editor/organization", backController: this });
                 };
                 Index.prototype.salePointButtonClick = function (e) {
-                    variables_1._main.OpenController({ urlController: "setting/card/salepoint", backController: this });
+                    vars._main.OpenController({ urlController: "setting/card/salepoint", backController: this });
                 };
                 Index.prototype.employeetButtonClick = function (e) {
-                    variables_1._main.OpenController({ urlController: "setting/card/employee", backController: this });
+                    vars._main.OpenController({ urlController: "setting/card/employee", backController: this });
                 };
                 Index.prototype.currencyButtonClick = function (e) {
-                    variables_1._main.OpenController({ urlController: "setting/card/currency", backController: this });
+                    vars._main.OpenController({ urlController: "setting/card/currency", backController: this });
                 };
                 Index.prototype.unitButtonClick = function (e) {
-                    variables_1._main.OpenController({ urlController: "setting/card/unit", backController: this });
+                    vars._main.OpenController({ urlController: "setting/card/unit", backController: this });
                 };
                 Index.prototype.categoryButtonClick = function (e) {
-                    variables_1._main.OpenController({ urlController: "setting/card/category", backController: this });
+                    vars._main.OpenController({ urlController: "setting/card/category", backController: this });
                 };
                 Index.prototype.productButtonClick = function (e) {
-                    variables_1._main.OpenController({ urlController: "setting/card/product", backController: this });
+                    vars._main.OpenController({ urlController: "setting/card/product", backController: this });
                 };
                 Index.prototype.discountButtonClick = function (e) {
-                    variables_1._main.OpenController({ urlController: "setting/card/discount", backController: this });
+                    vars._main.OpenController({ urlController: "setting/card/discount", backController: this });
                 };
                 Index.prototype.clientButtonClick = function (e) {
-                    variables_1._main.OpenController({ urlController: "setting/card/client", backController: this });
+                    vars._main.OpenController({ urlController: "setting/card/client", backController: this });
                 };
                 return Index;
             }(base.Controller.Base));
             Setting.Index = Index;
         })(Setting = Controller.Setting || (Controller.Setting = {}));
     })(Controller = exports.Controller || (exports.Controller = {}));
+    vars.registerController("setting/index", function (module) { return new module.Controller.Setting.Index(); });
 });
 //# sourceMappingURL=index.js.map

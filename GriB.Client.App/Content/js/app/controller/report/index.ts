@@ -1,7 +1,5 @@
 ﻿import vars = require('app/common/variables');
-import utils = require('app/common/utils');
 import base = require('app/common/basecontroller');
-import { _app } from 'app/common/variables';
 
 export namespace Controller.Report {
     export class Index extends base.Controller.Base {
@@ -28,3 +26,5 @@ export namespace Controller.Report {
         }
     }
 }
+
+vars.registerController("report/index", function (module: any): Interfaces.IController { return new module.Controller.Report.Index(); });

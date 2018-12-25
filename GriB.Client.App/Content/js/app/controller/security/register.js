@@ -11,7 +11,7 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-define(["require", "exports", "app/common/basecontroller", "app/services/accountservice", "app/common/variables", "app/common/utils", "app/common/variables"], function (require, exports, bc, acc, vars, utils, variables_1) {
+define(["require", "exports", "app/common/basecontroller", "app/services/accountservice", "app/common/variables", "app/common/utils"], function (require, exports, bc, acc, vars, utils) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var Controller;
@@ -53,9 +53,9 @@ define(["require", "exports", "app/common/basecontroller", "app/services/account
                     if (this.validate(model)) {
                         controller.accountService.Register(model, function (responseData) {
                             if (responseData.result == "Ok")
-                                variables_1._app.ShowMessage(vars._statres("label$passwordRecovery"), vars._statres("msg$success$Register"), function () { variables_1._app.OpenController({ urlController: "security/login" }); });
+                                vars._app.ShowMessage(vars._statres("label$passwordRecovery"), vars._statres("msg$success$Register"), function () { vars._app.OpenController({ urlController: "security/login" }); });
                             else
-                                variables_1._app.ShowError(responseData);
+                                vars._app.ShowError(responseData);
                         });
                     }
                 };
@@ -74,5 +74,6 @@ define(["require", "exports", "app/common/basecontroller", "app/services/account
             Security.Register = Register;
         })(Security = Controller.Security || (Controller.Security = {}));
     })(Controller = exports.Controller || (exports.Controller = {}));
+    vars.registerController("security/register", function (module) { vars._app.SetControlNavigation(vars._app); return new module.Controller.Security.Register(); });
 });
 //# sourceMappingURL=register.js.map

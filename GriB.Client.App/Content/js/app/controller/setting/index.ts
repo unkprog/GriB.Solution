@@ -1,7 +1,5 @@
 ﻿import vars = require('app/common/variables');
-import utils = require('app/common/utils');
 import base = require('app/common/basecontroller');
-import { _main } from 'app/common/variables';
 
 export namespace Controller.Setting {
     export class Index extends base.Controller.Base {
@@ -58,47 +56,49 @@ export namespace Controller.Setting {
 
         public OrganizationButtonClick: { (e: any): void; };
         private organizationButtonClick(e) {
-            _main.OpenController({ urlController: "setting/editor/organization", backController: this });
+            vars._main.OpenController({ urlController: "setting/editor/organization", backController: this });
         }
 
         public SalePointButtonClick: { (e: any): void; };
         private salePointButtonClick(e) {
-            _main.OpenController({ urlController: "setting/card/salepoint", backController: this });
+            vars._main.OpenController({ urlController: "setting/card/salepoint", backController: this });
         }
 
         public EmployeetButtonClick: { (e: any): void; };
         private employeetButtonClick(e) {
-            _main.OpenController({ urlController: "setting/card/employee", backController: this });
+            vars._main.OpenController({ urlController: "setting/card/employee", backController: this });
         }
 
         public CurrencyButtonClick: { (e: any): void; };
         private currencyButtonClick(e) {
-            _main.OpenController({ urlController: "setting/card/currency", backController: this });
+            vars._main.OpenController({ urlController: "setting/card/currency", backController: this });
         }
 
         public UnitButtonClick: { (e: any): void; };
         private unitButtonClick(e) {
-            _main.OpenController({ urlController: "setting/card/unit", backController: this });
+            vars._main.OpenController({ urlController: "setting/card/unit", backController: this });
         }
 
         public CategoryButtonClick: { (e: any): void; };
         private categoryButtonClick(e) {
-            _main.OpenController({ urlController: "setting/card/category", backController: this });
+            vars._main.OpenController({ urlController: "setting/card/category", backController: this });
         }
 
         public ProductButtonClick: { (e: any): void; };
         private productButtonClick(e) {
-            _main.OpenController({ urlController: "setting/card/product", backController: this });
+            vars._main.OpenController({ urlController: "setting/card/product", backController: this });
         }
 
         public DiscountButtonClick: { (e: any): void; };
         private discountButtonClick(e) {
-            _main.OpenController({ urlController: "setting/card/discount", backController: this });
+            vars._main.OpenController({ urlController: "setting/card/discount", backController: this });
         }
 
         public ClientButtonClick: { (e: any): void; };
         private clientButtonClick(e) {
-            _main.OpenController({ urlController: "setting/card/client", backController: this });
+            vars._main.OpenController({ urlController: "setting/card/client", backController: this });
         }
     }
 }
+
+vars.registerController("setting/index", function (module: any): Interfaces.IController { return new module.Controller.Setting.Index(); });
