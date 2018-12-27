@@ -153,10 +153,9 @@
     export interface IControllerPaymentWithOut extends IControllerPayment {
     }
 
-
     export interface IControllerCheckComment extends IControllerEditor {
+        IsRequireComment: boolean;
         Comment: string;
-
         OnApply(controller: IControllerCheckComment): void;
     }
 }

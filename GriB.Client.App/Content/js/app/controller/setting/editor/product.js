@@ -289,7 +289,6 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                                 ctrlProduct.OnSelect = $.proxy(self.selectComposition, self);
                             }
                         });
-                        //require(["/Content/js/app/controller/setting/card/product.js"], function (module) {
                     };
                     Product.prototype.removeCompositionButtonClick = function (e) {
                         var self = this;

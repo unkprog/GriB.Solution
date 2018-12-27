@@ -24,6 +24,7 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/s
                     this.buttonCheckComment = this.controlContainerChecks.find("#btn-check-comment");
                     this.buttonCheckMenu = this.controlContainerChecks.find("#btn-check-menu");
                     this.buttonCheckPayment = this.controlContainerChecks.find("#btn-check-payment");
+                    this.buttonCheckCancel = this.controlContainerChecks.find("#btn-check-cancel-item");
                     this.model = new kendo.data.ObservableObject({
                         "visibleCheck": false,
                         "labelTime": vars._statres("label$time"),
@@ -105,15 +106,19 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/s
                     this.ClientButtonClick = utils.createTouchClickEvent(this.buttonCheckClient, this.clientButtonClick, this);
                     this.DiscountButtonClick = utils.createTouchClickEvent(this.buttonCheckDiscount, this.discountButtonClick, this);
                     this.NoDiscountButtonClick = utils.createTouchClickEvent(this.buttonCheckNoDiscount, this.noDiscountButtonClick, this);
+                    this.CancelCheckButtonClick = utils.createTouchClickEvent(this.buttonCheckCancel, this.cancelCheckButtonClick, this);
                     this.CommentButtonClick = utils.createTouchClickEvent(this.buttonCheckComment, this.commentButtonClick, this);
                     this.PaymentButtonClick = utils.createTouchClickEvent(this.buttonCheckPayment, this.paymentButtonClick, this);
                 };
                 NavigationCheck.prototype.destroyEvents = function () {
                     this.controlContainerChecks.unbind();
+                    utils.destroyTouchClickEvent(this.controlTableBodyPositions.find('.check_pos_q_add'), this.checkPosAddQuantitytButtonClick);
+                    utils.destroyTouchClickEvent(this.controlTableBodyPositions.find('.check_pos_q_del'), this.checkPosDelQuantitytButtonClick);
                     utils.destroyTouchClickEvent(this.buttonNewCheck, this.NewCheckButtonClick);
                     utils.destroyTouchClickEvent(this.buttonCheckClient, this.ClientButtonClick);
                     utils.destroyTouchClickEvent(this.buttonCheckDiscount, this.DiscountButtonClick);
                     utils.destroyTouchClickEvent(this.buttonCheckNoDiscount, this.NoDiscountButtonClick);
+                    utils.destroyTouchClickEvent(this.buttonCheckCancel, this.CancelCheckButtonClick);
                     utils.destroyTouchClickEvent(this.buttonCheckComment, this.CommentButtonClick);
                     utils.destroyTouchClickEvent(this.buttonCheckPayment, this.PaymentButtonClick);
                     this.destroyEventsChecks();
@@ -197,19 +202,41 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/s
                     var html = '';
                     var sum = 0;
                     var positionsArray = (controller.currentCheck && controller.currentCheck.positions ? controller.currentCheck.positions : []);
+                    utils.destroyTouchClickEvent(controller.controlTableBodyPositions.find('.check_pos_q_add'), controller.checkPosAddQuantitytButtonClick);
+                    utils.destroyTouchClickEvent(controller.controlTableBodyPositions.find('.check_pos_q_del'), controller.checkPosDelQuantitytButtonClick);
                     for (var i = 0, iCount = (positionsArray ? positionsArray.length : 0); i < iCount; i++) {
                         html += '<tr id="check_pos_' + i + '">';
                         html += '<td class="product-col-name">' + positionsArray[i].product.name + '</td>';
-                        html += '<td class="product-col-btn"><a class="product-col-button-delete"><i class="material-icons editor-header">add_circle_outline</i></a></td>';
+                        html += '<td class="product-col-btn"><a class="product-col-button-delete check_pos_q_add"><i class="material-icons editor-header">add_circle_outline</i></a></td>';
                         html += '<td class="product-col-quantity-auto">' + positionsArray[i].quantity + '</td>';
-                        html += '<td class="product-col-btn"><a class="product-col-button-delete"><i class="material-icons editor-header">remove_circle_outline</i></a></td>';
+                        html += '<td class="product-col-btn"><a class="product-col-button-delete check_pos_q_del"><i class="material-icons editor-header">remove_circle_outline</i></a></td>';
                         html += '<td class="product-col-sum-auto">' + positionsArray[i].price + '</td>';
                         html += '</tr>';
-                        positionsArray[i].sum = (positionsArray[i].quantity ? positionsArray[i].quantity : 0) * (positionsArray[i].price ? positionsArray[i].price : 0);
-                        sum += (positionsArray[i].sum - ((controller.currentCheck.discount / 100) * positionsArray[i].sum));
                     }
                     controller.controlTableBodyPositions.html(html);
-                    this.model.set("checkSum", sum);
+                    utils.createTouchClickEvent(controller.controlTableBodyPositions.find('.check_pos_q_add'), controller.checkPosAddQuantitytButtonClick, controller);
+                    utils.createTouchClickEvent(controller.controlTableBodyPositions.find('.check_pos_q_del'), controller.checkPosDelQuantitytButtonClick, controller);
+                    controller.calcCheckSum();
+                };
+                NavigationCheck.prototype.checkPosAddQuantitytButtonClick = function (e) {
+                    this.setCurrentOrNew(undefined);
+                };
+                NavigationCheck.prototype.checkPosDelQuantitytButtonClick = function (e) {
+                    this.setCurrentOrNew(undefined);
+                };
+                NavigationCheck.prototype.calcCheckSum = function () {
+                    var controller = this;
+                    var result = 0;
+                    if (controller.currentCheck) {
+                        var positionsArray = (controller.currentCheck.positions ? controller.currentCheck.positions : []);
+                        for (var i = 0, iCount = (positionsArray ? positionsArray.length : 0); i < iCount; i++) {
+                            positionsArray[i].sum = (positionsArray[i].quantity ? positionsArray[i].quantity : 0) * (positionsArray[i].price ? positionsArray[i].price : 0);
+                            result += positionsArray[i].sum;
+                        }
+                        result = result - ((controller.currentCheck.discount / 100) * result);
+                    }
+                    this.model.set("checkSum", result);
+                    return result;
                 };
                 NavigationCheck.prototype.newCheckButtonClick = function (e) {
                     this.setCurrentOrNew(undefined);
@@ -360,12 +387,36 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/s
                         });
                     }
                 };
+                NavigationCheck.prototype.cancelCheckButtonClick = function (e) {
+                    var controller = this;
+                    var self = this;
+                    if (self.currentCheck) {
+                        vars._app.OpenController({
+                            urlController: 'terminal/checkcomment', isModal: true, onLoadController: function (controller) {
+                                var ctrlComment = controller;
+                                ctrlComment.Header = vars._statres("label$specifyreasoncancel");
+                                ctrlComment.IsRequireComment = true;
+                                ctrlComment.Comment = self.currentCheck.comment;
+                                ctrlComment.OnApply = $.proxy(self.cancelCheckComment, self);
+                            }
+                        });
+                    }
+                };
+                NavigationCheck.prototype.cancelCheckComment = function (controller) {
+                    var self = this;
+                    if (self.currentCheck) {
+                        self.Service.CheckCancel(self.currentCheck.id, controller.Comment, function (responseData) {
+                            self.removeCurrentCheck(self.currentCheck);
+                        });
+                    }
+                };
                 NavigationCheck.prototype.commentButtonClick = function (e) {
                     var self = this;
                     if (self.currentCheck) {
                         vars._app.OpenController({
                             urlController: 'terminal/checkcomment', isModal: true, onLoadController: function (controller) {
                                 var ctrlComment = controller;
+                                ctrlComment.Header = vars._statres("label$commenttoorder");
                                 ctrlComment.Comment = self.currentCheck.comment;
                                 ctrlComment.OnApply = $.proxy(self.applyCheckComment, self);
                             }

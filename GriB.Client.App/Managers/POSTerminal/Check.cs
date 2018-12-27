@@ -134,5 +134,12 @@ namespace GriB.Client.App.Managers.POSTerminal
             query.Execute(cmdSetComment, new SqlParameter[] { new SqlParameter() { ParameterName = "@id", Value = check }, new SqlParameter("@u", user), new SqlParameter() { ParameterName = "@comment", Value = comment } }
             , (values) => { });
         }
+
+        private const string cmdCancel = @"POSTerminal\Check\[cancel]";
+        public static void Cancel(this Query query, check check, int user)
+        {
+            query.Execute(cmdCancel, new SqlParameter[] { new SqlParameter() { ParameterName = "@id", Value = check.id }, new SqlParameter("@u", user), new SqlParameter() { ParameterName = "@options", Value = check.options }, new SqlParameter() { ParameterName = "@comment", Value = check.comment } }
+            , (values) => { });
+        }
     }
 }

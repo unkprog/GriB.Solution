@@ -31,6 +31,9 @@ namespace GriB.Client.App.Models.POSTerminal
 
     public class check : model_sys
     {
+        public const int ciClose = 1;
+        public const int ciCancel = ciClose << 1;
+
         public check()
         {
             comment = string.Empty;

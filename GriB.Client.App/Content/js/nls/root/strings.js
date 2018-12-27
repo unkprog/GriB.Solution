@@ -197,6 +197,9 @@ define({
     "label$surrender": "Сдача",
     "label$comment": "Комментарий",
     "label$commenttoorder": "Комментарий к заказу",
+    "label$specifyreasoncancel": "Укажите причину отмены",
+
+    "error$comment$specifycomment": "Не заполнен комментарий",
 
     "error$numpad$amountinsufficient": "Полученная сумма недостаточна для закрытия чека",
     "error$without$reasonnotspecified": "Не указана прична неоплаты",

@@ -52,6 +52,9 @@ define(["require", "exports", "app/common/baseservice"], function (require, expo
             POSTerminalService.prototype.CheckSetComment = function (check, comment, Callback) {
                 this.PostApi({ Action: "/check_setcomment", RequestData: JSON.stringify({ check: check, comment: comment }), Callback: Callback });
             };
+            POSTerminalService.prototype.CheckCancel = function (check, comment, Callback) {
+                this.PostApi({ Action: "/check_cancel", RequestData: JSON.stringify({ check: check, comment: comment }), Callback: Callback });
+            };
             POSTerminalService.prototype.AddToCheck = function (check, product, quantity, Callback) {
                 this.PostApi({ Action: "/check_add_pos", RequestData: JSON.stringify({ check: check, product: product, quantity: quantity }), Callback: Callback });
             };

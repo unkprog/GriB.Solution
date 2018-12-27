@@ -348,9 +348,8 @@ export namespace Controller.Setting.Editor {
                     ctrlProduct.OnSelect = $.proxy(self.selectComposition, self);
                 }
             });
-            //require(["/Content/js/app/controller/setting/card/product.js"], function (module) {
-            
         }
+
         public RemoveCompositionButtonClick: { (e: any): void; };
         private removeCompositionButtonClick(e) {
             let self = this;

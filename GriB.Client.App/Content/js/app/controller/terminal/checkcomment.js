@@ -21,9 +21,7 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
             var CheckComment = /** @class */ (function (_super) {
                 __extends(CheckComment, _super);
                 function CheckComment() {
-                    var _this = _super.call(this) || this;
-                    _this.Model.set("Header", vars._statres("label$commenttoorder"));
-                    return _this;
+                    return _super.call(this) || this;
                 }
                 CheckComment.prototype.createOptions = function () {
                     return { Url: "/Content/view/terminal/checkcomment.html", Id: "checkcomment-view" };
@@ -39,6 +37,7 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                     var result = new kendo.data.ObservableObject({
                         "Header": "",
                         "editModel": {
+                            isrequirecomment: false,
                             comment: "",
                         },
                         "labelComment": vars._statres("label$comment"),
@@ -47,6 +46,12 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                     });
                     return result;
                 };
+                Object.defineProperty(CheckComment.prototype, "IsRequireComment", {
+                    get: function () { return this.Model.get("editModel.isrequirecomment"); },
+                    set: function (value) { this.Model.set("editModel.isrequirecomment", value); },
+                    enumerable: true,
+                    configurable: true
+                });
                 Object.defineProperty(CheckComment.prototype, "Comment", {
                     get: function () { return this.Model.get("editModel.comment"); },
                     set: function (value) { this.Model.set("editModel.comment", value); },
@@ -85,6 +90,10 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                 CheckComment.prototype.validate = function () {
                     var controller = this;
                     var result = _super.prototype.validate.call(this);
+                    if (utils.isNullOrEmpty(controller.Comment) && controller.IsRequireComment === true) {
+                        M.toast({ html: vars._statres("error$comment$specifycomment") });
+                        result = false;
+                    }
                     if (!utils.isNullOrEmpty(controller.Comment) && controller.Comment.length > 226) {
                         M.toast({ html: utils.stringFormat(vars._statres("msg$error$fieldexceedscharacters"), vars._statres("label$comment"), 226) });
                         result = false;

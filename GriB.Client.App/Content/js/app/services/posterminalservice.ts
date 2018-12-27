@@ -43,6 +43,10 @@ export namespace Services {
             this.PostApi({ Action: "/check_setcomment", RequestData: JSON.stringify({ check: check, comment: comment }), Callback: Callback });
         }
 
+        public CheckCancel(check: number, comment: string, Callback: (responseData: any) => void) {
+            this.PostApi({ Action: "/check_cancel", RequestData: JSON.stringify({ check: check, comment: comment }), Callback: Callback });
+        }
+
         public AddToCheck(check: number, product: number, quantity: number, Callback: (responseData: any) => void) {
             this.PostApi({ Action: "/check_add_pos", RequestData: JSON.stringify({ check: check, product: product, quantity: quantity }), Callback: Callback });
         }

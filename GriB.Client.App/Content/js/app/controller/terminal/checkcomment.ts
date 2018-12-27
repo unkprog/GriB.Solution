@@ -7,7 +7,6 @@ export namespace Controller.Terminal {
     export class CheckComment extends base.Controller.BaseEditor implements Interfaces.IControllerCheckComment {
         constructor() {
             super();
-            this.Model.set("Header", vars._statres("label$commenttoorder"));
         }
 
         protected createOptions(): Interfaces.IControllerOptions {
@@ -22,6 +21,7 @@ export namespace Controller.Terminal {
             let result: kendo.data.ObservableObject = new kendo.data.ObservableObject({
                 "Header": "",
                 "editModel": {
+                    isrequirecomment: false,
                     comment: "",
                 },
                 "labelComment": vars._statres("label$comment"),
@@ -31,6 +31,9 @@ export namespace Controller.Terminal {
 
             return result;
         }
+
+        public get IsRequireComment(): boolean { return this.Model.get("editModel.isrequirecomment"); }
+        public set IsRequireComment(value: boolean) { this.Model.set("editModel.isrequirecomment", value); }
 
         public get Comment(): string { return this.Model.get("editModel.comment"); }
         public set Comment(value: string) { this.Model.set("editModel.comment", value); }
@@ -80,6 +83,10 @@ export namespace Controller.Terminal {
             let controller = this;
             let result: boolean = super.validate();
 
+            if (utils.isNullOrEmpty(controller.Comment) && controller.IsRequireComment === true) {
+                M.toast({ html: vars._statres("error$comment$specifycomment") });
+                result = false;
+            } 
 
             if (!utils.isNullOrEmpty(controller.Comment) && controller.Comment.length > 226) {
                 M.toast({ html: utils.stringFormat(vars._statres("msg$error$fieldexceedscharacters"), vars._statres("label$comment"), 226) });

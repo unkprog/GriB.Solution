@@ -242,6 +242,7 @@
     <Content Include="Scripts\Query\POSTerminal\Check\[close].sql" />
     <Content Include="Scripts\Query\POSTerminal\Check\[get].sql" />
     <Content Include="Scripts\Query\POSTerminal\Check\[del].sql" />
+    <Content Include="Scripts\Query\POSTerminal\Check\[cancel].sql" />
     <Content Include="Scripts\Query\POSTerminal\Check\[setdiscount].sql" />
     <Content Include="Scripts\Query\POSTerminal\Check\[setcomment].sql" />
     <Content Include="Scripts\Query\POSTerminal\Check\[setclient].sql" />

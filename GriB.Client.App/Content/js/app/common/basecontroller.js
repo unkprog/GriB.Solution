@@ -54,9 +54,9 @@ define(["require", "exports", "app/common/utils", "app/common/variables", "./var
                 configurable: true
             });
             Object.defineProperty(Base.prototype, "Header", {
-                get: function () {
-                    return this._model ? this._model.get("Header") : "";
-                },
+                get: function () { return this._model ? this._model.get("Header") : ""; },
+                set: function (value) { if (this._model)
+                    this._model.set("Header", value); },
                 enumerable: true,
                 configurable: true
             });

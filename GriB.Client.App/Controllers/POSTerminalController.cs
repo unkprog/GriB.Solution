@@ -104,12 +104,28 @@ namespace GriB.Client.App.Controllers
 
         [HttpPost]
         [ActionName("check_setcomment")]
-        public HttpResponseMessage PostCheckSetCommet(check_setcomment_params setcommentparams)
+        public HttpResponseMessage PostCheckSetComment(check_setcomment_params setcommentparams)
         {
             return TryCatchResponseQuery((query) =>
             {
                 Principal principal = (Principal)HttpContext.Current.User;
                 Check.SetComment(query, setcommentparams.check, setcommentparams.comment, principal.Data.User.id);
+                return Request.CreateResponse(HttpStatusCode.OK, "Ok");
+            });
+        }
+
+        [HttpPost]
+        [ActionName("check_cancel")]
+        public HttpResponseMessage PostCheckCancel(check_setcomment_params cancelparams)
+        {
+            return TryCatchResponseQuery((query) =>
+            {
+                Principal principal = (Principal)HttpContext.Current.User;
+                check check = Check.GetCheck(query, cancelparams.check);
+                if((check.options & check.ciCancel) != check.ciCancel)
+                    check.options = check.options + check.ciCancel;
+                check.comment = cancelparams.comment;
+                Check.Cancel(query, check, principal.Data.User.id);
                 return Request.CreateResponse(HttpStatusCode.OK, "Ok");
             });
         }
@@ -136,7 +152,7 @@ namespace GriB.Client.App.Controllers
                 payment payment = new payment() { ptype = closeparams.paymentType, option = closeparams.paymentOption, sum = closeparams.paymentSum, comment = closeparams.comment };
                 payment.check = Check.GetCheck(query, closeparams.check);
                 payment.check.client = closeparams.client;
-                payment.check.options = ((payment.check.options & 1) == 1 ? payment.check.options : payment.check.options + 1);
+                payment.check.options = ((payment.check.options & check.ciClose) == check.ciClose ? payment.check.options : payment.check.options + check.ciClose);
                 payment.check = Check.Close(query, payment.check, principal.Data.User.id);
                 payment.client = new Models.Editor.client() { id = closeparams.client };
                 payment = Payment.SetPayment(query, payment, principal.Data.User.id);

@@ -37,9 +37,8 @@ export namespace Controller {
         }
        
 
-        public get Header(): string {
-            return this._model ? this._model.get("Header") : "";
-        }
+        public get Header(): string { return this._model ? this._model.get("Header") : ""; }
+        public set Header(value: string) { if(this._model) this._model.set("Header", value); }
 
         public ViewInit(view: JQuery): boolean {
             this._view = view;

@@ -20,6 +20,7 @@ export namespace Controller.Terminal {
             this.buttonCheckComment = this.controlContainerChecks.find("#btn-check-comment");
             this.buttonCheckMenu = this.controlContainerChecks.find("#btn-check-menu");
             this.buttonCheckPayment = this.controlContainerChecks.find("#btn-check-payment");
+            this.buttonCheckCancel = this.controlContainerChecks.find("#btn-check-cancel-item");
 
             this.model = new kendo.data.ObservableObject({
                 "visibleCheck": false,
@@ -36,9 +37,6 @@ export namespace Controller.Terminal {
                 "labelSplitCheck": vars._statres("label$splitcheck"),
                 "labelPrintPreCheck": vars._statres("label$printprecheck")
             });
-
-           
-
         }
 
         private service: svc.Services.POSTerminalService;
@@ -71,6 +69,8 @@ export namespace Controller.Terminal {
         private buttonCheckComment: JQuery;
         private buttonCheckMenu: JQuery;
         private buttonCheckPayment: JQuery;
+
+        private buttonCheckCancel: JQuery;
 
         public get ControlContainerChecks() {
             return this.controlContainerChecks;
@@ -126,16 +126,20 @@ export namespace Controller.Terminal {
             this.ClientButtonClick = utils.createTouchClickEvent(this.buttonCheckClient, this.clientButtonClick, this);
             this.DiscountButtonClick = utils.createTouchClickEvent(this.buttonCheckDiscount, this.discountButtonClick, this);
             this.NoDiscountButtonClick = utils.createTouchClickEvent(this.buttonCheckNoDiscount, this.noDiscountButtonClick, this);
+            this.CancelCheckButtonClick = utils.createTouchClickEvent(this.buttonCheckCancel, this.cancelCheckButtonClick, this);
             this.CommentButtonClick = utils.createTouchClickEvent(this.buttonCheckComment, this.commentButtonClick, this);
             this.PaymentButtonClick = utils.createTouchClickEvent(this.buttonCheckPayment, this.paymentButtonClick, this);
         }
 
         public destroyEvents(): void {
             this.controlContainerChecks.unbind();
+            utils.destroyTouchClickEvent(this.controlTableBodyPositions.find('.check_pos_q_add'), this.checkPosAddQuantitytButtonClick);
+            utils.destroyTouchClickEvent(this.controlTableBodyPositions.find('.check_pos_q_del'), this.checkPosDelQuantitytButtonClick);
             utils.destroyTouchClickEvent(this.buttonNewCheck, this.NewCheckButtonClick);
             utils.destroyTouchClickEvent(this.buttonCheckClient, this.ClientButtonClick);
             utils.destroyTouchClickEvent(this.buttonCheckDiscount, this.DiscountButtonClick);
             utils.destroyTouchClickEvent(this.buttonCheckNoDiscount, this.NoDiscountButtonClick);
+            utils.destroyTouchClickEvent(this.buttonCheckCancel, this.CancelCheckButtonClick);
             utils.destroyTouchClickEvent(this.buttonCheckComment, this.CommentButtonClick);
             utils.destroyTouchClickEvent(this.buttonCheckPayment, this.PaymentButtonClick);
             this.destroyEventsChecks();
@@ -233,34 +237,49 @@ export namespace Controller.Terminal {
             let html: string = '';
             let sum: number = 0;
             let positionsArray: Interfaces.Model.IPOSCheckPosition[] = (controller.currentCheck && controller.currentCheck.positions ? controller.currentCheck.positions : []);
+            utils.destroyTouchClickEvent(controller.controlTableBodyPositions.find('.check_pos_q_add'), controller.checkPosAddQuantitytButtonClick);
+            utils.destroyTouchClickEvent(controller.controlTableBodyPositions.find('.check_pos_q_del'), controller.checkPosDelQuantitytButtonClick);
+
+
             for (let i = 0, iCount = (positionsArray ? positionsArray.length : 0); i < iCount; i++) {
                 html += '<tr id="check_pos_' + i + '">';
                 html += '<td class="product-col-name">' + positionsArray[i].product.name + '</td>';
-                html += '<td class="product-col-btn"><a class="product-col-button-delete"><i class="material-icons editor-header">add_circle_outline</i></a></td>';
+                html += '<td class="product-col-btn"><a class="product-col-button-delete check_pos_q_add"><i class="material-icons editor-header">add_circle_outline</i></a></td>';
                 html += '<td class="product-col-quantity-auto">' + positionsArray[i].quantity + '</td>';
-                html += '<td class="product-col-btn"><a class="product-col-button-delete"><i class="material-icons editor-header">remove_circle_outline</i></a></td>';
+                html += '<td class="product-col-btn"><a class="product-col-button-delete check_pos_q_del"><i class="material-icons editor-header">remove_circle_outline</i></a></td>';
                 html += '<td class="product-col-sum-auto">' + positionsArray[i].price + '</td>';
                 html += '</tr>';
-                positionsArray[i].sum = (positionsArray[i].quantity ? positionsArray[i].quantity : 0) * (positionsArray[i].price ? positionsArray[i].price : 0);
-                sum += (positionsArray[i].sum - ((controller.currentCheck.discount / 100) * positionsArray[i].sum));
             }
 
             controller.controlTableBodyPositions.html(html);
-            this.model.set("checkSum", sum);
+            utils.createTouchClickEvent(controller.controlTableBodyPositions.find('.check_pos_q_add'), controller.checkPosAddQuantitytButtonClick, controller);
+            utils.createTouchClickEvent(controller.controlTableBodyPositions.find('.check_pos_q_del'), controller.checkPosDelQuantitytButtonClick, controller);
+            
+            controller.calcCheckSum();
         }
 
-        //private calcCheckSum(): number {
-        //    let controller = this;
-        //    let result: number = 0;
-        //    if (controller.currentCheck) {
-        //        let positionsArray: Interfaces.Model.IPOSCheckPosition[] = (controller.currentCheck.positions ? controller.currentCheck.positions : []);
-        //        for (let i = 0, iCount = (positionsArray ? positionsArray.length : 0); i < iCount; i++) {
-        //            positionsArray[i].sum = (positionsArray[i].quantity * positionsArray[i].price);
-        //            result += positionsArray[i].sum;
-        //        }
-        //    }
-        //    return result;
+        //private checkPosAddQuantitytButtonClick(e): void {
+        //    this.setCurrentOrNew(undefined);
         //}
+
+        //private checkPosDelQuantitytButtonClick(e): void {
+        //    this.setCurrentOrNew(undefined);
+        //}
+
+        private calcCheckSum(): number {
+            let controller = this;
+            let result: number = 0;
+            if (controller.currentCheck) {
+                let positionsArray: Interfaces.Model.IPOSCheckPosition[] = (controller.currentCheck.positions ? controller.currentCheck.positions : []);
+                for (let i = 0, iCount = (positionsArray ? positionsArray.length : 0); i < iCount; i++) {
+                    positionsArray[i].sum = (positionsArray[i].quantity ? positionsArray[i].quantity : 0) * (positionsArray[i].price ? positionsArray[i].price : 0);
+                    result += positionsArray[i].sum;
+                }
+                result = result - ((controller.currentCheck.discount / 100) * result);
+            }
+            this.model.set("checkSum", result);
+            return result;
+        }
 
         private NewCheckButtonClick: { (e: any): void; };
         private newCheckButtonClick(e): void {
@@ -388,6 +407,7 @@ export namespace Controller.Terminal {
             }
         }
 
+        // Установить скидку
         public DiscountButtonClick: { (e: any): void; };
         private discountButtonClick(e) {
             let self = this;
@@ -416,6 +436,7 @@ export namespace Controller.Terminal {
             }
         }
 
+        // Убрать скидку
         public NoDiscountButtonClick: { (e: any): void; };
         private noDiscountButtonClick(e) {
             let controller = this;
@@ -427,6 +448,34 @@ export namespace Controller.Terminal {
             }
         }
 
+        // Отменить чек
+        public CancelCheckButtonClick: { (e: any): void; };
+        private cancelCheckButtonClick(e) {
+            let controller = this;
+            let self = this;
+            if (self.currentCheck) {
+                vars._app.OpenController({
+                    urlController: 'terminal/checkcomment', isModal: true, onLoadController: (controller: Interfaces.IController) => {
+                        let ctrlComment: Interfaces.IControllerCheckComment = controller as Interfaces.IControllerCheckComment;
+                        ctrlComment.Header = vars._statres("label$specifyreasoncancel");
+                        ctrlComment.IsRequireComment = true;
+                        ctrlComment.Comment = self.currentCheck.comment;
+                        ctrlComment.OnApply = $.proxy(self.cancelCheckComment, self);
+                    }
+                });
+            }
+        }
+
+        private cancelCheckComment(controller: Interfaces.IControllerCheckComment) {
+            let self = this;
+            if (self.currentCheck) {
+                self.Service.CheckCancel(self.currentCheck.id, controller.Comment, (responseData) => {
+                    self.removeCurrentCheck(self.currentCheck);
+                });
+            }
+        }
+
+        // Комментарий к заказу
         public CommentButtonClick: { (e: any): void; };
         private commentButtonClick(e) {
             let self = this;
@@ -434,6 +483,7 @@ export namespace Controller.Terminal {
                 vars._app.OpenController({
                     urlController: 'terminal/checkcomment', isModal: true, onLoadController: (controller: Interfaces.IController) => {
                         let ctrlComment: Interfaces.IControllerCheckComment = controller as Interfaces.IControllerCheckComment;
+                        ctrlComment.Header = vars._statres("label$commenttoorder");
                         ctrlComment.Comment = self.currentCheck.comment;
                         ctrlComment.OnApply = $.proxy(self.applyCheckComment, self);
                     }
