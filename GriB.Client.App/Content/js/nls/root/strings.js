@@ -199,9 +199,12 @@ define({
     "label$commenttoorder": "Комментарий к заказу",
     "label$specifyreasoncancel": "Укажите причину отмены",
 
+    "error$terminal$ammountnotset": "Сумма заказа не задана",
     "error$comment$specifycomment": "Не заполнен комментарий",
 
     "error$numpad$amountinsufficient": "Полученная сумма недостаточна для закрытия чека",
     "error$without$reasonnotspecified": "Не указана прична неоплаты",
     "error$without$clientnotspecified": "Не указан клиент"
+
+
 });

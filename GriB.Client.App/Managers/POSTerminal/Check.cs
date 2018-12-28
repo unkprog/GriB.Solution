@@ -99,7 +99,18 @@ namespace GriB.Client.App.Managers.POSTerminal
                 result.price = (double)values[c++];
             });
 
+            if (result.quantity <= 0)
+                DelPosition(query, result);
+
             return result;
+        }
+
+        private const string cmdDelPosition = @"POSTerminal\Check\Position\[del]";
+        public static void DelPosition(this Query query, check_position position)
+        {
+            check_position result = position;
+            query.Execute(cmdDelPosition, new SqlParameter[] { new SqlParameter() { ParameterName = "@id", Value = result.id }, new SqlParameter() { ParameterName = "@product", Value = result.product.id } }
+            , (values) =>{ });
         }
 
         private const string cmdClose = @"POSTerminal\Check\[close]";

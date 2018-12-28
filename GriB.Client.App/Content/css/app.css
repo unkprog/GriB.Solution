@@ -477,3 +477,6 @@ input[type='number']:hover::-webkit-outer-spin-button {
 
 #btn-check-menu-dropdown {
   min-width: 150px !important; }
+
+.check_pos_q_add, .check_pos_q_del {
+  cursor: pointer; }

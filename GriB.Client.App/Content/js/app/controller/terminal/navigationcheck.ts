@@ -247,7 +247,7 @@ export namespace Controller.Terminal {
                 html += '<td class="product-col-btn"><a class="product-col-button-delete check_pos_q_add"><i class="material-icons editor-header">add_circle_outline</i></a></td>';
                 html += '<td class="product-col-quantity-auto">' + positionsArray[i].quantity + '</td>';
                 html += '<td class="product-col-btn"><a class="product-col-button-delete check_pos_q_del"><i class="material-icons editor-header">remove_circle_outline</i></a></td>';
-                html += '<td class="product-col-sum-auto">' + positionsArray[i].price + '</td>';
+                html += '<td class="product-col-sum-auto">' + utils.numberToString(positionsArray[i].price, 2) + '</td>';
                 html += '</tr>';
             }
 
@@ -257,14 +257,6 @@ export namespace Controller.Terminal {
             
             controller.calcCheckSum();
         }
-
-        //private checkPosAddQuantitytButtonClick(e): void {
-        //    this.setCurrentOrNew(undefined);
-        //}
-
-        //private checkPosDelQuantitytButtonClick(e): void {
-        //    this.setCurrentOrNew(undefined);
-        //}
 
         private calcCheckSum(): number {
             let controller = this;
@@ -277,7 +269,7 @@ export namespace Controller.Terminal {
                 }
                 result = result - ((controller.currentCheck.discount / 100) * result);
             }
-            this.model.set("checkSum", result);
+            this.model.set("checkSum", utils.numberToString(result, 2));
             return result;
         }
 
@@ -308,7 +300,7 @@ export namespace Controller.Terminal {
         private CheckButtonClick: { (e: any): void; };
         private checkButtonClick(e): void {
             let targetid: string = e.currentTarget.id;
-            let id: number = + targetid.replace("check_id_", "");
+            let id: number = +targetid.replace("check_id_", "");
             if (!id || id === -1) return;
             this.setCurrentCheckById(id);
         }
@@ -357,16 +349,19 @@ export namespace Controller.Terminal {
                 controller._AddPosition(product);
         }
 
-        public _AddPosition(product: number): void {
+        public _AddPosition(product: number, qunatity:number = 1): void {
             let controller = this;
             if (controller.currentCheck) {
-                this.Service.AddToCheck(controller.currentCheck.id, product, 1, (responseData) => {
+                this.Service.AddToCheck(controller.currentCheck.id, product, qunatity, (responseData) => {
                     let positionsArray: Interfaces.Model.IPOSCheckPosition[] = (controller.currentCheck.positions ? controller.currentCheck.positions : []);
                     let newItem: Interfaces.Model.IPOSCheckPosition = responseData.newposition;
                     let isNotFound: boolean = true;
                     for (let i = 0, iCount = (positionsArray ? positionsArray.length : 0); i < iCount; i++) {
                         if (newItem.index === positionsArray[i].index) {
-                            positionsArray[i] = newItem;
+                            if (newItem.quantity <= 0)
+                                positionsArray.splice(i, 1);
+                            else
+                                positionsArray[i] = newItem;
                             isNotFound = false;
                             break;
                         }
@@ -376,6 +371,26 @@ export namespace Controller.Terminal {
 
                     this.drawCheckPositions();
                 });
+            }
+        }
+
+        private checkPosAddQuantitytButtonClick(e): void {
+            let controller = this;
+            let positionsArray: Interfaces.Model.IPOSCheckPosition[] = (controller.currentCheck.positions ? controller.currentCheck.positions : []);
+            let curRow: JQuery = $(e.currentTarget).parent().parent();
+            if (curRow && curRow.length > 0) {
+                let id: number = +curRow[0].id.replace("check_pos_", "");
+                controller._AddPosition(positionsArray[id].product.id);
+            }
+        }
+
+        private checkPosDelQuantitytButtonClick(e): void {
+            let controller = this;
+            let positionsArray: Interfaces.Model.IPOSCheckPosition[] = (controller.currentCheck.positions ? controller.currentCheck.positions : []);
+            let curRow: JQuery = $(e.currentTarget).parent().parent();
+            if (curRow && curRow.length > 0) {
+                let id: number = +curRow[0].id.replace("check_pos_", "");
+                controller._AddPosition(positionsArray[id].product.id, -1);
             }
         }
 
@@ -517,6 +532,11 @@ export namespace Controller.Terminal {
         private selectTypePayment(controller: Interfaces.IControllerPaymentType) {
             let self = this;
             if (self.currentCheck) {
+                let sum: number = this.model.get("checkSum");
+                if (sum === undefined || sum <= 0) {
+                    M.toast({ html: vars._statres("error$terminal$ammountnotset") });
+                    return;
+                }
                 self.paymentData = { check: self.currentCheck.id, client: self.currentCheck.client.id, paymentType: controller.SelectedPaymentType, paymentOption: 0, paymentSum: 0, comment: '' };
                 if (this.paymentData.paymentType === 1) {
                     vars._app.OpenController({

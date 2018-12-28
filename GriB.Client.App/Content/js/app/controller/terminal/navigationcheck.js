@@ -210,19 +210,13 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/s
                         html += '<td class="product-col-btn"><a class="product-col-button-delete check_pos_q_add"><i class="material-icons editor-header">add_circle_outline</i></a></td>';
                         html += '<td class="product-col-quantity-auto">' + positionsArray[i].quantity + '</td>';
                         html += '<td class="product-col-btn"><a class="product-col-button-delete check_pos_q_del"><i class="material-icons editor-header">remove_circle_outline</i></a></td>';
-                        html += '<td class="product-col-sum-auto">' + positionsArray[i].price + '</td>';
+                        html += '<td class="product-col-sum-auto">' + utils.numberToString(positionsArray[i].price, 2) + '</td>';
                         html += '</tr>';
                     }
                     controller.controlTableBodyPositions.html(html);
                     utils.createTouchClickEvent(controller.controlTableBodyPositions.find('.check_pos_q_add'), controller.checkPosAddQuantitytButtonClick, controller);
                     utils.createTouchClickEvent(controller.controlTableBodyPositions.find('.check_pos_q_del'), controller.checkPosDelQuantitytButtonClick, controller);
                     controller.calcCheckSum();
-                };
-                NavigationCheck.prototype.checkPosAddQuantitytButtonClick = function (e) {
-                    this.setCurrentOrNew(undefined);
-                };
-                NavigationCheck.prototype.checkPosDelQuantitytButtonClick = function (e) {
-                    this.setCurrentOrNew(undefined);
                 };
                 NavigationCheck.prototype.calcCheckSum = function () {
                     var controller = this;
@@ -235,7 +229,7 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/s
                         }
                         result = result - ((controller.currentCheck.discount / 100) * result);
                     }
-                    this.model.set("checkSum", result);
+                    this.model.set("checkSum", utils.numberToString(result, 2));
                     return result;
                 };
                 NavigationCheck.prototype.newCheckButtonClick = function (e) {
@@ -311,17 +305,21 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/s
                     else
                         controller._AddPosition(product);
                 };
-                NavigationCheck.prototype._AddPosition = function (product) {
+                NavigationCheck.prototype._AddPosition = function (product, qunatity) {
                     var _this = this;
+                    if (qunatity === void 0) { qunatity = 1; }
                     var controller = this;
                     if (controller.currentCheck) {
-                        this.Service.AddToCheck(controller.currentCheck.id, product, 1, function (responseData) {
+                        this.Service.AddToCheck(controller.currentCheck.id, product, qunatity, function (responseData) {
                             var positionsArray = (controller.currentCheck.positions ? controller.currentCheck.positions : []);
                             var newItem = responseData.newposition;
                             var isNotFound = true;
                             for (var i = 0, iCount = (positionsArray ? positionsArray.length : 0); i < iCount; i++) {
                                 if (newItem.index === positionsArray[i].index) {
-                                    positionsArray[i] = newItem;
+                                    if (newItem.quantity <= 0)
+                                        positionsArray.splice(i, 1);
+                                    else
+                                        positionsArray[i] = newItem;
                                     isNotFound = false;
                                     break;
                                 }
@@ -330,6 +328,24 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/s
                                 positionsArray.push(newItem);
                             _this.drawCheckPositions();
                         });
+                    }
+                };
+                NavigationCheck.prototype.checkPosAddQuantitytButtonClick = function (e) {
+                    var controller = this;
+                    var positionsArray = (controller.currentCheck.positions ? controller.currentCheck.positions : []);
+                    var curRow = $(e.currentTarget).parent().parent();
+                    if (curRow && curRow.length > 0) {
+                        var id = +curRow[0].id.replace("check_pos_", "");
+                        controller._AddPosition(positionsArray[id].product.id);
+                    }
+                };
+                NavigationCheck.prototype.checkPosDelQuantitytButtonClick = function (e) {
+                    var controller = this;
+                    var positionsArray = (controller.currentCheck.positions ? controller.currentCheck.positions : []);
+                    var curRow = $(e.currentTarget).parent().parent();
+                    if (curRow && curRow.length > 0) {
+                        var id = +curRow[0].id.replace("check_pos_", "");
+                        controller._AddPosition(positionsArray[id].product.id, -1);
                     }
                 };
                 NavigationCheck.prototype.clientButtonClick = function (e) {
@@ -445,6 +461,11 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/s
                     var _this = this;
                     var self = this;
                     if (self.currentCheck) {
+                        var sum = this.model.get("checkSum");
+                        if (sum === undefined || sum <= 0) {
+                            M.toast({ html: vars._statres("error$terminal$ammountnotset") });
+                            return;
+                        }
                         self.paymentData = { check: self.currentCheck.id, client: self.currentCheck.client.id, paymentType: controller.SelectedPaymentType, paymentOption: 0, paymentSum: 0, comment: '' };
                         if (this.paymentData.paymentType === 1) {
                             vars._app.OpenController({

@@ -237,6 +237,7 @@
     <Content Include="Scripts\Query\Editor\Unit\[del].sql" />
     <Content Include="Scripts\Query\Editor\Unit\[get].sql" />
     <Content Include="Scripts\Query\Editor\Unit\[set].sql" />
+    <Content Include="Scripts\Query\POSTerminal\Check\Position\[del].sql" />
     <Content Include="Scripts\Query\POSTerminal\Check\Position\[add].sql" />
     <Content Include="Scripts\Query\POSTerminal\Check\Position\[get].sql" />
     <Content Include="Scripts\Query\POSTerminal\Check\[close].sql" />
