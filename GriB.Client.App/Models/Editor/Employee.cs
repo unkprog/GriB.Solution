@@ -38,12 +38,12 @@ namespace GriB.Client.App.Models.Editor
         {
             id = data.User.id;
             phone = data.User.phone;
-            sex = data.Person.sex;
-            birth = data.Person.birth;
-            fname = data.Person.fname;
-            mname = data.Person.mname;
-            lname = data.Person.lname;
-            email = data.Person.email;
+            sex = (data.Person == null ? 0 : data.Person.sex);
+            birth = (data.Person == null ? new System.DateTime(1899,12,30) : data.Person.birth);
+            fname = data?.Person?.fname;
+            mname = data?.Person?.mname;
+            lname = data?.Person?.lname;
+            email = data?.Person?.email;
             accesssalepoints = new List<salepointaccess>();
         }
     }

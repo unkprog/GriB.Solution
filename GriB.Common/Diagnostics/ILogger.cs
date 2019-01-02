@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Diagnostics;
 using System.Reflection;
+using System.IO;
 
 namespace GriB.Common.Diagnostics
 {
@@ -34,10 +35,12 @@ namespace GriB.Common.Diagnostics
 
     public class Logger : ILogger
     {
-        public Logger()
+        public Logger(string _Path)
         {
-
+            path = _Path;
         }
+
+        private string path;
 
         public bool IsLogging { get; set; }
         public string Source { get; set; }
@@ -78,17 +81,29 @@ namespace GriB.Common.Diagnostics
         {
             if (IsLogging)
             {
-                string eventMessage = message;
-                if (!string.IsNullOrEmpty(trace))
-                    eventMessage = string.Concat(eventMessage, Environment.NewLine, Environment.NewLine, "Stack trace:", Environment.NewLine, trace);
-#if DEBUG
-                Debug.WriteLine(eventMessage, eventType.ToString());
-#endif
-                string source = GetSource();
-                using (EventLog eventLog = new EventLog("Application"))
+                //                string eventMessage = message;
+                //                if (!string.IsNullOrEmpty(trace))
+                //                    eventMessage = string.Concat(eventMessage, Environment.NewLine, Environment.NewLine, "Stack trace:", Environment.NewLine, trace);
+                //#if DEBUG
+                //                Debug.WriteLine(eventMessage, eventType.ToString());
+                //#endif
+                //                string source = GetSource();
+                //                using (EventLog eventLog = new EventLog("Application"))
+                //                {
+                //                    eventLog.Source = source; // "Application";
+                //                    eventLog.WriteEntry(eventMessage, eventType, eventId, category);
+                //                }
+
+                //Write to a file
+                string newFileName = Guid.NewGuid().ToString().Replace("-", string.Empty);
+                using (StreamWriter writer = new StreamWriter(string.IsNullOrEmpty(path) ? newFileName : string.Concat(path, "\\", newFileName)))
                 {
-                    eventLog.Source = source; // "Application";
-                    eventLog.WriteEntry(eventMessage, eventType, eventId, category);
+                    writer.WriteLine(message);
+                    if (!string.IsNullOrEmpty(trace))
+                    {
+                        writer.WriteLine("Stack trace:");
+                        writer.WriteLine(trace);
+                    }
                 }
             }
         }

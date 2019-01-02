@@ -68,9 +68,10 @@ export namespace Controller.Terminal {
                     html += salePoints[i].salepoint.name;
                     html += '</a></li>';
 
-                    if (vars._identity.employee.defaultsalepoint === salePoints[i].salepoint.id) {
+                    if (vars._identity.employee.defaultsalepoint === salePoints[i].salepoint.id || vars._identity.employee.defaultsalepoint === 0) {
                         let CurrentSalePoint = this.terminal.Model.get("POSData.CurrentSalePoint").toJSON();
                         CurrentSalePoint = salePoints[i].salepoint;
+                        vars._identity.employee.defaultsalepoint = CurrentSalePoint;
                         this.terminal.Model.set("POSData.CurrentSalePoint", CurrentSalePoint);
                     }
                 }

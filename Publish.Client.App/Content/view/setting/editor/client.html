@@ -1,0 +1,49 @@
+﻿<div id="editor-view-client">
+    <div id="editor-view-tab-client" class="padding-0001em">
+        <div class="section editor-section">
+            <h5 data-bind="text:labelClientInformation"></h5>
+        </div>
+        <div class="row row-inputs">
+            <div class="col s12 m6 l4 xl3">
+                <div class="input-field">
+                    <input id="client-surname" type="text" data-length="62" data-bind="value:editModel.fname">
+                    <label for="client-surname" data-bind="text:labelSurname"></label>
+                </div>
+            </div>
+            <div class="col s12 m6 l4 xl3">
+                <div class="input-field">
+                    <input id="client-name" type="text" data-length="62" data-bind="value:editModel.mname">
+                    <label for="client-name" data-bind="text:labelName"></label>
+                </div>
+            </div>
+            <div class="col s12 m6 l4 xl3">
+                <div class="input-field">
+                    <input id="client-patronymic" type="text" data-length="62" data-bind="value:editModel.lname">
+                    <label for="client-patronymic" data-bind="text:labelPatronymic"></label>
+                </div>
+            </div>
+        </div>
+        <div class="row row-inputs">
+            <div class="col s12 m6 l4 xl3 ">
+                <div class="input-field">
+                    <select id="client-sex-list" data-bind="value:editModel.sex">
+                        <option value="0" data-bind="text:labelUnspecified"></option>
+                        <option value="1" data-bind="text:labelMale"></option>
+                        <option value="2" data-bind="text:labelFemale"></option>
+                    </select>
+                    <label for="client-sex-list" data-bind="text:labelSex"></label>
+                </div>
+            </div>
+
+        </div>
+        <div class="row row-inputs">
+            <div class="col s12 m6 l4 xl3">
+                <div class="input-field">
+                    <input id="login-phone" type="tel" data-bind="value:editModel.phone">
+                    <label for="login-phone" data-bind="text:labelPhone"></label>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>

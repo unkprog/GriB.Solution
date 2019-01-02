@@ -1,0 +1,34 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <script src="/Content/js/lib/jquery-3.3.1.min.js"></script>
+</head>
+<body>
+    <button id="rttest1" title="test">employees</button>
+    <br />
+    <div id="div_result" />
+
+    <script>
+        $("#rttest1").click(function () {
+            var model = {
+                db: 1
+            };
+
+            $.ajax({
+                url: "/api/account/employees?db=1",
+                type: "get",
+                dataType: "json",
+                success: function (data) {
+                    $('#div_result').html(JSON.stringify(data));
+                },
+                error: function (e) {
+                    alert("Error:" + e);
+                },
+                //data: model
+            });
+        });
+    </script>
+</body>
+</html>

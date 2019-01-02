@@ -68,44 +68,44 @@ export namespace Controller.Setting.Editor {
             this.setupTableAccess($("#employee-rigths-rows"), data);
         }
 
-        //private setupTableAccess():void {
-        //    let model: Interfaces.Model.IEmployeeModel = this.EditorModel;
-        //    let data: Interfaces.Model.ISalePointAccessModel[] = model.accesssalepoints;
-        //    let html: string = '';
+        protected setupTableAccess(control: JQuery, data: Interfaces.Model.ISalePointAccessModel[]):void {
+            let model: Interfaces.Model.IEmployeeModel = this.EditorModel;
+            //let data: Interfaces.Model.ISalePointAccessModel[] = model.accesssalepoints;
+            let html: string = '';
 
-        //    if (data && data.length > 0) {
-        //        let item: Interfaces.Model.ISalePointAccessModel;
-        //        for (let i = 0, icount = (data && data.length ? data.length : 0); i < icount; i++) {
-        //            item = data[i];
-        //            item
+            if (data && data.length > 0) {
+                let item: Interfaces.Model.ISalePointAccessModel;
+                for (let i = 0, icount = (data && data.length ? data.length : 0); i < icount; i++) {
+                    item = data[i];
+                    item
 
-        //            html += '<tr>';
-        //            html += '<td data-bind="text:editModel.accesssalepoints[' + i + '].salepoint.name"></td>';
+                    html += '<tr>';
+                    html += '<td data-bind="text:editModel.accesssalepoints[' + i + '].salepoint.name"></td>';
 
-        //            html += '<td>';
-        //            html += '<div class="switch valign-wrapper">';
-        //            html += '    <label>';
-        //            html += '        <input type="checkbox" data-bind="checked:editModel.accesssalepoints[' + i + '].isaccess">';
-        //            html += '        <span class="lever"></span>';
-        //            html += '     </label>';
-        //            html += '</div>';
-        //            html += '</td>';
+                    html += '<td>';
+                    html += '<div class="switch valign-wrapper">';
+                    html += '    <label>';
+                    html += '        <input type="checkbox" data-bind="checked:editModel.accesssalepoints[' + i + '].isaccess">';
+                    html += '        <span class="lever"></span>';
+                    html += '     </label>';
+                    html += '</div>';
+                    html += '</td>';
 
-        //            html += '<td>';
-        //            html += '<div class="valign-wrapper">';
-        //            html += '    <label>';
-        //            html += '        <input name="group_isdefault" type="radio" value="' + data[i].salepoint.id + '" data-bind="checked:editModel.defaultsalepoint">';
-        //            html += '        <span></span>';
-        //            html += '     </label>';
-        //            html += '</div>';
-        //            html += '</td>';
-        //            html += '</tr>';
-        //        }
-        //    }
+                    html += '<td>';
+                    html += '<div class="valign-wrapper">';
+                    html += '    <label>';
+                    html += '        <input name="group_isdefault" type="radio" value="' + data[i].salepoint.id + '" data-bind="checked:editModel.defaultsalepoint">';
+                    html += '        <span></span>';
+                    html += '     </label>';
+                    html += '</div>';
+                    html += '</td>';
+                    html += '</tr>';
+                }
+            }
             
-        //    $("#employee-rigths-rows").html(html);
-        //    kendo.bind($("#employee-rigths-rows"), this.Model);
-        //}
+            $("#employee-rigths-rows").html(html);
+            kendo.bind($("#employee-rigths-rows"), this.Model);
+        }
 
         public ViewInit(view: JQuery): boolean {
             view.find("#login-pass").characterCounter();
@@ -155,6 +155,11 @@ export namespace Controller.Setting.Editor {
             }
             if (!utils.isNullOrEmpty(model.lname) && model.lname.length > 60) {
                 M.toast({ html: utils.stringFormat(vars._statres("msg$error$fieldexceedscharacters"), vars._statres("label$patronymic"), 60) });
+                result = false;
+            }
+
+            if (model.defaultsalepoint === 0) {
+                M.toast({ html: vars._statres('msg$error$pointsalenotnotavailabledefault') });
                 result = false;
             }
 

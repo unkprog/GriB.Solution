@@ -1,0 +1,20 @@
+﻿<div id="checkcomment-view">
+    <div class="row numpad-header">
+        <h3 class="center-align numpad-header" data-bind="text:Header"></h3>
+    </div>
+    <div class="row">
+        <div class="input-field col s12 m12 l6 xl6 offset-l3 offset-xl3 col-input-numpad">
+            <textarea id="checkcomment-view-description" class="materialize-textarea" data-length="226" data-bind="value:editModel.comment"></textarea>
+            <label for="checkcomment-view-description" data-bind="text:labelComment"></label>
+        </div>
+    </div>
+    <div class="row row-btn-numpad">
+        <div class="col s4 m4 l2 xl2 offset-l3 offset-xl3 col-btn-numpad">
+            <a id="btn-num-cancel" class="btn btncol" data-bind="text:labelCancel"></a>
+        </div>
+        <div class="col s8 m8 l4 xl4 col-btn-numpad">
+            <a id="btn-num-apply" class="btn btncol green darken-1" data-bind="text:labelSave"></a>
+        </div>
+    </div>
+</div>
+

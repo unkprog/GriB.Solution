@@ -31,6 +31,7 @@ export namespace Controller.Terminal {
                 "checkClient": "",
                 "labelPayment": vars._statres("label$payment"),
                 "checkSum": 0,
+                "checkSumText": "0.00",
                 "labelDiscount": vars._statres("label$discount"),
                 "labelNoDiscount": vars._statres("label$withoutdiscount"),
                 "labelCancelOrder": vars._statres("label$cancelorder"),
@@ -166,6 +167,10 @@ export namespace Controller.Terminal {
                 if (this.model.get("visibleCheck") === true)
                     this.ViewResize({});
             }
+            else if (e.field === "checkSum") {
+                this.model.set("checkSumText", utils.numberToString(this.model.get("checkSum"), 2));
+                
+            }
         }
 
 
@@ -269,7 +274,7 @@ export namespace Controller.Terminal {
                 }
                 result = result - ((controller.currentCheck.discount / 100) * result);
             }
-            this.model.set("checkSum", utils.numberToString(result, 2));
+            this.model.set("checkSum", result);
             return result;
         }
 

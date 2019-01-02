@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -15,7 +16,11 @@ namespace GriB.Common.Web.Http
 
         public BaseApiController()
         {
-            logger = new Logger();
+            string logPath = string.Concat(HttpContext.Current.Request.PhysicalApplicationPath, "Logs");
+            if (!Directory.Exists(logPath))
+                Directory.CreateDirectory(logPath);
+
+            logger = new Logger(logPath) { IsLogging = true };
         }
 
 
@@ -58,14 +63,22 @@ namespace GriB.Common.Web.Http
 
         public async Task<HttpResponseMessage> CheckResponseError(Func<Task<JObject>> funcGet, Func<JObject, HttpResponseMessage> func)
         {
-            Task<JObject> responseTask = funcGet.Invoke();
-            JObject response = await responseTask;
+            try
+            {
+                Task<JObject> responseTask = funcGet.Invoke();
+                JObject response = await responseTask;
 
-            HttpResponseException ex = response.ToObject<HttpResponseException>();
-            if (ex != null && !string.IsNullOrEmpty(ex.error))
-               return Request.CreateResponse(HttpStatusCode.OK, ex);
+                HttpResponseException ex = response.ToObject<HttpResponseException>();
+                if (ex != null && !string.IsNullOrEmpty(ex.error))
+                    return Request.CreateResponse(HttpStatusCode.OK, ex);
 
-            return func.Invoke(response);
+                return func.Invoke(response);
+            }
+            catch (Exception ex)
+            {
+                logger.WriteError(ex);
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, new HttpResponseException(ex));
+            }
         }
     }
 }

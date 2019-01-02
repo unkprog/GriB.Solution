@@ -259,3 +259,5 @@ paket-files/
 # Python Tools for Visual Studio (PTVS)
 __pycache__/
 *.pyc
+/GriB.Client.App/Images/Databases/u0623216_pdbu_9264042915/category
+/GriB.Client.App/Logs
