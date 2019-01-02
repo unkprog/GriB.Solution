@@ -169,6 +169,7 @@
     <Content Include="Content\js\nls\root\strings.js" />
     <Content Include="Content\js\nls\strings.js" />
     <Content Include="Content\view\about\index.html" />
+    <Content Include="Content\view\document\index.html" />
     <Content Include="Content\view\index - Копировать.html" />
     <Content Include="Content\view\index.html" />
     <Content Include="Content\view\main.html" />
@@ -406,6 +407,7 @@
     <TypeScriptCompile Include="Content\js\app\common\basecontroller.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\about\index.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\dialog\modaldialog.ts" />
+    <TypeScriptCompile Include="Content\js\app\controller\document\index.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\main.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\report\index.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\security\account.ts" />

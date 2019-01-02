@@ -21,7 +21,8 @@ export namespace Controller {
                 "employee": {},
                 "userDesc": "jdandturk@gmail.com",
                 "labelPOSterminal": vars._statres("label$POSterminal"),
-                "labelSettings":vars._statres("label$settings"),
+                "labelSettings": vars._statres("label$settings"),
+                "labelDocuments": vars._statres("label$documents"),
                 "labelReports":vars._statres("label$reports"),
                 "labelAbout":vars._statres("label$about"),
                 "labelExit":vars._statres("label$exit"),
@@ -68,6 +69,7 @@ export namespace Controller {
 
             this.MenuPOSTerminalButtonClick = this.createTouchClickEvent("main-view-btn-posterminal", this.menuPOSTerminalButtonClick);
             this.MenuSettingsButtonClick = this.createTouchClickEvent("main-view-btn-settings", this.menuSettingsButtonClick);
+            this.MenuDocumentsButtonClick = this.createTouchClickEvent("main-view-btn-documents", this.menuDocumentsButtonClick);
             this.MenuReportsButtonClick = this.createTouchClickEvent("main-view-btn-reports", this.menuReportsButtonClick);
             this.MenuAboutButtonClick = this.createTouchClickEvent("main-view-btn-about", this.menuAboutButtonClick);
             this.MenuExitButtonClick = this.createTouchClickEvent("main-view-btn-exit", this.menuExitButtonClick);
@@ -79,6 +81,7 @@ export namespace Controller {
 
             this.destroyTouchClickEvent("main-view-btn-posterminal", this.MenuPOSTerminalButtonClick);
             this.destroyTouchClickEvent("main-view-btn-settings", this.MenuSettingsButtonClick);
+            this.destroyTouchClickEvent("main-view-btn-documents", this.MenuDocumentsButtonClick);
             this.destroyTouchClickEvent("main-view-btn-reports", this.MenuReportsButtonClick);
             this.destroyTouchClickEvent("main-view-btn-about", this.MenuAboutButtonClick);
             this.destroyTouchClickEvent("main-view-btn-exit", this.MenuExitButtonClick);
@@ -106,6 +109,12 @@ export namespace Controller {
         public MenuSettingsButtonClick: { (e: any): void; };
         private menuSettingsButtonClick(e) {
             this.handleMenuItem("setting/index");
+        }
+
+
+        public MenuDocumentsButtonClick: { (e: any): void; };
+        private menuDocumentsButtonClick(e) {
+            this.handleMenuItem("document/index");
         }
 
         public MenuReportsButtonClick: { (e: any): void; };
