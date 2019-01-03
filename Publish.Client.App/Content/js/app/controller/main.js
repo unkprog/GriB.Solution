@@ -33,6 +33,7 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
                     "userDesc": "jdandturk@gmail.com",
                     "labelPOSterminal": vars._statres("label$POSterminal"),
                     "labelSettings": vars._statres("label$settings"),
+                    "labelDocuments": vars._statres("label$documents"),
                     "labelReports": vars._statres("label$reports"),
                     "labelAbout": vars._statres("label$about"),
                     "labelExit": vars._statres("label$exit"),
@@ -68,6 +69,7 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
                 this.OpenMenuButtonClick = this.createTouchClickEvent(this.buttonMenu, this.openMenuButtonClick);
                 this.MenuPOSTerminalButtonClick = this.createTouchClickEvent("main-view-btn-posterminal", this.menuPOSTerminalButtonClick);
                 this.MenuSettingsButtonClick = this.createTouchClickEvent("main-view-btn-settings", this.menuSettingsButtonClick);
+                this.MenuDocumentsButtonClick = this.createTouchClickEvent("main-view-btn-documents", this.menuDocumentsButtonClick);
                 this.MenuReportsButtonClick = this.createTouchClickEvent("main-view-btn-reports", this.menuReportsButtonClick);
                 this.MenuAboutButtonClick = this.createTouchClickEvent("main-view-btn-about", this.menuAboutButtonClick);
                 this.MenuExitButtonClick = this.createTouchClickEvent("main-view-btn-exit", this.menuExitButtonClick);
@@ -76,6 +78,7 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
                 this.destroyTouchClickEvent(this.buttonMenu, this.OpenMenuButtonClick);
                 this.destroyTouchClickEvent("main-view-btn-posterminal", this.MenuPOSTerminalButtonClick);
                 this.destroyTouchClickEvent("main-view-btn-settings", this.MenuSettingsButtonClick);
+                this.destroyTouchClickEvent("main-view-btn-documents", this.MenuDocumentsButtonClick);
                 this.destroyTouchClickEvent("main-view-btn-reports", this.MenuReportsButtonClick);
                 this.destroyTouchClickEvent("main-view-btn-about", this.MenuAboutButtonClick);
                 this.destroyTouchClickEvent("main-view-btn-exit", this.MenuExitButtonClick);
@@ -96,6 +99,9 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
             };
             Main.prototype.menuSettingsButtonClick = function (e) {
                 this.handleMenuItem("setting/index");
+            };
+            Main.prototype.menuDocumentsButtonClick = function (e) {
+                this.handleMenuItem("document/index");
             };
             Main.prototype.menuReportsButtonClick = function (e) {
                 this.handleMenuItem("report/index");

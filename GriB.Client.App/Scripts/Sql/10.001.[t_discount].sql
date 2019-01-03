@@ -1,9 +1,9 @@
-﻿-- ru: Оплата
--- en: Payment
+﻿-- ru: Скидка
+-- en: Discount
 
-if not exists (select * from [sys].[objects] where [object_id] = object_id(N'[t_payment]') and type in (N'U'))
+if not exists (select * from [sys].[objects] where [object_id] = object_id(N'[t_discount]') and type in (N'U'))
 begin
-  create table [t_payment]
+  create table [t_discount]
   (
     [id]       [int]           identity(1,1) not null,
 	[d]        [int]           not null default (0),
@@ -11,16 +11,23 @@ begin
 	[cu]       [int]           not null default (0),
 	[ud]       [datetime]      not null default (getdate()),
 	[uu]       [int]           not null default (0),
-	[check]    [int]           not null default (0),
-	[type]     [int]           not null default (0),
-	[sum]      [float]         not null default (0),
-	[option]   [int]           not null default (0),
-	[client]   [int]           not null default (0),
-	[comment]  [nvarchar](228) not null default (N''),
+	[name]     [nvarchar](60)  not null default (N''),
+	[value]    [float]         not null default (0),
     primary key clustered ([id])
   )
 end
 
 go
+
+if not exists (select * from [sys].[objects] where [object_id] = object_id(N'[t_discount_salepointaccess]') and type in (N'U'))
+begin
+  create table [t_discount_salepointaccess]
+  (
+    [id]        [int] not null,
+	[salepoint] [int] not null,
+	[isaccess]  [bit] not null default (0),
+    primary key clustered ([id], [salepoint])
+  )
+end
 
 

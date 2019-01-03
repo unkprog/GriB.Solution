@@ -169,6 +169,7 @@
     <Content Include="Content\js\nls\root\strings.js" />
     <Content Include="Content\js\nls\strings.js" />
     <Content Include="Content\view\about\index.html" />
+    <Content Include="Content\view\document\card\card.html" />
     <Content Include="Content\view\document\index.html" />
     <Content Include="Content\view\index - Копировать.html" />
     <Content Include="Content\view\index.html" />
@@ -271,6 +272,7 @@
     <Content Include="Scripts\Sql\08.001.[t_client].sql" />
     <Content Include="Scripts\Sql\03.001.[t_employee].sql" />
     <Content Include="Scripts\Sql\10.001.[t_discount].sql" />
+    <Content Include="Scripts\Sql\11.001.[t_document].sql" />
     <Content Include="Scripts\Sql\09.001.[t_payment].sql" />
     <Content Include="Scripts\Sql\07.001.[t_check].sql" />
     <Content Include="Scripts\Sql\06.004.[t_product_composition].sql" />
@@ -324,12 +326,8 @@
     <Content Condition="$(Configuration) == 'Debug' or $(Configuration) == 'Release'" Include="appSettings.config">
       <SubType>Designer</SubType>
     </Content>
-    <Content Condition="$(Configuration) == 'Publish'" Include="appSettings.Publish.config">
-      <Link>appSettings.config</Link>
-    </Content>
-    <None Include="appSettings.Publish.config">
+    <None Condition="$(Configuration) == 'Publish'" Include="appSettings.Publish.config">
       <DependentUpon>appSettings.config</DependentUpon>
-      <SubType>Designer</SubType>
     </None>
     <None Include="compilerconfig.json" />
     <None Include="compilerconfig.json.defaults">
@@ -393,6 +391,9 @@
     <None Include="Web.Release.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
+    <None Include="Web.Publish.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -407,6 +408,10 @@
     <TypeScriptCompile Include="Content\js\app\common\basecontroller.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\about\index.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\dialog\modaldialog.ts" />
+    <TypeScriptCompile Include="Content\js\app\controller\document\card\arrival.ts" />
+    <TypeScriptCompile Include="Content\js\app\controller\document\card\card.ts" />
+    <TypeScriptCompile Include="Content\js\app\controller\document\editor\arrival.ts" />
+    <TypeScriptCompile Include="Content\js\app\controller\document\editor\editor.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\document\index.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\main.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\report\index.ts" />
@@ -450,6 +455,7 @@
     <TypeScriptCompile Include="Content\js\app\interfaces\iservice.ts" />
     <TypeScriptCompile Include="Content\js\app\common\baseservice.ts" />
     <TypeScriptCompile Include="Content\js\app\services\posterminalservice.ts" />
+    <TypeScriptCompile Include="Content\js\app\services\documentservice.ts" />
     <TypeScriptCompile Include="Content\js\app\services\settingsservice.ts" />
     <TypeScriptCompile Include="Content\js\app\services\accountservice.ts" />
     <TypeScriptCompile Include="Content\js\lib\jquery.d.ts" />
