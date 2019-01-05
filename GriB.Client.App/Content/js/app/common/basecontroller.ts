@@ -453,6 +453,18 @@ export namespace Controller {
         private tableBody: JQuery;
 
         public ViewInit(view: JQuery): boolean {
+            let controls: Array<JQuery> = [];
+
+            controls.push(this.initNavHeader());
+            controls.push(this.initFilterControls());
+            controls.push(this.initTableRow());
+
+            view.append(controls);
+            super.ViewInit(view);
+            return this.loadData();
+        }
+
+        protected initNavHeader(): JQuery {
 
             let navbarHeader: string = '<div class="navbar-fixed editor-header">';
             navbarHeader += '        <nav class="editor-header-nav">';
@@ -462,10 +474,9 @@ export namespace Controller {
             navbarHeader += '            </div>';
             navbarHeader += '        </nav>';
             navbarHeader += '    </div>';
-
             this.navHeader = $(navbarHeader);
 
-            if (this.CardSettings.IsEdit)   this.btnEdit   = $('<li><a id="card-btn-edit" class="editor-header-button"><i class="material-icons editor-header">edit</i></a></li>');
+            if (this.CardSettings.IsEdit) this.btnEdit = $('<li><a id="card-btn-edit" class="editor-header-button"><i class="material-icons editor-header">edit</i></a></li>');
             if (this.CardSettings.IsAdd) this.btnAdd = $('<li><a id="card-btn-add" class="editor-header-button"><i class="material-icons editor-header">add</i></a></li>');
             if (this.CardSettings.IsAddCopy) this.btnAddCopy = $('<li><a id="card-btn-addcopy" class="editor-header-button"><i class="material-icons editor-header">exposure_plus_1</i></a></li>');
             if (this.CardSettings.IsDelete) this.btnDelete = $('<li><a id="card-btn-delete" class="editor-header-button"><i class="material-icons editor-header">delete_forever</i></a></li>');
@@ -476,7 +487,11 @@ export namespace Controller {
             let cardButtons: JQuery = this.navHeader.find("#cardButtons");
             cardButtons.append(this.btnEdit).append(this.btnAdd).append(this.btnAddCopy).append(this.btnDelete).append(this.btnSelect).append(this.btnClose);
 
-            navbarHeader = '<nav class="card-search-nav editor-header z-depth-1">';
+            return this.navHeader;
+        }
+
+        protected initFilterControls(): JQuery {
+            let navbarHeader: string = '<nav class="card-search-nav editor-header z-depth-1">';
             navbarHeader += '   <div class="nav-wrapper">';
             navbarHeader += '       <form>';
             navbarHeader += '           <div class="input-field">';
@@ -492,8 +507,11 @@ export namespace Controller {
             this.inputSearch = this.formSearch.find('#card-view-search');
             this.clearSearch = this.formSearch.find('#card-view-search-clear');
 
+            return this.navSearch;
+        }
 
-            navbarHeader  = '<div class="row row-table">';
+        protected initTableRow(): JQuery {
+            let navbarHeader: string =  '<div class="row row-table">';
             navbarHeader += '    <div class="col s12 m12 l12 xl12 col-table">';
             navbarHeader += '        <table class="highlight">';
             navbarHeader += '            <thead></thead>';
@@ -505,11 +523,7 @@ export namespace Controller {
             this.tableHead = this.tableRow.find('thead');
             this.tableBody = this.tableRow.find('tbody');
 
-            view.append([this.navHeader, this.navSearch, this.tableRow]);
-
-            super.ViewInit(view);
-
-            return this.loadData();
+            return this.tableRow;
         }
 
         public ViewResize(e: any): void {

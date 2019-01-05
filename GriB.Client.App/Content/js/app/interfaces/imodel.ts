@@ -179,4 +179,32 @@
     export interface ICheckCommetModel extends IEditorModel {
         comment: string;
     }
+
+    export interface IDocumentParams {
+        id: number;
+        doctype: number;
+        salepoint: number;
+        datefrom: Date;
+        dateto: Date;
+    }
+
+    export interface IDocumentModel extends IEditorModel {
+        doctype: number;
+        option: number;
+        date: Date;
+        salepoint: ISalepoint;
+        salepointto: ISalepoint;
+        contractor: IReferenceModel;
+        typecost: number;
+        positions: IDocumentModelPosition[];
+        sum: number;
+    }
+
+    export interface IDocumentModelPosition {
+        index: number;
+        product: IProduct;
+        quantity: number;
+        price: number;
+        sum: number;
+    }
 }

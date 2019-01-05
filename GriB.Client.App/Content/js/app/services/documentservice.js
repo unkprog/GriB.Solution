@@ -28,6 +28,18 @@ define(["require", "exports", "app/common/baseservice"], function (require, expo
                 enumerable: true,
                 configurable: true
             });
+            DocumentService.prototype.GetDocuments = function (model, Callback) {
+                this.PostApi({ Action: "/get_docs", RequestData: JSON.stringify(model), Callback: Callback });
+            };
+            DocumentService.prototype.GetDocument = function (id, Callback) {
+                this.GetApi({ Action: "/get_doc", RequestData: { id: id }, Callback: Callback });
+            };
+            DocumentService.prototype.SetDocument = function (model, Callback) {
+                this.PostApi({ Action: "/post_doc", RequestData: JSON.stringify(model), Callback: Callback });
+            };
+            DocumentService.prototype.DelDocument = function (id, Callback) {
+                this.GetApi({ Action: "/del_doc", RequestData: { id: id }, Callback: Callback });
+            };
             return DocumentService;
         }(base.Services.BaseService));
         Services.DocumentService = DocumentService;

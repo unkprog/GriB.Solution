@@ -14,18 +14,18 @@ export namespace Controller.Document.Card {
             });
         }
 
-        protected createCardSettings(): Interfaces.ICardSettings {
-            return {
-                FieldId: "id", FieldSearch: "name", ValueIdNew: -1, EditIdName: "id_arrival", EditController: "document/editor/arrival",
-                IsAdd: true, IsAddCopy: false, IsEdit: true, IsDelete: true, IsSelect: false,
-                Load: $.proxy(this.Service.GetCategries, this.Service), Delete: $.proxy(this.Service.DelCategory, this.Service),
-                Columns: [
-                    { Header: vars._statres("label$name"), Field: "name" },
-                    { Header: vars._statres("label$group"), Field: "parentname" },
-
-                ]
-            };
+        protected get EditIdName(): string {
+            return "id_arrival";
         }
+
+        protected get EditController(): string {
+            return "document/editor/arrival";
+        }
+
+        protected get DocType(): number {
+            return 0;
+        }
+
     }
 }
 

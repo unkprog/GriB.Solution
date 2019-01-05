@@ -11,7 +11,7 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-define(["require", "exports", "app/common/basecontroller", "app/services/documentservice"], function (require, exports, base, svc) {
+define(["require", "exports", "app/common/variables", "app/common/basecontroller", "app/services/documentservice"], function (require, exports, vars, base, svc) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var Controller;
@@ -35,7 +35,74 @@ define(["require", "exports", "app/common/basecontroller", "app/services/documen
                         configurable: true
                     });
                     Card.prototype.createOptions = function () {
-                        return { Url: "/Content/view/setting/card/card.html", Id: "card-view" };
+                        return { Url: "/Content/view/document/card/card.html", Id: "card-view" };
+                    };
+                    Card.prototype.createCardSettings = function () {
+                        return {
+                            FieldId: "id", FieldSearch: "name", ValueIdNew: -1, EditIdName: this.EditIdName, EditController: this.EditController,
+                            IsAdd: true, IsAddCopy: false, IsEdit: true, IsDelete: true, IsSelect: false,
+                            Load: $.proxy(this.getDocs, this), Delete: $.proxy(this.Service.DelDocument, this.Service),
+                            Columns: this.Columns
+                        };
+                    };
+                    Object.defineProperty(Card.prototype, "Columns", {
+                        get: function () {
+                            return [
+                                { Header: vars._statres("label$name"), Field: "name" },
+                                { Header: vars._statres("label$group"), Field: "parentname" },
+                            ];
+                        },
+                        enumerable: true,
+                        configurable: true
+                    });
+                    Object.defineProperty(Card.prototype, "EditIdName", {
+                        get: function () {
+                            return "";
+                        },
+                        enumerable: true,
+                        configurable: true
+                    });
+                    Object.defineProperty(Card.prototype, "EditController", {
+                        get: function () {
+                            return "";
+                        },
+                        enumerable: true,
+                        configurable: true
+                    });
+                    Object.defineProperty(Card.prototype, "DocType", {
+                        get: function () {
+                            return 0;
+                        },
+                        enumerable: true,
+                        configurable: true
+                    });
+                    Object.defineProperty(Card.prototype, "SalePoint", {
+                        get: function () {
+                            return 0;
+                        },
+                        enumerable: true,
+                        configurable: true
+                    });
+                    Object.defineProperty(Card.prototype, "DateFrom", {
+                        get: function () {
+                            return new Date();
+                        },
+                        enumerable: true,
+                        configurable: true
+                    });
+                    Object.defineProperty(Card.prototype, "DateTo", {
+                        get: function () {
+                            return new Date();
+                        },
+                        enumerable: true,
+                        configurable: true
+                    });
+                    Card.prototype.getDocs = function (Callback) {
+                        var params = { id: 0, doctype: this.DocType, salepoint: this.SalePoint, datefrom: this.DateFrom, dateto: this.DateTo };
+                        this.Service.GetDocuments(params, function (responseData) {
+                            if (Callback)
+                                Callback(responseData);
+                        });
                     };
                     return Card;
                 }(base.Controller.BaseCard));

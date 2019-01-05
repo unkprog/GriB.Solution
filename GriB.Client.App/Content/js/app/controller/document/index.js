@@ -39,26 +39,38 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
                     });
                 };
                 Index.prototype.createEvents = function () {
-                    //this.OrganizationButtonClick = this.createTouchClickEvent("btn-organization", this.organizationButtonClick);
-                    //this.SalePointButtonClick = this.createTouchClickEvent("btn-salepoint", this.salePointButtonClick);
-                    //this.EmployeetButtonClick = this.createTouchClickEvent("btn-employee", this.employeetButtonClick);
-                    //this.CurrencyButtonClick = this.createTouchClickEvent("btn-currency", this.currencyButtonClick);
-                    //this.UnitButtonClick = this.createTouchClickEvent("btn-unit", this.unitButtonClick);
-                    //this.CategoryButtonClick = this.createTouchClickEvent("btn-category", this.categoryButtonClick);
-                    //this.ProductButtonClick = this.createTouchClickEvent("btn-product", this.productButtonClick);
-                    //this.DiscountButtonClick = this.createTouchClickEvent("btn-discount", this.discountButtonClick);
-                    //this.ClientButtonClick = this.createTouchClickEvent("btn-client", this.clientButtonClick);
+                    this.ArrivalButtonClick = this.createTouchClickEvent("btn-arrival", this.arrivalButtonClick);
+                    this.ConsumptionButtonClick = this.createTouchClickEvent("btn-consumption", this.consumptionButtonClick);
+                    this.ReturnButtonClick = this.createTouchClickEvent("btn-return", this.returnButtonClick);
+                    this.WriteoffButtonClick = this.createTouchClickEvent("btn-writeoff", this.writeoffButtonClick);
+                    this.MovementButtonClick = this.createTouchClickEvent("btn-movement", this.movementButtonClick);
+                    this.ProductionButtonClick = this.createTouchClickEvent("btn-production", this.productionButtonClick);
                 };
                 Index.prototype.destroyEvents = function () {
-                    //this.destroyTouchClickEvent("btn-organization", this.OrganizationButtonClick);
-                    //this.destroyTouchClickEvent("btn-salepoint", this.SalePointButtonClick);
-                    //this.destroyTouchClickEvent("btn-employee", this.EmployeetButtonClick);
-                    //this.destroyTouchClickEvent("btn-currency", this.CurrencyButtonClick);
-                    //this.destroyTouchClickEvent("btn-unit", this.UnitButtonClick);
-                    //this.destroyTouchClickEvent("btn-category", this.CategoryButtonClick);
-                    //this.destroyTouchClickEvent("btn-product", this.ProductButtonClick);
-                    //this.destroyTouchClickEvent("btn-discount", this.DiscountButtonClick);
-                    //this.destroyTouchClickEvent("btn-client", this.ClientButtonClick);
+                    this.destroyTouchClickEvent("btn-arrival", this.ArrivalButtonClick);
+                    this.destroyTouchClickEvent("btn-consumption", this.ConsumptionButtonClick);
+                    this.destroyTouchClickEvent("btn-return", this.ReturnButtonClick);
+                    this.destroyTouchClickEvent("btn-writeoff", this.WriteoffButtonClick);
+                    this.destroyTouchClickEvent("btn-movement", this.MovementButtonClick);
+                    this.destroyTouchClickEvent("btn-production", this.ProductionButtonClick);
+                };
+                Index.prototype.arrivalButtonClick = function (e) {
+                    vars._main.OpenController({ urlController: "document/card/arrival", backController: this });
+                };
+                Index.prototype.consumptionButtonClick = function (e) {
+                    vars._main.OpenController({ urlController: "document/card/consumption", backController: this });
+                };
+                Index.prototype.returnButtonClick = function (e) {
+                    vars._main.OpenController({ urlController: "document/card/return", backController: this });
+                };
+                Index.prototype.writeoffButtonClick = function (e) {
+                    vars._main.OpenController({ urlController: "document/card/writeoff", backController: this });
+                };
+                Index.prototype.movementButtonClick = function (e) {
+                    vars._main.OpenController({ urlController: "document/card/movement", backController: this });
+                };
+                Index.prototype.productionButtonClick = function (e) {
+                    vars._main.OpenController({ urlController: "document/card/production", backController: this });
                 };
                 return Index;
             }(base.Controller.Base));

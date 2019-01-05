@@ -219,6 +219,12 @@
     <Content Include="Scripts\Query\Editor\Discount\[del].sql" />
     <Content Include="Scripts\Query\Editor\Discount\[get].sql" />
     <Content Include="Scripts\Query\Editor\Discount\[set].sql" />
+    <Content Include="Scripts\Query\Editor\Document\Position\[add].sql" />
+    <Content Include="Scripts\Query\Editor\Document\Position\[del].sql" />
+    <Content Include="Scripts\Query\Editor\Document\Position\[get].sql" />
+    <Content Include="Scripts\Query\Editor\Document\[del].sql" />
+    <Content Include="Scripts\Query\Editor\Document\[get].sql" />
+    <Content Include="Scripts\Query\Editor\Document\[set].sql" />
     <Content Include="Scripts\Query\Editor\Employee\SalepointAccess\[get].sql" />
     <Content Include="Scripts\Query\Editor\Employee\SalepointAccess\[set].sql" />
     <Content Include="Scripts\Query\Editor\Employee\[get].sql" />
@@ -290,6 +296,7 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
+    <Compile Include="Controllers\DocumentController.cs" />
     <Compile Include="Controllers\POSTerminalController.cs" />
     <Compile Include="Controllers\SettingsController.cs" />
     <Compile Include="Global.asax.cs">
@@ -298,6 +305,7 @@
     <Compile Include="Handlers\AuthorizationHeaderHandler.cs" />
     <Compile Include="Managers\AppSettings.cs" />
     <Compile Include="Managers\AuthUser.cs" />
+    <Compile Include="Managers\Editors\Document.cs" />
     <Compile Include="Managers\Editors\Client.cs" />
     <Compile Include="Managers\Editors\Discount.cs" />
     <Compile Include="Managers\Editors\Product.cs" />
@@ -310,7 +318,9 @@
     <Compile Include="Managers\POSTerminal\Terminal.cs" />
     <Compile Include="Models\Editor\Category.cs" />
     <Compile Include="Models\Editor\Client.cs" />
+    <Compile Include="Models\Editor\Contractor.cs" />
     <Compile Include="Models\Editor\Discount.cs" />
+    <Compile Include="Models\Editor\Document.cs" />
     <Compile Include="Models\Editor\Employee.cs" />
     <Compile Include="Models\Editor\Organization.cs" />
     <Compile Include="Models\Editor\Product.cs" />
