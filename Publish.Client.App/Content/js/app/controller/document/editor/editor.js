@@ -11,7 +11,7 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-define(["require", "exports", "app/common/variables", "app/controller/document/editor/editor"], function (require, exports, vars, edit) {
+define(["require", "exports", "app/common/basecontroller", "app/services/documentservice"], function (require, exports, base, svc) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var Controller;
@@ -19,32 +19,26 @@ define(["require", "exports", "app/common/variables", "app/controller/document/e
         var Document;
         (function (Document) {
             var Editor;
-            (function (Editor) {
-                var Arrival = /** @class */ (function (_super) {
-                    __extends(Arrival, _super);
-                    function Arrival() {
+            (function (Editor_1) {
+                var Editor = /** @class */ (function (_super) {
+                    __extends(Editor, _super);
+                    function Editor() {
                         return _super.call(this) || this;
                     }
-                    Object.defineProperty(Arrival.prototype, "Header", {
+                    Object.defineProperty(Editor.prototype, "Service", {
                         get: function () {
-                            return vars._statres("label$arrival");
+                            if (!this.documentService)
+                                this.documentService = new svc.Services.DocumentService();
+                            return this.documentService;
                         },
                         enumerable: true,
                         configurable: true
                     });
-                    Object.defineProperty(Arrival.prototype, "EditIdName", {
-                        get: function () {
-                            return "id_arrival";
-                        },
-                        enumerable: true,
-                        configurable: true
-                    });
-                    return Arrival;
-                }(edit.Controller.Document.Editor.Editor));
-                Editor.Arrival = Arrival;
+                    return Editor;
+                }(base.Controller.BaseEditor));
+                Editor_1.Editor = Editor;
             })(Editor = Document.Editor || (Document.Editor = {}));
         })(Document = Controller.Document || (Controller.Document = {}));
     })(Controller = exports.Controller || (exports.Controller = {}));
-    vars.registerController("document/editor/arrival", function (module) { return new module.Controller.Document.Editor.Arrival(); });
 });
-//# sourceMappingURL=arrival.js.map
+//# sourceMappingURL=editor.js.map

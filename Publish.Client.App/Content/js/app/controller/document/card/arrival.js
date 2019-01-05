@@ -11,27 +11,26 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-define(["require", "exports", "app/common/variables", "app/controller/document/editor/editor"], function (require, exports, vars, edit) {
+define(["require", "exports", "app/common/variables", "app/controller/document/card/card"], function (require, exports, vars, card) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var Controller;
     (function (Controller) {
         var Document;
         (function (Document) {
-            var Editor;
-            (function (Editor) {
+            var Card;
+            (function (Card) {
                 var Arrival = /** @class */ (function (_super) {
                     __extends(Arrival, _super);
                     function Arrival() {
                         return _super.call(this) || this;
                     }
-                    Object.defineProperty(Arrival.prototype, "Header", {
-                        get: function () {
-                            return vars._statres("label$arrival");
-                        },
-                        enumerable: true,
-                        configurable: true
-                    });
+                    Arrival.prototype.createModel = function () {
+                        return new kendo.data.ObservableObject({
+                            "Header": vars._statres("label$arrival"),
+                            "cardModel": []
+                        });
+                    };
                     Object.defineProperty(Arrival.prototype, "EditIdName", {
                         get: function () {
                             return "id_arrival";
@@ -39,12 +38,26 @@ define(["require", "exports", "app/common/variables", "app/controller/document/e
                         enumerable: true,
                         configurable: true
                     });
+                    Object.defineProperty(Arrival.prototype, "EditController", {
+                        get: function () {
+                            return "document/editor/arrival";
+                        },
+                        enumerable: true,
+                        configurable: true
+                    });
+                    Object.defineProperty(Arrival.prototype, "DocType", {
+                        get: function () {
+                            return 10;
+                        },
+                        enumerable: true,
+                        configurable: true
+                    });
                     return Arrival;
-                }(edit.Controller.Document.Editor.Editor));
-                Editor.Arrival = Arrival;
-            })(Editor = Document.Editor || (Document.Editor = {}));
+                }(card.Controller.Document.Card.Card));
+                Card.Arrival = Arrival;
+            })(Card = Document.Card || (Document.Card = {}));
         })(Document = Controller.Document || (Controller.Document = {}));
     })(Controller = exports.Controller || (exports.Controller = {}));
-    vars.registerController("document/editor/arrival", function (module) { return new module.Controller.Document.Editor.Arrival(); });
+    vars.registerController("document/card/arrival", function (module) { return new module.Controller.Document.Card.Arrival(); });
 });
 //# sourceMappingURL=arrival.js.map

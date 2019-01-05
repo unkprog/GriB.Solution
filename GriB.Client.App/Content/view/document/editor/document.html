@@ -1,0 +1,45 @@
+﻿<div id="document-view">
+    <div id="editor-view-tab-category" class="padding-0001em">
+
+        <div class="section editor-section">
+            <h5 data-bind="text:labelDocument"></h5>
+        </div>
+
+        <div class="row row-inputs">
+            <div class="input-field col s12 m6 l4 xl3">
+                <input id="editor-view-category-name" type="text" data-length="60" data-bind="value:editModel.name">
+                <label for="editor-view-category-name" data-bind="text:labelName"></label>
+            </div>
+
+            <div class="input-field col s12 m6 l4 xl3">
+                <select id="editor-view-category-list"></select>
+                <label for="editor-view-category-list" data-bind="text:labelIncludedInCategory"></label>
+            </div>
+        </div>
+
+        <div class="section">
+            <h5 data-bind="text:labelPosTerminal"></h5>
+        </div>
+
+        <div class="row row-inputs">
+            <div class="col s12 m4 l4 xl2">
+                <div class="row" style="margin-bottom: 0;">
+                    <div class="col s12 m12 l12 xl12 center-align">
+                        <img id="editor-view-category-photo" class="card-image" />
+                        <input type="file" id="editor-view-image-input" style="display:none" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col s12 m12 l12 xl12">
+                        <a id="editor-view-category-addphoto" class="btn btncol" data-bind="text:labelAddPhoto"></a>
+                    </div>
+                </div>
+            </div>
+            <div class="input-field col s12 m8 l8 xl10">
+                <textarea id="editor-view-category-description" class="materialize-textarea" data-length="3098" data-bind="value:editModel.description"></textarea>
+                <label for="editor-view-category-description" data-bind="text:labelDescription"></label>
+            </div>
+        </div>
+    </div>
+
+</div>

@@ -170,6 +170,7 @@
     <Content Include="Content\js\nls\strings.js" />
     <Content Include="Content\view\about\index.html" />
     <Content Include="Content\view\document\card\card.html" />
+    <Content Include="Content\view\document\editor\document.html" />
     <Content Include="Content\view\document\index.html" />
     <Content Include="Content\view\index - Копировать.html" />
     <Content Include="Content\view\index.html" />

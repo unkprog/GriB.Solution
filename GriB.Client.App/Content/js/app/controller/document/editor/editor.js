@@ -34,6 +34,59 @@ define(["require", "exports", "app/common/basecontroller", "app/services/documen
                         enumerable: true,
                         configurable: true
                     });
+                    Editor.prototype.createOptions = function () {
+                        return { Url: "/Content/view/document/editor/document.html", Id: "document-view" };
+                    };
+                    Editor.prototype.createModel = function () {
+                        var oo = new kendo.data.ObservableObject({
+                            "Header": this.Header,
+                            "editModel": {},
+                        });
+                        return oo;
+                    };
+                    Object.defineProperty(Editor.prototype, "EditorModel", {
+                        get: function () {
+                            return this.Model.get("editModel").toJSON();
+                        },
+                        enumerable: true,
+                        configurable: true
+                    });
+                    Editor.prototype.createEditorSettings = function () {
+                        return { EditIdName: this.EditIdName, Load: $.proxy(this.Service.GetDocument, this.Service), Save: $.proxy(this.Service.SetDocument, this.Service) };
+                    };
+                    Object.defineProperty(Editor.prototype, "EditIdName", {
+                        get: function () {
+                            return "";
+                        },
+                        enumerable: true,
+                        configurable: true
+                    });
+                    Editor.prototype.validate = function () {
+                        var result = true;
+                        var model = this.EditorModel;
+                        return result;
+                    };
+                    Editor.prototype.ViewInit = function (view) {
+                        return _super.prototype.ViewInit.call(this, view);
+                    };
+                    Editor.prototype.ViewShow = function (e) {
+                        return _super.prototype.ViewShow.call(this, e);
+                    };
+                    Editor.prototype.createEvents = function () {
+                        _super.prototype.createEvents.call(this);
+                    };
+                    Editor.prototype.destroyEvents = function () {
+                        _super.prototype.destroyEvents.call(this);
+                    };
+                    Editor.prototype.ViewResize = function (e) {
+                        _super.prototype.ViewResize.call(this, e);
+                    };
+                    Editor.prototype.afterLoad = function (responseData) {
+                        _super.prototype.afterLoad.call(this, responseData);
+                        this.setupPositions(responseData);
+                    };
+                    Editor.prototype.setupPositions = function (responseData) {
+                    };
                     return Editor;
                 }(base.Controller.BaseEditor));
                 Editor_1.Editor = Editor;
