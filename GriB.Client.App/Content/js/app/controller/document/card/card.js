@@ -48,8 +48,9 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
                     Object.defineProperty(Card.prototype, "Columns", {
                         get: function () {
                             return [
-                                { Header: vars._statres("label$name"), Field: "name" },
-                                { Header: vars._statres("label$group"), Field: "parentname" },
+                                { Header: vars._statres("label$date"), Field: "date" },
+                                { Header: vars._statres("label$stock"), Field: "salepointname" },
+                                { Header: vars._statres("label$sum"), Field: "sum" },
                             ];
                         },
                         enumerable: true,

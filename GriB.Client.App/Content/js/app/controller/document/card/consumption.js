@@ -20,44 +20,44 @@ define(["require", "exports", "app/common/variables", "app/controller/document/c
         (function (Document) {
             var Card;
             (function (Card) {
-                var Arrival = /** @class */ (function (_super) {
-                    __extends(Arrival, _super);
-                    function Arrival() {
+                var Consumption = /** @class */ (function (_super) {
+                    __extends(Consumption, _super);
+                    function Consumption() {
                         return _super.call(this) || this;
                     }
-                    Arrival.prototype.createModel = function () {
+                    Consumption.prototype.createModel = function () {
                         return new kendo.data.ObservableObject({
-                            "Header": vars._statres("label$arrival"),
+                            "Header": vars._statres("label$consumption"),
                             "cardModel": []
                         });
                     };
-                    Object.defineProperty(Arrival.prototype, "EditIdName", {
+                    Object.defineProperty(Consumption.prototype, "EditIdName", {
                         get: function () {
-                            return "id_arrival";
+                            return "id_consumption";
                         },
                         enumerable: true,
                         configurable: true
                     });
-                    Object.defineProperty(Arrival.prototype, "EditController", {
+                    Object.defineProperty(Consumption.prototype, "EditController", {
                         get: function () {
-                            return "document/editor/arrival";
+                            return "document/editor/Consumption";
                         },
                         enumerable: true,
                         configurable: true
                     });
-                    Object.defineProperty(Arrival.prototype, "DocType", {
+                    Object.defineProperty(Consumption.prototype, "DocType", {
                         get: function () {
-                            return 10;
+                            return 20;
                         },
                         enumerable: true,
                         configurable: true
                     });
-                    return Arrival;
+                    return Consumption;
                 }(card.Controller.Document.Card.Card));
-                Card.Arrival = Arrival;
+                Card.Consumption = Consumption;
             })(Card = Document.Card || (Document.Card = {}));
         })(Document = Controller.Document || (Controller.Document = {}));
     })(Controller = exports.Controller || (exports.Controller = {}));
-    vars.registerController("document/card/arrival", function (module) { return new module.Controller.Document.Card.Arrival(); });
+    vars.registerController("document/card/consumption", function (module) { return new module.Controller.Document.Card.Consumption(); });
 });
-//# sourceMappingURL=arrival.js.map
+//# sourceMappingURL=consumption.js.map

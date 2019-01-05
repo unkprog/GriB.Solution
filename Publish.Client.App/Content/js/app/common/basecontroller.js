@@ -411,6 +411,15 @@ define(["require", "exports", "app/common/utils", "app/common/variables", "./var
                 configurable: true
             });
             BaseCard.prototype.ViewInit = function (view) {
+                var controls = [];
+                controls.push(this.initNavHeader());
+                controls.push(this.initFilterControls());
+                controls.push(this.initTableRow());
+                view.append(controls);
+                _super.prototype.ViewInit.call(this, view);
+                return this.loadData();
+            };
+            BaseCard.prototype.initNavHeader = function () {
                 var navbarHeader = '<div class="navbar-fixed editor-header">';
                 navbarHeader += '        <nav class="editor-header-nav">';
                 navbarHeader += '            <div class="nav-wrapper editor-header">';
@@ -433,7 +442,10 @@ define(["require", "exports", "app/common/utils", "app/common/variables", "./var
                 this.btnClose = $('<li><a id="card-btn-close" class="editor-header-button"><i class="material-icons editor-header">close</i></a></li>');
                 var cardButtons = this.navHeader.find("#cardButtons");
                 cardButtons.append(this.btnEdit).append(this.btnAdd).append(this.btnAddCopy).append(this.btnDelete).append(this.btnSelect).append(this.btnClose);
-                navbarHeader = '<nav class="card-search-nav editor-header z-depth-1">';
+                return this.navHeader;
+            };
+            BaseCard.prototype.initFilterControls = function () {
+                var navbarHeader = '<nav class="card-search-nav editor-header z-depth-1">';
                 navbarHeader += '   <div class="nav-wrapper">';
                 navbarHeader += '       <form>';
                 navbarHeader += '           <div class="input-field">';
@@ -448,7 +460,10 @@ define(["require", "exports", "app/common/utils", "app/common/variables", "./var
                 this.formSearch = this.navSearch.find('form');
                 this.inputSearch = this.formSearch.find('#card-view-search');
                 this.clearSearch = this.formSearch.find('#card-view-search-clear');
-                navbarHeader = '<div class="row row-table">';
+                return this.navSearch;
+            };
+            BaseCard.prototype.initTableRow = function () {
+                var navbarHeader = '<div class="row row-table">';
                 navbarHeader += '    <div class="col s12 m12 l12 xl12 col-table">';
                 navbarHeader += '        <table class="highlight">';
                 navbarHeader += '            <thead></thead>';
@@ -459,9 +474,7 @@ define(["require", "exports", "app/common/utils", "app/common/variables", "./var
                 this.tableRow = $(navbarHeader);
                 this.tableHead = this.tableRow.find('thead');
                 this.tableBody = this.tableRow.find('tbody');
-                view.append([this.navHeader, this.navSearch, this.tableRow]);
-                _super.prototype.ViewInit.call(this, view);
-                return this.loadData();
+                return this.tableRow;
             };
             BaseCard.prototype.ViewResize = function (e) {
                 _super.prototype.ViewResize.call(this, e);

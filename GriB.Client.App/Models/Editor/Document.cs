@@ -23,9 +23,17 @@ namespace GriB.Client.App.Models.Editor
 
     public class document: model_sys
     {
+        public const int Arrival = 10;
+        public const int Consumption = 20;
+        public const int Return = 30;
+        public const int Writeoff = 40;
+        public const int Movement = 50;
+        public const int Production = 60;
+
         public document()
         {
             position = new List<document_position>();
+            salepointname = string.Empty;
         }
 
         public int doctype { get; set; }
@@ -36,6 +44,8 @@ namespace GriB.Client.App.Models.Editor
         public contractor contractor { get; set; }
         public int typecost { get; set; }
         public List<document_position> position { get; set; }
+        public string salepointname { get; set; }
+        public double sum { get; set; }
     }
 
 

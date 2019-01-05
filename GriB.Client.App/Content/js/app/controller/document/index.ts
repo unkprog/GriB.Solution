@@ -16,11 +16,11 @@ export namespace Controller.Document {
                 "Header": "POS Cloud",
                 "labelDocuments": vars._statres("label$documents"),
                 "labelArrival": vars._statres("label$arrival"),
-                "labelConsumption": vars._statres("label$consumptions"),
+                "labelConsumption": vars._statres("label$consumption"),
                 "labelReturn": vars._statres("label$return"),
                 "labelWriteOff": vars._statres("label$writeoff"),
                 "labelMovement": vars._statres("label$movement"),
-                "labelProduction": vars._statres("label$roduction"),
+                "labelProduction": vars._statres("label$productionmake"),
             });
         }
 

@@ -20,44 +20,44 @@ define(["require", "exports", "app/common/variables", "app/controller/document/c
         (function (Document) {
             var Card;
             (function (Card) {
-                var Arrival = /** @class */ (function (_super) {
-                    __extends(Arrival, _super);
-                    function Arrival() {
+                var Writeoff = /** @class */ (function (_super) {
+                    __extends(Writeoff, _super);
+                    function Writeoff() {
                         return _super.call(this) || this;
                     }
-                    Arrival.prototype.createModel = function () {
+                    Writeoff.prototype.createModel = function () {
                         return new kendo.data.ObservableObject({
-                            "Header": vars._statres("label$arrival"),
+                            "Header": vars._statres("label$writeoff"),
                             "cardModel": []
                         });
                     };
-                    Object.defineProperty(Arrival.prototype, "EditIdName", {
+                    Object.defineProperty(Writeoff.prototype, "EditIdName", {
                         get: function () {
-                            return "id_arrival";
+                            return "id_writeoff";
                         },
                         enumerable: true,
                         configurable: true
                     });
-                    Object.defineProperty(Arrival.prototype, "EditController", {
+                    Object.defineProperty(Writeoff.prototype, "EditController", {
                         get: function () {
-                            return "document/editor/arrival";
+                            return "document/editor/writeoff";
                         },
                         enumerable: true,
                         configurable: true
                     });
-                    Object.defineProperty(Arrival.prototype, "DocType", {
+                    Object.defineProperty(Writeoff.prototype, "DocType", {
                         get: function () {
-                            return 10;
+                            return 40;
                         },
                         enumerable: true,
                         configurable: true
                     });
-                    return Arrival;
+                    return Writeoff;
                 }(card.Controller.Document.Card.Card));
-                Card.Arrival = Arrival;
+                Card.Writeoff = Writeoff;
             })(Card = Document.Card || (Document.Card = {}));
         })(Document = Controller.Document || (Controller.Document = {}));
     })(Controller = exports.Controller || (exports.Controller = {}));
-    vars.registerController("document/card/arrival", function (module) { return new module.Controller.Document.Card.Arrival(); });
+    vars.registerController("document/card/writeoff", function (module) { return new module.Controller.Document.Card.Writeoff(); });
 });
-//# sourceMappingURL=arrival.js.map
+//# sourceMappingURL=writeoff.js.map

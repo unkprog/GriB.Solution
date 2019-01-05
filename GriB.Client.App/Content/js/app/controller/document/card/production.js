@@ -20,44 +20,44 @@ define(["require", "exports", "app/common/variables", "app/controller/document/c
         (function (Document) {
             var Card;
             (function (Card) {
-                var Arrival = /** @class */ (function (_super) {
-                    __extends(Arrival, _super);
-                    function Arrival() {
+                var Production = /** @class */ (function (_super) {
+                    __extends(Production, _super);
+                    function Production() {
                         return _super.call(this) || this;
                     }
-                    Arrival.prototype.createModel = function () {
+                    Production.prototype.createModel = function () {
                         return new kendo.data.ObservableObject({
-                            "Header": vars._statres("label$arrival"),
+                            "Header": vars._statres("label$productionmake"),
                             "cardModel": []
                         });
                     };
-                    Object.defineProperty(Arrival.prototype, "EditIdName", {
+                    Object.defineProperty(Production.prototype, "EditIdName", {
                         get: function () {
-                            return "id_arrival";
+                            return "id_production";
                         },
                         enumerable: true,
                         configurable: true
                     });
-                    Object.defineProperty(Arrival.prototype, "EditController", {
+                    Object.defineProperty(Production.prototype, "EditController", {
                         get: function () {
-                            return "document/editor/arrival";
+                            return "document/editor/production";
                         },
                         enumerable: true,
                         configurable: true
                     });
-                    Object.defineProperty(Arrival.prototype, "DocType", {
+                    Object.defineProperty(Production.prototype, "DocType", {
                         get: function () {
-                            return 10;
+                            return 60;
                         },
                         enumerable: true,
                         configurable: true
                     });
-                    return Arrival;
+                    return Production;
                 }(card.Controller.Document.Card.Card));
-                Card.Arrival = Arrival;
+                Card.Production = Production;
             })(Card = Document.Card || (Document.Card = {}));
         })(Document = Controller.Document || (Controller.Document = {}));
     })(Controller = exports.Controller || (exports.Controller = {}));
-    vars.registerController("document/card/arrival", function (module) { return new module.Controller.Document.Card.Arrival(); });
+    vars.registerController("document/card/production", function (module) { return new module.Controller.Document.Card.Production(); });
 });
-//# sourceMappingURL=arrival.js.map
+//# sourceMappingURL=production.js.map
