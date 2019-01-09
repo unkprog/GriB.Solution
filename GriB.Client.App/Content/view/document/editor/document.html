@@ -1,5 +1,5 @@
 ﻿<div id="document-view">
-    <div id="editor-view-tab-category" class="padding-0001em">
+    <div id="document-view-tab-header" class="padding-0001em">
 
         <div class="section editor-section">
             <h5 data-bind="text:labelDocument"></h5>
@@ -7,39 +7,37 @@
 
         <div class="row row-inputs">
             <div class="input-field col s12 m6 l4 xl3">
-                <input id="editor-view-category-name" type="text" data-length="60" data-bind="value:editModel.name">
-                <label for="editor-view-category-name" data-bind="text:labelName"></label>
+                <input type="checkbox" data-bind="checked:conduct" />
+                <span data-bind="text:labelConduct"></span>
             </div>
-
-            <div class="input-field col s12 m6 l4 xl3">
-                <select id="editor-view-category-list"></select>
-                <label for="editor-view-category-list" data-bind="text:labelIncludedInCategory"></label>
-            </div>
-        </div>
-
-        <div class="section">
-            <h5 data-bind="text:labelPosTerminal"></h5>
-        </div>
-
-        <div class="row row-inputs">
-            <div class="col s12 m4 l4 xl2">
-                <div class="row" style="margin-bottom: 0;">
-                    <div class="col s12 m12 l12 xl12 center-align">
-                        <img id="editor-view-category-photo" class="card-image" />
-                        <input type="file" id="editor-view-image-input" style="display:none" />
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col s12 m12 l12 xl12">
-                        <a id="editor-view-category-addphoto" class="btn btncol" data-bind="text:labelAddPhoto"></a>
-                    </div>
+            <div class="col s12 m6 l4 xl3">
+                <div class="input-field">
+                    <input id="document-view-date" type="text" class="datepicker" data-bind="value:editModel.date">
+                    <label for="document-view-date" data-bind="text:labelDate"></label>
                 </div>
             </div>
-            <div class="input-field col s12 m8 l8 xl10">
-                <textarea id="editor-view-category-description" class="materialize-textarea" data-length="3098" data-bind="value:editModel.description"></textarea>
-                <label for="editor-view-category-description" data-bind="text:labelDescription"></label>
+            <div id="document-view-salepoint-row" class="input-field col s12 m12 l6 xl6 col-input-numpad">
+                <input id="document-view-salepoint" type="text" disabled class="truncate black-text" data-bind="value: editModel.salepoint.name" style="cursor:pointer;font-weight:bold;">
+                <label for="document-view-salepoint" data-bind="text:labelSalepoint"></label>
             </div>
         </div>
     </div>
 
+    <div id="document-view-tab-positions" class="padding-0001em">
+        <div id="document-view-positions">
+            <table>
+                <thead>
+                    <tr>
+                        <th class="product-col-name" data-bind="text:labelName"></th>
+                        <th class="product-col-quantity" data-bind="text:labelQuantityShort"></th>
+                        <th class="product-col-unit" data-bind="text:labelUnitShort"></th>
+                        <th class="product-col-sum hide-on-small-only" data-bind="text:labelSum"></th>
+                        <th class="product-col-btn"></th>
+                    </tr>
+                </thead>
+
+                <tbody id="product-position-rows"></tbody>
+            </table>
+
+    </div>
 </div>
