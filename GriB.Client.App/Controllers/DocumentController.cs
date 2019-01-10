@@ -34,6 +34,18 @@ namespace GriB.Client.App.Controllers
             });
         }
 
+
+        [HttpGet]
+        [ActionName("get_document_newposition")]
+        public HttpResponseMessage GetProductNewPosition(int id, int salepoint)
+        {
+            return TryCatchResponseQuery((query) =>
+            {
+                document_position result = Document.GetDocumentPositionNew(query, id, salepoint);
+                return Request.CreateResponse(HttpStatusCode.OK, new { newcomposition = result });
+            });
+        }
+
         [HttpPost]
         [ActionName("post_doc")]
         public HttpResponseMessage PostSalepoint(document document)

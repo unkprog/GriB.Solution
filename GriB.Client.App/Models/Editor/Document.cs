@@ -32,7 +32,7 @@ namespace GriB.Client.App.Models.Editor
 
         public document()
         {
-            position = new List<document_position>();
+            positions = new List<document_position>();
             salepointname = string.Empty;
         }
 
@@ -43,7 +43,7 @@ namespace GriB.Client.App.Models.Editor
         public salepoint salepointto { get; set; }
         public contractor contractor { get; set; }
         public int typecost { get; set; }
-        public List<document_position> position { get; set; }
+        public List<document_position> positions { get; set; }
         public string salepointname { get; set; }
         public double sum { get; set; }
     }
@@ -54,5 +54,6 @@ namespace GriB.Client.App.Models.Editor
         public product product  { get; set; }
         public double  quantity { get; set; }
         public double  price    { get; set; }
+        public double  sum      { get; set; }
     }
 }

@@ -223,6 +223,7 @@
     <Content Include="Scripts\Query\Editor\Document\Position\[add].sql" />
     <Content Include="Scripts\Query\Editor\Document\Position\[del].sql" />
     <Content Include="Scripts\Query\Editor\Document\Position\[get].sql" />
+    <Content Include="Scripts\Query\Editor\Document\Position\[get_new].sql" />
     <Content Include="Scripts\Query\Editor\Document\[del].sql" />
     <Content Include="Scripts\Query\Editor\Document\[get].sql" />
     <Content Include="Scripts\Query\Editor\Document\[set].sql" />

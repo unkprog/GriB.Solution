@@ -53,6 +53,18 @@ namespace GriB.Client.App.Managers.Editors
             , (values) => { });
         }
 
-        
+        // TODO: Прикрутить фильтр по доступу по торговой точке
+        private const string cmdGetCompositionNew = @"Editor\Document\Position\[get_new]";
+        public static document_position GetDocumentPositionNew(this Query query, int id, int salepoint)
+        {
+            document_position result = new document_position();
+            query.Execute(cmdGetCompositionNew, new SqlParameter[] { new SqlParameter("@id", id), new SqlParameter("@salepoint", salepoint) }
+            , (values) =>
+            {
+                result = new document_position() { index = (int)values[1], quantity = (double)values[3], product = new product() { id = (int)values[2], name = (string)values[4], sellingprice = (double)values[5], unit = (int)values[6], unit_name = (string)values[7] } };
+            });
+
+            return result;
+        }
     }
 }

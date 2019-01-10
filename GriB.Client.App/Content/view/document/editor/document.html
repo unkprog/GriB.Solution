@@ -1,6 +1,5 @@
 ﻿<div id="document-view">
     <div id="document-view-tab-header" class="padding-0001em">
-
         <div class="section editor-section">
             <h5 data-bind="text:labelDocument"></h5>
         </div>
@@ -16,28 +15,39 @@
                     <label for="document-view-date" data-bind="text:labelDate"></label>
                 </div>
             </div>
+        </div>
+
+        <div class="row row-inputs">
+            <div id="document-view-contractor-row" class="input-field col s12 m12 l6 xl6 col-input-numpad">
+                <input id="document-view-contractor" type="text" disabled class="truncate black-text" data-bind="value: editModel.contractor.name" style="cursor:pointer;font-weight:bold;">
+                <label for="document-view-contractor" data-bind="text:labelProvider"></label>
+            </div>
             <div id="document-view-salepoint-row" class="input-field col s12 m12 l6 xl6 col-input-numpad">
                 <input id="document-view-salepoint" type="text" disabled class="truncate black-text" data-bind="value: editModel.salepoint.name" style="cursor:pointer;font-weight:bold;">
                 <label for="document-view-salepoint" data-bind="text:labelSalepoint"></label>
             </div>
         </div>
+        <div class="row">
+            <div id="document-view-sum-row" class="input-field col s12 m12 l6 xl6 col-input-numpad">
+                <span class="total-text-doc" data-bind="text:labelSum"></span><span class="total-text-doc">: </span><span class="total-text-doc" data-bind="text:totalSumText"></span>
+            </div>
+        </div>
     </div>
 
-    <div id="document-view-tab-positions" class="padding-0001em">
-        <div id="document-view-positions">
-            <table>
-                <thead>
-                    <tr>
-                        <th class="product-col-name" data-bind="text:labelName"></th>
-                        <th class="product-col-quantity" data-bind="text:labelQuantityShort"></th>
-                        <th class="product-col-unit" data-bind="text:labelUnitShort"></th>
-                        <th class="product-col-sum hide-on-small-only" data-bind="text:labelSum"></th>
-                        <th class="product-col-btn"></th>
-                    </tr>
-                </thead>
+    <div id="document-view-positions">
+        <table>
+            <thead>
+                <tr>
+                    <th class="product-col-name" data-bind="text:labelName"></th>
+                    <th class="product-col-quantity" data-bind="text:labelQuantityShort"></th>
+                    <th class="product-col-unit" data-bind="text:labelUnitShort"></th>
+                    <th class="product-col-price" data-bind="text:labelPrice"></th>
+                    <th class="product-col-sum" data-bind="text:labelSum"></th>
+                    <th class="product-col-btn"></th>
+                </tr>
+            </thead>
 
-                <tbody id="product-position-rows"></tbody>
-            </table>
-
+            <tbody id="product-position-rows"></tbody>
+        </table>
     </div>
 </div>

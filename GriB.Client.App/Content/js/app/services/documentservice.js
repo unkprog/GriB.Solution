@@ -40,6 +40,9 @@ define(["require", "exports", "app/common/baseservice"], function (require, expo
             DocumentService.prototype.DelDocument = function (id, Callback) {
                 this.GetApi({ Action: "/del_doc", RequestData: { id: id }, Callback: Callback });
             };
+            DocumentService.prototype.GetDocumentNewPosition = function (id, salepoint, Callback) {
+                this.GetApi({ Action: "/get_document_newposition", RequestData: { id: id, salepoint: salepoint }, Callback: Callback });
+            };
             return DocumentService;
         }(base.Services.BaseService));
         Services.DocumentService = DocumentService;

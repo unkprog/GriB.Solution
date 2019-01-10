@@ -27,9 +27,14 @@ export module Services {
             this.GetApi({ Action: "/del_doc", RequestData: { id: id }, Callback: Callback });
         }
 
+
+        public GetDocumentNewPosition(id: number, salepoint:number, Callback: (responseData: any) => void) {
+            this.GetApi({ Action: "/get_document_newposition", RequestData: { id: id, salepoint: salepoint }, Callback: Callback });
+        }
+
         //// Сотрудники
         //public GetEmployees(Callback: (responseData: any) => void) {
-        //    this.GetApi({ Action: "/get_employees", Callback: Callback });
+        //    this.GetApi({ Action: "/get_document_newposition", Callback: Callback });
         //}
 
         //public GetEmployee(id: number, Callback: (responseData: any) => void) {

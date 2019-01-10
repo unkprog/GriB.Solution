@@ -91,6 +91,8 @@ export namespace Controller {
             if (vars._identity.employee.openonlogin === 1)
                 this.MenuSettingsButtonClick({});
             else if (vars._identity.employee.openonlogin === 2)
+                this.MenuDocumentsButtonClick({});
+            else if (vars._identity.employee.openonlogin === 3)
                 this.MenuReportsButtonClick({});
             else
                 this.MenuPOSTerminalButtonClick({});

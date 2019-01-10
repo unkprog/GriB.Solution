@@ -15,12 +15,17 @@ export namespace Controller.Document {
             return new kendo.data.ObservableObject({
                 "Header": "POS Cloud",
                 "labelDocuments": vars._statres("label$documents"),
+                "labelMovementGoods": vars._statres("label$movementgoods"),
+                "labelMovementFunds": vars._statres("label$movementfunds"),
                 "labelArrival": vars._statres("label$arrival"),
                 "labelConsumption": vars._statres("label$consumption"),
                 "labelReturn": vars._statres("label$return"),
                 "labelWriteOff": vars._statres("label$writeoff"),
                 "labelMovement": vars._statres("label$movement"),
                 "labelProduction": vars._statres("label$productionmake"),
+                "labelEncashment": vars._statres("label$encashment"),
+                "labelDeposit": vars._statres("label$depositmoney"),
+                "labelWithDrawing": vars._statres("label$withdrawingmoney"),
             });
         }
 

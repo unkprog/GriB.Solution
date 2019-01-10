@@ -11,7 +11,7 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-define(["require", "exports", "app/common/basecontroller", "app/services/documentservice", "app/services/settingsservice", "app/common/variables"], function (require, exports, base, svc, svcSetting, vars) {
+define(["require", "exports", "app/common/basecontroller", "app/services/documentservice", "app/services/settingsservice", "app/common/variables", "app/common/utils"], function (require, exports, base, svc, svcSetting, vars, utils) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var Controller;
@@ -53,12 +53,16 @@ define(["require", "exports", "app/common/basecontroller", "app/services/documen
                             "conduct": true,
                             "labelConduct": vars._statres("label$conduct"),
                             "labelDate": vars._statres("label$date"),
+                            "labelProvider": vars._statres("label$provider"),
                             "labelSalepoint": vars._statres("label$salePoint"),
                             "labelName": vars._statres("label$name"),
                             "labelQuantityShort": vars._statres("label$quantityshort"),
                             "labelUnitShort": vars._statres("label$unitshort"),
+                            "labelPrice": vars._statres("label$price"),
                             "labelSum": vars._statres("label$sum"),
-                            "labelAdd": vars._statres("button$label$add")
+                            "labelAdd": vars._statres("button$label$add"),
+                            "totalSum": 0,
+                            "totalSumText": "0.00",
                         });
                         return oo;
                     };
@@ -115,24 +119,23 @@ define(["require", "exports", "app/common/basecontroller", "app/services/documen
                         _super.prototype.afterLoad.call(this, responseData);
                         this.setupPositions();
                     };
-                    Editor.prototype.changeModel = function (e) {
-                    };
                     Editor.prototype.setupPositions = function () {
                         var self = this;
                         var model = this.EditorModel;
                         var data = model.positions;
                         var html = '';
                         if (this.btnAddPosition)
-                            this.destroyTouchClickEvent(this.btnAddPosition, this.addPositionButtonClick);
+                            this.destroyTouchClickEvent(this.btnAddPosition, this.AddPositionButtonClick);
                         this.positionRows.unbind();
                         if (data && data.length > 0) {
                             for (var i = 0, icount = (data && data.length ? data.length : 0); i < icount; i++) {
-                                data[i].sum = Math.round((data[i].quantity * data[i].product.sellingprice) * 100) / 100;
+                                data[i].sum = Math.round((data[i].quantity * data[i].price) * 100) / 100;
                                 html += '<tr data-index="' + i + '">';
                                 html += '<td class="product-col-name" data-bind="text:editModel.positions[' + i + '].product.name"></td>';
                                 html += '<td class="product-col-quantity"><input class="table-cell-input" type="number" data-bind="value:editModel.positions[' + i + '].quantity"/></td>';
                                 html += '<td class="product-col-unit" data-bind="text:editModel.positions[' + i + '].product.unit_name"></td>';
-                                html += '<td class="product-col-sum hide-on-small-only" data-bind="text:editModel.positions[' + i + '].sum"></td>';
+                                html += '<td class="product-col-price"><input class="table-cell-input" type="number" data-bind="value:editModel.positions[' + i + '].price"/></td>';
+                                html += '<td class="product-col-sum"><input class="table-cell-input" type="number" data-bind="value:editModel.positions[' + i + '].sum"/></td>';
                                 html += '<td class="product-col-btn"><a class="product-col-button-delete"><i class="material-icons editor-header">close</i></a></td>';
                                 html += '</tr>';
                             }
@@ -142,11 +145,23 @@ define(["require", "exports", "app/common/basecontroller", "app/services/documen
                         html += '</tr>';
                         this.positionRows.html(html);
                         self.Model.set("editModel", model);
-                        this.btnAddPosition = this.positionRows.find("#btn-add-composition");
-                        this.btnRemovePosition = this.positionRows.find(".editor-header-button");
+                        self.Model.set("totalSum", self.calsTotalSum());
+                        this.btnAddPosition = this.positionRows.find("#btn-add-position");
+                        this.btnRemovePosition = this.positionRows.find(".product-col-button-delete");
                         this.AddPositionButtonClick = this.createTouchClickEvent(this.btnAddPosition, this.addPositionButtonClick);
                         this.RemovePositionButtonClick = this.createTouchClickEvent(this.btnRemovePosition, this.removePositionButtonClick);
                         kendo.bind(this.positionRows, this.Model);
+                    };
+                    Editor.prototype.calsTotalSum = function () {
+                        var result = 0;
+                        var model = this.EditorModel;
+                        var data = model.positions;
+                        if (data && data.length > 0) {
+                            for (var i = 0, icount = (data && data.length ? data.length : 0); i < icount; i++) {
+                                result += data[i].sum;
+                            }
+                        }
+                        return result;
                     };
                     Editor.prototype.salePointButtonClick = function (e) {
                         var self = this;
@@ -193,11 +208,44 @@ define(["require", "exports", "app/common/basecontroller", "app/services/documen
                         var id = controller.getSelectedRowId();
                         var self = this;
                         var model = this.EditorModel;
-                        self.SettingService.GetProductNewComposition(+id, function (responseData) {
+                        // TODO: Прикрутить фильтр по доступу по торговой точке
+                        var salepoint = 0;
+                        self.Service.GetDocumentNewPosition(+id, salepoint, function (responseData) {
                             model.positions.push(responseData.newcomposition);
                             self.Model.set("editModel", model);
                             self.setupPositions();
                         });
+                    };
+                    Editor.prototype.getPosIndex = function (field, fieldReplace) {
+                        var sindex = field.replace("editModel.positions[", "").replace(("]." + fieldReplace), "");
+                        var result = +sindex;
+                        return result;
+                    };
+                    Editor.prototype.changeModel = function (e) {
+                        if (e.field.indexOf("editModel.positions[") > -1) {
+                            var doc = this.EditorModel;
+                            if (e.field.lastIndexOf("].quantity") > -1) {
+                                var index = this.getPosIndex(e.field, "quantity");
+                                doc.positions[index].sum = Math.round((doc.positions[index].quantity * doc.positions[index].price) * 100) / 100;
+                                this.Model.set("editModel", doc);
+                            }
+                            else if (e.field.lastIndexOf("].price") > -1) {
+                                var index = this.getPosIndex(e.field, "price");
+                                doc.positions[index].sum = Math.round((doc.positions[index].quantity * doc.positions[index].price) * 100) / 100;
+                                this.Model.set("editModel", doc);
+                            }
+                            else if (e.field.lastIndexOf("].sum") > -1) {
+                                var index = this.getPosIndex(e.field, "sum");
+                                if (doc.positions[index].quantity > 0 && doc.positions[index].sum > 0) {
+                                    doc.positions[index].price = Math.round((doc.positions[index].sum / doc.positions[index].quantity) * 100) / 100;
+                                    this.Model.set("editModel", doc);
+                                }
+                            }
+                            this.Model.set("totalSum", this.calsTotalSum());
+                        }
+                        else if (e.field === "totalSum") {
+                            this.Model.set("totalSumText", utils.numberToString(this.Model.get("totalSum"), 2));
+                        }
                     };
                     return Editor;
                 }(base.Controller.BaseEditor));
