@@ -34,6 +34,7 @@ namespace GriB.Client.App.Models.Editor
         {
             positions = new List<document_position>();
             salepointname = string.Empty;
+            date = DateTime.Now;
         }
 
         public int doctype { get; set; }

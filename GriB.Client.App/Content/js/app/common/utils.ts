@@ -54,6 +54,15 @@ export function dateToLongString(date:Date) {
     return date.toLocaleString();
 }
 
+export function date_ddmmyyyy(date: Date) {
+
+    var yyyy = date.getFullYear().toString();
+    var mm = (date.getMonth() + 1).toString(); // getMonth() is zero-based         
+    var dd = date.getDate().toString();
+
+    return (dd[1] ? dd : '0' + dd[0]) + '.' + (mm[1] ? mm : '0' + mm[0]) + '.' + yyyy;
+};
+
 export function numberToString(value: number, decimal:number): string {
     let result: string = "";
     if (value)

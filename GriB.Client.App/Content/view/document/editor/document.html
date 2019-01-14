@@ -1,19 +1,19 @@
 ﻿<div id="document-view">
     <div id="document-view-tab-header" class="padding-0001em">
         <div class="section editor-section">
-            <h5 data-bind="text:labelDocument"></h5>
+            <h5 data-bind="text:labelHeader"></h5>
         </div>
 
         <div class="row row-inputs">
             <div class="input-field col s12 m6 l4 xl3">
-                <input type="checkbox" data-bind="checked:conduct" />
-                <span data-bind="text:labelConduct"></span>
+                <input id="document-view-date" type="text" class="datepicker">
+                <label for="document-view-date" data-bind="text:labelDate"></label>
             </div>
-            <div class="col s12 m6 l4 xl3">
-                <div class="input-field">
-                    <input id="document-view-date" type="text" class="datepicker" data-bind="value:editModel.date">
-                    <label for="document-view-date" data-bind="text:labelDate"></label>
-                </div>
+            <div class="input-field col s12 m6 l4 xl3">
+                <label>
+                    <input type="checkbox" data-bind="checked:documentConduct" />
+                    <span data-bind="text:labelConduct"></span>
+                </label>
             </div>
         </div>
 

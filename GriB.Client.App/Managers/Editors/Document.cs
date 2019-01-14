@@ -37,7 +37,7 @@ namespace GriB.Client.App.Managers.Editors
         {
             document result = document;
             query.Execute(cmdSet, new SqlParameter[] { new SqlParameter("@id", result.id), new SqlParameter("@u", user), new SqlParameter("@doctype", result.doctype), new SqlParameter("@option", result.option), new SqlParameter("@date", result.date)
-            , new SqlParameter("@salepoint", result.salepoint?.id), new SqlParameter("@salepointto", result.salepointto?.id), new SqlParameter("@contractor", result.contractor?.id), new SqlParameter("@typecost", result.typecost) }
+            , new SqlParameter("@salepoint", result.salepoint?.id), new SqlParameter("@salepointto", result.salepointto ==null ? 0 : result.salepointto.id), new SqlParameter("@contractor", result.contractor?.id), new SqlParameter("@typecost", result.typecost) }
             , (values) =>
             {
                 result.id = (int)values[0];

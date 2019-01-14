@@ -24,7 +24,9 @@ declare namespace M {
     export namespace Modal {
         function getInstance(elems: any, options?: any): JQuery;
     }
-
+    export namespace Datepicker {
+        function getInstance(elems: any, options?: any): any;
+    }
     export namespace FormSelect {
         function init(elems: any, options?: any): JQuery;
     }

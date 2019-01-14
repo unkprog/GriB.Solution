@@ -31,8 +31,8 @@ export namespace Controller.Document.Editor {
         protected createModel(): kendo.data.ObservableObject {
             let oo: kendo.data.ObservableObject = new kendo.data.ObservableObject({
                 "Header": this.Header,
+                "labelDocument": "",
                 "editModel": {},
-                "conduct": true,
                 "labelConduct": vars._statres("label$conduct"),
                 "labelDate": vars._statres("label$date"),
                 "labelProvider": vars._statres("label$provider"),
@@ -43,6 +43,7 @@ export namespace Controller.Document.Editor {
                 "labelPrice": vars._statres("label$price"),
                 "labelSum": vars._statres("label$sum"),
                 "labelAdd": vars._statres("button$label$add"),
+                "documentConduct": true,
                 "totalSum": 0,
                 "totalSumText": "0.00",
             });
@@ -71,14 +72,16 @@ export namespace Controller.Document.Editor {
 
         protected dateControl: JQuery;
         protected salePointControl: JQuery;
+        protected contractorControl: JQuery;
         private positionRows: JQuery;
         private btnAddPosition: JQuery;
         private btnRemovePosition: JQuery;
         public ViewInit(view: JQuery): boolean {
             this.dateControl = view.find("#document-view-date");
-            this.dateControl.datepicker();
+            this.dateControl.datepicker({ format: "dd.mm.yyyy" });
 
             this.salePointControl = view.find("#document-view-salepoint-row");
+            this.contractorControl = view.find("#document-view-contractor-row");
             this.positionRows = view.find("#product-position-rows");
             return super.ViewInit(view);
         }
@@ -90,6 +93,7 @@ export namespace Controller.Document.Editor {
         protected createEvents(): void {
             super.createEvents();
             this.SalePointButtonClick = this.createTouchClickEvent(this.salePointControl, this.salePointButtonClick);
+            this.ContractorButtonClick = this.createTouchClickEvent(this.contractorControl, this.contractorButtonClick);
 
             this.Model.bind("change", $.proxy(this.changeModel, this));
         }
@@ -101,6 +105,7 @@ export namespace Controller.Document.Editor {
             if (this.btnRemovePosition)
                 this.destroyTouchClickEvent(this.btnRemovePosition, this.removePositionButtonClick);
 
+            this.destroyTouchClickEvent(this.contractorControl, this.ContractorButtonClick);
             this.destroyTouchClickEvent(this.salePointControl, this.SalePointButtonClick);
             super.destroyEvents();
         }
@@ -112,6 +117,10 @@ export namespace Controller.Document.Editor {
 
         protected afterLoad(responseData?: any): void {
             super.afterLoad(responseData);
+            let dateTime: Date = new Date(responseData.record.date);
+            this.dateControl.val(utils.date_ddmmyyyy(dateTime));
+            M.Datepicker.getInstance(this.dateControl[0]).setDate(dateTime, true);
+            this.Model.set("documentConduct", ((responseData.record.option & 1) === 1));
             this.setupPositions();
         }
 
@@ -170,10 +179,32 @@ export namespace Controller.Document.Editor {
             return result;
         }
 
+        public ContractorButtonClick: { (e: any): void; };
+        private contractorButtonClick(e) {
+            let self = this;
+            vars._app.OpenController({
+                urlController: 'setting/card/contractor', isModal: true, onLoadController: (controller: Interfaces.IController) => {
+                    let ctrlTypePayment: Interfaces.IControllerCard = controller as Interfaces.IControllerCard;
+                    ctrlTypePayment.CardSettings.IsAdd = false;
+                    ctrlTypePayment.CardSettings.IsAddCopy = false;
+                    ctrlTypePayment.CardSettings.IsDelete = false;
+                    ctrlTypePayment.CardSettings.IsEdit = false;
+                    ctrlTypePayment.CardSettings.IsSelect = true;
+                    ctrlTypePayment.OnSelect = $.proxy(self.selectContractor, self);
+                }
+            });
+        }
+
+        private selectContractor(controller: Interfaces.IControllerCard) {
+            let contractor: Interfaces.Model.IContractor = controller.getSelectedRecord() as Interfaces.Model.IContractor;
+            if (contractor)
+                this.Model.set("editModel.contractor", contractor);
+            M.updateTextFields();
+        }
+
         public SalePointButtonClick: { (e: any): void; };
         private salePointButtonClick(e) {
             let self = this;
-
             vars._app.OpenController({
                 urlController: 'setting/card/salepoint', isModal: true, onLoadController: (controller: Interfaces.IController) => {
                     let ctrlTypePayment: Interfaces.IControllerCard = controller as Interfaces.IControllerCard;
@@ -197,17 +228,23 @@ export namespace Controller.Document.Editor {
         public AddPositionButtonClick: { (e: any): void; };
         private addPositionButtonClick(e) {
             let self = this;
-
-            vars._app.OpenController({
-                urlController: 'setting/card/product', isModal: true, onLoadController: (controller: Interfaces.IController) => {
-                    let ctrlProduct: Interfaces.IControllerCard = controller as Interfaces.IControllerCard;
-                    ctrlProduct.CardSettings.IsAdd = false;
-                    ctrlProduct.CardSettings.IsEdit = false;
-                    ctrlProduct.CardSettings.IsDelete = false;
-                    ctrlProduct.CardSettings.IsSelect = true;
-                    ctrlProduct.OnSelect = $.proxy(self.selectPosition, self);
-                }
-            });
+            let salepoint: Interfaces.Model.ISalepoint = this.Model.get("editModel.salepoint") as Interfaces.Model.ISalepoint;
+            if (salepoint) {
+                vars._app.OpenController({
+                    urlController: 'setting/card/product', isModal: true, onLoadController: (controller: Interfaces.IController) => {
+                        let ctrlProduct: Interfaces.IControllerCard = controller as Interfaces.IControllerCard;
+                        ctrlProduct.CardSettings.IsAdd = false;
+                        ctrlProduct.CardSettings.IsAddCopy = false;
+                        ctrlProduct.CardSettings.IsEdit = false;
+                        ctrlProduct.CardSettings.IsDelete = false;
+                        ctrlProduct.CardSettings.IsSelect = true;
+                        ctrlProduct.OnSelect = $.proxy(self.selectPosition, self);
+                    }
+                });
+            }
+            else {
+                M.toast({ html: vars._statres("msg$error$nowarehousespecified") });
+            }
         }
 
         public RemovePositionButtonClick: { (e: any): void; };
@@ -260,6 +297,22 @@ export namespace Controller.Document.Editor {
                     }
                 }
                 this.Model.set("totalSum", this.calsTotalSum());
+            }
+            else if (e.field === "documentConduct") {
+                let conduct: boolean = this.Model.get("documentConduct");
+                let options: number = this.Model.get("editModel.option");
+                if (conduct) {
+                    if ((options & 1) !== 1) {
+                        options = options + 1;
+                        this.Model.set("editModel.option", options);
+                    }
+                }
+                else {
+                    if ((options & 1) === 1) {
+                        options = options - 1;
+                        this.Model.set("editModel.option", options);
+                    }
+                }
             }
             else if (e.field === "totalSum") {
                 this.Model.set("totalSumText", utils.numberToString(this.Model.get("totalSum"), 2));

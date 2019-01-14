@@ -1,7 +1,4 @@
 ﻿using GriB.Common.Models.pos;
-using GriB.Common.Models.Security;
-using System;
-using System.Collections.Generic;
 
 namespace GriB.Client.App.Models.Editor
 {
@@ -18,8 +15,5 @@ namespace GriB.Client.App.Models.Editor
     {
         public int pid { get; set; }
     }
-
-
-
 
 }

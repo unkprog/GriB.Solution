@@ -49,8 +49,8 @@ define(["require", "exports", "app/common/basecontroller", "app/services/documen
                     Editor.prototype.createModel = function () {
                         var oo = new kendo.data.ObservableObject({
                             "Header": this.Header,
+                            "labelDocument": "",
                             "editModel": {},
-                            "conduct": true,
                             "labelConduct": vars._statres("label$conduct"),
                             "labelDate": vars._statres("label$date"),
                             "labelProvider": vars._statres("label$provider"),
@@ -61,6 +61,7 @@ define(["require", "exports", "app/common/basecontroller", "app/services/documen
                             "labelPrice": vars._statres("label$price"),
                             "labelSum": vars._statres("label$sum"),
                             "labelAdd": vars._statres("button$label$add"),
+                            "documentConduct": true,
                             "totalSum": 0,
                             "totalSumText": "0.00",
                         });
@@ -90,8 +91,9 @@ define(["require", "exports", "app/common/basecontroller", "app/services/documen
                     };
                     Editor.prototype.ViewInit = function (view) {
                         this.dateControl = view.find("#document-view-date");
-                        this.dateControl.datepicker();
+                        this.dateControl.datepicker({ format: "dd.mm.yyyy" });
                         this.salePointControl = view.find("#document-view-salepoint-row");
+                        this.contractorControl = view.find("#document-view-contractor-row");
                         this.positionRows = view.find("#product-position-rows");
                         return _super.prototype.ViewInit.call(this, view);
                     };
@@ -101,6 +103,7 @@ define(["require", "exports", "app/common/basecontroller", "app/services/documen
                     Editor.prototype.createEvents = function () {
                         _super.prototype.createEvents.call(this);
                         this.SalePointButtonClick = this.createTouchClickEvent(this.salePointControl, this.salePointButtonClick);
+                        this.ContractorButtonClick = this.createTouchClickEvent(this.contractorControl, this.contractorButtonClick);
                         this.Model.bind("change", $.proxy(this.changeModel, this));
                     };
                     Editor.prototype.destroyEvents = function () {
@@ -109,6 +112,7 @@ define(["require", "exports", "app/common/basecontroller", "app/services/documen
                             this.destroyTouchClickEvent(this.btnAddPosition, this.addPositionButtonClick);
                         if (this.btnRemovePosition)
                             this.destroyTouchClickEvent(this.btnRemovePosition, this.removePositionButtonClick);
+                        this.destroyTouchClickEvent(this.contractorControl, this.ContractorButtonClick);
                         this.destroyTouchClickEvent(this.salePointControl, this.SalePointButtonClick);
                         _super.prototype.destroyEvents.call(this);
                     };
@@ -117,6 +121,10 @@ define(["require", "exports", "app/common/basecontroller", "app/services/documen
                     };
                     Editor.prototype.afterLoad = function (responseData) {
                         _super.prototype.afterLoad.call(this, responseData);
+                        var dateTime = new Date(responseData.record.date);
+                        this.dateControl.val(utils.date_ddmmyyyy(dateTime));
+                        M.Datepicker.getInstance(this.dateControl[0]).setDate(dateTime, true);
+                        this.Model.set("documentConduct", ((responseData.record.option & 1) === 1));
                         this.setupPositions();
                     };
                     Editor.prototype.setupPositions = function () {
@@ -163,6 +171,26 @@ define(["require", "exports", "app/common/basecontroller", "app/services/documen
                         }
                         return result;
                     };
+                    Editor.prototype.contractorButtonClick = function (e) {
+                        var self = this;
+                        vars._app.OpenController({
+                            urlController: 'setting/card/contractor', isModal: true, onLoadController: function (controller) {
+                                var ctrlTypePayment = controller;
+                                ctrlTypePayment.CardSettings.IsAdd = false;
+                                ctrlTypePayment.CardSettings.IsAddCopy = false;
+                                ctrlTypePayment.CardSettings.IsDelete = false;
+                                ctrlTypePayment.CardSettings.IsEdit = false;
+                                ctrlTypePayment.CardSettings.IsSelect = true;
+                                ctrlTypePayment.OnSelect = $.proxy(self.selectContractor, self);
+                            }
+                        });
+                    };
+                    Editor.prototype.selectContractor = function (controller) {
+                        var contractor = controller.getSelectedRecord();
+                        if (contractor)
+                            this.Model.set("editModel.contractor", contractor);
+                        M.updateTextFields();
+                    };
                     Editor.prototype.salePointButtonClick = function (e) {
                         var self = this;
                         vars._app.OpenController({
@@ -185,16 +213,23 @@ define(["require", "exports", "app/common/basecontroller", "app/services/documen
                     };
                     Editor.prototype.addPositionButtonClick = function (e) {
                         var self = this;
-                        vars._app.OpenController({
-                            urlController: 'setting/card/product', isModal: true, onLoadController: function (controller) {
-                                var ctrlProduct = controller;
-                                ctrlProduct.CardSettings.IsAdd = false;
-                                ctrlProduct.CardSettings.IsEdit = false;
-                                ctrlProduct.CardSettings.IsDelete = false;
-                                ctrlProduct.CardSettings.IsSelect = true;
-                                ctrlProduct.OnSelect = $.proxy(self.selectPosition, self);
-                            }
-                        });
+                        var salepoint = this.Model.get("editModel.salepoint");
+                        if (salepoint) {
+                            vars._app.OpenController({
+                                urlController: 'setting/card/product', isModal: true, onLoadController: function (controller) {
+                                    var ctrlProduct = controller;
+                                    ctrlProduct.CardSettings.IsAdd = false;
+                                    ctrlProduct.CardSettings.IsAddCopy = false;
+                                    ctrlProduct.CardSettings.IsEdit = false;
+                                    ctrlProduct.CardSettings.IsDelete = false;
+                                    ctrlProduct.CardSettings.IsSelect = true;
+                                    ctrlProduct.OnSelect = $.proxy(self.selectPosition, self);
+                                }
+                            });
+                        }
+                        else {
+                            M.toast({ html: vars._statres("msg$error$nowarehousespecified") });
+                        }
                     };
                     Editor.prototype.removePositionButtonClick = function (e) {
                         var self = this;
@@ -242,6 +277,22 @@ define(["require", "exports", "app/common/basecontroller", "app/services/documen
                                 }
                             }
                             this.Model.set("totalSum", this.calsTotalSum());
+                        }
+                        else if (e.field === "documentConduct") {
+                            var conduct = this.Model.get("documentConduct");
+                            var options = this.Model.get("editModel.option");
+                            if (conduct) {
+                                if ((options & 1) !== 1) {
+                                    options = options + 1;
+                                    this.Model.set("editModel.option", options);
+                                }
+                            }
+                            else {
+                                if ((options & 1) === 1) {
+                                    options = options - 1;
+                                    this.Model.set("editModel.option", options);
+                                }
+                            }
                         }
                         else if (e.field === "totalSum") {
                             this.Model.set("totalSumText", utils.numberToString(this.Model.get("totalSum"), 2));

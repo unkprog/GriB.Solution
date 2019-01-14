@@ -180,5 +180,22 @@ export module Services {
         public DelDiscount(id: number, Callback: (responseData: any) => void) {
             this.GetApi({ Action: "/del_discount", RequestData: { id: id }, Callback: Callback });
         }
+
+        // Контрагенты
+        public GetContractors(Callback: (responseData: any) => void) {
+            this.GetApi({ Action: "/get_contractors", Callback: Callback });
+        }
+
+        public GetContractor(id: number, Callback: (responseData: any) => void) {
+            this.GetApi({ Action: "/get_contractor", RequestData: { id: id }, Callback: Callback });
+        }
+
+        public SetContractor(model: Interfaces.Model.IContractor, Callback: (responseData: any) => void) {
+            this.PostApi({ Action: "/post_contractor", RequestData: JSON.stringify(model), Callback: Callback });
+        }
+
+        public DelContractor(id: number, Callback: (responseData: any) => void) {
+            this.GetApi({ Action: "/del_contractor", RequestData: { id: id }, Callback: Callback });
+        }
     }
 }

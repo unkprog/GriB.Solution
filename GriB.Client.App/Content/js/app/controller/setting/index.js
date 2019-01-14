@@ -42,6 +42,7 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
                         "labelProducts": vars._statres("label$products"),
                         "labelDiscounts": vars._statres("label$discounts"),
                         "labelClients": vars._statres("label$clients"),
+                        "labelContractors": vars._statres("label$contractors"),
                     });
                 };
                 Index.prototype.createEvents = function () {
@@ -54,6 +55,7 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
                     this.ProductButtonClick = this.createTouchClickEvent("btn-product", this.productButtonClick);
                     this.DiscountButtonClick = this.createTouchClickEvent("btn-discount", this.discountButtonClick);
                     this.ClientButtonClick = this.createTouchClickEvent("btn-client", this.clientButtonClick);
+                    this.ContractorButtonClick = this.createTouchClickEvent("btn-contractor", this.contractorButtonClick);
                 };
                 Index.prototype.destroyEvents = function () {
                     this.destroyTouchClickEvent("btn-organization", this.OrganizationButtonClick);
@@ -65,6 +67,7 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
                     this.destroyTouchClickEvent("btn-product", this.ProductButtonClick);
                     this.destroyTouchClickEvent("btn-discount", this.DiscountButtonClick);
                     this.destroyTouchClickEvent("btn-client", this.ClientButtonClick);
+                    this.destroyTouchClickEvent("btn-contractor", this.ContractorButtonClick);
                 };
                 Index.prototype.organizationButtonClick = function (e) {
                     vars._main.OpenController({ urlController: "setting/editor/organization", backController: this });
@@ -92,6 +95,9 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
                 };
                 Index.prototype.clientButtonClick = function (e) {
                     vars._main.OpenController({ urlController: "setting/card/client", backController: this });
+                };
+                Index.prototype.contractorButtonClick = function (e) {
+                    vars._main.OpenController({ urlController: "setting/card/contractor", backController: this });
                 };
                 return Index;
             }(base.Controller.Base));

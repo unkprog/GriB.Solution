@@ -12,8 +12,7 @@ export namespace Controller.Document.Editor {
         public get Header(): string {
             return vars._statres("label$arrival");
         }
-
-       
+      
 
         public get EditIdName(): string {
             return "id_arrival";

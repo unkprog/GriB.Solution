@@ -125,6 +125,11 @@
 
     }
 
+    export interface IContractor extends IReferenceModel, IEditorModel {
+
+    }
+
+
     export interface IPosParamsSelect {
         category: number;
         salepoint: number;
@@ -194,7 +199,7 @@
         date: Date;
         salepoint: ISalepoint;
         salepointto: ISalepoint;
-        contractor: IReferenceModel;
+        contractor: IContractor;
         typecost: number;
         positions: IDocumentModelPosition[];
         sum: number;

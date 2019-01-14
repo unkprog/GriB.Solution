@@ -609,5 +609,50 @@ namespace GriB.Client.App.Controllers
             });
         }
         #endregion
+
+        #region Контрагент
+        [HttpGet]
+        [ActionName("get_contractors")]
+        public HttpResponseMessage GetContractors()
+        {
+            return TryCatchResponseQuery((query) =>
+            {
+                return Request.CreateResponse(HttpStatusCode.OK, Contractor.GetContractors(query));
+            });
+        }
+
+        [HttpGet]
+        [ActionName("get_contractor")]
+        public HttpResponseMessage GetContractor(int id)
+        {
+            return TryCatchResponseQuery((query) =>
+            {
+                return Request.CreateResponse(HttpStatusCode.OK, new { record = Contractor.GetContractor(query, id) });
+            });
+        }
+
+        [HttpPost]
+        [ActionName("post_contractor")]
+        public HttpResponseMessage PostContractor(contractor contractor)
+        {
+            return TryCatchResponseQuery((query) =>
+            {
+                Principal principal = (Principal)HttpContext.Current.User;
+                Contractor.SetContractor(query, contractor, principal.Data.User.id);
+                return Request.CreateResponse(HttpStatusCode.OK, "Ok");
+            });
+        }
+
+        [HttpGet]
+        [ActionName("del_contractor")]
+        public HttpResponseMessage DeleteContractor(int id)
+        {
+            return TryCatchResponseQuery((query) =>
+            {
+                Contractor.DelContractor(query, id, ((Principal)HttpContext.Current.User).Data.User.id);
+                return Request.CreateResponse(HttpStatusCode.OK, "Ok");
+            });
+        }
+        #endregion
     }
 }
