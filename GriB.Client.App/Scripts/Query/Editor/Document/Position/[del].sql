@@ -1,2 +1,2 @@
 ﻿delete [t_document_position] 
-where [id]=@id and [product] = @product
+where [id]=@id and [index] = @index

@@ -50,8 +50,13 @@ export namespace Controller.Document.Editor {
             return oo;
         }
 
+        protected get DocType(): number {
+            return 0;
+        }
         public get EditorModel(): Interfaces.Model.IDocumentModel {
-            return this.Model.get("editModel").toJSON();
+            let model: Interfaces.Model.IDocumentModel = this.Model.get("editModel").toJSON();
+            model.doctype = this.DocType;
+            return model;
         }
 
         protected createEditorSettings(): Interfaces.IEditorSettings {
@@ -264,7 +269,7 @@ export namespace Controller.Document.Editor {
             // TODO: Прикрутить фильтр по доступу по торговой точке
             let salepoint: number = 0;
             self.Service.GetDocumentNewPosition(+id, salepoint, (responseData) => {
-                model.positions.push(responseData.newcomposition);
+                model.positions.push(responseData.newposition);
                 self.Model.set("editModel", model);
                 self.setupPositions();
             });

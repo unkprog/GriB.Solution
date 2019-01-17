@@ -456,7 +456,9 @@ export namespace Controller {
             let controls: Array<JQuery> = [];
 
             controls.push(this.initNavHeader());
-            controls.push(this.initFilterControls());
+            let filterControl: JQuery = this.initFilterControls();
+            if (filterControl)
+                controls.push(filterControl);
             controls.push(this.initTableRow());
 
             view.append(controls);
@@ -559,14 +561,16 @@ export namespace Controller {
             this.DeleteButtonClick = this.createTouchClickEvent(this.btnDelete, this.deleteButtonClick);
             this.CloseButtonClick = this.createTouchClickEvent(this.btnClose, this.closeButtonClick);
             this.SelectButtonClick = this.createTouchClickEvent(this.btnSelect, this.selectButtonClick);
-            this.ClearButtonClick = this.createTouchClickEvent(this.clearSearch, this.clearButtonClick); 
-            this.proxySearch = $.proxy(this.search, this);
-            this.formSearch.on('submit', this.proxySearch);
+            if (this.clearSearch) this.ClearButtonClick = this.createTouchClickEvent(this.clearSearch, this.clearButtonClick);
+            if (this.formSearch) {
+                this.proxySearch = $.proxy(this.search, this);
+                this.formSearch.on('submit', this.proxySearch);
+            }
         }
 
         protected destroyEvents(): void {
-            this.formSearch.off('submit', this.proxySearch);
-            this.destroyTouchClickEvent(this.clearSearch, this.ClearButtonClick); 
+            if (this.formSearch) this.formSearch.off('submit', this.proxySearch);
+            if (this.clearSearch) this.destroyTouchClickEvent(this.clearSearch, this.ClearButtonClick); 
             this.destroyTouchClickEvent(this.rows, this.rowClick);
             this.destroyTouchClickEvent(this.btnSelect, this.SelectButtonClick);
             this.destroyTouchClickEvent(this.btnEdit, this.EditButtonClick);
@@ -666,7 +670,7 @@ export namespace Controller {
         protected getItemsForView(): Interfaces.Model.IEditorModel[] {
             let result: Interfaces.Model.IEditorModel[] = [];
             let data: Interfaces.Model.IEditorModel[] = this.Model.get("cardModel");
-            let strSearch: string = (this.inputSearch.val() as string); // ($("#card-view-search").val() as string);
+            let strSearch: string = (this.inputSearch ? this.inputSearch.val() as string : ""); // ($("#card-view-search").val() as string);
             let fieldSearch: string = this.CardSettings.FieldSearch;
             let isNotSearch: boolean = (utils.isNullOrEmpty(fieldSearch) || utils.isNullOrEmpty(strSearch));
             if (!isNotSearch)
@@ -770,7 +774,8 @@ export namespace Controller {
 
         public ClearButtonClick: { (e: any): void; };
         private clearButtonClick(e): void {
-            this.inputSearch.val("");
+            if (this.inputSearch)
+                this.inputSearch.val("");
             this.setupRows();
         }
         

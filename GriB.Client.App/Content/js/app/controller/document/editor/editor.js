@@ -67,9 +67,18 @@ define(["require", "exports", "app/common/basecontroller", "app/services/documen
                         });
                         return oo;
                     };
+                    Object.defineProperty(Editor.prototype, "DocType", {
+                        get: function () {
+                            return 0;
+                        },
+                        enumerable: true,
+                        configurable: true
+                    });
                     Object.defineProperty(Editor.prototype, "EditorModel", {
                         get: function () {
-                            return this.Model.get("editModel").toJSON();
+                            var model = this.Model.get("editModel").toJSON();
+                            model.doctype = this.DocType;
+                            return model;
                         },
                         enumerable: true,
                         configurable: true
@@ -246,7 +255,7 @@ define(["require", "exports", "app/common/basecontroller", "app/services/documen
                         // TODO: Прикрутить фильтр по доступу по торговой точке
                         var salepoint = 0;
                         self.Service.GetDocumentNewPosition(+id, salepoint, function (responseData) {
-                            model.positions.push(responseData.newcomposition);
+                            model.positions.push(responseData.newposition);
                             self.Model.set("editModel", model);
                             self.setupPositions();
                         });

@@ -29,7 +29,9 @@ namespace GriB.Client.App.Managers.Editors
         {
             document_params docpar = new document_params() { id = id };
             List<document> documents = GetDocuments(query, docpar);
-            return (documents == null || documents.Count == 0 ? new document() { id = id } : documents[0]);
+            document result = (documents == null || documents.Count == 0 ? new document() { id = id } : documents[0]);
+            GetPositions(query, result);
+            return result;
         }
 
         private const string cmdSet = @"Editor\Document\[set]";
@@ -43,7 +45,74 @@ namespace GriB.Client.App.Managers.Editors
                 result.id = (int)values[0];
             });
 
+            int index = 0;
+            foreach(var pos in result.positions)
+            {
+                pos.id = result.id;
+                pos.index = index;
+                index++;
+            }
+
+            DelPositionMax(query, result.id, index);
+
+            foreach (var pos in result.positions)
+            {
+                SetPosition(query, pos);
+            }
+
             return result;
+        }
+
+        private const string cmdGetPositions = @"Editor\Document\Position\[get]";
+        public static document GetPositions(this Query query, document document)
+        {
+            document result = document;
+            result.positions = new List<document_position>();
+            query.Execute(cmdGetPositions, new SqlParameter[] { new SqlParameter() { ParameterName = "@id", Value = result.id } }
+            , (values) =>
+            {
+                int c = 1;
+                result.positions.Add(new document_position() { index = (int)values[c++], product = new product() { id = (int)values[c++], name = (string)values[c++] }, quantity = (double)values[c++], price = (double)values[c++] });
+            });
+
+            return result;
+        }
+
+        private const string cmdSetPosition = @"Editor\Document\Position\[set]";
+        public static document_position SetPosition(this Query query, document_position position)
+        {
+            document_position result = position;
+            query.Execute(cmdSetPosition, new SqlParameter[] { new SqlParameter() { ParameterName = "@id", Value = result.id }, new SqlParameter() { ParameterName = "@index", Value = result.index }, new SqlParameter() { ParameterName = "@product", Value = result.product.id }, new SqlParameter() { ParameterName = "@quantity", Value = result.quantity }, new SqlParameter() { ParameterName = "@price", Value = result.price } }
+            , (values) =>
+            {
+                int c = 1;
+                result.index = (int)values[c++];
+                result.product.id = (int)values[c++];
+                result.product.name = (string)values[c++];
+                result.quantity = (double)values[c++];
+                result.price = (double)values[c++];
+            });
+
+            if (result.quantity <= 0)
+                DelPosition(query, result);
+
+            return result;
+        }
+
+
+        private const string cmdDelPosition = @"Editor\Document\Position\[del]";
+        public static void DelPosition(this Query query, document_position position)
+        {
+            document_position result = position;
+            query.Execute(cmdDelPosition, new SqlParameter[] { new SqlParameter() { ParameterName = "@id", Value = result.id }, new SqlParameter() { ParameterName = "@index", Value = result.index } }
+            , (values) => { });
+        }
+
+        private const string cmdDelPositionMax = @"Editor\Document\Position\[delmax]";
+        public static void DelPositionMax(this Query query, int doc, int maxIndex)
+        {
+            query.Execute(cmdDelPositionMax, new SqlParameter[] { new SqlParameter() { ParameterName = "@id", Value = doc }, new SqlParameter() { ParameterName = "@index", Value = maxIndex } }
+            , (values) => { });
         }
 
         private const string cmdDel = @"Editor\Document\[del]";

@@ -413,7 +413,9 @@ define(["require", "exports", "app/common/utils", "app/common/variables", "./var
             BaseCard.prototype.ViewInit = function (view) {
                 var controls = [];
                 controls.push(this.initNavHeader());
-                controls.push(this.initFilterControls());
+                var filterControl = this.initFilterControls();
+                if (filterControl)
+                    controls.push(filterControl);
                 controls.push(this.initTableRow());
                 view.append(controls);
                 _super.prototype.ViewInit.call(this, view);
@@ -505,13 +507,18 @@ define(["require", "exports", "app/common/utils", "app/common/variables", "./var
                 this.DeleteButtonClick = this.createTouchClickEvent(this.btnDelete, this.deleteButtonClick);
                 this.CloseButtonClick = this.createTouchClickEvent(this.btnClose, this.closeButtonClick);
                 this.SelectButtonClick = this.createTouchClickEvent(this.btnSelect, this.selectButtonClick);
-                this.ClearButtonClick = this.createTouchClickEvent(this.clearSearch, this.clearButtonClick);
-                this.proxySearch = $.proxy(this.search, this);
-                this.formSearch.on('submit', this.proxySearch);
+                if (this.clearSearch)
+                    this.ClearButtonClick = this.createTouchClickEvent(this.clearSearch, this.clearButtonClick);
+                if (this.formSearch) {
+                    this.proxySearch = $.proxy(this.search, this);
+                    this.formSearch.on('submit', this.proxySearch);
+                }
             };
             BaseCard.prototype.destroyEvents = function () {
-                this.formSearch.off('submit', this.proxySearch);
-                this.destroyTouchClickEvent(this.clearSearch, this.ClearButtonClick);
+                if (this.formSearch)
+                    this.formSearch.off('submit', this.proxySearch);
+                if (this.clearSearch)
+                    this.destroyTouchClickEvent(this.clearSearch, this.ClearButtonClick);
                 this.destroyTouchClickEvent(this.rows, this.rowClick);
                 this.destroyTouchClickEvent(this.btnSelect, this.SelectButtonClick);
                 this.destroyTouchClickEvent(this.btnEdit, this.EditButtonClick);
@@ -594,7 +601,7 @@ define(["require", "exports", "app/common/utils", "app/common/variables", "./var
             BaseCard.prototype.getItemsForView = function () {
                 var result = [];
                 var data = this.Model.get("cardModel");
-                var strSearch = this.inputSearch.val(); // ($("#card-view-search").val() as string);
+                var strSearch = (this.inputSearch ? this.inputSearch.val() : ""); // ($("#card-view-search").val() as string);
                 var fieldSearch = this.CardSettings.FieldSearch;
                 var isNotSearch = (utils.isNullOrEmpty(fieldSearch) || utils.isNullOrEmpty(strSearch));
                 if (!isNotSearch)
@@ -674,7 +681,8 @@ define(["require", "exports", "app/common/utils", "app/common/variables", "./var
                 variables_1._main.ControllerBack(e);
             };
             BaseCard.prototype.clearButtonClick = function (e) {
-                this.inputSearch.val("");
+                if (this.inputSearch)
+                    this.inputSearch.val("");
                 this.setupRows();
             };
             BaseCard.prototype.loadData = function () {

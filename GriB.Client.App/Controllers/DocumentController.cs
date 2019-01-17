@@ -14,7 +14,7 @@ namespace GriB.Client.App.Controllers
         #region Документы
         [HttpPost]
         [ActionName("get_docs")]
-        public HttpResponseMessage GetSalePoints(document_params docpar)
+        public HttpResponseMessage GetDocuments(document_params docpar)
         {
             return TryCatchResponseQuery((query) =>
             {
@@ -24,13 +24,12 @@ namespace GriB.Client.App.Controllers
 
         [HttpGet]
         [ActionName("get_doc")]
-        public HttpResponseMessage GetSalePoint(int id)
+        public HttpResponseMessage GetDocument(int id)
         {
             return TryCatchResponseQuery((query) =>
             {
                 document result = Document.GetDocument(query, id);
                 return Request.CreateResponse(HttpStatusCode.OK, new { record = result });
-
             });
         }
 
@@ -42,13 +41,13 @@ namespace GriB.Client.App.Controllers
             return TryCatchResponseQuery((query) =>
             {
                 document_position result = Document.GetDocumentPositionNew(query, id, salepoint);
-                return Request.CreateResponse(HttpStatusCode.OK, new { newcomposition = result });
+                return Request.CreateResponse(HttpStatusCode.OK, new { newposition = result });
             });
         }
 
         [HttpPost]
         [ActionName("post_doc")]
-        public HttpResponseMessage PostSalepoint(document document)
+        public HttpResponseMessage PostDocument(document document)
         {
             return TryCatchResponseQuery((query) =>
             {
@@ -60,7 +59,7 @@ namespace GriB.Client.App.Controllers
 
         [HttpGet]
         [ActionName("del_doc")]
-        public HttpResponseMessage DeleteSalepoint(int id)
+        public HttpResponseMessage DeleteDocument(int id)
         {
             return TryCatchResponseQuery((query) =>
             {

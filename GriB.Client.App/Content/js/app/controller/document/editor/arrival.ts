@@ -18,6 +18,9 @@ export namespace Controller.Document.Editor {
             return "id_arrival";
         }
 
+        protected get DocType(): number {
+            return 10;
+        }
 
     }
 }

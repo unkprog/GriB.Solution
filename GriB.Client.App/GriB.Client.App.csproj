@@ -224,7 +224,8 @@
     <Content Include="Scripts\Query\Editor\Discount\[del].sql" />
     <Content Include="Scripts\Query\Editor\Discount\[get].sql" />
     <Content Include="Scripts\Query\Editor\Discount\[set].sql" />
-    <Content Include="Scripts\Query\Editor\Document\Position\[add].sql" />
+    <Content Include="Scripts\Query\Editor\Document\Position\[delmax].sql" />
+    <Content Include="Scripts\Query\Editor\Document\Position\[set].sql" />
     <Content Include="Scripts\Query\Editor\Document\Position\[del].sql" />
     <Content Include="Scripts\Query\Editor\Document\Position\[get].sql" />
     <Content Include="Scripts\Query\Editor\Document\Position\[get_new].sql" />

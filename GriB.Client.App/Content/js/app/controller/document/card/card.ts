@@ -53,11 +53,11 @@ export namespace Controller.Document.Card {
         }
 
         protected get DateFrom(): Date {
-            return new Date();
+            return new Date(1899, 11, 30, 0, 0, 0, 0);
         }
 
         protected get DateTo(): Date {
-            return new Date();
+            return new Date(1899, 11, 30, 0, 0, 0, 0);
         }
 
         private getDocs(Callback: (responseData: any) => void) {
@@ -66,6 +66,27 @@ export namespace Controller.Document.Card {
                 if (Callback)
                     Callback(responseData);
             });
+        }
+
+
+        protected initFilterControls(): JQuery {
+            //let navbarHeader: string = '<nav class="card-search-nav editor-header z-depth-1">';
+            //navbarHeader += '   <div class="nav-wrapper">';
+            //navbarHeader += '       <form>';
+            //navbarHeader += '           <div class="input-field">';
+            //navbarHeader += '               <input id="card-view-search" type="search" required value="">';
+            //navbarHeader += '               <label class="label-icon" for="search"><i class="material-icons editor-header">search</i></label>';
+            //navbarHeader += '               <i id="card-view-search-clear" class="material-icons editor-header">close</i>';
+            //navbarHeader += '           </div>';
+            //navbarHeader += '       </form>';
+            //navbarHeader += '   </div>';
+            //navbarHeader += '</nav>';
+            //this.navSearch = $(navbarHeader);
+            //this.formSearch = this.navSearch.find('form');
+            //this.inputSearch = this.formSearch.find('#card-view-search');
+            //this.clearSearch = this.formSearch.find('#card-view-search-clear');
+
+            return undefined; //this.navSearch;
         }
     }
 }

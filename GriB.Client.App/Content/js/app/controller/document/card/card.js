@@ -86,14 +86,14 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
                     });
                     Object.defineProperty(Card.prototype, "DateFrom", {
                         get: function () {
-                            return new Date();
+                            return new Date(1899, 11, 30, 0, 0, 0, 0);
                         },
                         enumerable: true,
                         configurable: true
                     });
                     Object.defineProperty(Card.prototype, "DateTo", {
                         get: function () {
-                            return new Date();
+                            return new Date(1899, 11, 30, 0, 0, 0, 0);
                         },
                         enumerable: true,
                         configurable: true
@@ -104,6 +104,24 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
                             if (Callback)
                                 Callback(responseData);
                         });
+                    };
+                    Card.prototype.initFilterControls = function () {
+                        //let navbarHeader: string = '<nav class="card-search-nav editor-header z-depth-1">';
+                        //navbarHeader += '   <div class="nav-wrapper">';
+                        //navbarHeader += '       <form>';
+                        //navbarHeader += '           <div class="input-field">';
+                        //navbarHeader += '               <input id="card-view-search" type="search" required value="">';
+                        //navbarHeader += '               <label class="label-icon" for="search"><i class="material-icons editor-header">search</i></label>';
+                        //navbarHeader += '               <i id="card-view-search-clear" class="material-icons editor-header">close</i>';
+                        //navbarHeader += '           </div>';
+                        //navbarHeader += '       </form>';
+                        //navbarHeader += '   </div>';
+                        //navbarHeader += '</nav>';
+                        //this.navSearch = $(navbarHeader);
+                        //this.formSearch = this.navSearch.find('form');
+                        //this.inputSearch = this.formSearch.find('#card-view-search');
+                        //this.clearSearch = this.formSearch.find('#card-view-search-clear');
+                        return undefined; //this.navSearch;
                     };
                     return Card;
                 }(base.Controller.BaseCard));
