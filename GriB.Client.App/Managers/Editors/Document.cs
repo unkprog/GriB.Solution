@@ -9,7 +9,7 @@ namespace GriB.Client.App.Managers.Editors
     public static class Document
     {
 
-        private static document readFromValues(object[] values) => new document() { id = (int)values[0], doctype = (int)values[1], option = (int)values[2], date = (DateTime)values[3], salepoint = new salepoint() { id = (int)values[4] }, salepointto = new salepoint() { id = (int)values[5] } , contractor = new contractor() { id = (int)values[6] }, typecost= (int)values[7], salepointname = (string)values[8], sum = (double)values[9] };
+        private static document readFromValues(object[] values) => new document() { id = (int)values[0], doctype = (int)values[1], option = (int)values[2], date = (DateTime)values[3], salepoint = new salepoint() { id = (int)values[4], name = (string)values[8] }, salepointto = new salepoint() { id = (int)values[5] } , contractor = new contractor() { id = (int)values[6], name = (string)values[9] }, typecost= (int)values[7], sum = (double)values[10] };
 
         private const string cmdGet = @"Editor\Document\[get]";
         public static List<document> GetDocuments(this Query query, document_params docpar)

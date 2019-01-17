@@ -63,6 +63,10 @@ export function date_ddmmyyyy(date: Date) {
     return (dd[1] ? dd : '0' + dd[0]) + '.' + (mm[1] ? mm : '0' + mm[0]) + '.' + yyyy;
 };
 
+
+//Window.grib = (window.grib || {}); 
+window.date_ddmmyyyy = date_ddmmyyyy;
+
 export function numberToString(value: number, decimal:number): string {
     let result: string = "";
     if (value)

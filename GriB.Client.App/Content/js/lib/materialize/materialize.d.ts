@@ -39,3 +39,7 @@ declare namespace M {
         function getInstance(elems: any): any;
     }
 }
+
+interface Window {
+    date_ddmmyyyy(date: Date): string;
+}

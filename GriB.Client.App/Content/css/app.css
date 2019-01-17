@@ -485,3 +485,6 @@ input[type='number']:hover::-webkit-outer-spin-button {
 
 .check_pos_q_add, .check_pos_q_del {
   cursor: pointer; }
+
+.doc-col-conduct {
+  width: 30px; }

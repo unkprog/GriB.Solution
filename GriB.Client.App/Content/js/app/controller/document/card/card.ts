@@ -35,8 +35,9 @@ export namespace Controller.Document.Card {
 
         protected get Columns(): Interfaces.ICardColumn[] {
             return [
-                { Header: vars._statres("label$date"), Field: "date" },
-                { Header: vars._statres("label$stock"), Field: "salepointname" },
+                { Header: "", HeaderStyle: "doc-col-conduct", Field: "option", FieldStyle:"doc-col-conduct", FieldTemplate: '#if ((option & 1) === 1) {#<label><input type="checkbox" checked="checked" disabled="disabled"/><span></span></label>#}#' },
+                { Header: vars._statres("label$date"), Field: "date", FieldTemplate: "#=date_ddmmyyyy(new Date(date))#" },
+                { Header: vars._statres("label$stock"), Field: "salepoint.name" },
                 { Header: vars._statres("label$sum"), Field: "sum" },
             ];
         }

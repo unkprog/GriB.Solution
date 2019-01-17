@@ -71,6 +71,8 @@ define(["require", "exports"], function (require, exports) {
     }
     exports.date_ddmmyyyy = date_ddmmyyyy;
     ;
+    //Window.grib = (window.grib || {}); 
+    window.date_ddmmyyyy = date_ddmmyyyy;
     function numberToString(value, decimal) {
         var result = "";
         if (value)
