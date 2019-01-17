@@ -33,7 +33,7 @@ define(["require", "exports", "app/common/variables", "app/controller/setting/ca
                     };
                     Product.prototype.createCardSettings = function () {
                         return {
-                            FieldId: "id", FieldSearch: "name", ValueIdNew: -1, EditIdName: "id_product", EditController: "setting/editor/product",
+                            FieldId: "id", FilterSettings: this.createCardFilterSettings(), ValueIdNew: -1, EditIdName: "id_product", EditController: "setting/editor/product",
                             IsAdd: true, IsAddCopy: true, IsEdit: true, IsDelete: true, IsSelect: false,
                             Load: $.proxy(this.Service.GetProducts, this.Service), Delete: $.proxy(this.Service.DelProduct, this.Service),
                             Columns: [

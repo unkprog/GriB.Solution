@@ -14,9 +14,15 @@ export namespace Controller.Setting.Card {
             });
         }
 
+        protected createCardFilterSettings(): Interfaces.ICardFilterSettings {
+            let result: Interfaces.ICardFilterSettings = super.createCardFilterSettings();
+            result.FieldSearch = "code";
+            return result;
+        }
+
         protected createCardSettings(): Interfaces.ICardSettings {
             return {
-                FieldId: "id", FieldSearch: "code", ValueIdNew: -1, EditIdName: "id_unit", EditController: "setting/editor/unit",
+                FieldId: "id", FilterSettings: this.createCardFilterSettings(), ValueIdNew: -1, EditIdName: "id_unit", EditController: "setting/editor/unit",
                 IsAdd: true, IsAddCopy: false, IsEdit: true, IsDelete: true, IsSelect: false,
                 Load: $.proxy(this.Service.GetUnits, this.Service), Delete: $.proxy(this.Service.DelUnit, this.Service),
                 Columns: [

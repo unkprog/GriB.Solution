@@ -37,9 +37,13 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
                     Card.prototype.createOptions = function () {
                         return { Url: "/Content/view/document/card/card.html", Id: "card-view" };
                     };
+                    Card.prototype.createCardFilterSettings = function () {
+                        var result = undefined; //super.createCardFilterSettings();
+                        return result;
+                    };
                     Card.prototype.createCardSettings = function () {
                         return {
-                            FieldId: "id", FieldSearch: "name", ValueIdNew: -1, EditIdName: this.EditIdName, EditController: this.EditController,
+                            FieldId: "id", FilterSettings: this.createCardFilterSettings(), ValueIdNew: -1, EditIdName: this.EditIdName, EditController: this.EditController,
                             IsAdd: true, IsAddCopy: false, IsEdit: true, IsDelete: true, IsSelect: false,
                             Load: $.proxy(this.getDocs, this), Delete: $.proxy(this.Service.DelDocument, this.Service),
                             Columns: this.Columns

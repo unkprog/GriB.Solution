@@ -16,7 +16,7 @@ export namespace Controller.Setting.Card {
 
         protected createCardSettings(): Interfaces.ICardSettings {
             return {
-                FieldId: "id", FieldSearch: "code", ValueIdNew: -1, EditIdName: "id_contractor", EditController: "setting/editor/contractor",
+                FieldId: "id", FilterSettings: this.createCardFilterSettings(), ValueIdNew: -1, EditIdName: "id_contractor", EditController: "setting/editor/contractor",
                 IsAdd: true, IsAddCopy: false, IsEdit: true, IsDelete: true, IsSelect: false,
                 Load: $.proxy(this.Service.GetContractors, this.Service), Delete: $.proxy(this.Service.DelContractor, this.Service),
                 Columns: [

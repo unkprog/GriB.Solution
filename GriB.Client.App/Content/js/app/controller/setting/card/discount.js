@@ -33,7 +33,7 @@ define(["require", "exports", "app/common/variables", "app/controller/setting/ca
                     };
                     Discount.prototype.createCardSettings = function () {
                         return {
-                            FieldId: "id", FieldSearch: "name", ValueIdNew: -1, EditIdName: "id_discount", EditController: "setting/editor/discount",
+                            FieldId: "id", FilterSettings: this.createCardFilterSettings(), ValueIdNew: -1, EditIdName: "id_discount", EditController: "setting/editor/discount",
                             IsAdd: true, IsAddCopy: false, IsEdit: true, IsDelete: true, IsSelect: false,
                             Load: $.proxy(this.Service.GetDiscounts, this.Service), Delete: $.proxy(this.Service.DelDiscount, this.Service),
                             Columns: [

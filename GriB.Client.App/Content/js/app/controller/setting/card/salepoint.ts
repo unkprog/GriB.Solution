@@ -16,7 +16,7 @@ export namespace Controller.Setting.Card {
 
         protected createCardSettings(): Interfaces.ICardSettings {
             return {
-                FieldId: "id", FieldSearch: "name", ValueIdNew: 0, EditIdName: "id_salepoint", EditController: "setting/editor/salepoint",
+                FieldId: "id", FilterSettings: this.createCardFilterSettings(), ValueIdNew: 0, EditIdName: "id_salepoint", EditController: "setting/editor/salepoint",
                 IsAdd: true, IsAddCopy: false,IsEdit: true, IsDelete: true, IsSelect: false,
                 Load: $.proxy(this.Service.GetSalePoints, this.Service), Delete: $.proxy(this.Service.DelSalePoint, this.Service),
                 Columns: [

@@ -412,6 +412,96 @@ export namespace Controller {
         }
     }
 
+    export class BaseCardFilterSettings implements Interfaces.ICardFilterSettings {
+        constructor(setupRows: { (): void; }) {
+            this.fieldSearch = "name";
+            this.setupRows = setupRows;
+        }
+
+        private setupRows: { (): void; };
+
+        private fieldSearch: string;
+        public get FieldSearch(): string {
+            return this.fieldSearch;
+        }
+        public set FieldSearch(val: string) {
+            this.fieldSearch = val;
+        }
+
+        private navSearch: JQuery;
+        private formSearch: JQuery;
+        private inputSearch: JQuery;
+        private clearSearch: JQuery;
+
+        private proxySearch;
+
+        public InitControls(): JQuery {
+            let navbarHeader: string = '<nav class="card-search-nav editor-header z-depth-1">';
+            navbarHeader += '   <div class="nav-wrapper">';
+            navbarHeader += '       <form>';
+            navbarHeader += '           <div class="input-field">';
+            navbarHeader += '               <input id="card-view-search" type="search" required value="">';
+            navbarHeader += '               <label class="label-icon" for="search"><i class="material-icons editor-header">search</i></label>';
+            navbarHeader += '               <i id="card-view-search-clear" class="material-icons editor-header">close</i>';
+            navbarHeader += '           </div>';
+            navbarHeader += '       </form>';
+            navbarHeader += '   </div>';
+            navbarHeader += '</nav>';
+            this.navSearch = $(navbarHeader);
+            this.formSearch = this.navSearch.find('form');
+            this.inputSearch = this.formSearch.find('#card-view-search');
+            this.clearSearch = this.formSearch.find('#card-view-search-clear');
+
+            return this.navSearch;
+        }
+
+        public createEvents(): void {
+            if (this.clearSearch) this.ClearButtonClick = utils.createTouchClickEvent(this.clearSearch, this.clearButtonClick, this);
+            if (this.formSearch) {
+                this.proxySearch = $.proxy(this.search, this);
+                this.formSearch.on('submit', this.proxySearch);
+            }
+        }
+
+        private search(e: any) {
+            e.preventDefault();
+            if (this.setupRows)
+                this.setupRows();
+            return false;
+        }
+
+        public destroyEvents(): void {
+            if (this.formSearch) this.formSearch.off('submit', this.proxySearch);
+            if (this.clearSearch) utils.destroyTouchClickEvent(this.clearSearch, this.ClearButtonClick);
+        }
+
+        public ClearButtonClick: { (e: any): void; };
+        private clearButtonClick(e): void {
+            if (this.inputSearch)
+                this.inputSearch.val("");
+            if (this.setupRows)
+                this.setupRows();
+        }
+
+        public GetItemsForView(data: Interfaces.Model.IEditorModel[]): Interfaces.Model.IEditorModel[] {
+            let result: Interfaces.Model.IEditorModel[] = [];
+            let strSearch: string = (this.inputSearch ? this.inputSearch.val() as string : ""); // ($("#card-view-search").val() as string);
+            let fieldSearch: string = this.FieldSearch;
+            let isNotSearch: boolean = (utils.isNullOrEmpty(fieldSearch) || utils.isNullOrEmpty(strSearch));
+            if (!isNotSearch)
+                strSearch = strSearch.toLowerCase();
+            for (let i = 0, icount = (data && data.length ? data.length : 0); i < icount; i++) {
+                if (isNotSearch) {
+                    result.push(data[i]);
+                }
+                else if ((data[i][fieldSearch] as string).toLowerCase().indexOf(strSearch) > -1) {
+                    result.push(data[i]);
+                }
+            }
+            return result;
+        }
+    }
+
     export class BaseCard extends Base implements Interfaces.IControllerCard {
 
         constructor() {
@@ -443,11 +533,6 @@ export namespace Controller {
         private btnSelect: JQuery;
         private btnClose: JQuery;
 
-        private navSearch: JQuery;
-        private formSearch: JQuery;
-        private inputSearch: JQuery;
-        private clearSearch: JQuery;
-
         private tableRow: JQuery;
         private tableHead: JQuery;
         private tableBody: JQuery;
@@ -456,7 +541,7 @@ export namespace Controller {
             let controls: Array<JQuery> = [];
 
             controls.push(this.initNavHeader());
-            let filterControl: JQuery = this.initFilterControls();
+            let filterControl: JQuery = (this.cardSettings && this.cardSettings.FilterSettings ? this.cardSettings.FilterSettings.InitControls() : undefined);
             if (filterControl)
                 controls.push(filterControl);
             controls.push(this.initTableRow());
@@ -492,25 +577,7 @@ export namespace Controller {
             return this.navHeader;
         }
 
-        protected initFilterControls(): JQuery {
-            let navbarHeader: string = '<nav class="card-search-nav editor-header z-depth-1">';
-            navbarHeader += '   <div class="nav-wrapper">';
-            navbarHeader += '       <form>';
-            navbarHeader += '           <div class="input-field">';
-            navbarHeader += '               <input id="card-view-search" type="search" required value="">';
-            navbarHeader += '               <label class="label-icon" for="search"><i class="material-icons editor-header">search</i></label>';
-            navbarHeader += '               <i id="card-view-search-clear" class="material-icons editor-header">close</i>';
-            navbarHeader += '           </div>';
-            navbarHeader += '       </form>';
-            navbarHeader += '   </div>';
-            navbarHeader += '</nav>';
-            this.navSearch = $(navbarHeader);
-            this.formSearch = this.navSearch.find('form');
-            this.inputSearch = this.formSearch.find('#card-view-search');
-            this.clearSearch = this.formSearch.find('#card-view-search-clear');
-
-            return this.navSearch;
-        }
+       
 
         protected initTableRow(): JQuery {
             let navbarHeader: string =  '<div class="row row-table">';
@@ -561,16 +628,20 @@ export namespace Controller {
             this.DeleteButtonClick = this.createTouchClickEvent(this.btnDelete, this.deleteButtonClick);
             this.CloseButtonClick = this.createTouchClickEvent(this.btnClose, this.closeButtonClick);
             this.SelectButtonClick = this.createTouchClickEvent(this.btnSelect, this.selectButtonClick);
-            if (this.clearSearch) this.ClearButtonClick = this.createTouchClickEvent(this.clearSearch, this.clearButtonClick);
-            if (this.formSearch) {
-                this.proxySearch = $.proxy(this.search, this);
-                this.formSearch.on('submit', this.proxySearch);
-            }
+            if (this.cardSettings && this.cardSettings.FilterSettings)
+                this.cardSettings.FilterSettings.createEvents();
+            //if (this.clearSearch) this.ClearButtonClick = this.createTouchClickEvent(this.clearSearch, this.clearButtonClick);
+            //if (this.formSearch) {
+            //    this.proxySearch = $.proxy(this.search, this);
+            //    this.formSearch.on('submit', this.proxySearch);
+            //}
         }
 
         protected destroyEvents(): void {
-            if (this.formSearch) this.formSearch.off('submit', this.proxySearch);
-            if (this.clearSearch) this.destroyTouchClickEvent(this.clearSearch, this.ClearButtonClick); 
+            if (this.cardSettings && this.cardSettings.FilterSettings)
+                this.cardSettings.FilterSettings.destroyEvents();
+            //if (this.formSearch) this.formSearch.off('submit', this.proxySearch);
+            //if (this.clearSearch) this.destroyTouchClickEvent(this.clearSearch, this.ClearButtonClick); 
             this.destroyTouchClickEvent(this.rows, this.rowClick);
             this.destroyTouchClickEvent(this.btnSelect, this.SelectButtonClick);
             this.destroyTouchClickEvent(this.btnEdit, this.EditButtonClick);
@@ -580,8 +651,12 @@ export namespace Controller {
             this.destroyTouchClickEvent(this.btnClose, this.CloseButtonClick);
         }
 
+        protected createCardFilterSettings(): Interfaces.ICardFilterSettings {
+            return new BaseCardFilterSettings($.proxy(this.setupRows, this));
+        }
+
         protected createCardSettings(): Interfaces.ICardSettings {
-            return { FieldId: "", FieldSearch: "", ValueIdNew: 0, EditIdName: "", IsAdd: false, IsAddCopy: false, IsEdit: false, IsDelete: false, IsSelect: false, EditController: "", Load: undefined, Delete: undefined, Columns: [] };
+            return { FilterSettings: this.createCardFilterSettings(), ValueIdNew: 0, EditIdName: "", IsAdd: false, IsAddCopy: false, IsEdit: false, IsDelete: false, IsSelect: false, EditController: "", Load: undefined, Delete: undefined, Columns: [] };
         }
 
 
@@ -604,12 +679,7 @@ export namespace Controller {
             this.createTouchClickEvent(this.rows, this.rowClick);
         }
 
-        private search(e: any) {
-            e.preventDefault();
-            this.setupRows();
-            return false;
-        }
-
+       
         protected getTableHeaderHtml(): string {
             let columns: Interfaces.ICardColumn[] = this.CardSettings.Columns;
             let html: string = '';
@@ -667,28 +737,9 @@ export namespace Controller {
             return html;
         }
 
-        protected getItemsForView(): Interfaces.Model.IEditorModel[] {
-            let result: Interfaces.Model.IEditorModel[] = [];
-            let data: Interfaces.Model.IEditorModel[] = this.Model.get("cardModel");
-            let strSearch: string = (this.inputSearch ? this.inputSearch.val() as string : ""); // ($("#card-view-search").val() as string);
-            let fieldSearch: string = this.CardSettings.FieldSearch;
-            let isNotSearch: boolean = (utils.isNullOrEmpty(fieldSearch) || utils.isNullOrEmpty(strSearch));
-            if (!isNotSearch)
-                strSearch = strSearch.toLowerCase();
-            for (let i = 0, icount = (data && data.length ? data.length : 0); i < icount; i++) {
-                if (isNotSearch) {
-                    result.push(data[i]);
-                }
-                else if ((data[i][fieldSearch] as string).toLowerCase().indexOf(strSearch) > -1) {
-                    result.push(data[i]);
-                }
-            }
-            return result;
-        }
-
         protected getTableBodyHtml(): string {
             let html: string = '';
-            let data: Interfaces.Model.IEditorModel[] = this.getItemsForView();
+            let data: Interfaces.Model.IEditorModel[] = (this.cardSettings && this.cardSettings.FilterSettings ? this.cardSettings.FilterSettings.GetItemsForView(this.Model.get("cardModel")) : this.Model.get("cardModel"));
 
             if (data && data.length > 0) {
                 if (!this.templateRow)
@@ -769,16 +820,6 @@ export namespace Controller {
             this.Close();
             _main.ControllerBack(e);
         }
-
-        
-
-        public ClearButtonClick: { (e: any): void; };
-        private clearButtonClick(e): void {
-            if (this.inputSearch)
-                this.inputSearch.val("");
-            this.setupRows();
-        }
-        
 
         protected loadData(): boolean {
             let controller = this;

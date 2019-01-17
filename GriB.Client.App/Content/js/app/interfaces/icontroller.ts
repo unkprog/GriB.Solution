@@ -66,9 +66,19 @@
         FieldTemplate?: string;
     }
 
-    export interface ICardSettings {
-        FieldId?: string;
+    export interface ICardFilterSettings {
         FieldSearch: string;
+
+        GetItemsForView(data: Interfaces.Model.IEditorModel[]): Interfaces.Model.IEditorModel[] 
+
+        InitControls(): JQuery;
+        createEvents(): void;
+        destroyEvents(): void;
+    }
+
+    export interface ICardSettings {
+        FilterSettings: Interfaces.ICardFilterSettings;
+        FieldId?: string;
         ValueIdNew: number;
         EditIdName: string;
         IsAdd: boolean;
@@ -81,6 +91,8 @@
         Load: (callback: (responseData: any) => void) => void;
         Delete: (id: number, callback: (responseData: any) => void) => void;
     }
+
+
 
     export interface IEditorButtonSettings {
         IsSave?: boolean;

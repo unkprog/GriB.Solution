@@ -19,9 +19,14 @@ export namespace Controller.Document.Card {
             return { Url: "/Content/view/document/card/card.html", Id: "card-view" };
         }
 
+        protected createCardFilterSettings(): Interfaces.ICardFilterSettings {
+            let result: Interfaces.ICardFilterSettings = undefined; //super.createCardFilterSettings();
+            return result;
+        }
+
         protected createCardSettings(): Interfaces.ICardSettings {
             return {
-                FieldId: "id", FieldSearch: "name", ValueIdNew: -1, EditIdName: this.EditIdName, EditController: this.EditController,
+                FieldId: "id", FilterSettings: this.createCardFilterSettings(), ValueIdNew: -1, EditIdName: this.EditIdName, EditController: this.EditController,
                 IsAdd: true, IsAddCopy: false, IsEdit: true, IsDelete: true, IsSelect: false,
                 Load: $.proxy(this.getDocs, this), Delete: $.proxy(this.Service.DelDocument, this.Service),
                 Columns: this.Columns
