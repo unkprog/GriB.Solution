@@ -18,6 +18,10 @@ export namespace Controller.Document.Card {
             return "id_consumption";
         }
 
+        protected get FilterId(): string {
+            return "DocumentFilterConsumption";
+        }
+
         protected get EditController(): string {
             return "document/editor/Consumption";
         }

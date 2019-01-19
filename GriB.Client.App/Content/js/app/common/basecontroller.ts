@@ -413,6 +413,13 @@ export namespace Controller {
     }
 
     export class BaseCardFilterSettings implements Interfaces.ICardFilterSettings {
+        public saveFilter(): void {
+            throw new Error("Method not implemented.");
+        }
+        public restoreFilter() {
+            throw new Error("Method not implemented.");
+        }
+
         constructor(setupRows: { (): void; }) {
             this.fieldSearch = "name";
             this.setupRows = setupRows;
@@ -630,18 +637,11 @@ export namespace Controller {
             this.SelectButtonClick = this.createTouchClickEvent(this.btnSelect, this.selectButtonClick);
             if (this.cardSettings && this.cardSettings.FilterSettings)
                 this.cardSettings.FilterSettings.createEvents();
-            //if (this.clearSearch) this.ClearButtonClick = this.createTouchClickEvent(this.clearSearch, this.clearButtonClick);
-            //if (this.formSearch) {
-            //    this.proxySearch = $.proxy(this.search, this);
-            //    this.formSearch.on('submit', this.proxySearch);
-            //}
         }
 
         protected destroyEvents(): void {
             if (this.cardSettings && this.cardSettings.FilterSettings)
                 this.cardSettings.FilterSettings.destroyEvents();
-            //if (this.formSearch) this.formSearch.off('submit', this.proxySearch);
-            //if (this.clearSearch) this.destroyTouchClickEvent(this.clearSearch, this.ClearButtonClick); 
             this.destroyTouchClickEvent(this.rows, this.rowClick);
             this.destroyTouchClickEvent(this.btnSelect, this.SelectButtonClick);
             this.destroyTouchClickEvent(this.btnEdit, this.EditButtonClick);
@@ -668,7 +668,7 @@ export namespace Controller {
             this.createTouchClickEvent(this.rows, this.rowClick);
         }
 
-        private setupRows(): void {
+        protected setupRows(): void {
             this.selectedRow = null;
 
             if (this.rows)

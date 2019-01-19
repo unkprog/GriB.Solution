@@ -39,6 +39,13 @@ define(["require", "exports", "app/common/variables", "app/controller/document/e
                         enumerable: true,
                         configurable: true
                     });
+                    Object.defineProperty(Arrival.prototype, "FilterId", {
+                        get: function () {
+                            return "DocumentFilterArrival";
+                        },
+                        enumerable: true,
+                        configurable: true
+                    });
                     Object.defineProperty(Arrival.prototype, "DocType", {
                         get: function () {
                             return 10;

@@ -388,6 +388,12 @@ define(["require", "exports", "app/common/utils", "app/common/variables", "./var
                 this.fieldSearch = "name";
                 this.setupRows = setupRows;
             }
+            BaseCardFilterSettings.prototype.saveFilter = function () {
+                throw new Error("Method not implemented.");
+            };
+            BaseCardFilterSettings.prototype.restoreFilter = function () {
+                throw new Error("Method not implemented.");
+            };
             Object.defineProperty(BaseCardFilterSettings.prototype, "FieldSearch", {
                 get: function () {
                     return this.fieldSearch;
@@ -570,17 +576,10 @@ define(["require", "exports", "app/common/utils", "app/common/variables", "./var
                 this.SelectButtonClick = this.createTouchClickEvent(this.btnSelect, this.selectButtonClick);
                 if (this.cardSettings && this.cardSettings.FilterSettings)
                     this.cardSettings.FilterSettings.createEvents();
-                //if (this.clearSearch) this.ClearButtonClick = this.createTouchClickEvent(this.clearSearch, this.clearButtonClick);
-                //if (this.formSearch) {
-                //    this.proxySearch = $.proxy(this.search, this);
-                //    this.formSearch.on('submit', this.proxySearch);
-                //}
             };
             BaseCard.prototype.destroyEvents = function () {
                 if (this.cardSettings && this.cardSettings.FilterSettings)
                     this.cardSettings.FilterSettings.destroyEvents();
-                //if (this.formSearch) this.formSearch.off('submit', this.proxySearch);
-                //if (this.clearSearch) this.destroyTouchClickEvent(this.clearSearch, this.ClearButtonClick); 
                 this.destroyTouchClickEvent(this.rows, this.rowClick);
                 this.destroyTouchClickEvent(this.btnSelect, this.SelectButtonClick);
                 this.destroyTouchClickEvent(this.btnEdit, this.EditButtonClick);

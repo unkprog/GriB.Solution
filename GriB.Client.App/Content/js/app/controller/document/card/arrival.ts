@@ -14,6 +14,13 @@ export namespace Controller.Document.Card {
             });
         }
 
+        protected columns(): Interfaces.ICardColumn[] {
+            let result: Interfaces.ICardColumn[] = super.columns();
+            result.splice(3, 0, { Header: vars._statres("label$contractor"), Field: "contractor.name" },);
+            return result;
+        }
+
+
         protected get EditIdName(): string {
             return "id_arrival";
         }
@@ -26,6 +33,14 @@ export namespace Controller.Document.Card {
             return 10;
         }
 
+        public ViewInit(view: JQuery): boolean {
+            let result: boolean = super.ViewInit(view);
+
+            let settings: card.Controller.Document.Card.DocumentCardFilterSettings = this.CardSettings.FilterSettings as card.Controller.Document.Card.DocumentCardFilterSettings;
+            if (settings)
+                settings.showContractor();
+            return result;
+        }
     }
 }
 

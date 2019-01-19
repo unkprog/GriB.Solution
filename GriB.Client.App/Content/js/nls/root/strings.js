@@ -201,6 +201,9 @@ define({
 
     "label$conduct": "Учитывать",
     "label$date": "Дата",
+    "label$date$from": "Дата с",
+    "label$date$to": "Дата по",
+    "label$find": "Поиск",
     "label$stock": "Склад",
     "label$provider": "Поставщик",
 

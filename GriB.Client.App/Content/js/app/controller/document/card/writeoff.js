@@ -38,6 +38,13 @@ define(["require", "exports", "app/common/variables", "app/controller/document/c
                         enumerable: true,
                         configurable: true
                     });
+                    Object.defineProperty(Writeoff.prototype, "FilterId", {
+                        get: function () {
+                            return "DocumentFilterWriteoff";
+                        },
+                        enumerable: true,
+                        configurable: true
+                    });
                     Object.defineProperty(Writeoff.prototype, "EditController", {
                         get: function () {
                             return "document/editor/writeoff";

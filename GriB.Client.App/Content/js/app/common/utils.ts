@@ -55,16 +55,14 @@ export function dateToLongString(date:Date) {
 }
 
 export function date_ddmmyyyy(date: Date) {
-
-    var yyyy = date.getFullYear().toString();
-    var mm = (date.getMonth() + 1).toString(); // getMonth() is zero-based         
-    var dd = date.getDate().toString();
+    let _date = (date ? date : new Date());
+    var yyyy = _date.getFullYear().toString();
+    var mm = (_date.getMonth() + 1).toString(); // getMonth() is zero-based         
+    var dd = _date.getDate().toString();
 
     return (dd[1] ? dd : '0' + dd[0]) + '.' + (mm[1] ? mm : '0' + mm[0]) + '.' + yyyy;
 };
 
-
-//Window.grib = (window.grib || {}); 
 window.date_ddmmyyyy = date_ddmmyyyy;
 
 export function numberToString(value: number, decimal:number): string {
@@ -73,3 +71,5 @@ export function numberToString(value: number, decimal:number): string {
         result = value.toFixed(decimal);// parseFloat(value).toFixed(2);
     return result;
 }
+
+window.numberToString = numberToString;

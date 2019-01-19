@@ -18,6 +18,10 @@ export namespace Controller.Document.Editor {
             return "id_arrival";
         }
 
+        protected get FilterId(): string {
+            return "DocumentFilterArrival";
+        }
+
         protected get DocType(): number {
             return 10;
         }

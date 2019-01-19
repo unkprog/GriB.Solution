@@ -74,6 +74,9 @@
         InitControls(): JQuery;
         createEvents(): void;
         destroyEvents(): void;
+
+        saveFilter(): void;
+        restoreFilter(): any;
     }
 
     export interface ICardSettings {

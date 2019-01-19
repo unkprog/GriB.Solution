@@ -550,6 +550,7 @@ input[type='number']:hover::-webkit-outer-spin-button {
         line-height: 80px;
     }
 }
+
 @media only screen and (max-height: 667px) {
     .btn-numpad, #btn-num-cancel, #btn-num-apply {
         font-size: 1.3em;
@@ -608,4 +609,13 @@ input[type='number']:hover::-webkit-outer-spin-button {
 
 .doc-col-conduct {
     width: 30px;
+}
+
+.doc-edit-ref {
+    cursor: pointer;
+}
+
+.doc-edit-ref-del {
+    margin-top: -48px;
+    cursor: pointer;
 }

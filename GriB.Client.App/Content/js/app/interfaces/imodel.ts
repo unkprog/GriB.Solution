@@ -189,6 +189,7 @@
         id: number;
         doctype: number;
         salepoint: number;
+        contractor: number;
         datefrom: Date;
         dateto: Date;
     }

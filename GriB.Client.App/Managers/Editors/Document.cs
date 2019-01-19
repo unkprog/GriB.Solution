@@ -15,7 +15,8 @@ namespace GriB.Client.App.Managers.Editors
         public static List<document> GetDocuments(this Query query, document_params docpar)
         {
             List<document> result = new List<document>();
-            query.Execute(cmdGet, new SqlParameter[] { new SqlParameter() { ParameterName = "@id", Value = docpar.id }, new SqlParameter() { ParameterName = "@doctype", Value = docpar.doctype }, new SqlParameter() { ParameterName = "@salepoint", Value = docpar.salepoint }
+            query.Execute(cmdGet, new SqlParameter[] { new SqlParameter() { ParameterName = "@id", Value = docpar.id }, new SqlParameter() { ParameterName = "@doctype", Value = docpar.doctype }
+            , new SqlParameter() { ParameterName = "@salepoint", Value = docpar.salepoint } , new SqlParameter() { ParameterName = "@contractor", Value = docpar.contractor }
             , new SqlParameter() { ParameterName = "@datefrom", Value = docpar.datefrom }, new SqlParameter() { ParameterName = "@dateto", Value = docpar.dateto} }
             , (values) =>
             {

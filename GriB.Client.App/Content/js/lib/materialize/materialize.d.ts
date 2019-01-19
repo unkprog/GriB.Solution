@@ -9,6 +9,7 @@
     dropdown(methodName?: any, paramName?: any): JQuery;
     recalculateDimensions(): JQuery;
     chips(methodName?: any, paramName?: any): JQuery;
+    collapsible(methodName?: any, paramName?: any): JQuery;
 }
 
 
@@ -42,4 +43,5 @@ declare namespace M {
 
 interface Window {
     date_ddmmyyyy(date: Date): string;
+    numberToString(value: number, decimal: number): string
 }

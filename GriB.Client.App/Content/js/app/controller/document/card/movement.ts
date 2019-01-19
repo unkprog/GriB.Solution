@@ -18,6 +18,11 @@ export namespace Controller.Document.Card {
             return "id_movement";
         }
 
+        protected get FilterId(): string {
+            return "DocumentFilterMovement";
+        }
+
+
         protected get EditController(): string {
             return "document/editor/movement";
         }

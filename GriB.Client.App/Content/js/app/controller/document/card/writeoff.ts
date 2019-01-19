@@ -18,6 +18,10 @@ export namespace Controller.Document.Card {
             return "id_writeoff";
         }
 
+        protected get FilterId(): string {
+            return "DocumentFilterWriteoff";
+        }
+
         protected get EditController(): string {
             return "document/editor/writeoff";
         }

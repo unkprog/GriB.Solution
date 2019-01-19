@@ -18,6 +18,10 @@ export namespace Controller.Document.Card {
             return "id_production";
         }
 
+        protected get FilterId(): string {
+            return "DocumentFilterProduction";
+        }
+
         protected get EditController(): string {
             return "document/editor/production";
         }

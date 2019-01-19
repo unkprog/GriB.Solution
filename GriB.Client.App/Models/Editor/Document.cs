@@ -17,6 +17,7 @@ namespace GriB.Client.App.Models.Editor
         public int id { get; set; }
         public int doctype { get; set; }
         public int salepoint { get; set; }
+        public int contractor { get; set; }
         public DateTime datefrom { get; set; }
         public DateTime dateto { get; set; }
     }
