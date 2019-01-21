@@ -36,7 +36,8 @@ export namespace Controller.Document.Editor {
                 "labelConduct": vars._statres("label$conduct"),
                 "labelDate": vars._statres("label$date"),
                 "labelProvider": vars._statres("label$provider"),
-                "labelSalepoint": vars._statres("label$salePoint"),
+                "labelStock": vars._statres("label$stock"),
+                "labelReason": vars._statres("label$reason"),
                 "labelName": vars._statres("label$name"),
                 "labelQuantityShort": vars._statres("label$quantityshort"),
                 "labelUnitShort": vars._statres("label$unitshort"),
@@ -78,6 +79,7 @@ export namespace Controller.Document.Editor {
         protected dateControl: JQuery;
         protected salePointControl: JQuery;
         protected contractorControl: JQuery;
+        protected reasonControl: JQuery;
         private positionRows: JQuery;
         private btnAddPosition: JQuery;
         private btnRemovePosition: JQuery;
@@ -87,6 +89,7 @@ export namespace Controller.Document.Editor {
 
             this.salePointControl = view.find("#document-view-salepoint-row");
             this.contractorControl = view.find("#document-view-contractor-row");
+            this.reasonControl = view.find("#document-view-reason-row");
             this.positionRows = view.find("#product-position-rows");
             return super.ViewInit(view);
         }
@@ -95,10 +98,31 @@ export namespace Controller.Document.Editor {
             return super.ViewShow(e);
         }
 
+        protected showContractor(isShow: boolean): void {
+            if (isShow) {
+                this.contractorControl.removeClass("hide");
+            }
+            else {
+                if (!this.contractorControl.hasClass("hide"))
+                    this.contractorControl.addClass("hide");
+            }
+        }
+
+        protected showReason(isShow: boolean): void {
+            if (isShow) {
+                this.reasonControl.removeClass("hide");
+            }
+            else {
+                if (!this.reasonControl.hasClass("hide"))
+                    this.reasonControl.addClass("hide");
+            }
+        }
+
         protected createEvents(): void {
             super.createEvents();
             this.SalePointButtonClick = this.createTouchClickEvent(this.salePointControl, this.salePointButtonClick);
             this.ContractorButtonClick = this.createTouchClickEvent(this.contractorControl, this.contractorButtonClick);
+            this.ReasonButtonClick = this.createTouchClickEvent(this.reasonControl, this.reasonButtonClick);
 
             this.Model.bind("change", $.proxy(this.changeModel, this));
         }
@@ -227,6 +251,29 @@ export namespace Controller.Document.Editor {
             let salepoint: Interfaces.Model.ISalepoint = controller.getSelectedRecord() as Interfaces.Model.ISalepoint;
             if (salepoint)
                 this.Model.set("editModel.salepoint", salepoint);
+            M.updateTextFields();
+        }
+
+        public ReasonButtonClick: { (e: any): void; };
+        private reasonButtonClick(e) {
+            let self = this;
+            vars._app.OpenController({
+                urlController: 'setting/card/reason', isModal: true, onLoadController: (controller: Interfaces.IController) => {
+                    let ctrlReason: Interfaces.IControllerCard = controller as Interfaces.IControllerCard;
+                    ctrlReason.CardSettings.IsAdd = false;
+                    ctrlReason.CardSettings.IsAddCopy = false;
+                    ctrlReason.CardSettings.IsDelete = false;
+                    ctrlReason.CardSettings.IsEdit = false;
+                    ctrlReason.CardSettings.IsSelect = true;
+                    ctrlReason.OnSelect = $.proxy(self.selectReason, self);
+                }
+            });
+        }
+
+        private selectReason(controller: Interfaces.IControllerCard) {
+            let reason: Interfaces.Model.IContractor = controller.getSelectedRecord() as Interfaces.Model.IReason;
+            if (reason)
+                this.Model.set("editModel.reason", reason);
             M.updateTextFields();
         }
 

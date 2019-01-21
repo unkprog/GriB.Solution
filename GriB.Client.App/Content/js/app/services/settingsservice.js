@@ -174,6 +174,19 @@ define(["require", "exports", "app/common/baseservice"], function (require, expo
             SettingsService.prototype.DelContractor = function (id, Callback) {
                 this.GetApi({ Action: "/del_contractor", RequestData: { id: id }, Callback: Callback });
             };
+            // Причина
+            SettingsService.prototype.GetReasons = function (Callback) {
+                this.GetApi({ Action: "/get_reasons", Callback: Callback });
+            };
+            SettingsService.prototype.GetReason = function (id, Callback) {
+                this.GetApi({ Action: "/get_reason", RequestData: { id: id }, Callback: Callback });
+            };
+            SettingsService.prototype.SetReason = function (model, Callback) {
+                this.PostApi({ Action: "/post_reason", RequestData: JSON.stringify(model), Callback: Callback });
+            };
+            SettingsService.prototype.DelReason = function (id, Callback) {
+                this.GetApi({ Action: "/del_reason", RequestData: { id: id }, Callback: Callback });
+            };
             return SettingsService;
         }(base.Services.BaseService));
         Services.SettingsService = SettingsService;

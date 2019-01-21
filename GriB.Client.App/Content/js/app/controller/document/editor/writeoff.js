@@ -20,43 +20,43 @@ define(["require", "exports", "app/common/variables", "app/controller/document/e
         (function (Document) {
             var Editor;
             (function (Editor) {
-                var Arrival = /** @class */ (function (_super) {
-                    __extends(Arrival, _super);
-                    function Arrival() {
+                var WriteOff = /** @class */ (function (_super) {
+                    __extends(WriteOff, _super);
+                    function WriteOff() {
                         return _super.call(this) || this;
                     }
-                    Object.defineProperty(Arrival.prototype, "Header", {
+                    Object.defineProperty(WriteOff.prototype, "Header", {
                         get: function () {
-                            return vars._statres("label$arrival");
+                            return vars._statres("label$writeoff");
                         },
                         enumerable: true,
                         configurable: true
                     });
-                    Object.defineProperty(Arrival.prototype, "EditIdName", {
+                    Object.defineProperty(WriteOff.prototype, "EditIdName", {
                         get: function () {
-                            return "id_arrival";
+                            return "id_writeoff";
                         },
                         enumerable: true,
                         configurable: true
                     });
-                    Object.defineProperty(Arrival.prototype, "DocType", {
+                    Object.defineProperty(WriteOff.prototype, "DocType", {
                         get: function () {
-                            return 10;
+                            return 40;
                         },
                         enumerable: true,
                         configurable: true
                     });
-                    Arrival.prototype.ViewInit = function (view) {
+                    WriteOff.prototype.ViewInit = function (view) {
                         var result = _super.prototype.ViewInit.call(this, view);
-                        this.showContractor(true);
+                        this.showReason(true);
                         return result;
                     };
-                    return Arrival;
+                    return WriteOff;
                 }(edit.Controller.Document.Editor.Editor));
-                Editor.Arrival = Arrival;
+                Editor.WriteOff = WriteOff;
             })(Editor = Document.Editor || (Document.Editor = {}));
         })(Document = Controller.Document || (Controller.Document = {}));
     })(Controller = exports.Controller || (exports.Controller = {}));
-    vars.registerController("document/editor/arrival", function (module) { return new module.Controller.Document.Editor.Arrival(); });
+    vars.registerController("document/editor/writeoff", function (module) { return new module.Controller.Document.Editor.WriteOff(); });
 });
-//# sourceMappingURL=arrival.js.map
+//# sourceMappingURL=writeoff.js.map

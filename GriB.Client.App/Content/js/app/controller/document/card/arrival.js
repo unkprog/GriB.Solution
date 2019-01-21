@@ -57,11 +57,18 @@ define(["require", "exports", "app/common/variables", "app/controller/document/c
                         enumerable: true,
                         configurable: true
                     });
+                    Object.defineProperty(Arrival.prototype, "Reason", {
+                        get: function () {
+                            return 0;
+                        },
+                        enumerable: true,
+                        configurable: true
+                    });
                     Arrival.prototype.ViewInit = function (view) {
                         var result = _super.prototype.ViewInit.call(this, view);
                         var settings = this.CardSettings.FilterSettings;
                         if (settings)
-                            settings.showContractor();
+                            settings.showContractor(true);
                         return result;
                     };
                     return Arrival;

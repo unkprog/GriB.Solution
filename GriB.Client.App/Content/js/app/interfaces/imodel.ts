@@ -122,13 +122,14 @@
         costprice: number;
         sellingprice: number;
         composition: IProductComposition[];
-
     }
 
     export interface IContractor extends IReferenceModel, IEditorModel {
-
     }
 
+    
+    export interface IReason extends IReferenceModel, IEditorModel {
+    }
 
     export interface IPosParamsSelect {
         category: number;
@@ -190,6 +191,7 @@
         doctype: number;
         salepoint: number;
         contractor: number;
+        reason: number;
         datefrom: Date;
         dateto: Date;
     }
@@ -201,6 +203,7 @@
         salepoint: ISalepoint;
         salepointto: ISalepoint;
         contractor: IContractor;
+        reason: IReason;
         typecost: number;
         positions: IDocumentModelPosition[];
         sum: number;

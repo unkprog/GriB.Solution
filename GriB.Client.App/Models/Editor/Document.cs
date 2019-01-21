@@ -18,6 +18,7 @@ namespace GriB.Client.App.Models.Editor
         public int doctype { get; set; }
         public int salepoint { get; set; }
         public int contractor { get; set; }
+        public int reason { get; set; }
         public DateTime datefrom { get; set; }
         public DateTime dateto { get; set; }
     }
@@ -44,6 +45,7 @@ namespace GriB.Client.App.Models.Editor
         public salepoint salepoint { get; set; }
         public salepoint salepointto { get; set; }
         public contractor contractor { get; set; }
+        public reason reason { get; set; }
         public int typecost { get; set; }
         public List<document_position> positions { get; set; }
         public string salepointname { get; set; }

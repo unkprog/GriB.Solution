@@ -55,14 +55,18 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                             "labelDateTo": vars._statres("label$date$to"),
                             "labelSalepoint": vars._statres("label$stock"),
                             "labelContractor": vars._statres("label$contractor"),
+                            "labelReason": vars._statres("label$reason"),
                             "labelFind": vars._statres("label$find"),
                             "salepoint": {},
                             "contractor": {},
+                            "reason": {},
                             "datefrom": data ? data.datefrom : undefined,
                             "dateto": data ? data.dateto : undefined
                         });
                         if (data) {
                             result.set("salepoint", data.salepoint);
+                            result.set("contractor", data.contractor);
+                            result.set("reason", data.reason);
                             result.set("datefrom", new Date(data.datefrom));
                             result.set("dateto", new Date(data.dateto));
                         }
@@ -73,14 +77,14 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                         var saved = window.localStorage.getItem(this.fieldSearch);
                         if (!saved || saved === "\"{}\"") {
                             var dateTime = this.getDefDate();
-                            result = { salepoint: {}, datefrom: dateTime, dateto: dateTime };
+                            result = { salepoint: {}, contractor: {}, reason: {}, datefrom: dateTime, dateto: dateTime };
                         }
                         else
                             result = JSON.parse(saved);
                         return result;
                     };
                     DocumentCardFilterSettings.prototype.saveFilter = function () {
-                        var dataToSave = { salepoint: this._model.get("salepoint"), datefrom: this._model.get("datefrom"), dateto: this._model.get("dateto") };
+                        var dataToSave = { salepoint: this._model.get("salepoint"), contractor: this._model.get("contractor"), reason: this._model.get("reason"), datefrom: this._model.get("datefrom"), dateto: this._model.get("dateto") };
                         var toSave = JSON.stringify(dataToSave);
                         window.localStorage.setItem(this.fieldSearch, toSave);
                     };
@@ -101,10 +105,15 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                         filterHtml += '       <label for="card-filter-view-salepoint" data-bind="text:labelSalepoint"></label>';
                         filterHtml += '       <i id="card-view-salepoint-clear" class="material-icons editor-header right doc-edit-ref-del">close</i>';
                         filterHtml += '    </div>';
-                        filterHtml += '    <div id="card-filter-view-contractor-col" class="input-field col s12 m8 l6 xl4 col-input-numpad">';
+                        filterHtml += '    <div id="card-filter-view-contractor-col" class="input-field col s12 m8 l6 xl4 col-input-numpad hide">';
                         filterHtml += '       <input id="card-filter-view-contractor" type="text" disabled class="truncate black-text doc-edit-ref" data-bind="value: contractor.name">';
                         filterHtml += '       <label for="card-filter-view-contractor" data-bind="text:labelContractor"></label>';
                         filterHtml += '       <i id="card-view-contractor-clear" class="material-icons editor-header right doc-edit-ref-del">close</i>';
+                        filterHtml += '    </div>';
+                        filterHtml += '    <div id="card-filter-view-reason-col" class="input-field col s12 m8 l6 xl4 col-input-numpad  hide">';
+                        filterHtml += '       <input id="card-filter-view-reason" type="text" disabled class="truncate black-text doc-edit-ref" data-bind="value: reason.name">';
+                        filterHtml += '       <label for="card-filter-view-reason" data-bind="text:labelReason"></label>';
+                        filterHtml += '       <i id="card-view-reason-clear" class="material-icons editor-header right doc-edit-ref-del">close</i>';
                         filterHtml += '    </div>';
                         filterHtml += '</div>';
                         filterHtml += '<div class="row row-inputs">';
@@ -134,17 +143,36 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                         controller.salePointClear = this.filterControl.find("#card-view-salepoint-clear");
                         controller.contractorControl = this.filterControl.find("#card-filter-view-contractor-col");
                         controller.contractorClear = this.filterControl.find("#card-view-contractor-clear");
-                        controller.hideContractor();
+                        controller.reasonControl = this.filterControl.find("#card-filter-view-reason-col");
+                        controller.reasonClear = this.filterControl.find("#card-view-reason-clear");
                         controller.searchButton = controller.filterControl.find("#card-filter-view-btn-find");
                         return controller.filterControl;
                     };
-                    DocumentCardFilterSettings.prototype.showContractor = function () {
+                    DocumentCardFilterSettings.prototype.showContractor = function (isShow) {
                         this.contractorControl.show();
                         this.contractorClear.show();
+                        if (isShow) {
+                            this.contractorControl.removeClass("hide");
+                            this.contractorClear.removeClass("hide");
+                        }
+                        else {
+                            if (!this.contractorControl.hasClass("hide"))
+                                this.contractorControl.addClass("hide");
+                            if (!this.contractorClear.hasClass("hide"))
+                                this.contractorClear.addClass("hide");
+                        }
                     };
-                    DocumentCardFilterSettings.prototype.hideContractor = function () {
-                        this.contractorControl.hide();
-                        this.contractorClear.hide();
+                    DocumentCardFilterSettings.prototype.showReason = function (isShow) {
+                        if (isShow) {
+                            this.reasonControl.removeClass("hide");
+                            this.reasonClear.removeClass("hide");
+                        }
+                        else {
+                            if (!this.reasonControl.hasClass("hide"))
+                                this.reasonControl.addClass("hide");
+                            if (!this.reasonClear.hasClass("hide"))
+                                this.reasonClear.addClass("hide");
+                        }
                     };
                     DocumentCardFilterSettings.prototype.createEvents = function () {
                         kendo.bind(this.filterControl, this._model);
@@ -158,10 +186,18 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                             this.ContractorButtonClick = utils.createTouchClickEvent(this.contractorControl, this.contractorButtonClick, this);
                         if (this.contractorClear)
                             this.ClearContractorButtonClick = utils.createTouchClickEvent(this.contractorClear, this.clearContractorButtonClick, this);
+                        if (this.reasonControl)
+                            this.ReasonButtonClick = utils.createTouchClickEvent(this.reasonControl, this.reasonButtonClick, this);
+                        if (this.reasonClear)
+                            this.ClearReasonButtonClick = utils.createTouchClickEvent(this.reasonClear, this.clearReasonButtonClick, this);
                     };
                     DocumentCardFilterSettings.prototype.destroyEvents = function () {
                         this.saveFilter();
                         this.filterControl.unbind();
+                        if (this.reasonClear)
+                            utils.destroyTouchClickEvent(this.reasonClear, this.ClearReasonButtonClick);
+                        if (this.reasonControl)
+                            utils.destroyTouchClickEvent(this.reasonControl, this.ReasonButtonClick);
                         if (this.contractorClear)
                             utils.destroyTouchClickEvent(this.contractorClear, this.ClearContractorButtonClick);
                         if (this.contractorControl)
@@ -226,6 +262,34 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                         e.preventDefault();
                         e.stopPropagation();
                         this._model.set("contractor", {});
+                        M.updateTextFields();
+                        return false;
+                    };
+                    DocumentCardFilterSettings.prototype.reasonButtonClick = function (e) {
+                        var self = this;
+                        self.saveFilter();
+                        vars._app.OpenController({
+                            urlController: 'setting/card/reason', isModal: true, onLoadController: function (controller) {
+                                var ctrlReason = controller;
+                                ctrlReason.CardSettings.IsAdd = false;
+                                ctrlReason.CardSettings.IsAddCopy = false;
+                                ctrlReason.CardSettings.IsDelete = false;
+                                ctrlReason.CardSettings.IsEdit = false;
+                                ctrlReason.CardSettings.IsSelect = true;
+                                ctrlReason.OnSelect = $.proxy(self.selectReason, self);
+                            }
+                        });
+                    };
+                    DocumentCardFilterSettings.prototype.selectReason = function (controller) {
+                        var reason = controller.getSelectedRecord();
+                        if (reason)
+                            this._model.set("reason", reason);
+                        M.updateTextFields();
+                    };
+                    DocumentCardFilterSettings.prototype.clearReasonButtonClick = function (e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        this._model.set("reason", {});
                         M.updateTextFields();
                         return false;
                     };
@@ -333,6 +397,15 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                         enumerable: true,
                         configurable: true
                     });
+                    Object.defineProperty(Card.prototype, "Reason", {
+                        get: function () {
+                            var settings = this.CardSettings.FilterSettings;
+                            var reason = (settings ? settings.Model.get("reason") : undefined);
+                            return (reason ? reason.id : 0);
+                        },
+                        enumerable: true,
+                        configurable: true
+                    });
                     Object.defineProperty(Card.prototype, "DateFrom", {
                         get: function () {
                             var settings = this.CardSettings.FilterSettings;
@@ -356,7 +429,7 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                     });
                     Card.prototype.getDocs = function (Callback) {
                         this.CardSettings.FilterSettings.saveFilter();
-                        var params = { id: 0, doctype: this.DocType, salepoint: this.SalePoint, contractor: this.Contractor, datefrom: this.DateFrom, dateto: this.DateTo };
+                        var params = { id: 0, doctype: this.DocType, salepoint: this.SalePoint, contractor: this.Contractor, reason: this.Reason, datefrom: this.DateFrom, dateto: this.DateTo };
                         this.Service.GetDocuments(params, function (responseData) {
                             if (Callback)
                                 Callback(responseData);

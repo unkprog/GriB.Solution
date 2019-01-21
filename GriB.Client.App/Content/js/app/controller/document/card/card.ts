@@ -40,14 +40,18 @@ export namespace Controller.Document.Card {
                 "labelDateTo": vars._statres("label$date$to"),
                 "labelSalepoint": vars._statres("label$stock"),
                 "labelContractor": vars._statres("label$contractor"),
+                "labelReason": vars._statres("label$reason"),
                 "labelFind": vars._statres("label$find"),
                 "salepoint": {},
                 "contractor": {},
+                "reason": {},
                 "datefrom": data ? data.datefrom : undefined,
                 "dateto": data ? data.dateto: undefined
             });
             if (data) {
                 result.set("salepoint", data.salepoint);
+                result.set("contractor", data.contractor);
+                result.set("reason", data.reason);
                 result.set("datefrom", new Date(data.datefrom));
                 result.set("dateto", new Date(data.dateto));
             }
@@ -59,7 +63,7 @@ export namespace Controller.Document.Card {
             let saved: any = window.localStorage.getItem(this.fieldSearch);
             if (!saved || saved === "\"{}\"") {
                 let dateTime: Date = this.getDefDate();
-                result = { salepoint: {}, datefrom: dateTime, dateto: dateTime };
+                result = { salepoint: {}, contractor: {}, reason: {}, datefrom: dateTime, dateto: dateTime };
             }
             else
                 result = JSON.parse(saved);
@@ -67,7 +71,7 @@ export namespace Controller.Document.Card {
         }
 
         public saveFilter() {
-            let dataToSave = { salepoint: this._model.get("salepoint"), datefrom: this._model.get("datefrom"), dateto: this._model.get("dateto") };
+            let dataToSave = { salepoint: this._model.get("salepoint"), contractor: this._model.get("contractor"), reason: this._model.get("reason"), datefrom: this._model.get("datefrom"), dateto: this._model.get("dateto") };
             let toSave: string = JSON.stringify(dataToSave);
             window.localStorage.setItem(this.fieldSearch, toSave);
         }
@@ -79,6 +83,8 @@ export namespace Controller.Document.Card {
         private salePointClear: JQuery;
         private contractorControl: JQuery;
         private contractorClear: JQuery;
+        private reasonControl: JQuery;
+        private reasonClear: JQuery;
         private searchButton: JQuery;
         
         public InitControls(): JQuery {
@@ -98,10 +104,15 @@ export namespace Controller.Document.Card {
             filterHtml += '       <label for="card-filter-view-salepoint" data-bind="text:labelSalepoint"></label>'; 
             filterHtml += '       <i id="card-view-salepoint-clear" class="material-icons editor-header right doc-edit-ref-del">close</i>';
             filterHtml += '    </div>';
-            filterHtml += '    <div id="card-filter-view-contractor-col" class="input-field col s12 m8 l6 xl4 col-input-numpad">';
+            filterHtml += '    <div id="card-filter-view-contractor-col" class="input-field col s12 m8 l6 xl4 col-input-numpad hide">';
             filterHtml += '       <input id="card-filter-view-contractor" type="text" disabled class="truncate black-text doc-edit-ref" data-bind="value: contractor.name">';
             filterHtml += '       <label for="card-filter-view-contractor" data-bind="text:labelContractor"></label>'; 
             filterHtml += '       <i id="card-view-contractor-clear" class="material-icons editor-header right doc-edit-ref-del">close</i>';
+            filterHtml += '    </div>';
+            filterHtml += '    <div id="card-filter-view-reason-col" class="input-field col s12 m8 l6 xl4 col-input-numpad  hide">';
+            filterHtml += '       <input id="card-filter-view-reason" type="text" disabled class="truncate black-text doc-edit-ref" data-bind="value: reason.name">';
+            filterHtml += '       <label for="card-filter-view-reason" data-bind="text:labelReason"></label>';
+            filterHtml += '       <i id="card-view-reason-clear" class="material-icons editor-header right doc-edit-ref-del">close</i>';
             filterHtml += '    </div>';
             filterHtml += '</div>';
             filterHtml += '<div class="row row-inputs">';
@@ -134,20 +145,35 @@ export namespace Controller.Document.Card {
             controller.salePointClear = this.filterControl.find("#card-view-salepoint-clear");
             controller.contractorControl = this.filterControl.find("#card-filter-view-contractor-col");
             controller.contractorClear = this.filterControl.find("#card-view-contractor-clear");
-            controller.hideContractor();
-
+            controller.reasonControl = this.filterControl.find("#card-filter-view-reason-col");
+            controller.reasonClear = this.filterControl.find("#card-view-reason-clear");
+            
             controller.searchButton = controller.filterControl.find("#card-filter-view-btn-find");
             return controller.filterControl;
         }
 
-        public showContractor() {
+        public showContractor(isShow: boolean) {
             this.contractorControl.show();
             this.contractorClear.show();
+            if (isShow) {
+                this.contractorControl.removeClass("hide");
+                this.contractorClear.removeClass("hide")
+            }
+            else {
+                if (!this.contractorControl.hasClass("hide")) this.contractorControl.addClass("hide");
+                if (!this.contractorClear.hasClass("hide")) this.contractorClear.addClass("hide");
+            }
         }
 
-        public hideContractor() {
-            this.contractorControl.hide();
-            this.contractorClear.hide();
+        public showReason(isShow: boolean) {
+            if (isShow) {
+                this.reasonControl.removeClass("hide");
+                this.reasonClear.removeClass("hide")
+            }
+            else {
+                if (!this.reasonControl.hasClass("hide")) this.reasonControl.addClass("hide");
+                if (!this.reasonClear.hasClass("hide")) this.reasonClear.addClass("hide");
+            }
         }
 
         public createEvents(): void {
@@ -157,11 +183,15 @@ export namespace Controller.Document.Card {
             if (this.salePointClear) this.ClearSalePointButtonClick = utils.createTouchClickEvent(this.salePointClear, this.clearSalePointButtonClick, this);
             if (this.contractorControl) this.ContractorButtonClick = utils.createTouchClickEvent(this.contractorControl, this.contractorButtonClick, this);
             if (this.contractorClear) this.ClearContractorButtonClick = utils.createTouchClickEvent(this.contractorClear, this.clearContractorButtonClick, this);
+            if (this.reasonControl) this.ReasonButtonClick = utils.createTouchClickEvent(this.reasonControl, this.reasonButtonClick, this);
+            if (this.reasonClear) this.ClearReasonButtonClick = utils.createTouchClickEvent(this.reasonClear, this.clearReasonButtonClick, this);
         }
 
         public destroyEvents(): void {
             this.saveFilter();
             this.filterControl.unbind();
+            if (this.reasonClear) utils.destroyTouchClickEvent(this.reasonClear, this.ClearReasonButtonClick);
+            if (this.reasonControl) utils.destroyTouchClickEvent(this.reasonControl, this.ReasonButtonClick);
             if (this.contractorClear) utils.destroyTouchClickEvent(this.contractorClear, this.ClearContractorButtonClick);
             if (this.contractorControl) utils.destroyTouchClickEvent(this.contractorControl, this.ContractorButtonClick);
             if (this.salePointClear) utils.destroyTouchClickEvent(this.salePointClear, this.ClearSalePointButtonClick);
@@ -228,12 +258,45 @@ export namespace Controller.Document.Card {
             M.updateTextFields();
         }
 
-
         public ClearContractorButtonClick: { (e: any): void; };
         private clearContractorButtonClick(e: any) {
             e.preventDefault();
             e.stopPropagation();
             this._model.set("contractor", {});
+            M.updateTextFields();
+            return false;
+        }
+
+        public ReasonButtonClick: { (e: any): void; };
+        private reasonButtonClick(e) {
+            let self = this;
+            self.saveFilter();
+
+            vars._app.OpenController({
+                urlController: 'setting/card/reason', isModal: true, onLoadController: (controller: Interfaces.IController) => {
+                    let ctrlReason: Interfaces.IControllerCard = controller as Interfaces.IControllerCard;
+                    ctrlReason.CardSettings.IsAdd = false;
+                    ctrlReason.CardSettings.IsAddCopy = false;
+                    ctrlReason.CardSettings.IsDelete = false;
+                    ctrlReason.CardSettings.IsEdit = false;
+                    ctrlReason.CardSettings.IsSelect = true;
+                    ctrlReason.OnSelect = $.proxy(self.selectReason, self);
+                }
+            });
+        }
+
+        private selectReason(controller: Interfaces.IControllerCard) {
+            let reason: Interfaces.Model.IReason = controller.getSelectedRecord() as Interfaces.Model.IReason;
+            if (reason)
+                this._model.set("reason", reason);
+            M.updateTextFields();
+        }
+
+        public ClearReasonButtonClick: { (e: any): void; };
+        private clearReasonButtonClick(e: any) {
+            e.preventDefault();
+            e.stopPropagation();
+            this._model.set("reason", {});
             M.updateTextFields();
             return false;
         }
@@ -326,6 +389,12 @@ export namespace Controller.Document.Card {
             return (contractor ? contractor.id : 0);
         }
 
+        protected get Reason(): number {
+            let settings: DocumentCardFilterSettings = this.CardSettings.FilterSettings as DocumentCardFilterSettings;
+            let reason: Interfaces.Model.IContractor = (settings ? settings.Model.get("reason") : undefined);
+            return (reason ? reason.id : 0);
+        }
+
         protected get DateFrom(): Date {
             let settings: DocumentCardFilterSettings = this.CardSettings.FilterSettings as DocumentCardFilterSettings;
             let date: Date = (settings ? settings.Model.get("datefrom") : undefined);
@@ -343,7 +412,7 @@ export namespace Controller.Document.Card {
 
         private getDocs(Callback: (responseData: any) => void) {
             this.CardSettings.FilterSettings.saveFilter();
-            let params: Interfaces.Model.IDocumentParams = { id: 0, doctype: this.DocType, salepoint: this.SalePoint, contractor: this.Contractor, datefrom: this.DateFrom, dateto: this.DateTo }
+            let params: Interfaces.Model.IDocumentParams = { id: 0, doctype: this.DocType, salepoint: this.SalePoint, contractor: this.Contractor, reason: this.Reason, datefrom: this.DateFrom, dateto: this.DateTo }
             this.Service.GetDocuments(params, (responseData: any) => {
                 if (Callback)
                     Callback(responseData);

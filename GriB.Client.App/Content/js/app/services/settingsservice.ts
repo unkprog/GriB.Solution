@@ -197,5 +197,22 @@ export module Services {
         public DelContractor(id: number, Callback: (responseData: any) => void) {
             this.GetApi({ Action: "/del_contractor", RequestData: { id: id }, Callback: Callback });
         }
+
+        // Причина
+        public GetReasons(Callback: (responseData: any) => void) {
+            this.GetApi({ Action: "/get_reasons", Callback: Callback });
+        }
+
+        public GetReason(id: number, Callback: (responseData: any) => void) {
+            this.GetApi({ Action: "/get_reason", RequestData: { id: id }, Callback: Callback });
+        }
+
+        public SetReason(model: Interfaces.Model.IContractor, Callback: (responseData: any) => void) {
+            this.PostApi({ Action: "/post_reason", RequestData: JSON.stringify(model), Callback: Callback });
+        }
+
+        public DelReason(id: number, Callback: (responseData: any) => void) {
+            this.GetApi({ Action: "/del_reason", RequestData: { id: id }, Callback: Callback });
+        }
     }
 }

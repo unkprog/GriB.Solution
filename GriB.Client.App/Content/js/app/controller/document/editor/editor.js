@@ -54,7 +54,8 @@ define(["require", "exports", "app/common/basecontroller", "app/services/documen
                             "labelConduct": vars._statres("label$conduct"),
                             "labelDate": vars._statres("label$date"),
                             "labelProvider": vars._statres("label$provider"),
-                            "labelSalepoint": vars._statres("label$salePoint"),
+                            "labelStock": vars._statres("label$stock"),
+                            "labelReason": vars._statres("label$reason"),
                             "labelName": vars._statres("label$name"),
                             "labelQuantityShort": vars._statres("label$quantityshort"),
                             "labelUnitShort": vars._statres("label$unitshort"),
@@ -103,16 +104,36 @@ define(["require", "exports", "app/common/basecontroller", "app/services/documen
                         this.dateControl.datepicker({ format: "dd.mm.yyyy" });
                         this.salePointControl = view.find("#document-view-salepoint-row");
                         this.contractorControl = view.find("#document-view-contractor-row");
+                        this.reasonControl = view.find("#document-view-reason-row");
                         this.positionRows = view.find("#product-position-rows");
                         return _super.prototype.ViewInit.call(this, view);
                     };
                     Editor.prototype.ViewShow = function (e) {
                         return _super.prototype.ViewShow.call(this, e);
                     };
+                    Editor.prototype.showContractor = function (isShow) {
+                        if (isShow) {
+                            this.contractorControl.removeClass("hide");
+                        }
+                        else {
+                            if (!this.contractorControl.hasClass("hide"))
+                                this.contractorControl.addClass("hide");
+                        }
+                    };
+                    Editor.prototype.showReason = function (isShow) {
+                        if (isShow) {
+                            this.reasonControl.removeClass("hide");
+                        }
+                        else {
+                            if (!this.reasonControl.hasClass("hide"))
+                                this.reasonControl.addClass("hide");
+                        }
+                    };
                     Editor.prototype.createEvents = function () {
                         _super.prototype.createEvents.call(this);
                         this.SalePointButtonClick = this.createTouchClickEvent(this.salePointControl, this.salePointButtonClick);
                         this.ContractorButtonClick = this.createTouchClickEvent(this.contractorControl, this.contractorButtonClick);
+                        this.ReasonButtonClick = this.createTouchClickEvent(this.reasonControl, this.reasonButtonClick);
                         this.Model.bind("change", $.proxy(this.changeModel, this));
                     };
                     Editor.prototype.destroyEvents = function () {
@@ -218,6 +239,26 @@ define(["require", "exports", "app/common/basecontroller", "app/services/documen
                         var salepoint = controller.getSelectedRecord();
                         if (salepoint)
                             this.Model.set("editModel.salepoint", salepoint);
+                        M.updateTextFields();
+                    };
+                    Editor.prototype.reasonButtonClick = function (e) {
+                        var self = this;
+                        vars._app.OpenController({
+                            urlController: 'setting/card/reason', isModal: true, onLoadController: function (controller) {
+                                var ctrlReason = controller;
+                                ctrlReason.CardSettings.IsAdd = false;
+                                ctrlReason.CardSettings.IsAddCopy = false;
+                                ctrlReason.CardSettings.IsDelete = false;
+                                ctrlReason.CardSettings.IsEdit = false;
+                                ctrlReason.CardSettings.IsSelect = true;
+                                ctrlReason.OnSelect = $.proxy(self.selectReason, self);
+                            }
+                        });
+                    };
+                    Editor.prototype.selectReason = function (controller) {
+                        var reason = controller.getSelectedRecord();
+                        if (reason)
+                            this.Model.set("editModel.reason", reason);
                         M.updateTextFields();
                     };
                     Editor.prototype.addPositionButtonClick = function (e) {

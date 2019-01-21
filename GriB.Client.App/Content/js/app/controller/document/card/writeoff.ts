@@ -14,6 +14,13 @@ export namespace Controller.Document.Card {
             });
         }
 
+        protected columns(): Interfaces.ICardColumn[] {
+            let result: Interfaces.ICardColumn[] = super.columns();
+            result.splice(4, 0, { Header: vars._statres("label$reason"), Field: "reason.name" });
+            return result;
+        }
+
+
         protected get EditIdName(): string {
             return "id_writeoff";
         }
@@ -28,6 +35,17 @@ export namespace Controller.Document.Card {
 
         protected get DocType(): number {
             return 40;
+        }
+
+        protected get Contractor(): number {
+            return 0;
+        }
+
+        public ViewInit(view: JQuery): boolean {
+            let result: boolean = super.ViewInit(view);
+            let settings: card.Controller.Document.Card.DocumentCardFilterSettings = this.CardSettings.FilterSettings as card.Controller.Document.Card.DocumentCardFilterSettings;
+            if (settings) settings.showReason(true);
+            return result;
         }
 
     }

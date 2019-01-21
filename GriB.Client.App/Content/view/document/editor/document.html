@@ -18,13 +18,17 @@
         </div>
 
         <div class="row row-inputs">
-            <div id="document-view-contractor-row" class="input-field col s12 m12 l6 xl6 col-input-numpad">
+            <div id="document-view-contractor-row" class="input-field col s12 m12 l6 xl6 col-input-numpad hide">
                 <input id="document-view-contractor" type="text" disabled class="truncate black-text" data-bind="value: editModel.contractor.name" style="cursor:pointer;font-weight:bold;">
                 <label for="document-view-contractor" data-bind="text:labelProvider"></label>
             </div>
             <div id="document-view-salepoint-row" class="input-field col s12 m12 l6 xl6 col-input-numpad">
                 <input id="document-view-salepoint" type="text" disabled class="truncate black-text" data-bind="value: editModel.salepoint.name" style="cursor:pointer;font-weight:bold;">
-                <label for="document-view-salepoint" data-bind="text:labelSalepoint"></label>
+                <label for="document-view-salepoint" data-bind="text:labelStock"></label>
+            </div>
+            <div id="document-view-reason-row" class="input-field col s12 m12 l6 xl6 col-input-numpad hide">
+                <input id="document-view-reason" type="text" disabled class="truncate black-text" data-bind="value: editModel.reason.name" style="cursor:pointer;font-weight:bold;">
+                <label for="document-view-reason" data-bind="text:labelReason"></label>
             </div>
         </div>
         <div class="row">

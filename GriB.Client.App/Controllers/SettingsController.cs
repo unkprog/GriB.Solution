@@ -654,5 +654,50 @@ namespace GriB.Client.App.Controllers
             });
         }
         #endregion
+
+        #region Причина
+        [HttpGet]
+        [ActionName("get_reasons")]
+        public HttpResponseMessage GetReasons()
+        {
+            return TryCatchResponseQuery((query) =>
+            {
+                return Request.CreateResponse(HttpStatusCode.OK, Reason.GetReasons(query));
+            });
+        }
+
+        [HttpGet]
+        [ActionName("get_reason")]
+        public HttpResponseMessage GetReason(int id)
+        {
+            return TryCatchResponseQuery((query) =>
+            {
+                return Request.CreateResponse(HttpStatusCode.OK, new { record = Reason.GetReason(query, id) });
+            });
+        }
+
+        [HttpPost]
+        [ActionName("post_reason")]
+        public HttpResponseMessage PostReason(reason reason)
+        {
+            return TryCatchResponseQuery((query) =>
+            {
+                Principal principal = (Principal)HttpContext.Current.User;
+                Reason.SetReason(query, reason, principal.Data.User.id);
+                return Request.CreateResponse(HttpStatusCode.OK, "Ok");
+            });
+        }
+
+        [HttpGet]
+        [ActionName("del_reason")]
+        public HttpResponseMessage DeleteReason(int id)
+        {
+            return TryCatchResponseQuery((query) =>
+            {
+                Reason.DelReason(query, id, ((Principal)HttpContext.Current.User).Data.User.id);
+                return Request.CreateResponse(HttpStatusCode.OK, "Ok");
+            });
+        }
+        #endregion
     }
 }

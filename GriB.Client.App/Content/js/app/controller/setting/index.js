@@ -41,6 +41,7 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
                         "labelCategories": vars._statres("label$categories"),
                         "labelProducts": vars._statres("label$products"),
                         "labelDiscounts": vars._statres("label$discounts"),
+                        "labelReasons": vars._statres("label$reasons"),
                         "labelClients": vars._statres("label$clients"),
                         "labelContractors": vars._statres("label$contractors"),
                     });
@@ -54,6 +55,7 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
                     this.CategoryButtonClick = this.createTouchClickEvent("btn-category", this.categoryButtonClick);
                     this.ProductButtonClick = this.createTouchClickEvent("btn-product", this.productButtonClick);
                     this.DiscountButtonClick = this.createTouchClickEvent("btn-discount", this.discountButtonClick);
+                    this.ReasonButtonClick = this.createTouchClickEvent("btn-reason", this.reasonButtonClick);
                     this.ClientButtonClick = this.createTouchClickEvent("btn-client", this.clientButtonClick);
                     this.ContractorButtonClick = this.createTouchClickEvent("btn-contractor", this.contractorButtonClick);
                 };
@@ -66,6 +68,7 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
                     this.destroyTouchClickEvent("btn-category", this.CategoryButtonClick);
                     this.destroyTouchClickEvent("btn-product", this.ProductButtonClick);
                     this.destroyTouchClickEvent("btn-discount", this.DiscountButtonClick);
+                    this.destroyTouchClickEvent("btn-reason", this.ReasonButtonClick);
                     this.destroyTouchClickEvent("btn-client", this.ClientButtonClick);
                     this.destroyTouchClickEvent("btn-contractor", this.ContractorButtonClick);
                 };
@@ -92,6 +95,9 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
                 };
                 Index.prototype.discountButtonClick = function (e) {
                     vars._main.OpenController({ urlController: "setting/card/discount", backController: this });
+                };
+                Index.prototype.reasonButtonClick = function (e) {
+                    vars._main.OpenController({ urlController: "setting/card/reason", backController: this });
                 };
                 Index.prototype.clientButtonClick = function (e) {
                     vars._main.OpenController({ urlController: "setting/card/client", backController: this });

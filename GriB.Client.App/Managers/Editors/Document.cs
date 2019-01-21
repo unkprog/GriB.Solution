@@ -9,14 +9,14 @@ namespace GriB.Client.App.Managers.Editors
     public static class Document
     {
 
-        private static document readFromValues(object[] values) => new document() { id = (int)values[0], doctype = (int)values[1], option = (int)values[2], date = (DateTime)values[3], salepoint = new salepoint() { id = (int)values[4], name = (string)values[8] }, salepointto = new salepoint() { id = (int)values[5] } , contractor = new contractor() { id = (int)values[6], name = (string)values[9] }, typecost= (int)values[7], sum = (double)values[10] };
+        private static document readFromValues(object[] values) => new document() { id = (int)values[0], doctype = (int)values[1], option = (int)values[2], date = (DateTime)values[3], salepoint = new salepoint() { id = (int)values[4], name = (string)values[9] }, salepointto = new salepoint() { id = (int)values[5] }, contractor = new contractor() { id = (int)values[6], name = (string)values[10] }, typecost= (int)values[7], reason = new reason() { id = (int)values[8], name = (string)values[11] }, sum = (double)values[12] };
 
         private const string cmdGet = @"Editor\Document\[get]";
         public static List<document> GetDocuments(this Query query, document_params docpar)
         {
             List<document> result = new List<document>();
             query.Execute(cmdGet, new SqlParameter[] { new SqlParameter() { ParameterName = "@id", Value = docpar.id }, new SqlParameter() { ParameterName = "@doctype", Value = docpar.doctype }
-            , new SqlParameter() { ParameterName = "@salepoint", Value = docpar.salepoint } , new SqlParameter() { ParameterName = "@contractor", Value = docpar.contractor }
+            , new SqlParameter() { ParameterName = "@salepoint", Value = docpar.salepoint } , new SqlParameter() { ParameterName = "@contractor", Value = docpar.contractor }, new SqlParameter() { ParameterName = "@reason", Value = docpar.reason }
             , new SqlParameter() { ParameterName = "@datefrom", Value = docpar.datefrom }, new SqlParameter() { ParameterName = "@dateto", Value = docpar.dateto} }
             , (values) =>
             {
@@ -39,8 +39,9 @@ namespace GriB.Client.App.Managers.Editors
         public static document SetDocument(this Query query, document document, int user)
         {
             document result = document;
-            query.Execute(cmdSet, new SqlParameter[] { new SqlParameter("@id", result.id), new SqlParameter("@u", user), new SqlParameter("@doctype", result.doctype), new SqlParameter("@option", result.option), new SqlParameter("@date", result.date)
-            , new SqlParameter("@salepoint", result.salepoint?.id), new SqlParameter("@salepointto", result.salepointto ==null ? 0 : result.salepointto.id), new SqlParameter("@contractor", result.contractor?.id), new SqlParameter("@typecost", result.typecost) }
+            query.Execute(cmdSet, new SqlParameter[] { new SqlParameter("@id", result.id), new SqlParameter("@u", user), new SqlParameter("@doctype", result.doctype), new SqlParameter("@option", result.option), new SqlParameter("@date", result.date), new SqlParameter("@typecost", result.typecost)
+            , new SqlParameter("@salepoint",  result.salepoint == null ? 0 : result.salepoint.id), new SqlParameter("@salepointto", result.salepointto ==null ? 0 : result.salepointto.id)
+            , new SqlParameter("@contractor",  result.contractor == null? 0 : result.contractor.id), new SqlParameter("@reason", result.reason == null ? 0 : result.reason.id) }
             , (values) =>
             {
                 result.id = (int)values[0];

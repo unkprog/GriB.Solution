@@ -26,6 +26,7 @@ export namespace Controller.Setting {
                 "labelCategories": vars._statres("label$categories"),
                 "labelProducts": vars._statres("label$products"),
                 "labelDiscounts": vars._statres("label$discounts"),
+                "labelReasons": vars._statres("label$reasons"),
                 "labelClients": vars._statres("label$clients"),
                 "labelContractors": vars._statres("label$contractors"),
             });
@@ -40,6 +41,7 @@ export namespace Controller.Setting {
             this.CategoryButtonClick = this.createTouchClickEvent("btn-category", this.categoryButtonClick);
             this.ProductButtonClick = this.createTouchClickEvent("btn-product", this.productButtonClick);
             this.DiscountButtonClick = this.createTouchClickEvent("btn-discount", this.discountButtonClick);
+            this.ReasonButtonClick = this.createTouchClickEvent("btn-reason", this.reasonButtonClick);
             this.ClientButtonClick = this.createTouchClickEvent("btn-client", this.clientButtonClick);
             this.ContractorButtonClick = this.createTouchClickEvent("btn-contractor", this.contractorButtonClick);
         }
@@ -53,6 +55,7 @@ export namespace Controller.Setting {
             this.destroyTouchClickEvent("btn-category", this.CategoryButtonClick);
             this.destroyTouchClickEvent("btn-product", this.ProductButtonClick);
             this.destroyTouchClickEvent("btn-discount", this.DiscountButtonClick);
+            this.destroyTouchClickEvent("btn-reason", this.ReasonButtonClick);
             this.destroyTouchClickEvent("btn-client", this.ClientButtonClick);
             this.destroyTouchClickEvent("btn-contractor", this.ContractorButtonClick);
         }
@@ -95,6 +98,11 @@ export namespace Controller.Setting {
         public DiscountButtonClick: { (e: any): void; };
         private discountButtonClick(e) {
             vars._main.OpenController({ urlController: "setting/card/discount", backController: this });
+        }
+
+        public ReasonButtonClick: { (e: any): void; };
+        private reasonButtonClick(e) {
+            vars._main.OpenController({ urlController: "setting/card/reason", backController: this });
         }
 
         public ClientButtonClick: { (e: any): void; };

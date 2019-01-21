@@ -33,12 +33,14 @@ export namespace Controller.Document.Card {
             return 10;
         }
 
+        protected get Reason(): number {
+            return 0;
+        }
+
         public ViewInit(view: JQuery): boolean {
             let result: boolean = super.ViewInit(view);
-
             let settings: card.Controller.Document.Card.DocumentCardFilterSettings = this.CardSettings.FilterSettings as card.Controller.Document.Card.DocumentCardFilterSettings;
-            if (settings)
-                settings.showContractor();
+            if (settings) settings.showContractor(true);
             return result;
         }
     }
