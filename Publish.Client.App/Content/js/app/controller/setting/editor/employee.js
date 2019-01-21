@@ -40,6 +40,7 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                             "labelAccessSystem": vars._statres("label$accesstosystem"),
                             "labelPOSterminal": vars._statres("label$POSterminal"),
                             "labelSettings": vars._statres("label$settings"),
+                            "labelDocuments": vars._statres("label$documents"),
                             "labelReports": vars._statres("label$reports"),
                             "labelNo": vars._statres("label$no"),
                             "labelYes": vars._statres("label$yes"),

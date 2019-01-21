@@ -38,6 +38,13 @@ define(["require", "exports", "app/common/variables", "app/controller/document/c
                         enumerable: true,
                         configurable: true
                     });
+                    Object.defineProperty(Movement.prototype, "FilterId", {
+                        get: function () {
+                            return "DocumentFilterMovement";
+                        },
+                        enumerable: true,
+                        configurable: true
+                    });
                     Object.defineProperty(Movement.prototype, "EditController", {
                         get: function () {
                             return "document/editor/movement";

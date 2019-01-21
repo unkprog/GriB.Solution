@@ -91,15 +91,15 @@ export namespace Controller.Document.Card {
             let controller = this;
             let filterHtml: string = '';
             filterHtml += '<div class="row row-inputs">';
-            filterHtml += '    <div class="input-field col s12 m4 l3 xl2">';
+            filterHtml += '    <div class="input-field col s6 m4 l3 xl2">';
             filterHtml += '       <input id="card-filter-view-date-start" type="text" class="datepicker">';
             filterHtml += '       <label for="card-filter-view-date-start" data-bind="text:labelDateFrom"></label>';
             filterHtml += '    </div>';
-            filterHtml += '    <div class="input-field col s12 m4 l3 xl2">';
+            filterHtml += '    <div class="input-field col s6 m4 l3 xl2">';
             filterHtml += '       <input id="card-filter-view-date-end" type="text" class="datepicker">';
             filterHtml += '       <label for="card-filter-view-date-end" data-bind="text:labelDateTo"></label>';
             filterHtml += '    </div>';
-            filterHtml += '    <div id="card-filter-view-salepoint-col" class="input-field col s12 m8 l6 xl4 offset-l6 col-input-numpad">';
+            filterHtml += '    <div id="card-filter-view-salepoint-col" class="input-field col s12 m8 l6 xl4 col-input-numpad">';
             filterHtml += '       <input id="card-filter-view-salepoint" type="text" disabled class="truncate black-text doc-edit-ref" data-bind="value: salepoint.name">';
             filterHtml += '       <label for="card-filter-view-salepoint" data-bind="text:labelSalepoint"></label>'; 
             filterHtml += '       <i id="card-view-salepoint-clear" class="material-icons editor-header right doc-edit-ref-del">close</i>';

@@ -31,9 +31,21 @@ define(["require", "exports", "app/common/variables", "app/controller/document/c
                             "cardModel": []
                         });
                     };
+                    Writeoff.prototype.columns = function () {
+                        var result = _super.prototype.columns.call(this);
+                        result.splice(4, 0, { Header: vars._statres("label$reason"), Field: "reason.name" });
+                        return result;
+                    };
                     Object.defineProperty(Writeoff.prototype, "EditIdName", {
                         get: function () {
                             return "id_writeoff";
+                        },
+                        enumerable: true,
+                        configurable: true
+                    });
+                    Object.defineProperty(Writeoff.prototype, "FilterId", {
+                        get: function () {
+                            return "DocumentFilterWriteoff";
                         },
                         enumerable: true,
                         configurable: true
@@ -52,6 +64,20 @@ define(["require", "exports", "app/common/variables", "app/controller/document/c
                         enumerable: true,
                         configurable: true
                     });
+                    Object.defineProperty(Writeoff.prototype, "Contractor", {
+                        get: function () {
+                            return 0;
+                        },
+                        enumerable: true,
+                        configurable: true
+                    });
+                    Writeoff.prototype.ViewInit = function (view) {
+                        var result = _super.prototype.ViewInit.call(this, view);
+                        var settings = this.CardSettings.FilterSettings;
+                        if (settings)
+                            settings.showReason(true);
+                        return result;
+                    };
                     return Writeoff;
                 }(card.Controller.Document.Card.Card));
                 Card.Writeoff = Writeoff;

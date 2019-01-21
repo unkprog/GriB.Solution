@@ -33,7 +33,7 @@ define(["require", "exports", "app/common/variables", "app/controller/setting/ca
                     };
                     Client.prototype.createCardSettings = function () {
                         return {
-                            FieldId: "id", FieldSearch: "name", ValueIdNew: 0, EditIdName: "id_client", EditController: "setting/editor/client",
+                            FieldId: "id", FilterSettings: this.createCardFilterSettings(), ValueIdNew: 0, EditIdName: "id_client", EditController: "setting/editor/client",
                             IsAdd: true, IsAddCopy: false, IsEdit: true, IsDelete: true, IsSelect: false,
                             Load: $.proxy(this.Service.GetClients, this.Service), Delete: $.proxy(this.Service.DelClient, this.Service),
                             Columns: [

@@ -31,9 +31,15 @@ define(["require", "exports", "app/common/variables", "app/controller/setting/ca
                             "cardModel": []
                         });
                     };
+                    //FilterSettings: this.createCardFilterSettings()
+                    Currency.prototype.createCardFilterSettings = function () {
+                        var result = _super.prototype.createCardFilterSettings.call(this);
+                        result.FieldSearch = "code";
+                        return result;
+                    };
                     Currency.prototype.createCardSettings = function () {
                         return {
-                            FieldId: "id", FieldSearch: "code", ValueIdNew: -1, EditIdName: "id_currency", EditController: "setting/editor/currency",
+                            FieldId: "id", FilterSettings: this.createCardFilterSettings(), ValueIdNew: -1, EditIdName: "id_currency", EditController: "setting/editor/currency",
                             IsAdd: true, IsAddCopy: false, IsEdit: true, IsDelete: true, IsSelect: false,
                             Load: $.proxy(this.Service.GetCurrencies, this.Service), Delete: $.proxy(this.Service.DelCurrency, this.Service),
                             Columns: [

@@ -38,6 +38,13 @@ define(["require", "exports", "app/common/variables", "app/controller/document/c
                         enumerable: true,
                         configurable: true
                     });
+                    Object.defineProperty(Return.prototype, "FilterId", {
+                        get: function () {
+                            return "DocumentFilterReturn";
+                        },
+                        enumerable: true,
+                        configurable: true
+                    });
                     Object.defineProperty(Return.prototype, "EditController", {
                         get: function () {
                             return "document/editor/return";

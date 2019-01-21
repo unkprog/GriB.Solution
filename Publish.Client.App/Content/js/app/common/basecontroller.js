@@ -383,6 +383,91 @@ define(["require", "exports", "app/common/utils", "app/common/variables", "./var
             return BaseEditor;
         }(Base));
         Controller.BaseEditor = BaseEditor;
+        var BaseCardFilterSettings = /** @class */ (function () {
+            function BaseCardFilterSettings(setupRows) {
+                this.fieldSearch = "name";
+                this.setupRows = setupRows;
+            }
+            BaseCardFilterSettings.prototype.saveFilter = function () {
+                throw new Error("Method not implemented.");
+            };
+            BaseCardFilterSettings.prototype.restoreFilter = function () {
+                throw new Error("Method not implemented.");
+            };
+            Object.defineProperty(BaseCardFilterSettings.prototype, "FieldSearch", {
+                get: function () {
+                    return this.fieldSearch;
+                },
+                set: function (val) {
+                    this.fieldSearch = val;
+                },
+                enumerable: true,
+                configurable: true
+            });
+            BaseCardFilterSettings.prototype.InitControls = function () {
+                var navbarHeader = '<nav class="card-search-nav editor-header z-depth-1">';
+                navbarHeader += '   <div class="nav-wrapper">';
+                navbarHeader += '       <form>';
+                navbarHeader += '           <div class="input-field">';
+                navbarHeader += '               <input id="card-view-search" type="search" required value="">';
+                navbarHeader += '               <label class="label-icon" for="search"><i class="material-icons editor-header">search</i></label>';
+                navbarHeader += '               <i id="card-view-search-clear" class="material-icons editor-header">close</i>';
+                navbarHeader += '           </div>';
+                navbarHeader += '       </form>';
+                navbarHeader += '   </div>';
+                navbarHeader += '</nav>';
+                this.navSearch = $(navbarHeader);
+                this.formSearch = this.navSearch.find('form');
+                this.inputSearch = this.formSearch.find('#card-view-search');
+                this.clearSearch = this.formSearch.find('#card-view-search-clear');
+                return this.navSearch;
+            };
+            BaseCardFilterSettings.prototype.createEvents = function () {
+                if (this.clearSearch)
+                    this.ClearButtonClick = utils.createTouchClickEvent(this.clearSearch, this.clearButtonClick, this);
+                if (this.formSearch) {
+                    this.proxySearch = $.proxy(this.search, this);
+                    this.formSearch.on('submit', this.proxySearch);
+                }
+            };
+            BaseCardFilterSettings.prototype.search = function (e) {
+                e.preventDefault();
+                if (this.setupRows)
+                    this.setupRows();
+                return false;
+            };
+            BaseCardFilterSettings.prototype.destroyEvents = function () {
+                if (this.formSearch)
+                    this.formSearch.off('submit', this.proxySearch);
+                if (this.clearSearch)
+                    utils.destroyTouchClickEvent(this.clearSearch, this.ClearButtonClick);
+            };
+            BaseCardFilterSettings.prototype.clearButtonClick = function (e) {
+                if (this.inputSearch)
+                    this.inputSearch.val("");
+                if (this.setupRows)
+                    this.setupRows();
+            };
+            BaseCardFilterSettings.prototype.GetItemsForView = function (data) {
+                var result = [];
+                var strSearch = (this.inputSearch ? this.inputSearch.val() : ""); // ($("#card-view-search").val() as string);
+                var fieldSearch = this.FieldSearch;
+                var isNotSearch = (utils.isNullOrEmpty(fieldSearch) || utils.isNullOrEmpty(strSearch));
+                if (!isNotSearch)
+                    strSearch = strSearch.toLowerCase();
+                for (var i = 0, icount = (data && data.length ? data.length : 0); i < icount; i++) {
+                    if (isNotSearch) {
+                        result.push(data[i]);
+                    }
+                    else if (data[i][fieldSearch].toLowerCase().indexOf(strSearch) > -1) {
+                        result.push(data[i]);
+                    }
+                }
+                return result;
+            };
+            return BaseCardFilterSettings;
+        }());
+        Controller.BaseCardFilterSettings = BaseCardFilterSettings;
         var BaseCard = /** @class */ (function (_super) {
             __extends(BaseCard, _super);
             function BaseCard() {
@@ -413,7 +498,9 @@ define(["require", "exports", "app/common/utils", "app/common/variables", "./var
             BaseCard.prototype.ViewInit = function (view) {
                 var controls = [];
                 controls.push(this.initNavHeader());
-                controls.push(this.initFilterControls());
+                var filterControl = (this.cardSettings && this.cardSettings.FilterSettings ? this.cardSettings.FilterSettings.InitControls() : undefined);
+                if (filterControl)
+                    controls.push(filterControl);
                 controls.push(this.initTableRow());
                 view.append(controls);
                 _super.prototype.ViewInit.call(this, view);
@@ -443,24 +530,6 @@ define(["require", "exports", "app/common/utils", "app/common/variables", "./var
                 var cardButtons = this.navHeader.find("#cardButtons");
                 cardButtons.append(this.btnEdit).append(this.btnAdd).append(this.btnAddCopy).append(this.btnDelete).append(this.btnSelect).append(this.btnClose);
                 return this.navHeader;
-            };
-            BaseCard.prototype.initFilterControls = function () {
-                var navbarHeader = '<nav class="card-search-nav editor-header z-depth-1">';
-                navbarHeader += '   <div class="nav-wrapper">';
-                navbarHeader += '       <form>';
-                navbarHeader += '           <div class="input-field">';
-                navbarHeader += '               <input id="card-view-search" type="search" required value="">';
-                navbarHeader += '               <label class="label-icon" for="search"><i class="material-icons editor-header">search</i></label>';
-                navbarHeader += '               <i id="card-view-search-clear" class="material-icons editor-header">close</i>';
-                navbarHeader += '           </div>';
-                navbarHeader += '       </form>';
-                navbarHeader += '   </div>';
-                navbarHeader += '</nav>';
-                this.navSearch = $(navbarHeader);
-                this.formSearch = this.navSearch.find('form');
-                this.inputSearch = this.formSearch.find('#card-view-search');
-                this.clearSearch = this.formSearch.find('#card-view-search-clear');
-                return this.navSearch;
             };
             BaseCard.prototype.initTableRow = function () {
                 var navbarHeader = '<div class="row row-table">';
@@ -505,13 +574,12 @@ define(["require", "exports", "app/common/utils", "app/common/variables", "./var
                 this.DeleteButtonClick = this.createTouchClickEvent(this.btnDelete, this.deleteButtonClick);
                 this.CloseButtonClick = this.createTouchClickEvent(this.btnClose, this.closeButtonClick);
                 this.SelectButtonClick = this.createTouchClickEvent(this.btnSelect, this.selectButtonClick);
-                this.ClearButtonClick = this.createTouchClickEvent(this.clearSearch, this.clearButtonClick);
-                this.proxySearch = $.proxy(this.search, this);
-                this.formSearch.on('submit', this.proxySearch);
+                if (this.cardSettings && this.cardSettings.FilterSettings)
+                    this.cardSettings.FilterSettings.createEvents();
             };
             BaseCard.prototype.destroyEvents = function () {
-                this.formSearch.off('submit', this.proxySearch);
-                this.destroyTouchClickEvent(this.clearSearch, this.ClearButtonClick);
+                if (this.cardSettings && this.cardSettings.FilterSettings)
+                    this.cardSettings.FilterSettings.destroyEvents();
                 this.destroyTouchClickEvent(this.rows, this.rowClick);
                 this.destroyTouchClickEvent(this.btnSelect, this.SelectButtonClick);
                 this.destroyTouchClickEvent(this.btnEdit, this.EditButtonClick);
@@ -520,8 +588,11 @@ define(["require", "exports", "app/common/utils", "app/common/variables", "./var
                 this.destroyTouchClickEvent(this.btnDelete, this.DeleteButtonClick);
                 this.destroyTouchClickEvent(this.btnClose, this.CloseButtonClick);
             };
+            BaseCard.prototype.createCardFilterSettings = function () {
+                return new BaseCardFilterSettings($.proxy(this.setupRows, this));
+            };
             BaseCard.prototype.createCardSettings = function () {
-                return { FieldId: "", FieldSearch: "", ValueIdNew: 0, EditIdName: "", IsAdd: false, IsAddCopy: false, IsEdit: false, IsDelete: false, IsSelect: false, EditController: "", Load: undefined, Delete: undefined, Columns: [] };
+                return { FilterSettings: this.createCardFilterSettings(), ValueIdNew: 0, EditIdName: "", IsAdd: false, IsAddCopy: false, IsEdit: false, IsDelete: false, IsSelect: false, EditController: "", Load: undefined, Delete: undefined, Columns: [] };
             };
             BaseCard.prototype.setupTable = function () {
                 this.tableHead.html(this.getTableHeaderHtml());
@@ -536,11 +607,6 @@ define(["require", "exports", "app/common/utils", "app/common/variables", "./var
                 this.tableBody.html(this.getTableBodyHtml());
                 this.rows = this.tableBody.find('tr');
                 this.createTouchClickEvent(this.rows, this.rowClick);
-            };
-            BaseCard.prototype.search = function (e) {
-                e.preventDefault();
-                this.setupRows();
-                return false;
             };
             BaseCard.prototype.getTableHeaderHtml = function () {
                 var columns = this.CardSettings.Columns;
@@ -591,27 +657,9 @@ define(["require", "exports", "app/common/utils", "app/common/variables", "./var
                 html += '</tr>';
                 return html;
             };
-            BaseCard.prototype.getItemsForView = function () {
-                var result = [];
-                var data = this.Model.get("cardModel");
-                var strSearch = this.inputSearch.val(); // ($("#card-view-search").val() as string);
-                var fieldSearch = this.CardSettings.FieldSearch;
-                var isNotSearch = (utils.isNullOrEmpty(fieldSearch) || utils.isNullOrEmpty(strSearch));
-                if (!isNotSearch)
-                    strSearch = strSearch.toLowerCase();
-                for (var i = 0, icount = (data && data.length ? data.length : 0); i < icount; i++) {
-                    if (isNotSearch) {
-                        result.push(data[i]);
-                    }
-                    else if (data[i][fieldSearch].toLowerCase().indexOf(strSearch) > -1) {
-                        result.push(data[i]);
-                    }
-                }
-                return result;
-            };
             BaseCard.prototype.getTableBodyHtml = function () {
                 var html = '';
-                var data = this.getItemsForView();
+                var data = (this.cardSettings && this.cardSettings.FilterSettings ? this.cardSettings.FilterSettings.GetItemsForView(this.Model.get("cardModel")) : this.Model.get("cardModel"));
                 if (data && data.length > 0) {
                     if (!this.templateRow)
                         this.templateRow = kendo.template(this.getTableRowTemplate());
@@ -672,10 +720,6 @@ define(["require", "exports", "app/common/utils", "app/common/variables", "./var
             BaseCard.prototype.closeButtonClick = function (e) {
                 this.Close();
                 variables_1._main.ControllerBack(e);
-            };
-            BaseCard.prototype.clearButtonClick = function (e) {
-                this.inputSearch.val("");
-                this.setupRows();
             };
             BaseCard.prototype.loadData = function () {
                 var controller = this;

@@ -263,7 +263,7 @@ input[type='number']:hover::-webkit-outer-spin-button {
     width: 8%;
 }
 
-.product-col-sum {
+.product-col-sum, .product-col-price {
     width: 15%;
     text-align: right;
 }
@@ -393,6 +393,12 @@ input[type='number']:hover::-webkit-outer-spin-button {
 .total-text {
     margin: 5px;
     font-size: 2em;
+    font-weight: bold;
+}
+
+.total-text-doc {
+    margin: 5px;
+    font-size: 1.5em;
     font-weight: bold;
 }
 
@@ -544,6 +550,7 @@ input[type='number']:hover::-webkit-outer-spin-button {
         line-height: 80px;
     }
 }
+
 @media only screen and (max-height: 667px) {
     .btn-numpad, #btn-num-cancel, #btn-num-apply {
         font-size: 1.3em;
@@ -597,5 +604,18 @@ input[type='number']:hover::-webkit-outer-spin-button {
 }
 
 .check_pos_q_add, .check_pos_q_del {
+    cursor: pointer;
+}
+
+.doc-col-conduct {
+    width: 30px;
+}
+
+.doc-edit-ref {
+    cursor: pointer;
+}
+
+.doc-edit-ref-del {
+    margin-top: -48px;
     cursor: pointer;
 }

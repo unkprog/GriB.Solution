@@ -63,6 +63,16 @@ define(["require", "exports"], function (require, exports) {
         return date.toLocaleString();
     }
     exports.dateToLongString = dateToLongString;
+    function date_ddmmyyyy(date) {
+        var _date = (date ? date : new Date());
+        var yyyy = _date.getFullYear().toString();
+        var mm = (_date.getMonth() + 1).toString(); // getMonth() is zero-based         
+        var dd = _date.getDate().toString();
+        return (dd[1] ? dd : '0' + dd[0]) + '.' + (mm[1] ? mm : '0' + mm[0]) + '.' + yyyy;
+    }
+    exports.date_ddmmyyyy = date_ddmmyyyy;
+    ;
+    window.date_ddmmyyyy = date_ddmmyyyy;
     function numberToString(value, decimal) {
         var result = "";
         if (value)
@@ -70,5 +80,6 @@ define(["require", "exports"], function (require, exports) {
         return result;
     }
     exports.numberToString = numberToString;
+    window.numberToString = numberToString;
 });
 //# sourceMappingURL=utils.js.map
