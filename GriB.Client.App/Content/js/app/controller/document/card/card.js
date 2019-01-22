@@ -21,8 +21,8 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
             var Card;
             (function (Card_1) {
                 var DocumentCardFilterSettings = /** @class */ (function () {
-                    function DocumentCardFilterSettings(setupRows) {
-                        this.fieldSearch = "DocumentCardFilterSettings";
+                    function DocumentCardFilterSettings(setupRows, fieldSearch) {
+                        this.fieldSearch = fieldSearch;
                         this.setupRows = setupRows;
                         this._model = this.createModel();
                     }
@@ -45,7 +45,7 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                     });
                     DocumentCardFilterSettings.prototype.getDefDate = function () {
                         var dateTime = new Date();
-                        dateTime = new Date(dateTime.getFullYear(), dateTime.getMonth(), dateTime.getDate(), 0, 0, 0, 0);
+                        dateTime.setHours(0, 0, 0, 0); // = new Date(dateTime.getFullYear(), dateTime.getMonth(), dateTime.getDate(), 0, 0, 0, 0);
                         return dateTime;
                     };
                     DocumentCardFilterSettings.prototype.createModel = function () {
@@ -60,23 +60,24 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                             "salepoint": {},
                             "contractor": {},
                             "reason": {},
-                            "datefrom": data ? data.datefrom : undefined,
-                            "dateto": data ? data.dateto : undefined
+                            "datefrom": undefined,
+                            "dateto": undefined
                         });
                         if (data) {
                             result.set("salepoint", data.salepoint);
                             result.set("contractor", data.contractor);
                             result.set("reason", data.reason);
-                            result.set("datefrom", new Date(data.datefrom));
-                            result.set("dateto", new Date(data.dateto));
+                            result.set("datefrom", utils.date_from_ddmmyyyy(data.datefrom));
+                            result.set("dateto", utils.date_from_ddmmyyyy(data.dateto));
                         }
                         return result;
                     };
                     DocumentCardFilterSettings.prototype.restoreFilter = function () {
                         var result;
+                        //localStorage.clear();
                         var saved = window.localStorage.getItem(this.fieldSearch);
                         if (!saved || saved === "\"{}\"") {
-                            var dateTime = this.getDefDate();
+                            var dateTime = utils.date_ddmmyyyy(this.getDefDate());
                             result = { salepoint: {}, contractor: {}, reason: {}, datefrom: dateTime, dateto: dateTime };
                         }
                         else
@@ -84,7 +85,9 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                         return result;
                     };
                     DocumentCardFilterSettings.prototype.saveFilter = function () {
-                        var dataToSave = { salepoint: this._model.get("salepoint"), contractor: this._model.get("contractor"), reason: this._model.get("reason"), datefrom: this._model.get("datefrom"), dateto: this._model.get("dateto") };
+                        var _datefrom = this._model.get("datefrom");
+                        var _dateto = this._model.get("dateto");
+                        var dataToSave = { salepoint: this._model.get("salepoint"), contractor: this._model.get("contractor"), reason: this._model.get("reason"), datefrom: utils.date_ddmmyyyy(_datefrom), dateto: utils.date_ddmmyyyy(_dateto) };
                         var toSave = JSON.stringify(dataToSave);
                         window.localStorage.setItem(this.fieldSearch, toSave);
                     };
@@ -137,8 +140,6 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                         });
                         controller.dateFromControl.val(utils.date_ddmmyyyy(controller._model.get("datefrom")));
                         controller.dateToControl.val(utils.date_ddmmyyyy(controller._model.get("dateto")));
-                        M.Datepicker.getInstance(this.dateFromControl[0]).setDate(controller._model.get("datefrom"), true);
-                        M.Datepicker.getInstance(this.dateToControl[0]).setDate(controller._model.get("dateto"), true);
                         controller.salePointControl = this.filterControl.find("#card-filter-view-salepoint-col");
                         controller.salePointClear = this.filterControl.find("#card-view-salepoint-clear");
                         controller.contractorControl = this.filterControl.find("#card-filter-view-contractor-col");
@@ -324,9 +325,7 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                         return { Url: "/Content/view/document/card/card.html", Id: "card-view" };
                     };
                     Card.prototype.createCardFilterSettings = function () {
-                        var result = new DocumentCardFilterSettings($.proxy(this.loadData, this));
-                        result.FieldSearch = this.FilterId;
-                        return result;
+                        return new DocumentCardFilterSettings($.proxy(this.loadData, this), this.FilterId);
                     };
                     Card.prototype.createCardSettings = function () {
                         return {
@@ -419,10 +418,7 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                         get: function () {
                             var settings = this.CardSettings.FilterSettings;
                             var date = (settings ? settings.Model.get("dateto") : undefined);
-                            if (date) {
-                                date.setDate(date.getDate() + 1);
-                            }
-                            return (date ? date : new Date(1899, 11, 30, 0, 0, 0, 0));
+                            return (date ? new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1) : new Date(1899, 11, 30, 0, 0, 0, 0));
                         },
                         enumerable: true,
                         configurable: true

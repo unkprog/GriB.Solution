@@ -14,12 +14,18 @@ export namespace Controller.Document.Card {
             });
         }
 
+        protected columns(): Interfaces.ICardColumn[] {
+            let result: Interfaces.ICardColumn[] = super.columns();
+            result.splice(4, 0, { Header: vars._statres("label$stockto"), Field: "salepointto.name" });
+            return result;
+        }
+
         protected get EditIdName(): string {
             return "id_movement";
         }
 
         protected get FilterId(): string {
-            return "DocumentFilterMovement";
+            return "MovementCardFilterSettings";
         }
 
 

@@ -50,16 +50,16 @@ define(["require", "exports", "app/common/variables", "app/controller/document/c
                         enumerable: true,
                         configurable: true
                     });
-                    Object.defineProperty(Arrival.prototype, "DocType", {
+                    Object.defineProperty(Arrival.prototype, "FilterId", {
                         get: function () {
-                            return 10;
+                            return "ArrivalCardFilterSettings";
                         },
                         enumerable: true,
                         configurable: true
                     });
-                    Object.defineProperty(Arrival.prototype, "Reason", {
+                    Object.defineProperty(Arrival.prototype, "DocType", {
                         get: function () {
-                            return 0;
+                            return 10;
                         },
                         enumerable: true,
                         configurable: true

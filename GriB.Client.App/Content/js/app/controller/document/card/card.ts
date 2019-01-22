@@ -5,8 +5,8 @@ import svc = require('app/services/documentservice');
 
 export namespace Controller.Document.Card {
     export class DocumentCardFilterSettings implements Interfaces.ICardFilterSettings {
-        constructor(setupRows: { (): void; }) {
-            this.fieldSearch = "DocumentCardFilterSettings";
+        constructor(setupRows: { (): void; }, fieldSearch:string) {
+            this.fieldSearch = fieldSearch;
             this.setupRows = setupRows;
             this._model = this.createModel();
         }
@@ -28,7 +28,7 @@ export namespace Controller.Document.Card {
 
         private getDefDate(): Date {
             let dateTime: Date = new Date();
-            dateTime = new Date(dateTime.getFullYear(), dateTime.getMonth(), dateTime.getDate(), 0, 0, 0, 0);
+            dateTime.setHours(0, 0, 0, 0);// = new Date(dateTime.getFullYear(), dateTime.getMonth(), dateTime.getDate(), 0, 0, 0, 0);
             return dateTime;
         }
 
@@ -45,24 +45,25 @@ export namespace Controller.Document.Card {
                 "salepoint": {},
                 "contractor": {},
                 "reason": {},
-                "datefrom": data ? data.datefrom : undefined,
-                "dateto": data ? data.dateto: undefined
+                "datefrom": undefined,
+                "dateto": undefined
             });
             if (data) {
                 result.set("salepoint", data.salepoint);
                 result.set("contractor", data.contractor);
                 result.set("reason", data.reason);
-                result.set("datefrom", new Date(data.datefrom));
-                result.set("dateto", new Date(data.dateto));
+                result.set("datefrom", utils.date_from_ddmmyyyy(data.datefrom));
+                result.set("dateto", utils.date_from_ddmmyyyy(data.dateto));
             }
             return result;
         }
 
         public restoreFilter(): any{
             let result: any;
+            //localStorage.clear();
             let saved: any = window.localStorage.getItem(this.fieldSearch);
             if (!saved || saved === "\"{}\"") {
-                let dateTime: Date = this.getDefDate();
+                let dateTime: string = utils.date_ddmmyyyy(this.getDefDate());
                 result = { salepoint: {}, contractor: {}, reason: {}, datefrom: dateTime, dateto: dateTime };
             }
             else
@@ -71,7 +72,9 @@ export namespace Controller.Document.Card {
         }
 
         public saveFilter() {
-            let dataToSave = { salepoint: this._model.get("salepoint"), contractor: this._model.get("contractor"), reason: this._model.get("reason"), datefrom: this._model.get("datefrom"), dateto: this._model.get("dateto") };
+            let _datefrom: Date = this._model.get("datefrom");
+            let _dateto: Date = this._model.get("dateto");
+            let dataToSave = { salepoint: this._model.get("salepoint"), contractor: this._model.get("contractor"), reason: this._model.get("reason"), datefrom: utils.date_ddmmyyyy(_datefrom), dateto: utils.date_ddmmyyyy(_dateto) };
             let toSave: string = JSON.stringify(dataToSave);
             window.localStorage.setItem(this.fieldSearch, toSave);
         }
@@ -138,8 +141,6 @@ export namespace Controller.Document.Card {
             controller.dateFromControl.val(utils.date_ddmmyyyy(controller._model.get("datefrom")));
             controller.dateToControl.val(utils.date_ddmmyyyy(controller._model.get("dateto")));
 
-            M.Datepicker.getInstance(this.dateFromControl[0]).setDate(controller._model.get("datefrom"), true);
-            M.Datepicker.getInstance(this.dateToControl[0]).setDate(controller._model.get("dateto"), true);
 
             controller.salePointControl = this.filterControl.find("#card-filter-view-salepoint-col");
             controller.salePointClear = this.filterControl.find("#card-view-salepoint-clear");
@@ -333,9 +334,7 @@ export namespace Controller.Document.Card {
         }
 
         protected createCardFilterSettings(): Interfaces.ICardFilterSettings {
-            let result: Interfaces.ICardFilterSettings = new DocumentCardFilterSettings($.proxy(this.loadData, this));
-            result.FieldSearch = this.FilterId;
-            return result;
+            return new DocumentCardFilterSettings($.proxy(this.loadData, this), this.FilterId);
         }
 
         protected createCardSettings(): Interfaces.ICardSettings {
@@ -404,10 +403,7 @@ export namespace Controller.Document.Card {
         protected get DateTo(): Date {
             let settings: DocumentCardFilterSettings = this.CardSettings.FilterSettings as DocumentCardFilterSettings;
             let date: Date = (settings ? settings.Model.get("dateto") : undefined);
-            if (date) {
-                date.setDate(date.getDate() + 1);
-            }
-            return (date ? date : new Date(1899, 11, 30, 0, 0, 0, 0));
+            return (date ? new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1) : new Date(1899, 11, 30, 0, 0, 0, 0));
         }
 
         private getDocs(Callback: (responseData: any) => void) {

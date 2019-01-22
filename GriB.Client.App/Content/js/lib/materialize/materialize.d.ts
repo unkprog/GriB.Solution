@@ -43,5 +43,6 @@ declare namespace M {
 
 interface Window {
     date_ddmmyyyy(date: Date): string;
+    date_from_ddmmyyyy(dateStr: string): Date;
     numberToString(value: number, decimal: number): string
 }

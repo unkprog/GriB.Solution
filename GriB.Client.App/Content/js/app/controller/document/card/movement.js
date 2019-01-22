@@ -31,6 +31,11 @@ define(["require", "exports", "app/common/variables", "app/controller/document/c
                             "cardModel": []
                         });
                     };
+                    Movement.prototype.columns = function () {
+                        var result = _super.prototype.columns.call(this);
+                        result.splice(4, 0, { Header: vars._statres("label$stockto"), Field: "salepointto.name" });
+                        return result;
+                    };
                     Object.defineProperty(Movement.prototype, "EditIdName", {
                         get: function () {
                             return "id_movement";
@@ -40,7 +45,7 @@ define(["require", "exports", "app/common/variables", "app/controller/document/c
                     });
                     Object.defineProperty(Movement.prototype, "FilterId", {
                         get: function () {
-                            return "DocumentFilterMovement";
+                            return "MovementCardFilterSettings";
                         },
                         enumerable: true,
                         configurable: true

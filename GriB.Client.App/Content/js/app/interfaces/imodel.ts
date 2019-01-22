@@ -207,6 +207,7 @@
         typecost: number;
         positions: IDocumentModelPosition[];
         sum: number;
+        comment: string;
     }
 
     export interface IDocumentModelPosition {

@@ -42,7 +42,7 @@ export function validatePhone(phone: string): boolean {
     return pattern.test(phone);
 }
 
-export function stringFormat(...args1:any[]): string {
+export function stringFormat(...args1: any[]): string {
     var args = Array.prototype.slice.call(arguments, 1);
     return arguments[0].replace(/\{(\d+)\}/g, function (match, index) {
         return args[index];
@@ -50,11 +50,11 @@ export function stringFormat(...args1:any[]): string {
 };
 
 
-export function dateToLongString(date:Date) {
+export function dateToLongString(date: Date): string {
     return date.toLocaleString();
 }
 
-export function date_ddmmyyyy(date: Date) {
+export function date_ddmmyyyy(date: Date): string {
     let _date = (date ? date : new Date());
     var yyyy = _date.getFullYear().toString();
     var mm = (_date.getMonth() + 1).toString(); // getMonth() is zero-based         
@@ -62,14 +62,18 @@ export function date_ddmmyyyy(date: Date) {
 
     return (dd[1] ? dd : '0' + dd[0]) + '.' + (mm[1] ? mm : '0' + mm[0]) + '.' + yyyy;
 };
-
 window.date_ddmmyyyy = date_ddmmyyyy;
 
-export function numberToString(value: number, decimal:number): string {
+export function date_from_ddmmyyyy(dateStr: string): Date {
+    var parts: string[] = dateStr.split(".");
+    return new Date(parseInt(parts[2]), parseInt(parts[1]) - 1, parseInt(parts[0]), 0, 0, 0, 0);
+};
+window.date_from_ddmmyyyy = date_from_ddmmyyyy;
+
+export function numberToString(value: number, decimal: number): string {
     let result: string = "";
     if (value)
         result = value.toFixed(decimal);// parseFloat(value).toFixed(2);
     return result;
 }
-
 window.numberToString = numberToString;

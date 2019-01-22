@@ -35,7 +35,7 @@ namespace GriB.Client.App.Models.Editor
         public document()
         {
             positions = new List<document_position>();
-            salepointname = string.Empty;
+            comment = string.Empty;
             date = DateTime.Now;
         }
 
@@ -48,7 +48,7 @@ namespace GriB.Client.App.Models.Editor
         public reason reason { get; set; }
         public int typecost { get; set; }
         public List<document_position> positions { get; set; }
-        public string salepointname { get; set; }
+        public string comment { get; set; }
         public double sum { get; set; }
     }
 

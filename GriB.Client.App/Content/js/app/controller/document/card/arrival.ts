@@ -29,12 +29,12 @@ export namespace Controller.Document.Card {
             return "document/editor/arrival";
         }
 
-        protected get DocType(): number {
-            return 10;
+        protected get FilterId(): string {
+            return "ArrivalCardFilterSettings";
         }
 
-        protected get Reason(): number {
-            return 0;
+        protected get DocType(): number {
+            return 10;
         }
 
         public ViewInit(view: JQuery): boolean {

@@ -31,6 +31,7 @@ namespace GriB.Client.App.Managers.Editors
             document_params docpar = new document_params() { id = id };
             List<document> documents = GetDocuments(query, docpar);
             document result = (documents == null || documents.Count == 0 ? new document() { id = id } : documents[0]);
+            GetComment(query, result);
             GetPositions(query, result);
             return result;
         }
@@ -46,6 +47,8 @@ namespace GriB.Client.App.Managers.Editors
             {
                 result.id = (int)values[0];
             });
+
+            SetComment(query, result);
 
             int index = 0;
             foreach(var pos in result.positions)
@@ -63,6 +66,20 @@ namespace GriB.Client.App.Managers.Editors
             }
 
             return result;
+        }
+
+        private const string cmdGetComment = @"Editor\Document\Comment\[get]";
+        public static void GetComment(this Query query, document document)
+        {
+            query.Execute(cmdGetComment, new SqlParameter[] { new SqlParameter() { ParameterName = "@id", Value = document.id } }
+            , (values) => { document.comment = (string)values[1]; });
+        }
+
+        private const string cmdSetComment = @"Editor\Document\Comment\[set]";
+        public static void SetComment(this Query query, document document)
+        {
+            query.Execute(cmdSetComment, new SqlParameter[] { new SqlParameter() { ParameterName = "@id", Value = document.id }, new SqlParameter() { ParameterName = "@comment", Value = document.comment } }
+            , (values) => { });
         }
 
         private const string cmdGetPositions = @"Editor\Document\Position\[get]";

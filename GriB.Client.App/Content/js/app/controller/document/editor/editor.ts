@@ -44,6 +44,7 @@ export namespace Controller.Document.Editor {
                 "labelPrice": vars._statres("label$price"),
                 "labelSum": vars._statres("label$sum"),
                 "labelAdd": vars._statres("button$label$add"),
+                "labelComment": vars._statres("label$comment"),
                 "documentConduct": true,
                 "totalSum": 0,
                 "totalSumText": "0.00",
@@ -72,7 +73,11 @@ export namespace Controller.Document.Editor {
             let result: boolean = true;
             let model: Interfaces.Model.IDocumentModel = this.EditorModel;
 
-
+            if (!model.positions || model.positions.length < 1) {
+                M.toast({ html: vars._statres("msg$error$documentpositionsnotfilled") });
+                result = false;
+            }
+            
             return result;
         }
 
@@ -81,6 +86,8 @@ export namespace Controller.Document.Editor {
         protected contractorControl: JQuery;
         protected reasonControl: JQuery;
         private positionRows: JQuery;
+        private commentControl: JQuery;
+
         private btnAddPosition: JQuery;
         private btnRemovePosition: JQuery;
         public ViewInit(view: JQuery): boolean {
@@ -91,10 +98,14 @@ export namespace Controller.Document.Editor {
             this.contractorControl = view.find("#document-view-contractor-row");
             this.reasonControl = view.find("#document-view-reason-row");
             this.positionRows = view.find("#product-position-rows");
+            this.commentControl = view.find("#document-view-comment-row");
+
+            view.find("#document-view-comment").characterCounter();
             return super.ViewInit(view);
         }
 
         public ViewShow(e: any): boolean {
+            M.textareaAutoResize($("#document-view-comment"));
             return super.ViewShow(e);
         }
 
@@ -115,6 +126,16 @@ export namespace Controller.Document.Editor {
             else {
                 if (!this.reasonControl.hasClass("hide"))
                     this.reasonControl.addClass("hide");
+            }
+        }
+
+        protected showComment(isShow: boolean): void {
+            if (isShow) {
+                this.commentControl.removeClass("hide");
+            }
+            else {
+                if (!this.commentControl.hasClass("hide"))
+                    this.commentControl.addClass("hide");
             }
         }
 

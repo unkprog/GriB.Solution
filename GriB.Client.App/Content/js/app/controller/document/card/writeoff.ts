@@ -26,7 +26,7 @@ export namespace Controller.Document.Card {
         }
 
         protected get FilterId(): string {
-            return "DocumentFilterWriteoff";
+            return "WriteOffCardFilterSettings";
         }
 
         protected get EditController(): string {
@@ -35,10 +35,6 @@ export namespace Controller.Document.Card {
 
         protected get DocType(): number {
             return 40;
-        }
-
-        protected get Contractor(): number {
-            return 0;
         }
 
         public ViewInit(view: JQuery): boolean {

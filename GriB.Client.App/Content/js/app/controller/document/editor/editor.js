@@ -62,6 +62,7 @@ define(["require", "exports", "app/common/basecontroller", "app/services/documen
                             "labelPrice": vars._statres("label$price"),
                             "labelSum": vars._statres("label$sum"),
                             "labelAdd": vars._statres("button$label$add"),
+                            "labelComment": vars._statres("label$comment"),
                             "documentConduct": true,
                             "totalSum": 0,
                             "totalSumText": "0.00",
@@ -97,6 +98,10 @@ define(["require", "exports", "app/common/basecontroller", "app/services/documen
                     Editor.prototype.validate = function () {
                         var result = true;
                         var model = this.EditorModel;
+                        if (!model.positions || model.positions.length < 1) {
+                            M.toast({ html: vars._statres("msg$error$documentpositionsnotfilled") });
+                            result = false;
+                        }
                         return result;
                     };
                     Editor.prototype.ViewInit = function (view) {
@@ -106,9 +111,12 @@ define(["require", "exports", "app/common/basecontroller", "app/services/documen
                         this.contractorControl = view.find("#document-view-contractor-row");
                         this.reasonControl = view.find("#document-view-reason-row");
                         this.positionRows = view.find("#product-position-rows");
+                        this.commentControl = view.find("#document-view-comment-row");
+                        view.find("#document-view-comment").characterCounter();
                         return _super.prototype.ViewInit.call(this, view);
                     };
                     Editor.prototype.ViewShow = function (e) {
+                        M.textareaAutoResize($("#document-view-comment"));
                         return _super.prototype.ViewShow.call(this, e);
                     };
                     Editor.prototype.showContractor = function (isShow) {
@@ -127,6 +135,15 @@ define(["require", "exports", "app/common/basecontroller", "app/services/documen
                         else {
                             if (!this.reasonControl.hasClass("hide"))
                                 this.reasonControl.addClass("hide");
+                        }
+                    };
+                    Editor.prototype.showComment = function (isShow) {
+                        if (isShow) {
+                            this.commentControl.removeClass("hide");
+                        }
+                        else {
+                            if (!this.commentControl.hasClass("hide"))
+                                this.commentControl.addClass("hide");
                         }
                     };
                     Editor.prototype.createEvents = function () {
