@@ -31,6 +31,12 @@ define(["require", "exports", "app/common/variables", "app/controller/document/c
                             "cardModel": []
                         });
                     };
+                    Movement.prototype.columns = function () {
+                        var result = _super.prototype.columns.call(this);
+                        result[2].Header = vars._statres("label$stock$from");
+                        result.splice(3, 0, { Header: vars._statres("label$stock$to"), Field: "salepointto.name" });
+                        return result;
+                    };
                     Object.defineProperty(Movement.prototype, "EditIdName", {
                         get: function () {
                             return "id_movement";
@@ -40,7 +46,7 @@ define(["require", "exports", "app/common/variables", "app/controller/document/c
                     });
                     Object.defineProperty(Movement.prototype, "FilterId", {
                         get: function () {
-                            return "DocumentFilterMovement";
+                            return "MovementCardFilterSettings";
                         },
                         enumerable: true,
                         configurable: true
@@ -59,6 +65,15 @@ define(["require", "exports", "app/common/variables", "app/controller/document/c
                         enumerable: true,
                         configurable: true
                     });
+                    Movement.prototype.ViewInit = function (view) {
+                        var result = _super.prototype.ViewInit.call(this, view);
+                        var settings = this.CardSettings.FilterSettings;
+                        if (settings) {
+                            settings.Model.set("labelSalepoint", vars._statres("label$stock$from"));
+                            settings.showSalePointTo(true);
+                        }
+                        return result;
+                    };
                     return Movement;
                 }(card.Controller.Document.Card.Card));
                 Card.Movement = Movement;

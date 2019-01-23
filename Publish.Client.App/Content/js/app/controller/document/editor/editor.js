@@ -55,6 +55,7 @@ define(["require", "exports", "app/common/basecontroller", "app/services/documen
                             "labelDate": vars._statres("label$date"),
                             "labelProvider": vars._statres("label$provider"),
                             "labelStock": vars._statres("label$stock"),
+                            "labelStockTo": vars._statres("label$stock$to"),
                             "labelReason": vars._statres("label$reason"),
                             "labelName": vars._statres("label$name"),
                             "labelQuantityShort": vars._statres("label$quantityshort"),
@@ -62,6 +63,7 @@ define(["require", "exports", "app/common/basecontroller", "app/services/documen
                             "labelPrice": vars._statres("label$price"),
                             "labelSum": vars._statres("label$sum"),
                             "labelAdd": vars._statres("button$label$add"),
+                            "labelComment": vars._statres("label$comment"),
                             "documentConduct": true,
                             "totalSum": 0,
                             "totalSumText": "0.00",
@@ -94,22 +96,56 @@ define(["require", "exports", "app/common/basecontroller", "app/services/documen
                         enumerable: true,
                         configurable: true
                     });
-                    Editor.prototype.validate = function () {
+                    Editor.prototype.validateStock = function () {
                         var result = true;
                         var model = this.EditorModel;
+                        if ((model.option & 1) === 1) {
+                            if (!model.salepoint || !model.salepoint.id || model.salepoint.id === 0) {
+                                M.toast({ html: vars._statres("msg$error$nowarehousespecified") });
+                                result = false;
+                            }
+                        }
+                        return result;
+                    };
+                    Editor.prototype.validate = function () {
+                        var result = this.validateStock();
+                        var model = this.EditorModel;
+                        if ((model.option & 1) === 1) {
+                            if (!model.positions || !model.positions.length || model.positions.length < 1) {
+                                M.toast({ html: vars._statres("msg$error$documentpositionsnotfilled") });
+                                result = false;
+                            }
+                            if (model.comment.length > 254) {
+                                M.toast({ html: utils.stringFormat(vars._statres("msg$error$fieldexceedscharacters"), vars._statres("label$comment"), 254) });
+                                result = false;
+                            }
+                        }
                         return result;
                     };
                     Editor.prototype.ViewInit = function (view) {
                         this.dateControl = view.find("#document-view-date");
                         this.dateControl.datepicker({ format: "dd.mm.yyyy" });
                         this.salePointControl = view.find("#document-view-salepoint-row");
+                        this.salePointToControl = view.find("#document-view-salepointto-row");
                         this.contractorControl = view.find("#document-view-contractor-row");
                         this.reasonControl = view.find("#document-view-reason-row");
                         this.positionRows = view.find("#product-position-rows");
+                        this.commentControl = view.find("#document-view-comment-row");
+                        view.find("#document-view-comment").characterCounter();
                         return _super.prototype.ViewInit.call(this, view);
                     };
                     Editor.prototype.ViewShow = function (e) {
+                        M.textareaAutoResize($("#document-view-comment"));
                         return _super.prototype.ViewShow.call(this, e);
+                    };
+                    Editor.prototype.showSalePointTo = function (isShow) {
+                        if (isShow) {
+                            this.salePointToControl.removeClass("hide");
+                        }
+                        else {
+                            if (!this.salePointToControl.hasClass("hide"))
+                                this.salePointToControl.addClass("hide");
+                        }
                     };
                     Editor.prototype.showContractor = function (isShow) {
                         if (isShow) {
@@ -132,6 +168,7 @@ define(["require", "exports", "app/common/basecontroller", "app/services/documen
                     Editor.prototype.createEvents = function () {
                         _super.prototype.createEvents.call(this);
                         this.SalePointButtonClick = this.createTouchClickEvent(this.salePointControl, this.salePointButtonClick);
+                        this.SalePointToButtonClick = this.createTouchClickEvent(this.salePointToControl, this.salePointToButtonClick);
                         this.ContractorButtonClick = this.createTouchClickEvent(this.contractorControl, this.contractorButtonClick);
                         this.ReasonButtonClick = this.createTouchClickEvent(this.reasonControl, this.reasonButtonClick);
                         this.Model.bind("change", $.proxy(this.changeModel, this));
@@ -143,6 +180,7 @@ define(["require", "exports", "app/common/basecontroller", "app/services/documen
                         if (this.btnRemovePosition)
                             this.destroyTouchClickEvent(this.btnRemovePosition, this.removePositionButtonClick);
                         this.destroyTouchClickEvent(this.contractorControl, this.ContractorButtonClick);
+                        this.destroyTouchClickEvent(this.salePointToControl, this.SalePointToButtonClick);
                         this.destroyTouchClickEvent(this.salePointControl, this.SalePointButtonClick);
                         _super.prototype.destroyEvents.call(this);
                     };
@@ -219,6 +257,26 @@ define(["require", "exports", "app/common/basecontroller", "app/services/documen
                         var contractor = controller.getSelectedRecord();
                         if (contractor)
                             this.Model.set("editModel.contractor", contractor);
+                        M.updateTextFields();
+                    };
+                    Editor.prototype.salePointToButtonClick = function (e) {
+                        var self = this;
+                        vars._app.OpenController({
+                            urlController: 'setting/card/salepoint', isModal: true, onLoadController: function (controller) {
+                                var ctrlTypePayment = controller;
+                                ctrlTypePayment.CardSettings.IsAdd = false;
+                                ctrlTypePayment.CardSettings.IsAddCopy = false;
+                                ctrlTypePayment.CardSettings.IsDelete = false;
+                                ctrlTypePayment.CardSettings.IsEdit = false;
+                                ctrlTypePayment.CardSettings.IsSelect = true;
+                                ctrlTypePayment.OnSelect = $.proxy(self.selectSalePointTo, self);
+                            }
+                        });
+                    };
+                    Editor.prototype.selectSalePointTo = function (controller) {
+                        var salepoint = controller.getSelectedRecord();
+                        if (salepoint)
+                            this.Model.set("editModel.salepointto", salepoint);
                         M.updateTextFields();
                     };
                     Editor.prototype.salePointButtonClick = function (e) {

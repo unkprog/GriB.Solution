@@ -11,7 +11,7 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-define(["require", "exports", "app/common/variables", "app/controller/document/editor/editor"], function (require, exports, vars, edit) {
+define(["require", "exports", "app/common/variables", "app/common/utils", "app/controller/document/editor/editor"], function (require, exports, vars, utils, edit) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var Controller;
@@ -49,6 +49,21 @@ define(["require", "exports", "app/common/variables", "app/controller/document/e
                     WriteOff.prototype.ViewInit = function (view) {
                         var result = _super.prototype.ViewInit.call(this, view);
                         this.showReason(true);
+                        return result;
+                    };
+                    WriteOff.prototype.validate = function () {
+                        var result = _super.prototype.validate.call(this);
+                        var model = this.EditorModel;
+                        if ((model.option & 1) === 1) {
+                            if (!model.reason || !model.reason.id || model.reason.id === 0) {
+                                M.toast({ html: vars._statres("msg$error$noreasonspecified") });
+                                result = false;
+                            }
+                            if (utils.isNullOrEmpty(model.comment) === true) {
+                                M.toast({ html: vars._statres("msg$error$commentnotfilled") });
+                                result = false;
+                            }
+                        }
                         return result;
                     };
                     return WriteOff;

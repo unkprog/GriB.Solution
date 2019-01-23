@@ -45,7 +45,7 @@ define(["require", "exports", "app/common/variables", "app/controller/document/c
                     });
                     Object.defineProperty(Writeoff.prototype, "FilterId", {
                         get: function () {
-                            return "DocumentFilterWriteoff";
+                            return "WriteOffCardFilterSettings";
                         },
                         enumerable: true,
                         configurable: true
@@ -60,13 +60,6 @@ define(["require", "exports", "app/common/variables", "app/controller/document/c
                     Object.defineProperty(Writeoff.prototype, "DocType", {
                         get: function () {
                             return 40;
-                        },
-                        enumerable: true,
-                        configurable: true
-                    });
-                    Object.defineProperty(Writeoff.prototype, "Contractor", {
-                        get: function () {
-                            return 0;
                         },
                         enumerable: true,
                         configurable: true

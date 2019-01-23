@@ -73,6 +73,13 @@ define(["require", "exports"], function (require, exports) {
     exports.date_ddmmyyyy = date_ddmmyyyy;
     ;
     window.date_ddmmyyyy = date_ddmmyyyy;
+    function date_from_ddmmyyyy(dateStr) {
+        var parts = dateStr.split(".");
+        return new Date(parseInt(parts[2]), parseInt(parts[1]) - 1, parseInt(parts[0]), 0, 0, 0, 0);
+    }
+    exports.date_from_ddmmyyyy = date_from_ddmmyyyy;
+    ;
+    window.date_from_ddmmyyyy = date_from_ddmmyyyy;
     function numberToString(value, decimal) {
         var result = "";
         if (value)

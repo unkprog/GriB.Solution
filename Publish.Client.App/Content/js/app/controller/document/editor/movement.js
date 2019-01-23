@@ -20,54 +20,64 @@ define(["require", "exports", "app/common/variables", "app/controller/document/e
         (function (Document) {
             var Editor;
             (function (Editor) {
-                var Arrival = /** @class */ (function (_super) {
-                    __extends(Arrival, _super);
-                    function Arrival() {
-                        return _super.call(this) || this;
+                var Movement = /** @class */ (function (_super) {
+                    __extends(Movement, _super);
+                    function Movement() {
+                        var _this = _super.call(this) || this;
+                        _this.Model.set("labelStock", vars._statres("label$stock$from"));
+                        return _this;
                     }
-                    Object.defineProperty(Arrival.prototype, "Header", {
+                    Object.defineProperty(Movement.prototype, "Header", {
                         get: function () {
-                            return vars._statres("label$arrival");
+                            return vars._statres("label$movement");
                         },
                         enumerable: true,
                         configurable: true
                     });
-                    Object.defineProperty(Arrival.prototype, "EditIdName", {
+                    Object.defineProperty(Movement.prototype, "EditIdName", {
                         get: function () {
-                            return "id_arrival";
+                            return "id_movement";
                         },
                         enumerable: true,
                         configurable: true
                     });
-                    Object.defineProperty(Arrival.prototype, "DocType", {
+                    Object.defineProperty(Movement.prototype, "DocType", {
                         get: function () {
-                            return 10;
+                            return 50;
                         },
                         enumerable: true,
                         configurable: true
                     });
-                    Arrival.prototype.ViewInit = function (view) {
+                    Movement.prototype.ViewInit = function (view) {
                         var result = _super.prototype.ViewInit.call(this, view);
-                        this.showContractor(true);
+                        this.showSalePointTo(true);
                         return result;
                     };
-                    Arrival.prototype.validate = function () {
-                        var result = _super.prototype.validate.call(this);
+                    Movement.prototype.validateStock = function () {
+                        var result = true;
                         var model = this.EditorModel;
                         if ((model.option & 1) === 1) {
-                            if (!model.contractor || !model.contractor.id || model.contractor.id === 0) {
-                                M.toast({ html: vars._statres("msg$error$nocontractorspecified") });
+                            if (!model.salepoint || !model.salepoint.id || model.salepoint.id === 0) {
+                                M.toast({ html: vars._statres("msg$error$nowarehouse$fromspecified") });
+                                result = false;
+                            }
+                            if (!model.salepointto || !model.salepointto.id || model.salepointto.id === 0) {
+                                M.toast({ html: vars._statres("msg$error$nowarehouse$tospecified") });
+                                result = false;
+                            }
+                            if (result === true && model.salepoint.id === model.salepointto.id) {
+                                M.toast({ html: vars._statres("msg$error$warehousedifferentspecified") });
                                 result = false;
                             }
                         }
                         return result;
                     };
-                    return Arrival;
+                    return Movement;
                 }(edit.Controller.Document.Editor.Editor));
-                Editor.Arrival = Arrival;
+                Editor.Movement = Movement;
             })(Editor = Document.Editor || (Document.Editor = {}));
         })(Document = Controller.Document || (Controller.Document = {}));
     })(Controller = exports.Controller || (exports.Controller = {}));
-    vars.registerController("document/editor/arrival", function (module) { return new module.Controller.Document.Editor.Arrival(); });
+    vars.registerController("document/editor/movement", function (module) { return new module.Controller.Document.Editor.Movement(); });
 });
-//# sourceMappingURL=arrival.js.map
+//# sourceMappingURL=movement.js.map
