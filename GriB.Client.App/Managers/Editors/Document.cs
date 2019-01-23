@@ -155,5 +155,29 @@ namespace GriB.Client.App.Managers.Editors
 
             return result;
         }
+
+
+
+        private static saledocument readSaleFromValues(object[] values) => new saledocument() { id = (int)values[0], cd = (DateTime)values[2], cu = (int)values[3], ud = (DateTime)values[4], uu= (int)values[5]
+            , options = (int)values[6], number= (int)values[7], change=(int)values[8], discount=(double)values[9], comment=(string)values[10]
+            , salepoint = new salepoint() { id = (int)values[11], name = (string)values[12] }
+            , client = new client() { id = (int)values[13], fname = (string)values[14], mname = (string)values[15], lname = (string)values[16] }
+            , sum = (double)values[17]
+        };
+
+        private const string cmdGetSale = @"POSTerminal\Check\[getcard]";
+        public static List<saledocument> GetSales(this Query query, sales_params docpar)
+        {
+            List<saledocument> result = new List<saledocument>();
+            query.Execute(cmdGetSale, new SqlParameter[] { new SqlParameter() { ParameterName = "@id", Value = docpar.id }
+            , new SqlParameter() { ParameterName = "@salepoint", Value = docpar.salepoint }
+            , new SqlParameter() { ParameterName = "@datefrom", Value = docpar.datefrom }, new SqlParameter() { ParameterName = "@dateto", Value = docpar.dateto} }
+            , (values) =>
+            {
+                result.Add(readSaleFromValues(values));
+            });
+
+            return result;
+        }
     }
 }

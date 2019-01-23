@@ -68,5 +68,17 @@ namespace GriB.Client.App.Controllers
             });
         }
         #endregion
+
+        #region Движение денег
+        [HttpPost]
+        [ActionName("get_sales")]
+        public HttpResponseMessage GetSales(sales_params docpar)
+        {
+            return TryCatchResponseQuery((query) =>
+            {
+                return Request.CreateResponse(HttpStatusCode.OK, Document.GetSales(query, docpar));
+            });
+        }
+        #endregion
     }
 }

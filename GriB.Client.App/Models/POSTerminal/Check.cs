@@ -67,4 +67,5 @@ namespace GriB.Client.App.Models.POSTerminal
         public string comment    { get; set; }
     }
 
+   
 }

@@ -64,6 +64,19 @@ export function date_ddmmyyyy(date: Date): string {
 };
 window.date_ddmmyyyy = date_ddmmyyyy;
 
+export function date_ddmmyyyy_withtime(date: Date | string): string {
+    let _date: Date = (date ? (typeof date === 'string' || date instanceof String ? new Date(date as string) : date) : new Date());
+    let yyyy:string = _date.getFullYear().toString();
+    let mm: string = (_date.getMonth() + 1).toString(); // getMonth() is zero-based         
+    let dd: string = _date.getDate().toString();
+    let hh: string = _date.getHours().toString();
+    let mn: string = _date.getMinutes().toString();
+    let ss: string = _date.getSeconds().toString();
+
+    return (dd[1] ? dd : '0' + dd[0]) + '.' + (mm[1] ? mm : '0' + mm[0]) + '.' + yyyy + ' ' + (hh[1] ? hh : '0' + hh[0]) + ':' + (mn[1] ? mn : '0' + mn[0]) + ':' + (ss[1] ? ss : '0' + ss[0]);
+};
+window.date_ddmmyyyy_withtime = date_ddmmyyyy_withtime;
+
 export function date_from_ddmmyyyy(dateStr: string): Date {
     var parts: string[] = dateStr.split(".");
     return new Date(parseInt(parts[2]), parseInt(parts[1]) - 1, parseInt(parts[0]), 0, 0, 0, 0);

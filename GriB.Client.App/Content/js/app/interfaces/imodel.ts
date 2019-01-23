@@ -186,15 +186,18 @@
         comment: string;
     }
 
-    export interface IDocumentParams {
+    export interface ISaleParams {
         id: number;
-        doctype: number;
         salepoint: number;
+        datefrom: Date;
+        dateto: Date;
+    }
+
+    export interface IDocumentParams extends ISaleParams {
+        doctype: number;
         salepointto: number;
         contractor: number;
         reason: number;
-        datefrom: Date;
-        dateto: Date;
     }
 
     export interface IDocumentModel extends IEditorModel {

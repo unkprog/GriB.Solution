@@ -32,6 +32,10 @@ export module Services {
             this.GetApi({ Action: "/get_document_newposition", RequestData: { id: id, salepoint: salepoint }, Callback: Callback });
         }
 
+        public GetSales(model: Interfaces.Model.ISaleParams, Callback: (responseData: any) => void) {
+            this.PostApi({ Action: "/get_sales", RequestData: JSON.stringify(model), Callback: Callback });
+        }
+
         //// Сотрудники
         //public GetEmployees(Callback: (responseData: any) => void) {
         //    this.GetApi({ Action: "/get_document_newposition", Callback: Callback });

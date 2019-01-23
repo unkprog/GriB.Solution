@@ -43,6 +43,9 @@ define(["require", "exports", "app/common/baseservice"], function (require, expo
             DocumentService.prototype.GetDocumentNewPosition = function (id, salepoint, Callback) {
                 this.GetApi({ Action: "/get_document_newposition", RequestData: { id: id, salepoint: salepoint }, Callback: Callback });
             };
+            DocumentService.prototype.GetSales = function (model, Callback) {
+                this.PostApi({ Action: "/get_sales", RequestData: JSON.stringify(model), Callback: Callback });
+            };
             return DocumentService;
         }(base.Services.BaseService));
         Services.DocumentService = DocumentService;

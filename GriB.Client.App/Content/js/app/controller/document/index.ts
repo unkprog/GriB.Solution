@@ -23,6 +23,8 @@ export namespace Controller.Document {
                 "labelWriteOff": vars._statres("label$writeoff"),
                 "labelMovement": vars._statres("label$movement"),
                 "labelProduction": vars._statres("label$productionmake"),
+                "labelSale": vars._statres("label$sale"),
+                "labelPayment": vars._statres("label$payment"),
                 "labelEncashment": vars._statres("label$encashment"),
                 "labelDeposit": vars._statres("label$depositmoney"),
                 "labelWithDrawing": vars._statres("label$withdrawingmoney"),
@@ -31,35 +33,33 @@ export namespace Controller.Document {
 
         protected createEvents(): void {
             this.ArrivalButtonClick = this.createTouchClickEvent("btn-arrival", this.arrivalButtonClick);
-            this.ConsumptionButtonClick = this.createTouchClickEvent("btn-consumption", this.consumptionButtonClick);
-            this.ReturnButtonClick = this.createTouchClickEvent("btn-return", this.returnButtonClick);
             this.WriteoffButtonClick = this.createTouchClickEvent("btn-writeoff", this.writeoffButtonClick);
             this.MovementButtonClick = this.createTouchClickEvent("btn-movement", this.movementButtonClick);
-            this.ProductionButtonClick = this.createTouchClickEvent("btn-production", this.productionButtonClick);
+            this.SaleButtonClick = this.createTouchClickEvent("btn-sale", this.saleButtonClick);
+
+            this.PaymentButtonClick = this.createTouchClickEvent("btn-payment", this.paymentButtonClick);
+
+            //this.ConsumptionButtonClick = this.createTouchClickEvent("btn-consumption", this.consumptionButtonClick);
+            //this.ReturnButtonClick = this.createTouchClickEvent("btn-return", this.returnButtonClick);
+            //this.ProductionButtonClick = this.createTouchClickEvent("btn-production", this.productionButtonClick);
         }
 
         protected destroyEvents(): void {
             this.destroyTouchClickEvent("btn-arrival", this.ArrivalButtonClick);
-            this.destroyTouchClickEvent("btn-consumption", this.ConsumptionButtonClick);
-            this.destroyTouchClickEvent("btn-return", this.ReturnButtonClick);
             this.destroyTouchClickEvent("btn-writeoff", this.WriteoffButtonClick);
             this.destroyTouchClickEvent("btn-movement", this.MovementButtonClick);
-            this.destroyTouchClickEvent("btn-production", this.ProductionButtonClick);
+            this.destroyTouchClickEvent("btn-sale", this.SaleButtonClick);
+
+            this.destroyTouchClickEvent("btn-payment", this.PaymentButtonClick);
+
+            //this.destroyTouchClickEvent("btn-consumption", this.ConsumptionButtonClick);
+            //this.destroyTouchClickEvent("btn-return", this.ReturnButtonClick);
+            //this.destroyTouchClickEvent("btn-production", this.ProductionButtonClick);
         }
 
         public ArrivalButtonClick: { (e: any): void; };
         private arrivalButtonClick(e) {
             vars._main.OpenController({ urlController: "document/card/arrival", backController: this });
-        }
-
-        public ConsumptionButtonClick: { (e: any): void; };
-        private consumptionButtonClick(e) {
-            vars._main.OpenController({ urlController: "document/card/consumption", backController: this });
-        }
-
-        public ReturnButtonClick: { (e: any): void; };
-        private returnButtonClick(e) {
-            vars._main.OpenController({ urlController: "document/card/return", backController: this });
         }
 
         public WriteoffButtonClick: { (e: any): void; };
@@ -72,10 +72,30 @@ export namespace Controller.Document {
             vars._main.OpenController({ urlController: "document/card/movement", backController: this });
         }
 
-        public ProductionButtonClick: { (e: any): void; };
-        private productionButtonClick(e) {
-            vars._main.OpenController({ urlController: "document/card/production", backController: this });
+        public SaleButtonClick: { (e: any): void; };
+        private saleButtonClick(e) {
+            vars._main.OpenController({ urlController: "document/card/sale", backController: this });
         }
+
+        public PaymentButtonClick: { (e: any): void; };
+        private paymentButtonClick(e) {
+            vars._main.OpenController({ urlController: "document/card/payment", backController: this });
+        }
+
+        //public ConsumptionButtonClick: { (e: any): void; };
+        //private consumptionButtonClick(e) {
+        //    vars._main.OpenController({ urlController: "document/card/consumption", backController: this });
+        //}
+
+        //public ReturnButtonClick: { (e: any): void; };
+        //private returnButtonClick(e) {
+        //    vars._main.OpenController({ urlController: "document/card/return", backController: this });
+        //}
+
+        //public ProductionButtonClick: { (e: any): void; };
+        //private productionButtonClick(e) {
+        //    vars._main.OpenController({ urlController: "document/card/production", backController: this });
+        //}
 
     }
 }

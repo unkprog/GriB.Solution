@@ -182,7 +182,7 @@ export namespace Controller.Terminal {
             if (controller.currentCheck) {
                 $('#check_id_' + controller.currentCheck.id).addClass(['check-select', 'z-depth-1']);
                 //this.model.set("checkSum", this.calcCheckSum());
-                this.model.set("checkTime", utils.dateToLongString(controller.currentCheck.cd));
+                this.model.set("checkTime", utils.date_ddmmyyyy_withtime(controller.currentCheck.cd));
             }
             else {
                 this.model.set("checkTime", "");
