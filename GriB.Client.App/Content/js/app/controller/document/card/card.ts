@@ -39,10 +39,12 @@ export namespace Controller.Document.Card {
                 "labelDateFrom": vars._statres("label$date$from"),
                 "labelDateTo": vars._statres("label$date$to"),
                 "labelSalepoint": vars._statres("label$stock"),
+                "labelSalepointTo": vars._statres("label$stock$to"),
                 "labelContractor": vars._statres("label$contractor"),
                 "labelReason": vars._statres("label$reason"),
                 "labelFind": vars._statres("label$find"),
                 "salepoint": {},
+                "salepointto": {},
                 "contractor": {},
                 "reason": {},
                 "datefrom": undefined,
@@ -50,6 +52,7 @@ export namespace Controller.Document.Card {
             });
             if (data) {
                 result.set("salepoint", data.salepoint);
+                result.set("salepointto", data.salepointto);
                 result.set("contractor", data.contractor);
                 result.set("reason", data.reason);
                 result.set("datefrom", utils.date_from_ddmmyyyy(data.datefrom));
@@ -64,7 +67,7 @@ export namespace Controller.Document.Card {
             let saved: any = window.localStorage.getItem(this.fieldSearch);
             if (!saved || saved === "\"{}\"") {
                 let dateTime: string = utils.date_ddmmyyyy(this.getDefDate());
-                result = { salepoint: {}, contractor: {}, reason: {}, datefrom: dateTime, dateto: dateTime };
+                result = { salepoint: {}, salepointto: {}, contractor: {}, reason: {}, datefrom: dateTime, dateto: dateTime };
             }
             else
                 result = JSON.parse(saved);
@@ -74,7 +77,7 @@ export namespace Controller.Document.Card {
         public saveFilter() {
             let _datefrom: Date = this._model.get("datefrom");
             let _dateto: Date = this._model.get("dateto");
-            let dataToSave = { salepoint: this._model.get("salepoint"), contractor: this._model.get("contractor"), reason: this._model.get("reason"), datefrom: utils.date_ddmmyyyy(_datefrom), dateto: utils.date_ddmmyyyy(_dateto) };
+            let dataToSave = { salepoint: this._model.get("salepoint"), salepointto: this._model.get("salepointto"), contractor: this._model.get("contractor"), reason: this._model.get("reason"), datefrom: utils.date_ddmmyyyy(_datefrom), dateto: utils.date_ddmmyyyy(_dateto) };
             let toSave: string = JSON.stringify(dataToSave);
             window.localStorage.setItem(this.fieldSearch, toSave);
         }
@@ -84,6 +87,8 @@ export namespace Controller.Document.Card {
         private dateToControl: JQuery;
         private salePointControl: JQuery;
         private salePointClear: JQuery;
+        private salePointToControl: JQuery;
+        private salePointToClear: JQuery;
         private contractorControl: JQuery;
         private contractorClear: JQuery;
         private reasonControl: JQuery;
@@ -106,6 +111,11 @@ export namespace Controller.Document.Card {
             filterHtml += '       <input id="card-filter-view-salepoint" type="text" disabled class="truncate black-text doc-edit-ref" data-bind="value: salepoint.name">';
             filterHtml += '       <label for="card-filter-view-salepoint" data-bind="text:labelSalepoint"></label>'; 
             filterHtml += '       <i id="card-view-salepoint-clear" class="material-icons editor-header right doc-edit-ref-del">close</i>';
+            filterHtml += '    </div>';
+            filterHtml += '    <div id="card-filter-view-salepointto-col" class="input-field col s12 m6 l6 xl4 col-input-numpad hide">';
+            filterHtml += '       <input id="card-filter-view-salepointto" type="text" disabled class="truncate black-text doc-edit-ref" data-bind="value: salepointto.name">';
+            filterHtml += '       <label for="card-filter-view-salepointto" data-bind="text:labelSalepoint"></label>';
+            filterHtml += '       <i id="card-view-salepointto-clear" class="material-icons editor-header right doc-edit-ref-del">close</i>';
             filterHtml += '    </div>';
             filterHtml += '    <div id="card-filter-view-contractor-col" class="input-field col s12 m6 l6 xl4 col-input-numpad hide">';
             filterHtml += '       <input id="card-filter-view-contractor" type="text" disabled class="truncate black-text doc-edit-ref" data-bind="value: contractor.name">';
@@ -144,6 +154,8 @@ export namespace Controller.Document.Card {
 
             controller.salePointControl = this.filterControl.find("#card-filter-view-salepoint-col");
             controller.salePointClear = this.filterControl.find("#card-view-salepoint-clear");
+            controller.salePointToControl = this.filterControl.find("#card-filter-view-salepointto-col");
+            controller.salePointToClear = this.filterControl.find("#card-view-salepointto-clear");
             controller.contractorControl = this.filterControl.find("#card-filter-view-contractor-col");
             controller.contractorClear = this.filterControl.find("#card-view-contractor-clear");
             controller.reasonControl = this.filterControl.find("#card-filter-view-reason-col");
@@ -153,9 +165,18 @@ export namespace Controller.Document.Card {
             return controller.filterControl;
         }
 
+        public showSalePointTo(isShow: boolean) {
+            if (isShow) {
+                this.salePointToControl.removeClass("hide");
+                this.salePointToClear.removeClass("hide")
+            }
+            else {
+                if (!this.salePointToControl.hasClass("hide")) this.salePointToControl.addClass("hide");
+                if (!this.salePointToClear.hasClass("hide")) this.salePointToClear.addClass("hide");
+            }
+        }
+
         public showContractor(isShow: boolean) {
-            this.contractorControl.show();
-            this.contractorClear.show();
             if (isShow) {
                 this.contractorControl.removeClass("hide");
                 this.contractorClear.removeClass("hide")
@@ -182,6 +203,8 @@ export namespace Controller.Document.Card {
             if (this.searchButton) this.SearchButtonClick = utils.createTouchClickEvent(this.searchButton, this.searchButtonClick, this);
             if (this.salePointControl) this.SalePointButtonClick = utils.createTouchClickEvent(this.salePointControl, this.salePointButtonClick, this);
             if (this.salePointClear) this.ClearSalePointButtonClick = utils.createTouchClickEvent(this.salePointClear, this.clearSalePointButtonClick, this);
+            if (this.salePointToControl) this.SalePointToButtonClick = utils.createTouchClickEvent(this.salePointToControl, this.salePointToButtonClick, this);
+            if (this.salePointToClear) this.ClearSalePointToButtonClick = utils.createTouchClickEvent(this.salePointToClear, this.clearSalePointToButtonClick, this);
             if (this.contractorControl) this.ContractorButtonClick = utils.createTouchClickEvent(this.contractorControl, this.contractorButtonClick, this);
             if (this.contractorClear) this.ClearContractorButtonClick = utils.createTouchClickEvent(this.contractorClear, this.clearContractorButtonClick, this);
             if (this.reasonControl) this.ReasonButtonClick = utils.createTouchClickEvent(this.reasonControl, this.reasonButtonClick, this);
@@ -195,6 +218,8 @@ export namespace Controller.Document.Card {
             if (this.reasonControl) utils.destroyTouchClickEvent(this.reasonControl, this.ReasonButtonClick);
             if (this.contractorClear) utils.destroyTouchClickEvent(this.contractorClear, this.ClearContractorButtonClick);
             if (this.contractorControl) utils.destroyTouchClickEvent(this.contractorControl, this.ContractorButtonClick);
+            if (this.salePointToClear) utils.destroyTouchClickEvent(this.salePointToClear, this.ClearSalePointToButtonClick);
+            if (this.salePointToControl) utils.destroyTouchClickEvent(this.salePointToControl, this.SalePointToButtonClick);
             if (this.salePointClear) utils.destroyTouchClickEvent(this.salePointClear, this.ClearSalePointButtonClick);
             if (this.salePointControl) utils.destroyTouchClickEvent(this.salePointControl, this.SalePointButtonClick);
             if (this.searchButton) utils.destroyTouchClickEvent(this.searchButton, this.SearchButtonClick);
@@ -230,6 +255,40 @@ export namespace Controller.Document.Card {
             e.preventDefault();
             e.stopPropagation();
             this._model.set("salepoint", {});
+            M.updateTextFields();
+            return false;
+        }
+
+        public SalePointToButtonClick: { (e: any): void; };
+        private salePointToButtonClick(e) {
+            let self = this;
+            self.saveFilter();
+
+            vars._app.OpenController({
+                urlController: 'setting/card/salepoint', isModal: true, onLoadController: (controller: Interfaces.IController) => {
+                    let ctrlTypePayment: Interfaces.IControllerCard = controller as Interfaces.IControllerCard;
+                    ctrlTypePayment.CardSettings.IsAdd = false;
+                    ctrlTypePayment.CardSettings.IsAddCopy = false;
+                    ctrlTypePayment.CardSettings.IsDelete = false;
+                    ctrlTypePayment.CardSettings.IsEdit = false;
+                    ctrlTypePayment.CardSettings.IsSelect = true;
+                    ctrlTypePayment.OnSelect = $.proxy(self.selectSalePointTo, self);
+                }
+            });
+        }
+
+        private selectSalePointTo(controller: Interfaces.IControllerCard) {
+            let salepoint: Interfaces.Model.ISalepoint = controller.getSelectedRecord() as Interfaces.Model.ISalepoint;
+            if (salepoint)
+                this._model.set("salepointto", salepoint);
+            M.updateTextFields();
+        }
+
+        public ClearSalePointToButtonClick: { (e: any): void; };
+        private clearSalePointToButtonClick(e: any) {
+            e.preventDefault();
+            e.stopPropagation();
+            this._model.set("salepointto", {});
             M.updateTextFields();
             return false;
         }
@@ -382,6 +441,12 @@ export namespace Controller.Document.Card {
             return (salepoint ? salepoint.id : 0);
         }
 
+        protected get SalePointTo(): number {
+            let settings: DocumentCardFilterSettings = this.CardSettings.FilterSettings as DocumentCardFilterSettings;
+            let salepointto: Interfaces.Model.ISalepoint = (settings ? settings.Model.get("salepointto") : undefined);
+            return (salepointto ? salepointto.id : 0);
+        }
+
         protected get Contractor(): number {
             let settings: DocumentCardFilterSettings = this.CardSettings.FilterSettings as DocumentCardFilterSettings;
             let contractor: Interfaces.Model.IContractor = (settings ? settings.Model.get("contractor") : undefined);
@@ -408,7 +473,7 @@ export namespace Controller.Document.Card {
 
         private getDocs(Callback: (responseData: any) => void) {
             this.CardSettings.FilterSettings.saveFilter();
-            let params: Interfaces.Model.IDocumentParams = { id: 0, doctype: this.DocType, salepoint: this.SalePoint, contractor: this.Contractor, reason: this.Reason, datefrom: this.DateFrom, dateto: this.DateTo }
+            let params: Interfaces.Model.IDocumentParams = { id: 0, doctype: this.DocType, salepoint: this.SalePoint, salepointto: this.SalePointTo, contractor: this.Contractor, reason: this.Reason, datefrom: this.DateFrom, dateto: this.DateTo }
             this.Service.GetDocuments(params, (responseData: any) => {
                 if (Callback)
                     Callback(responseData);

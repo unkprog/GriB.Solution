@@ -190,6 +190,7 @@
         id: number;
         doctype: number;
         salepoint: number;
+        salepointto: number;
         contractor: number;
         reason: number;
         datefrom: Date;

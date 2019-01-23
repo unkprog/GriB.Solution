@@ -37,6 +37,7 @@ export namespace Controller.Document.Editor {
                 "labelDate": vars._statres("label$date"),
                 "labelProvider": vars._statres("label$provider"),
                 "labelStock": vars._statres("label$stock"),
+                "labelStockTo": vars._statres("label$stock$to"),
                 "labelReason": vars._statres("label$reason"),
                 "labelName": vars._statres("label$name"),
                 "labelQuantityShort": vars._statres("label$quantityshort"),
@@ -69,20 +70,39 @@ export namespace Controller.Document.Editor {
             return "";
         }
 
-        protected validate(): boolean {
+        protected validateStock(): boolean {
             let result: boolean = true;
             let model: Interfaces.Model.IDocumentModel = this.EditorModel;
-
-            if (!model.positions || model.positions.length < 1) {
-                M.toast({ html: vars._statres("msg$error$documentpositionsnotfilled") });
-                result = false;
+            if ((model.option & 1) === 1) {
+                if (!model.salepoint || !model.salepoint.id || model.salepoint.id === 0) {
+                    M.toast({ html: vars._statres("msg$error$nowarehousespecified") });
+                    result = false;
+                }
             }
-            
+            return result;
+        }
+
+        protected validate(): boolean {
+            let result: boolean = this.validateStock();
+            let model: Interfaces.Model.IDocumentModel = this.EditorModel;
+
+            if ((model.option & 1) === 1) {
+                if (!model.positions || !model.positions.length || model.positions.length < 1) {
+                    M.toast({ html: vars._statres("msg$error$documentpositionsnotfilled") });
+                    result = false;
+                }
+
+                if (model.comment.length > 254) {
+                    M.toast({ html: utils.stringFormat(vars._statres("msg$error$fieldexceedscharacters"), vars._statres("label$comment"), 254) });
+                    result = false;
+                }
+            }
             return result;
         }
 
         protected dateControl: JQuery;
         protected salePointControl: JQuery;
+        protected salePointToControl: JQuery;
         protected contractorControl: JQuery;
         protected reasonControl: JQuery;
         private positionRows: JQuery;
@@ -95,6 +115,7 @@ export namespace Controller.Document.Editor {
             this.dateControl.datepicker({ format: "dd.mm.yyyy" });
 
             this.salePointControl = view.find("#document-view-salepoint-row");
+            this.salePointToControl = view.find("#document-view-salepointto-row");
             this.contractorControl = view.find("#document-view-contractor-row");
             this.reasonControl = view.find("#document-view-reason-row");
             this.positionRows = view.find("#product-position-rows");
@@ -107,6 +128,16 @@ export namespace Controller.Document.Editor {
         public ViewShow(e: any): boolean {
             M.textareaAutoResize($("#document-view-comment"));
             return super.ViewShow(e);
+        }
+
+        protected showSalePointTo(isShow: boolean): void {
+            if (isShow) {
+                this.salePointToControl.removeClass("hide");
+            }
+            else {
+                if (!this.salePointToControl.hasClass("hide"))
+                    this.salePointToControl.addClass("hide");
+            }
         }
 
         protected showContractor(isShow: boolean): void {
@@ -129,19 +160,10 @@ export namespace Controller.Document.Editor {
             }
         }
 
-        protected showComment(isShow: boolean): void {
-            if (isShow) {
-                this.commentControl.removeClass("hide");
-            }
-            else {
-                if (!this.commentControl.hasClass("hide"))
-                    this.commentControl.addClass("hide");
-            }
-        }
-
         protected createEvents(): void {
             super.createEvents();
             this.SalePointButtonClick = this.createTouchClickEvent(this.salePointControl, this.salePointButtonClick);
+            this.SalePointToButtonClick = this.createTouchClickEvent(this.salePointToControl, this.salePointToButtonClick);
             this.ContractorButtonClick = this.createTouchClickEvent(this.contractorControl, this.contractorButtonClick);
             this.ReasonButtonClick = this.createTouchClickEvent(this.reasonControl, this.reasonButtonClick);
 
@@ -156,6 +178,7 @@ export namespace Controller.Document.Editor {
                 this.destroyTouchClickEvent(this.btnRemovePosition, this.removePositionButtonClick);
 
             this.destroyTouchClickEvent(this.contractorControl, this.ContractorButtonClick);
+            this.destroyTouchClickEvent(this.salePointToControl, this.SalePointToButtonClick);
             this.destroyTouchClickEvent(this.salePointControl, this.SalePointButtonClick);
             super.destroyEvents();
         }
@@ -249,6 +272,29 @@ export namespace Controller.Document.Editor {
             let contractor: Interfaces.Model.IContractor = controller.getSelectedRecord() as Interfaces.Model.IContractor;
             if (contractor)
                 this.Model.set("editModel.contractor", contractor);
+            M.updateTextFields();
+        }
+
+        public SalePointToButtonClick: { (e: any): void; };
+        private salePointToButtonClick(e) {
+            let self = this;
+            vars._app.OpenController({
+                urlController: 'setting/card/salepoint', isModal: true, onLoadController: (controller: Interfaces.IController) => {
+                    let ctrlTypePayment: Interfaces.IControllerCard = controller as Interfaces.IControllerCard;
+                    ctrlTypePayment.CardSettings.IsAdd = false;
+                    ctrlTypePayment.CardSettings.IsAddCopy = false;
+                    ctrlTypePayment.CardSettings.IsDelete = false;
+                    ctrlTypePayment.CardSettings.IsEdit = false;
+                    ctrlTypePayment.CardSettings.IsSelect = true;
+                    ctrlTypePayment.OnSelect = $.proxy(self.selectSalePointTo, self);
+                }
+            });
+        }
+
+        private selectSalePointTo(controller: Interfaces.IControllerCard) {
+            let salepoint: Interfaces.Model.ISalepoint = controller.getSelectedRecord() as Interfaces.Model.ISalepoint;
+            if (salepoint)
+                this.Model.set("editModel.salepointto", salepoint);
             M.updateTextFields();
         }
 

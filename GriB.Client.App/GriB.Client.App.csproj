@@ -443,6 +443,7 @@
     <TypeScriptCompile Include="Content\js\app\controller\document\card\consumption.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\document\card\arrival.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\document\card\card.ts" />
+    <TypeScriptCompile Include="Content\js\app\controller\document\editor\movement.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\document\editor\writeoff.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\document\editor\arrival.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\document\editor\editor.ts" />

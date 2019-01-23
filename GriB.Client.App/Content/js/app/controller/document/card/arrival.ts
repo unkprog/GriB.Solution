@@ -20,7 +20,6 @@ export namespace Controller.Document.Card {
             return result;
         }
 
-
         protected get EditIdName(): string {
             return "id_arrival";
         }

@@ -9,14 +9,15 @@ namespace GriB.Client.App.Managers.Editors
     public static class Document
     {
 
-        private static document readFromValues(object[] values) => new document() { id = (int)values[0], doctype = (int)values[1], option = (int)values[2], date = (DateTime)values[3], salepoint = new salepoint() { id = (int)values[4], name = (string)values[9] }, salepointto = new salepoint() { id = (int)values[5] }, contractor = new contractor() { id = (int)values[6], name = (string)values[10] }, typecost= (int)values[7], reason = new reason() { id = (int)values[8], name = (string)values[11] }, sum = (double)values[12] };
+        private static document readFromValues(object[] values) => new document() { id = (int)values[0], doctype = (int)values[1], option = (int)values[2], date = (DateTime)values[3], salepoint = new salepoint() { id = (int)values[4], name = (string)values[9] }, salepointto = new salepoint() { id = (int)values[5], name = (string)values[10] }, contractor = new contractor() { id = (int)values[6], name = (string)values[11] }, typecost= (int)values[7], reason = new reason() { id = (int)values[8], name = (string)values[12] }, sum = (double)values[13] };
 
         private const string cmdGet = @"Editor\Document\[get]";
         public static List<document> GetDocuments(this Query query, document_params docpar)
         {
             List<document> result = new List<document>();
             query.Execute(cmdGet, new SqlParameter[] { new SqlParameter() { ParameterName = "@id", Value = docpar.id }, new SqlParameter() { ParameterName = "@doctype", Value = docpar.doctype }
-            , new SqlParameter() { ParameterName = "@salepoint", Value = docpar.salepoint } , new SqlParameter() { ParameterName = "@contractor", Value = docpar.contractor }, new SqlParameter() { ParameterName = "@reason", Value = docpar.reason }
+            , new SqlParameter() { ParameterName = "@salepoint", Value = docpar.salepoint }, new SqlParameter() { ParameterName = "@salepointto", Value = docpar.salepointto }
+            , new SqlParameter() { ParameterName = "@contractor", Value = docpar.contractor }, new SqlParameter() { ParameterName = "@reason", Value = docpar.reason }
             , new SqlParameter() { ParameterName = "@datefrom", Value = docpar.datefrom }, new SqlParameter() { ParameterName = "@dateto", Value = docpar.dateto} }
             , (values) =>
             {

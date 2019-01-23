@@ -26,6 +26,20 @@ export namespace Controller.Document.Editor {
             this.showContractor(true);
             return result;
         }
+
+        protected validate(): boolean {
+            let result: boolean = super.validate();
+            let model: Interfaces.Model.IDocumentModel = this.EditorModel;
+
+            if ((model.option & 1) === 1) {
+                if (!model.contractor || !model.contractor.id || model.contractor.id === 0) {
+                    M.toast({ html: vars._statres("msg$error$nocontractorspecified") });
+                    result = false;
+                }
+            }
+
+            return result;
+        }
     }
 }
 

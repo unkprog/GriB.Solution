@@ -11,12 +11,14 @@ namespace GriB.Client.App.Models.Editor
             id = 0;
             doctype = 0;
             salepoint = 0;
+            salepointto = 0;
             datefrom = new DateTime(1899, 12, 30);
             dateto = new DateTime(1899, 12, 30);
         }
         public int id { get; set; }
         public int doctype { get; set; }
         public int salepoint { get; set; }
+        public int salepointto { get; set; }
         public int contractor { get; set; }
         public int reason { get; set; }
         public DateTime datefrom { get; set; }

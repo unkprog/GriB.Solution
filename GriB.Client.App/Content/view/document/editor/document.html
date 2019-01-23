@@ -26,6 +26,10 @@
                 <input id="document-view-salepoint" type="text" disabled class="truncate black-text" data-bind="value: editModel.salepoint.name" style="cursor:pointer;font-weight:bold;">
                 <label for="document-view-salepoint" data-bind="text:labelStock"></label>
             </div>
+            <div id="document-view-salepointto-row" class="input-field col s12 m12 l6 xl6 col-input-numpad hide">
+                <input id="document-view-salepointto" type="text" disabled class="truncate black-text" data-bind="value: editModel.salepointto.name" style="cursor:pointer;font-weight:bold;">
+                <label for="document-view-salepointto" data-bind="text:labelStockTo"></label>
+            </div>
             <div id="document-view-reason-row" class="input-field col s12 m12 l6 xl6 col-input-numpad hide">
                 <input id="document-view-reason" type="text" disabled class="truncate black-text" data-bind="value: editModel.reason.name" style="cursor:pointer;font-weight:bold;">
                 <label for="document-view-reason" data-bind="text:labelReason"></label>
@@ -55,7 +59,7 @@
         </table>
     </div>
 
-    <div id="document-view-comment-row" class="row row-inputs hide">
+    <div id="document-view-comment-row" class="row row-inputs">
         <div class="input-field col s12 m12 l12 xl12">
             <textarea id="document-view-comment" class="materialize-textarea" data-length="254" data-bind="value:editModel.comment"></textarea>
             <label for="document-view-comment" data-bind="text:labelComment"></label>

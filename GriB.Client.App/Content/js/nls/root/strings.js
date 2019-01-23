@@ -211,11 +211,17 @@ define({
     "label$date$to": "Дата по",
     "label$find": "Поиск",
     "label$stock": "Склад",
-    "label$stockto": "На склад",
+    "label$stock$from": "Со склада",
+    "label$stock$to": "На склад",
     "label$provider": "Поставщик",
 
     "msg$error$nowarehousespecified": "Не указан склад",
+    "msg$error$nocontractorspecified": "Не указан поставщик",
+    "msg$error$nowarehouse$fromspecified": "Не заполнено поле со склада",
+    "msg$error$nowarehouse$tospecified": "Не заполнено поле на склад",
+    "msg$error$warehousedifferentspecified": "Укажите разные склады",
     "msg$error$documentpositionsnotfilled": "Не заполнены позиции документа",
+    "msg$error$noreasonspecified": "Не указана причина",
     "msg$error$commentnotfilled": "Не заполнен комментарий",
     /////////////////////////////////////////////////////////////////////////////////////////////
     //              Терминал                                                                   //

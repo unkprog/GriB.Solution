@@ -16,7 +16,8 @@ export namespace Controller.Document.Card {
 
         protected columns(): Interfaces.ICardColumn[] {
             let result: Interfaces.ICardColumn[] = super.columns();
-            result.splice(4, 0, { Header: vars._statres("label$stockto"), Field: "salepointto.name" });
+            result[2].Header = vars._statres("label$stock$from");
+            result.splice(3, 0, { Header: vars._statres("label$stock$to"), Field: "salepointto.name" });
             return result;
         }
 
@@ -35,6 +36,16 @@ export namespace Controller.Document.Card {
 
         protected get DocType(): number {
             return 50;
+        }
+
+        public ViewInit(view: JQuery): boolean {
+            let result: boolean = super.ViewInit(view);
+            let settings: card.Controller.Document.Card.DocumentCardFilterSettings = this.CardSettings.FilterSettings as card.Controller.Document.Card.DocumentCardFilterSettings;
+            if (settings) {
+                settings.Model.set("labelSalepoint", vars._statres("label$stock$from"));
+                settings.showSalePointTo(true);
+            }
+            return result;
         }
 
     }
