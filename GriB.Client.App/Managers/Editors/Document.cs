@@ -3,13 +3,14 @@ using System.Data.SqlClient;
 using GriB.Common.Sql;
 using GriB.Client.App.Models.Editor;
 using System;
+using GriB.Client.App.Models.POSTerminal;
 
 namespace GriB.Client.App.Managers.Editors
 {
     public static class Document
     {
 
-        private static document readFromValues(object[] values) => new document() { id = (int)values[0], doctype = (int)values[1], option = (int)values[2], date = (DateTime)values[3], salepoint = new salepoint() { id = (int)values[4], name = (string)values[9] }, salepointto = new salepoint() { id = (int)values[5], name = (string)values[10] }, contractor = new contractor() { id = (int)values[6], name = (string)values[11] }, typecost= (int)values[7], reason = new reason() { id = (int)values[8], name = (string)values[12] }, sum = (double)values[13] };
+        private static document readFromValues(object[] values) => new document() { id = (int)values[0], doctype = (int)values[1], options = (int)values[2], date = (DateTime)values[3], salepoint = new salepoint() { id = (int)values[4], name = (string)values[9] }, salepointto = new salepoint() { id = (int)values[5], name = (string)values[10] }, contractor = new contractor() { id = (int)values[6], name = (string)values[11] }, typecost= (int)values[7], reason = new reason() { id = (int)values[8], name = (string)values[12] }, sum = (double)values[13] };
 
         private const string cmdGet = @"Editor\Document\[get]";
         public static List<document> GetDocuments(this Query query, document_params docpar)
@@ -41,7 +42,7 @@ namespace GriB.Client.App.Managers.Editors
         public static document SetDocument(this Query query, document document, int user)
         {
             document result = document;
-            query.Execute(cmdSet, new SqlParameter[] { new SqlParameter("@id", result.id), new SqlParameter("@u", user), new SqlParameter("@doctype", result.doctype), new SqlParameter("@option", result.option), new SqlParameter("@date", result.date), new SqlParameter("@typecost", result.typecost)
+            query.Execute(cmdSet, new SqlParameter[] { new SqlParameter("@id", result.id), new SqlParameter("@u", user), new SqlParameter("@doctype", result.doctype), new SqlParameter("@option", result.options), new SqlParameter("@date", result.date), new SqlParameter("@typecost", result.typecost)
             , new SqlParameter("@salepoint",  result.salepoint == null ? 0 : result.salepoint.id), new SqlParameter("@salepointto", result.salepointto ==null ? 0 : result.salepointto.id)
             , new SqlParameter("@contractor",  result.contractor == null? 0 : result.contractor.id), new SqlParameter("@reason", result.reason == null ? 0 : result.reason.id) }
             , (values) =>
@@ -158,26 +159,26 @@ namespace GriB.Client.App.Managers.Editors
 
 
 
-        private static saledocument readSaleFromValues(object[] values) => new saledocument() { id = (int)values[0], cd = (DateTime)values[2], cu = (int)values[3], ud = (DateTime)values[4], uu= (int)values[5]
-            , options = (int)values[6], number= (int)values[7], change=(int)values[8], discount=(double)values[9], comment=(string)values[10]
-            , salepoint = new salepoint() { id = (int)values[11], name = (string)values[12] }
-            , client = new client() { id = (int)values[13], fname = (string)values[14], mname = (string)values[15], lname = (string)values[16] }
-            , sum = (double)values[17]
-        };
+        //private static saledocument readSaleFromValues(object[] values) => new saledocument() { id = (int)values[0], cd = (DateTime)values[2], cu = (int)values[3], ud = (DateTime)values[4], uu= (int)values[5]
+        //    , options = (int)values[6], number= (int)values[7], change=(int)values[8], discount=(double)values[9], comment=(string)values[10]
+        //    , salepoint = new salepoint() { id = (int)values[11], name = (string)values[12] }
+        //    , client = new client() { id = (int)values[13], fname = (string)values[14], mname = (string)values[15], lname = (string)values[16] }
+        //    , sum = (double)values[17]
+        //};
 
-        private const string cmdGetSale = @"POSTerminal\Check\[getcard]";
-        public static List<saledocument> GetSales(this Query query, sales_params docpar)
-        {
-            List<saledocument> result = new List<saledocument>();
-            query.Execute(cmdGetSale, new SqlParameter[] { new SqlParameter() { ParameterName = "@id", Value = docpar.id }
-            , new SqlParameter() { ParameterName = "@salepoint", Value = docpar.salepoint }
-            , new SqlParameter() { ParameterName = "@datefrom", Value = docpar.datefrom }, new SqlParameter() { ParameterName = "@dateto", Value = docpar.dateto} }
-            , (values) =>
-            {
-                result.Add(readSaleFromValues(values));
-            });
+        //private const string cmdGetSale = @"POSTerminal\Check\[getcard]";
+        //public static List<saledocument> GetSales(this Query query, sales_params docpar)
+        //{
+        //    List<check> result = new List<check>();
+        //    query.Execute(cmdGetSale, new SqlParameter[] { new SqlParameter() { ParameterName = "@id", Value = docpar.id }
+        //    , new SqlParameter() { ParameterName = "@salepoint", Value = docpar.salepoint }
+        //    , new SqlParameter() { ParameterName = "@datefrom", Value = docpar.datefrom }, new SqlParameter() { ParameterName = "@dateto", Value = docpar.dateto} }
+        //    , (values) =>
+        //    {
+        //        result.Add(readSaleFromValues(values));
+        //    });
 
-            return result;
-        }
+        //    return result;
+        //}
     }
 }

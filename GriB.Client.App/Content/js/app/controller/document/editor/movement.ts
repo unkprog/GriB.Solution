@@ -30,7 +30,7 @@ export namespace Controller.Document.Editor {
         protected validateStock(): boolean {
             let result: boolean = true;
             let model: Interfaces.Model.IDocumentModel = this.EditorModel;
-            if ((model.option & 1) === 1) {
+            if ((model.options & 1) === 1) {
                 if (!model.salepoint || !model.salepoint.id || model.salepoint.id === 0) {
                     M.toast({ html: vars._statres("msg$error$nowarehouse$fromspecified") });
                     result = false;

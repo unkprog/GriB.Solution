@@ -1,5 +1,7 @@
 ﻿using GriB.Client.App.Managers.Editors;
+using GriB.Client.App.Managers.POSTerminal;
 using GriB.Client.App.Models.Editor;
+using GriB.Client.App.Models.POSTerminal;
 using GriB.Common.Models.Security;
 using System.Net;
 using System.Net.Http;
@@ -67,18 +69,51 @@ namespace GriB.Client.App.Controllers
                 return Request.CreateResponse(HttpStatusCode.OK, "Ok");
             });
         }
-        #endregion
 
-        #region Движение денег
         [HttpPost]
         [ActionName("get_sales")]
         public HttpResponseMessage GetSales(sales_params docpar)
         {
             return TryCatchResponseQuery((query) =>
             {
-                return Request.CreateResponse(HttpStatusCode.OK, Document.GetSales(query, docpar));
+                return Request.CreateResponse(HttpStatusCode.OK, Check.GetSales(query, docpar));
             });
         }
+
+        [HttpGet]
+        [ActionName("get_sale")]
+        public HttpResponseMessage GetSale(int id)
+        {
+            return TryCatchResponseQuery((query) =>
+            {
+                check result = Check.GetSale(query, id);
+                return Request.CreateResponse(HttpStatusCode.OK, new { record = result });
+            });
+        }
+        #endregion
+
+        #region Движение денег
+        [HttpPost]
+        [ActionName("get_payments")]
+        public HttpResponseMessage GetPayments(payments_params docpar)
+        {
+            return TryCatchResponseQuery((query) =>
+            {
+                return Request.CreateResponse(HttpStatusCode.OK, Payment.GetPayments.GetSales(query, docpar));
+            });
+        }
+
+        [HttpGet]
+        [ActionName("get_payment")]
+        public HttpResponseMessage GetPayment(int id)
+        {
+            return TryCatchResponseQuery((query) =>
+            {
+                payment result = Payment.GetPayment(query, id);
+                return Request.CreateResponse(HttpStatusCode.OK, new { record = result });
+            });
+        }
+
         #endregion
     }
 }

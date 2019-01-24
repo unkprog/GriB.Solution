@@ -59,26 +59,24 @@
         accesssalepoints: ISalePointAccessModel[];
     }
 
-    export interface IEmployeeModel extends IReferenceModel, IEditorModel, IEditorSalePointAccess {
+    export interface IPersonModel extends IReferenceModel, IEditorModel {
+        fname: string;
+        mname: string;
+        lname: string;
+        sex: number;
+        datebirth: Date;
+
+    }
+
+    export interface IEmployeeModel extends IPersonModel, IEditorSalePointAccess {
         phone: string;
         pass: string;
         isaccess: boolean;
         openonlogin: number;
         defaultsalepoint: number;
-        fname: string;
-        mname: string;
-        lname: string;
-        sex: number;
-        datebirth: Date;
     }
 
-    export interface IClientModel extends IReferenceModel, IEditorModel, IEditorSalePointAccess {
-        name: string;
-        fname: string;
-        mname: string;
-        lname: string;
-        sex: number;
-        datebirth: Date;
+    export interface IClientModel extends IPersonModel, IEditorSalePointAccess {
         phone: string;
     }
 
@@ -193,6 +191,11 @@
         dateto: Date;
     }
 
+    export interface IPaymentParams extends ISaleParams {
+        client: number;
+        type: number;
+    }
+
     export interface IDocumentParams extends ISaleParams {
         doctype: number;
         salepointto: number;
@@ -202,7 +205,7 @@
 
     export interface IDocumentModel extends IEditorModel {
         doctype: number;
-        option: number;
+        options: number;
         date: Date;
         salepoint: ISalepoint;
         salepointto: ISalepoint;

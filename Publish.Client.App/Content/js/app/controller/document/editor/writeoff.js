@@ -54,7 +54,7 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                     WriteOff.prototype.validate = function () {
                         var result = _super.prototype.validate.call(this);
                         var model = this.EditorModel;
-                        if ((model.option & 1) === 1) {
+                        if ((model.options & 1) === 1) {
                             if (!model.reason || !model.reason.id || model.reason.id === 0) {
                                 M.toast({ html: vars._statres("msg$error$noreasonspecified") });
                                 result = false;

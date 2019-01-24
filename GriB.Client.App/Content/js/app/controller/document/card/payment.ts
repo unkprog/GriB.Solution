@@ -4,7 +4,7 @@ import base = require('app/common/basecontroller');
 import svc = require('app/services/documentservice');
 
 export namespace Controller.Document.Card {
-    export class SaleCardFilterSettings implements Interfaces.ICardFilterSettings {
+    export class PaymentCardFilterSettings implements Interfaces.ICardFilterSettings {
         constructor(setupRows: { (): void; }, fieldSearch:string) {
             this.fieldSearch = fieldSearch;
             this.setupRows = setupRows;
@@ -39,13 +39,16 @@ export namespace Controller.Document.Card {
                 "labelDateFrom": vars._statres("label$date$from"),
                 "labelDateTo": vars._statres("label$date$to"),
                 "labelSalepoint": vars._statres("label$salePoint"),
+                "labelClient": vars._statres("label$client"),
                 "labelFind": vars._statres("label$find"),
                 "salepoint": {},
+                "client": {},
                 "datefrom": undefined,
                 "dateto": undefined
             });
             if (data) {
                 result.set("salepoint", data.salepoint);
+                result.set("client", data.salepoint);
                 result.set("datefrom", utils.date_from_ddmmyyyy(data.datefrom));
                 result.set("dateto", utils.date_from_ddmmyyyy(data.dateto));
             }
@@ -57,7 +60,7 @@ export namespace Controller.Document.Card {
             let saved: any = window.localStorage.getItem(this.fieldSearch);
             if (!saved || saved === "\"{}\"") {
                 let dateTime: string = utils.date_ddmmyyyy(this.getDefDate());
-                result = { salepoint: {}, datefrom: dateTime, dateto: dateTime };
+                result = { salepoint: {}, client: {}, datefrom: dateTime, dateto: dateTime };
             }
             else
                 result = JSON.parse(saved);
@@ -67,7 +70,7 @@ export namespace Controller.Document.Card {
         public saveFilter() {
             let _datefrom: Date = this._model.get("datefrom");
             let _dateto: Date = this._model.get("dateto");
-            let dataToSave = { salepoint: this._model.get("salepoint"), datefrom: utils.date_ddmmyyyy(_datefrom), dateto: utils.date_ddmmyyyy(_dateto) };
+            let dataToSave = { salepoint: this._model.get("salepoint"), client: this._model.get("client"), datefrom: utils.date_ddmmyyyy(_datefrom), dateto: utils.date_ddmmyyyy(_dateto) };
             let toSave: string = JSON.stringify(dataToSave);
             window.localStorage.setItem(this.fieldSearch, toSave);
         }
@@ -77,6 +80,8 @@ export namespace Controller.Document.Card {
         private dateToControl: JQuery;
         private salePointControl: JQuery;
         private salePointClear: JQuery;
+        private saleClientControl: JQuery;
+        private saleClientClear: JQuery;
         private searchButton: JQuery;
         
         public InitControls(): JQuery {
@@ -95,6 +100,11 @@ export namespace Controller.Document.Card {
             filterHtml += '       <input id="card-filter-view-salepoint" type="text" disabled class="truncate black-text doc-edit-ref" data-bind="value: salepoint.name">';
             filterHtml += '       <label for="card-filter-view-salepoint" data-bind="text:labelSalepoint"></label>'; 
             filterHtml += '       <i id="card-view-salepoint-clear" class="material-icons editor-header right doc-edit-ref-del">close</i>';
+            filterHtml += '    </div>';
+            filterHtml += '    <div id="card-filter-view-client-col" class="input-field col s12 m6 l6 xl4 col-input-numpad">';
+            filterHtml += '       <input id="card-filter-view-client" type="text" disabled class="truncate black-text doc-edit-ref" data-bind="value: client.name">';
+            filterHtml += '       <label for="card-filter-view-client" data-bind="text:labelClient"></label>';
+            filterHtml += '       <i id="card-view-client-clear" class="material-icons editor-header right doc-edit-ref-del">close</i>';
             filterHtml += '    </div>';
             filterHtml += '</div>';
             filterHtml += '<div class="row row-inputs">';
@@ -123,6 +133,8 @@ export namespace Controller.Document.Card {
 
             controller.salePointControl = this.filterControl.find("#card-filter-view-salepoint-col");
             controller.salePointClear = this.filterControl.find("#card-view-salepoint-clear");
+            controller.saleClientControl = this.filterControl.find("#card-filter-view-client-col");
+            controller.saleClientClear = this.filterControl.find("#card-view-client-clear");
             
             controller.searchButton = controller.filterControl.find("#card-filter-view-btn-find");
             return controller.filterControl;
@@ -131,6 +143,8 @@ export namespace Controller.Document.Card {
         public createEvents(): void {
             kendo.bind(this.filterControl, this._model);
             if (this.searchButton) this.SearchButtonClick = utils.createTouchClickEvent(this.searchButton, this.searchButtonClick, this);
+            if (this.saleClientControl) this.ClientButtonClick = utils.createTouchClickEvent(this.saleClientControl, this.clientButtonClick, this);
+            if (this.saleClientClear) this.ClearClientButtonClick = utils.createTouchClickEvent(this.saleClientClear, this.clearClientButtonClick, this);
             if (this.salePointControl) this.SalePointButtonClick = utils.createTouchClickEvent(this.salePointControl, this.salePointButtonClick, this);
             if (this.salePointClear) this.ClearSalePointButtonClick = utils.createTouchClickEvent(this.salePointClear, this.clearSalePointButtonClick, this);
         }
@@ -138,6 +152,8 @@ export namespace Controller.Document.Card {
         public destroyEvents(): void {
             this.saveFilter();
             this.filterControl.unbind();
+            if (this.saleClientClear) utils.destroyTouchClickEvent(this.saleClientClear, this.ClearClientButtonClick);
+            if (this.saleClientControl) utils.destroyTouchClickEvent(this.saleClientControl, this.ClearClientButtonClick);
             if (this.salePointClear) utils.destroyTouchClickEvent(this.salePointClear, this.ClearSalePointButtonClick);
             if (this.salePointControl) utils.destroyTouchClickEvent(this.salePointControl, this.SalePointButtonClick);
             if (this.searchButton) utils.destroyTouchClickEvent(this.searchButton, this.SearchButtonClick);
@@ -177,6 +193,40 @@ export namespace Controller.Document.Card {
             return false;
         }
 
+        public ClientButtonClick: { (e: any): void; };
+        private clientButtonClick(e) {
+            let self = this;
+            self.saveFilter();
+
+            vars._app.OpenController({
+                urlController: 'setting/card/client', isModal: true, onLoadController: (controller: Interfaces.IController) => {
+                    let ctrlTypePayment: Interfaces.IControllerCard = controller as Interfaces.IControllerCard;
+                    ctrlTypePayment.CardSettings.IsAdd = false;
+                    ctrlTypePayment.CardSettings.IsAddCopy = false;
+                    ctrlTypePayment.CardSettings.IsDelete = false;
+                    ctrlTypePayment.CardSettings.IsEdit = false;
+                    ctrlTypePayment.CardSettings.IsSelect = true;
+                    ctrlTypePayment.OnSelect = $.proxy(self.selectClient, self);
+                }
+            });
+        }
+
+        private selectClient(controller: Interfaces.IControllerCard) {
+            let client: Interfaces.Model.IClientModel = controller.getSelectedRecord() as Interfaces.Model.IClientModel;
+            if (client)
+                this._model.set("client", client);
+            M.updateTextFields();
+        }
+
+        public ClearClientButtonClick: { (e: any): void; };
+        private clearClientButtonClick(e: any) {
+            e.preventDefault();
+            e.stopPropagation();
+            this._model.set("client", {});
+            M.updateTextFields();
+            return false;
+        }
+
         public SearchButtonClick: { (e: any): void; };
         private searchButtonClick(e: any) {
             e.preventDefault();
@@ -191,7 +241,7 @@ export namespace Controller.Document.Card {
         }
     }
 
-    export class Sale extends base.Controller.BaseCard {
+    export class Payment extends base.Controller.BaseCard {
         constructor() {
             super();
         }
@@ -208,7 +258,7 @@ export namespace Controller.Document.Card {
         }
 
         protected createCardFilterSettings(): Interfaces.ICardFilterSettings {
-            return new SaleCardFilterSettings($.proxy(this.loadData, this), this.FilterId);
+            return new PaymentCardFilterSettings($.proxy(this.loadData, this), this.FilterId);
         }
 
         protected createCardSettings(): Interfaces.ICardSettings {
@@ -234,39 +284,45 @@ export namespace Controller.Document.Card {
         }
 
         protected get EditIdName(): string {
-            return "id_sale";
+            return "id_payment";
         }
 
         protected get EditController(): string {
-            return "document/editor/sale";
+            return "document/editor/payment";
         }
 
         protected get FilterId(): string {
-            return "SaleCardFilterSettings";
+            return "PaymentCardFilterSettings";
         }
 
         protected get SalePoint(): number {
-            let settings: SaleCardFilterSettings = this.CardSettings.FilterSettings as SaleCardFilterSettings;
+            let settings: PaymentCardFilterSettings = this.CardSettings.FilterSettings as PaymentCardFilterSettings;
             let salepoint: Interfaces.Model.ISalepoint = (settings ? settings.Model.get("salepoint") : undefined);
             return (salepoint ? salepoint.id : 0);
         }
 
+        protected get Client(): number {
+            let settings: PaymentCardFilterSettings = this.CardSettings.FilterSettings as PaymentCardFilterSettings;
+            let client: Interfaces.Model.IClientModel = (settings ? settings.Model.get("client") : undefined);
+            return (client ? client.id : 0);
+        }
+
         protected get DateFrom(): Date {
-            let settings: SaleCardFilterSettings = this.CardSettings.FilterSettings as SaleCardFilterSettings;
+            let settings: PaymentCardFilterSettings = this.CardSettings.FilterSettings as PaymentCardFilterSettings;
             let date: Date = (settings ? settings.Model.get("datefrom") : undefined);
             return (date ? date : new Date(1899, 11, 30, 0, 0, 0, 0));
         }
 
         protected get DateTo(): Date {
-            let settings: SaleCardFilterSettings = this.CardSettings.FilterSettings as SaleCardFilterSettings;
+            let settings: PaymentCardFilterSettings = this.CardSettings.FilterSettings as PaymentCardFilterSettings;
             let date: Date = (settings ? settings.Model.get("dateto") : undefined);
             return (date ? new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1) : new Date(1899, 11, 30, 0, 0, 0, 0));
         }
 
         private getDocs(Callback: (responseData: any) => void) {
             this.CardSettings.FilterSettings.saveFilter();
-            let params: Interfaces.Model.ISaleParams = { id: 0, salepoint: this.SalePoint, datefrom: this.DateFrom, dateto: this.DateTo }
-            this.Service.GetSales(params, (responseData: any) => {
+            let params: Interfaces.Model.IPaymentParams = { id: 0, salepoint: this.SalePoint, client: this.Client, type: 0, datefrom: this.DateFrom, dateto: this.DateTo }
+            this.Service.GetPayments(params, (responseData: any) => {
                 if (Callback)
                     Callback(responseData);
             });
@@ -275,4 +331,4 @@ export namespace Controller.Document.Card {
     }
 }
 
-vars.registerController("document/card/sale", function (module: any): Interfaces.IController { return new module.Controller.Document.Card.Sale(); });
+vars.registerController("document/card/payment", function (module: any): Interfaces.IController { return new module.Controller.Document.Card.Payment(); });

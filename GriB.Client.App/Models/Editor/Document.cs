@@ -19,9 +19,20 @@ namespace GriB.Client.App.Models.Editor
         public DateTime dateto { get; set; }
     }
 
+    public class payments_params
+    {
+        public payments_params() : base()
+        {
+            client = 0;
+            type = 0;
+        }
+        public int client { get; set; }
+        public int type { get; set; }
+    }
+
     public class document_params : sales_params
     {
-        public document_params()
+        public document_params() : base()
         {
             doctype = 0;
             salepointto = 0;
@@ -35,10 +46,11 @@ namespace GriB.Client.App.Models.Editor
     public class document : model_sys
     {
         public const int Arrival = 10;
-        public const int Consumption = 20;
-        public const int Return = 30;
         public const int Writeoff = 40;
         public const int Movement = 50;
+
+        public const int Consumption = 20;
+        public const int Return = 30;
         public const int Production = 60;
 
         public document()
@@ -49,7 +61,7 @@ namespace GriB.Client.App.Models.Editor
         }
 
         public int doctype { get; set; }
-        public int option { get; set; }
+        public int options { get; set; }
         public DateTime date { get; set; }
         public salepoint salepoint { get; set; }
         public salepoint salepointto { get; set; }

@@ -20,54 +20,48 @@ define(["require", "exports", "app/common/variables", "app/controller/document/e
         (function (Document) {
             var Editor;
             (function (Editor) {
-                var Arrival = /** @class */ (function (_super) {
-                    __extends(Arrival, _super);
-                    function Arrival() {
-                        return _super.call(this) || this;
+                var Sale = /** @class */ (function (_super) {
+                    __extends(Sale, _super);
+                    function Sale() {
+                        var _this = _super.call(this) || this;
+                        if (_this.EditorSettings.ButtonSetings)
+                            _this.EditorSettings.ButtonSetings.IsSave = false;
+                        return _this;
                     }
-                    Object.defineProperty(Arrival.prototype, "Header", {
+                    Object.defineProperty(Sale.prototype, "Header", {
                         get: function () {
-                            return vars._statres("label$arrival");
+                            return vars._statres("label$sale");
                         },
                         enumerable: true,
                         configurable: true
                     });
-                    Object.defineProperty(Arrival.prototype, "EditIdName", {
+                    Object.defineProperty(Sale.prototype, "EditIdName", {
                         get: function () {
-                            return "id_arrival";
+                            return "id_sale";
                         },
                         enumerable: true,
                         configurable: true
                     });
-                    Object.defineProperty(Arrival.prototype, "DocType", {
+                    Object.defineProperty(Sale.prototype, "DocFormatDate", {
                         get: function () {
-                            return 10;
+                            return "dd.mm.yyyy ";
                         },
                         enumerable: true,
                         configurable: true
                     });
-                    Arrival.prototype.ViewInit = function (view) {
+                    Sale.prototype.createEditorSettings = function () {
+                        return { EditIdName: this.EditIdName, Load: $.proxy(this.Service.GetSale, this.Service), Save: $.proxy(this.Service.SetDocument, this.Service) };
+                    };
+                    Sale.prototype.ViewInit = function (view) {
                         var result = _super.prototype.ViewInit.call(this, view);
-                        this.showContractor(true);
                         return result;
                     };
-                    Arrival.prototype.validate = function () {
-                        var result = _super.prototype.validate.call(this);
-                        var model = this.EditorModel;
-                        if ((model.options & 1) === 1) {
-                            if (!model.contractor || !model.contractor.id || model.contractor.id === 0) {
-                                M.toast({ html: vars._statres("msg$error$nocontractorspecified") });
-                                result = false;
-                            }
-                        }
-                        return result;
-                    };
-                    return Arrival;
+                    return Sale;
                 }(edit.Controller.Document.Editor.Editor));
-                Editor.Arrival = Arrival;
+                Editor.Sale = Sale;
             })(Editor = Document.Editor || (Document.Editor = {}));
         })(Document = Controller.Document || (Controller.Document = {}));
     })(Controller = exports.Controller || (exports.Controller = {}));
-    vars.registerController("document/editor/arrival", function (module) { return new module.Controller.Document.Editor.Arrival(); });
+    vars.registerController("document/editor/sale", function (module) { return new module.Controller.Document.Editor.Sale(); });
 });
-//# sourceMappingURL=arrival.js.map
+//# sourceMappingURL=sale.js.map

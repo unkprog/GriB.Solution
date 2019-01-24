@@ -3,6 +3,7 @@ using System.Data.SqlClient;
 using GriB.Common.Sql;
 using GriB.Client.App.Models.POSTerminal;
 using System.Collections.Generic;
+using GriB.Client.App.Models.Editor;
 
 namespace GriB.Client.App.Managers.POSTerminal
 {
@@ -11,8 +12,8 @@ namespace GriB.Client.App.Managers.POSTerminal
         private static check readFromValues(object[] values)
         {
             int c = 0;
-            return new check() { id = (int)values[c++],  d = (int)values[c++], cd = (DateTime)values[c++], cu = (int)values[c++], ud = (DateTime)values[c++], uu = (int)values[c++], salepoint = (int)values[c++]
-                               , options = (int)values[c++], client = (int)values[c++], number = (int)values[c++], change = (int)values[c++]
+            return new check() { id = (int)values[c++],  d = (int)values[c++], cd = (DateTime)values[c++], cu = (int)values[c++], ud = (DateTime)values[c++], uu = (int)values[c++], salepoint = new salepoint() { id = (int)values[c++] }
+                               , options = (int)values[c++], client = new client() { id = (int)values[c++] }, number = (int)values[c++], change = new change() { id = (int)values[c++] }
                                , discount = (double)values[c++], comment = (string)values[c++] };
         }
 
@@ -26,6 +27,37 @@ namespace GriB.Client.App.Managers.POSTerminal
                 result = readFromValues(values);
             });
 
+            return result;
+        }
+
+        private static checkcard readSaleFromValues(object[] values) => new checkcard() { id = (int)values[0], cd = (DateTime)values[2], cu = (int)values[3], ud = (DateTime)values[4], uu= (int)values[5]
+            , options = (int)values[6], number= (int)values[7], change= new change() { id = (int)values[8] }, discount=(double)values[9], comment=(string)values[10]
+            , salepoint = new salepoint() { id = (int)values[11], name = (string)values[12] }
+            , client = new client() { id = (int)values[13], fname = (string)values[14], mname = (string)values[15], lname = (string)values[16] }
+            , sum = (double)values[17]
+        };
+
+        private const string cmdGetSale = @"POSTerminal\Check\[getcard]";
+        public static List<checkcard> GetSales(this Query query, sales_params docpar)
+        {
+            List<checkcard> result = new List<checkcard>();
+            query.Execute(cmdGetSale, new SqlParameter[] { new SqlParameter() { ParameterName = "@id", Value = docpar.id }
+            , new SqlParameter() { ParameterName = "@salepoint", Value = docpar.salepoint }
+            , new SqlParameter() { ParameterName = "@datefrom", Value = docpar.datefrom }, new SqlParameter() { ParameterName = "@dateto", Value = docpar.dateto} }
+            , (values) =>
+            {
+                result.Add(readSaleFromValues(values));
+            });
+
+            return result;
+        }
+
+        public static checkcard GetSale(this Query query, int id)
+        {
+            sales_params docpar = new sales_params() { id = id };
+            List<checkcard> sales = GetSales(query, docpar);
+            checkcard result = (sales == null || sales.Count == 0 ? new checkcard() { id = id } : sales[0]);
+            GetPositions(query, result);
             return result;
         }
 
@@ -84,6 +116,21 @@ namespace GriB.Client.App.Managers.POSTerminal
             return result;
         }
 
+        //private const string cmdGetPositions = @"POSTerminal\Check\Position\[get]";
+        //public static check GetPositions(this Query query, check check)
+        //{
+        //    check result = check;
+        //    result.positions = new List<check_position>();
+        //    query.Execute(cmdGetPositions, new SqlParameter[] { new SqlParameter() { ParameterName = "@id", Value = result.id } }
+        //    , (values) =>
+        //    {
+        //        int c = 1;
+        //        result.positions.Add(new check_position() { index = (int)values[c++], product = new Models.Editor.product() { id = (int)values[c++], name = (string)values[c++] }, quantity = (double)values[c++], price = (double)values[c++] });
+        //    });
+
+        //    return result;
+        //}
+
         private const string cmdAddPosition = @"POSTerminal\Check\Position\[add]";
         public static check_position AddPosition(this Query query, check_position position)
         {
@@ -117,9 +164,9 @@ namespace GriB.Client.App.Managers.POSTerminal
         public static check Close(this Query query, check check, int user)
         {
             check result = check;
-            query.Execute(cmdClose, new SqlParameter[] { new SqlParameter() { ParameterName = "@id", Value = result.id }, new SqlParameter("@u", user), new SqlParameter() { ParameterName = "@salepoint", Value = result.salepoint }
-            , new SqlParameter() { ParameterName = "@options", Value = result.options }, new SqlParameter() { ParameterName = "@client", Value = result.client }, new SqlParameter() { ParameterName = "@discount", Value = result.discount }
-            , new SqlParameter() { ParameterName = "@number", Value = result.number }, new SqlParameter() { ParameterName = "@change", Value = result.change }, new SqlParameter() { ParameterName = "@comment", Value = result.comment } }
+            query.Execute(cmdClose, new SqlParameter[] { new SqlParameter() { ParameterName = "@id", Value = result.id }, new SqlParameter("@u", user), new SqlParameter() { ParameterName = "@salepoint", Value = (result.salepoint == null ? 0 : result.salepoint.id) }
+            , new SqlParameter() { ParameterName = "@options", Value = result.options }, new SqlParameter() { ParameterName = "@client", Value = (result.client == null ? 0 : result.client.id)  }, new SqlParameter() { ParameterName = "@discount", Value = result.discount }
+            , new SqlParameter() { ParameterName = "@number", Value = result.number }, new SqlParameter() { ParameterName = "@change", Value = (result.change == null ? 0 : result.change.id) }, new SqlParameter() { ParameterName = "@comment", Value = result.comment } }
             , (values) => { });
 
             return result;

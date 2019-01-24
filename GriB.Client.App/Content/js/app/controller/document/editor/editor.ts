@@ -73,7 +73,7 @@ export namespace Controller.Document.Editor {
         protected validateStock(): boolean {
             let result: boolean = true;
             let model: Interfaces.Model.IDocumentModel = this.EditorModel;
-            if ((model.option & 1) === 1) {
+            if ((model.options & 1) === 1) {
                 if (!model.salepoint || !model.salepoint.id || model.salepoint.id === 0) {
                     M.toast({ html: vars._statres("msg$error$nowarehousespecified") });
                     result = false;
@@ -86,7 +86,7 @@ export namespace Controller.Document.Editor {
             let result: boolean = this.validateStock();
             let model: Interfaces.Model.IDocumentModel = this.EditorModel;
 
-            if ((model.option & 1) === 1) {
+            if ((model.options & 1) === 1) {
                 if (!model.positions || !model.positions.length || model.positions.length < 1) {
                     M.toast({ html: vars._statres("msg$error$documentpositionsnotfilled") });
                     result = false;
@@ -108,11 +108,15 @@ export namespace Controller.Document.Editor {
         private positionRows: JQuery;
         private commentControl: JQuery;
 
+        protected get DocFormatDate(): string {
+            return "dd.mm.yyyy";
+        }
+
         private btnAddPosition: JQuery;
         private btnRemovePosition: JQuery;
         public ViewInit(view: JQuery): boolean {
             this.dateControl = view.find("#document-view-date");
-            this.dateControl.datepicker({ format: "dd.mm.yyyy" });
+            this.dateControl.datepicker({ format: this.DocFormatDate });
 
             this.salePointControl = view.find("#document-view-salepoint-row");
             this.salePointToControl = view.find("#document-view-salepointto-row");
@@ -122,6 +126,12 @@ export namespace Controller.Document.Editor {
             this.commentControl = view.find("#document-view-comment-row");
 
             view.find("#document-view-comment").characterCounter();
+
+            if (this.EditorSettings.ButtonSetings && this.EditorSettings.ButtonSetings.IsSave === false) {
+                this.dateControl.attr('disabled', 'disabled'); 
+                view.find("#document-view-comment").attr('disabled', 'disabled'); 
+                view.find("#document-view-conduct").attr('disabled', 'disabled'); 
+            }
             return super.ViewInit(view);
         }
 
@@ -162,11 +172,12 @@ export namespace Controller.Document.Editor {
 
         protected createEvents(): void {
             super.createEvents();
-            this.SalePointButtonClick = this.createTouchClickEvent(this.salePointControl, this.salePointButtonClick);
-            this.SalePointToButtonClick = this.createTouchClickEvent(this.salePointToControl, this.salePointToButtonClick);
-            this.ContractorButtonClick = this.createTouchClickEvent(this.contractorControl, this.contractorButtonClick);
-            this.ReasonButtonClick = this.createTouchClickEvent(this.reasonControl, this.reasonButtonClick);
-
+            if (this.EditorSettings.ButtonSetings && this.EditorSettings.ButtonSetings.IsSave === true) {
+                this.SalePointButtonClick = this.createTouchClickEvent(this.salePointControl, this.salePointButtonClick);
+                this.SalePointToButtonClick = this.createTouchClickEvent(this.salePointToControl, this.salePointToButtonClick);
+                this.ContractorButtonClick = this.createTouchClickEvent(this.contractorControl, this.contractorButtonClick);
+                this.ReasonButtonClick = this.createTouchClickEvent(this.reasonControl, this.reasonButtonClick);
+            }
             this.Model.bind("change", $.proxy(this.changeModel, this));
         }
 
@@ -176,10 +187,12 @@ export namespace Controller.Document.Editor {
                 this.destroyTouchClickEvent(this.btnAddPosition, this.addPositionButtonClick);
             if (this.btnRemovePosition)
                 this.destroyTouchClickEvent(this.btnRemovePosition, this.removePositionButtonClick);
-
-            this.destroyTouchClickEvent(this.contractorControl, this.ContractorButtonClick);
-            this.destroyTouchClickEvent(this.salePointToControl, this.SalePointToButtonClick);
-            this.destroyTouchClickEvent(this.salePointControl, this.SalePointButtonClick);
+            if (this.EditorSettings.ButtonSetings && this.EditorSettings.ButtonSetings.IsSave === true) {
+                this.destroyTouchClickEvent(this.reasonControl, this.reasonButtonClick);
+                this.destroyTouchClickEvent(this.contractorControl, this.ContractorButtonClick);
+                this.destroyTouchClickEvent(this.salePointToControl, this.SalePointToButtonClick);
+                this.destroyTouchClickEvent(this.salePointControl, this.SalePointButtonClick);
+            }
             super.destroyEvents();
         }
 
@@ -193,11 +206,11 @@ export namespace Controller.Document.Editor {
             let dateTime: Date = new Date(responseData.record.date);
             this.dateControl.val(utils.date_ddmmyyyy(dateTime));
             M.Datepicker.getInstance(this.dateControl[0]).setDate(dateTime, true);
-            this.Model.set("documentConduct", ((responseData.record.option & 1) === 1));
+            this.Model.set("documentConduct", ((responseData.record.options & 1) === 1));
             this.setupPositions();
         }
 
-
+        // TODO: ПРИКРУТИТЬ ИНФОРМАЦИЮ о СКИДКЕ!!!
         private setupPositions() {
 
             let self = this;
@@ -215,18 +228,30 @@ export namespace Controller.Document.Editor {
 
                     html += '<tr data-index="' + i + '">';
                     html += '<td class="product-col-name" data-bind="text:editModel.positions[' + i + '].product.name"></td>';
-                    html += '<td class="product-col-quantity"><input class="table-cell-input" type="number" data-bind="value:editModel.positions[' + i + '].quantity"/></td>';
+                    if (this.EditorSettings.ButtonSetings && this.EditorSettings.ButtonSetings.IsSave === true)
+                        html += '<td class="product-col-quantity"><input class="table-cell-input" type="number" data-bind="value:editModel.positions[' + i + '].quantity"/></td>';
+                    else
+                        html += '<td class="product-col-quantity" data-bind="text:editModel.positions[' + i + '].quantity"></td>';
+
                     html += '<td class="product-col-unit" data-bind="text:editModel.positions[' + i + '].product.unit_name"></td>';
-                    html += '<td class="product-col-price"><input class="table-cell-input" type="number" data-bind="value:editModel.positions[' + i + '].price"/></td>';
-                    html += '<td class="product-col-sum"><input class="table-cell-input" type="number" data-bind="value:editModel.positions[' + i + '].sum"/></td>';
-                    html += '<td class="product-col-btn"><a class="product-col-button-delete"><i class="material-icons editor-header">close</i></a></td>';
+                    if (this.EditorSettings.ButtonSetings && this.EditorSettings.ButtonSetings.IsSave === true) {
+                        html += '<td class="product-col-price"><input class="table-cell-input" type="number" data-bind="value:editModel.positions[' + i + '].price"/></td>';
+                        html += '<td class="product-col-sum"><input class="table-cell-input" type="number" data-bind="value:editModel.positions[' + i + '].sum"/></td>';
+                        html += '<td class="product-col-btn"><a class="product-col-button-delete"><i class="material-icons editor-header">close</i></a></td>';
+                    } else {
+                        html += '<td class="product-col-price" data-bind="text:editModel.positions[' + i + '].price"></td>';
+                        html += '<td class="product-col-sum" data-bind="text:editModel.positions[' + i + '].sum"></td>';
+                    }
                     html += '</tr>';
                 }
             }
 
-            html += '<tr>';
-            html += '<td><a id="btn-add-position" class="btn btncol"><span data-bind="text:labelAdd"></span></a></td>';
-            html += '</tr>';
+            if (this.EditorSettings.ButtonSetings && this.EditorSettings.ButtonSetings.IsSave === true) {
+                html += '<tr>';
+                html += '<td><a id="btn-add-position" class="btn btncol"><span data-bind="text:labelAdd"></span></a></td>';
+                html += '</tr>';
+            }
+
             this.positionRows.html(html);
 
             self.Model.set("editModel", model);

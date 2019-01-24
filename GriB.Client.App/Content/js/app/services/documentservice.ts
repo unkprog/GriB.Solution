@@ -36,6 +36,18 @@ export module Services {
             this.PostApi({ Action: "/get_sales", RequestData: JSON.stringify(model), Callback: Callback });
         }
 
+        public GetSale(id: number, Callback: (responseData: any) => void) {
+            this.GetApi({ Action: "/get_sale", RequestData: { id: id }, Callback: Callback });
+        }
+
+        public GetPayments(model: Interfaces.Model.ISaleParams, Callback: (responseData: any) => void) {
+            this.PostApi({ Action: "/get_payments", RequestData: JSON.stringify(model), Callback: Callback });
+        }
+
+        public GetPayment(id: number, Callback: (responseData: any) => void) {
+            this.GetApi({ Action: "/get_payment", RequestData: { id: id }, Callback: Callback });
+        }
+
         //// Сотрудники
         //public GetEmployees(Callback: (responseData: any) => void) {
         //    this.GetApi({ Action: "/get_document_newposition", Callback: Callback });

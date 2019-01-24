@@ -289,6 +289,7 @@
     <Content Include="Scripts\Query\POSTerminal\Payment\[set].sql" />
     <Content Include="Scripts\Query\POSTerminal\[get].sql" />
     <Content Include="Scripts\Sql\01.001.[t_orgtype].sql" />
+    <Content Include="Scripts\Sql\07.001.[t_change].sql" />
     <Content Include="Scripts\Sql\08.001.[t_client].sql" />
     <Content Include="Scripts\Sql\03.001.[t_employee].sql" />
     <Content Include="Scripts\Sql\12.001.[t_reason].sql" />
@@ -296,7 +297,7 @@
     <Content Include="Scripts\Sql\10.001.[t_discount].sql" />
     <Content Include="Scripts\Sql\12.005.[t_document].sql" />
     <Content Include="Scripts\Sql\09.001.[t_payment].sql" />
-    <Content Include="Scripts\Sql\07.001.[t_check].sql" />
+    <Content Include="Scripts\Sql\07.002.[t_check].sql" />
     <Content Include="Scripts\Sql\06.004.[t_product_composition].sql" />
     <Content Include="Scripts\Sql\06.003.[t_product_price].sql" />
     <Content Include="Scripts\Sql\06.002.[t_product_account].sql" />
@@ -321,6 +322,7 @@
     <Compile Include="Handlers\AuthorizationHeaderHandler.cs" />
     <Compile Include="Managers\AppSettings.cs" />
     <Compile Include="Managers\AuthUser.cs" />
+    <Compile Include="Managers\Editors\Change.cs" />
     <Compile Include="Managers\Editors\Reason.cs" />
     <Compile Include="Managers\Editors\Document.cs" />
     <Compile Include="Managers\Editors\Client.cs" />
@@ -335,6 +337,7 @@
     <Compile Include="Managers\POSTerminal\Payment.cs" />
     <Compile Include="Managers\POSTerminal\Terminal.cs" />
     <Compile Include="Models\Editor\Category.cs" />
+    <Compile Include="Models\Editor\Change.cs" />
     <Compile Include="Models\Editor\Client.cs" />
     <Compile Include="Models\Editor\Reason.cs" />
     <Compile Include="Models\Editor\Contractor.cs" />
@@ -437,6 +440,7 @@
     <TypeScriptCompile Include="Content\js\app\common\basecontroller.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\about\index.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\dialog\modaldialog.ts" />
+    <TypeScriptCompile Include="Content\js\app\controller\document\card\payment.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\document\card\sale.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\document\card\production.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\document\card\movement.ts" />
@@ -446,6 +450,7 @@
     <TypeScriptCompile Include="Content\js\app\controller\document\card\arrival.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\document\card\card.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\document\editor\movement.ts" />
+    <TypeScriptCompile Include="Content\js\app\controller\document\editor\sale.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\document\editor\writeoff.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\document\editor\arrival.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\document\editor\editor.ts" />

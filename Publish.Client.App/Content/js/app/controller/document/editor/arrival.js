@@ -54,7 +54,7 @@ define(["require", "exports", "app/common/variables", "app/controller/document/e
                     Arrival.prototype.validate = function () {
                         var result = _super.prototype.validate.call(this);
                         var model = this.EditorModel;
-                        if ((model.option & 1) === 1) {
+                        if ((model.options & 1) === 1) {
                             if (!model.contractor || !model.contractor.id || model.contractor.id === 0) {
                                 M.toast({ html: vars._statres("msg$error$nocontractorspecified") });
                                 result = false;

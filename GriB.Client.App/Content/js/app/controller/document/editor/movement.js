@@ -56,7 +56,7 @@ define(["require", "exports", "app/common/variables", "app/controller/document/e
                     Movement.prototype.validateStock = function () {
                         var result = true;
                         var model = this.EditorModel;
-                        if ((model.option & 1) === 1) {
+                        if ((model.options & 1) === 1) {
                             if (!model.salepoint || !model.salepoint.id || model.salepoint.id === 0) {
                                 M.toast({ html: vars._statres("msg$error$nowarehouse$fromspecified") });
                                 result = false;

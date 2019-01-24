@@ -31,7 +31,7 @@ export namespace Controller.Document.Editor {
             let result: boolean = super.validate();
             let model: Interfaces.Model.IDocumentModel = this.EditorModel;
 
-            if ((model.option & 1) === 1) {
+            if ((model.options & 1) === 1) {
                 if (!model.contractor || !model.contractor.id || model.contractor.id === 0) {
                     M.toast({ html: vars._statres("msg$error$nocontractorspecified") });
                     result = false;
