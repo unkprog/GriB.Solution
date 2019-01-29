@@ -170,6 +170,7 @@
     <Content Include="Content\js\nls\strings.js" />
     <Content Include="Content\view\about\index.html" />
     <Content Include="Content\view\document\card\card.html" />
+    <Content Include="Content\view\document\editor\payment.html" />
     <Content Include="Content\view\document\editor\document.html" />
     <Content Include="Content\view\document\index.html" />
     <Content Include="Content\view\index - Копировать.html" />
@@ -284,6 +285,8 @@
     <Content Include="Scripts\Query\POSTerminal\Check\[setclient].sql" />
     <Content Include="Scripts\Query\POSTerminal\Check\[new_all].sql" />
     <Content Include="Scripts\Query\POSTerminal\Check\[new].sql" />
+    <Content Include="Scripts\Query\POSTerminal\Payment\Comment\[get].sql" />
+    <Content Include="Scripts\Query\POSTerminal\Payment\Comment\[set].sql" />
     <Content Include="Scripts\Query\POSTerminal\Payment\[del].sql" />
     <Content Include="Scripts\Query\POSTerminal\Payment\[get].sql" />
     <Content Include="Scripts\Query\POSTerminal\Payment\[set].sql" />
@@ -449,6 +452,7 @@
     <TypeScriptCompile Include="Content\js\app\controller\document\card\consumption.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\document\card\arrival.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\document\card\card.ts" />
+    <TypeScriptCompile Include="Content\js\app\controller\document\editor\payment.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\document\editor\movement.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\document\editor\sale.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\document\editor\writeoff.ts" />

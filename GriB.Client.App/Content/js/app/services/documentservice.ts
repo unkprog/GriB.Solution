@@ -40,12 +40,16 @@ export module Services {
             this.GetApi({ Action: "/get_sale", RequestData: { id: id }, Callback: Callback });
         }
 
-        public GetPayments(model: Interfaces.Model.ISaleParams, Callback: (responseData: any) => void) {
+        public GetPayments(model: Interfaces.Model.IPaymentParams, Callback: (responseData: any) => void) {
             this.PostApi({ Action: "/get_payments", RequestData: JSON.stringify(model), Callback: Callback });
         }
 
         public GetPayment(id: number, Callback: (responseData: any) => void) {
             this.GetApi({ Action: "/get_payment", RequestData: { id: id }, Callback: Callback });
+        }
+
+        public SetPayment(model: Interfaces.Model.IPaymentModel, Callback: (responseData: any) => void) {
+            this.PostApi({ Action: "/post_payment", RequestData: JSON.stringify(model), Callback: Callback });
         }
 
         //// Сотрудники

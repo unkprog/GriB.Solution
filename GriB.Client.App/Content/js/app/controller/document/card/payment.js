@@ -274,7 +274,8 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                             { Header: "", HeaderStyle: "doc-col-conduct", Field: "options", FieldStyle: "doc-col-conduct", FieldTemplate: '#if ((options & 1) === 1) {#<label><input type="checkbox" checked="checked" disabled="disabled"/><span></span></label>#}#' },
                             { Header: vars._statres("label$date"), Field: "cd", FieldTemplate: "#=date_ddmmyyyy_withtime(new Date(cd))#" },
                             { Header: vars._statres("label$salePoint"), Field: "salepoint.name" },
-                            { Header: vars._statres("label$sum"), HeaderStyle: "product-col-sum-auto", Field: "sum", FieldTemplate: '#=numberToString(sum,2)#', FieldStyle: "product-col-sum-auto" },
+                            { Header: vars._statres("label$client"), Field: "client.name" },
+                            { Header: vars._statres("label$sum"), HeaderStyle: "product-col-sum-auto-rigth", Field: "sum", FieldTemplate: '#=numberToString(sum,2)#', FieldStyle: "product-col-sum-auto-rigth" },
                         ];
                     };
                     Object.defineProperty(Payment.prototype, "EditIdName", {

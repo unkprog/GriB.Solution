@@ -99,7 +99,7 @@ namespace GriB.Client.App.Controllers
         {
             return TryCatchResponseQuery((query) =>
             {
-                return Request.CreateResponse(HttpStatusCode.OK, Payment.GetPayments.GetSales(query, docpar));
+                return Request.CreateResponse(HttpStatusCode.OK, Payment.GetPayments(query, docpar));
             });
         }
 
@@ -111,6 +111,18 @@ namespace GriB.Client.App.Controllers
             {
                 payment result = Payment.GetPayment(query, id);
                 return Request.CreateResponse(HttpStatusCode.OK, new { record = result });
+            });
+        }
+
+        [HttpPost]
+        [ActionName("post_payment")]
+        public HttpResponseMessage PostPayment(payment payment)
+        {
+            return TryCatchResponseQuery((query) =>
+            {
+                Principal principal = (Principal)HttpContext.Current.User;
+                Payment.SetPayment(query, payment, principal.Data.User.id);
+                return Request.CreateResponse(HttpStatusCode.OK, "Ok");
             });
         }
 

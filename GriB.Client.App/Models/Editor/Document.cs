@@ -4,9 +4,9 @@ using GriB.Common.Models.pos;
 
 namespace GriB.Client.App.Models.Editor
 {
-    public class sales_params
+    public class base_params
     {
-        public sales_params()
+        public base_params()
         {
             id = 0;
             salepoint = 0;
@@ -19,7 +19,11 @@ namespace GriB.Client.App.Models.Editor
         public DateTime dateto { get; set; }
     }
 
-    public class payments_params
+    public class sales_params : base_params
+    {
+    }
+
+    public class payments_params : base_params
     {
         public payments_params() : base()
         {
@@ -30,7 +34,7 @@ namespace GriB.Client.App.Models.Editor
         public int type { get; set; }
     }
 
-    public class document_params : sales_params
+    public class document_params : base_params
     {
         public document_params() : base()
         {

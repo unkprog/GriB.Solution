@@ -150,13 +150,16 @@ namespace GriB.Client.App.Controllers
             return TryCatchResponseQuery((query) =>
             {
                 Principal principal = (Principal)HttpContext.Current.User;
-                payment payment = new payment() { ptype = closeparams.paymentType, option = closeparams.paymentOption, sum = closeparams.paymentSum, comment = closeparams.comment };
+                payment payment = new payment() { ptype = closeparams.paymentType, options = closeparams.paymentOption, sum = closeparams.paymentSum, comment = closeparams.comment };
                 payment.check = Check.GetCheck(query, closeparams.check);
                 payment.check.client = new client() { id = closeparams.client };
                 payment.check.options = ((payment.check.options & check.ciClose) == check.ciClose ? payment.check.options : payment.check.options + check.ciClose);
                 payment.check = Check.Close(query, payment.check, principal.Data.User.id);
-                payment.client = new Models.Editor.client() { id = closeparams.client };
+                payment.client = new client() { id = closeparams.client };
+
                 payment = Payment.SetPayment(query, payment, principal.Data.User.id);
+                Payment.SetComment(query, payment);
+
                 return Request.CreateResponse(HttpStatusCode.OK, "Ok");
             });
         }

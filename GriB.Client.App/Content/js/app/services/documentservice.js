@@ -55,6 +55,9 @@ define(["require", "exports", "app/common/baseservice"], function (require, expo
             DocumentService.prototype.GetPayment = function (id, Callback) {
                 this.GetApi({ Action: "/get_payment", RequestData: { id: id }, Callback: Callback });
             };
+            DocumentService.prototype.SetPayment = function (model, Callback) {
+                this.PostApi({ Action: "/post_payment", RequestData: JSON.stringify(model), Callback: Callback });
+            };
             return DocumentService;
         }(base.Services.BaseService));
         Services.DocumentService = DocumentService;

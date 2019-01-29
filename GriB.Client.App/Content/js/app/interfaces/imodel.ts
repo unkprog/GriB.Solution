@@ -125,7 +125,7 @@
     export interface IContractor extends IReferenceModel, IEditorModel {
     }
 
-    
+
     export interface IReason extends IReferenceModel, IEditorModel {
     }
 
@@ -223,5 +223,16 @@
         quantity: number;
         price: number;
         sum: number;
+    }
+
+    export interface IPayment extends IEditorModel {
+        cd: Date;
+        check: IPOSCheck;
+        ptype: number;
+        sum: number;
+        options: number;
+        client: IClientModel
+        salepoint: ISalepoint;
+        comment: string;
     }
 }
