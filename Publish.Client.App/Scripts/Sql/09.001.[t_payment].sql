@@ -11,16 +11,26 @@ begin
 	[cu]       [int]           not null default (0),
 	[ud]       [datetime]      not null default (getdate()),
 	[uu]       [int]           not null default (0),
+	[salepoint][int]           not null default (0),
 	[check]    [int]           not null default (0),
 	[type]     [int]           not null default (0),
 	[sum]      [float]         not null default (0),
 	[option]   [int]           not null default (0),
 	[client]   [int]           not null default (0),
-	[comment]  [nvarchar](228) not null default (N''),
     primary key clustered ([id])
   )
 end
 
 go
 
+go
 
+if not exists (select * from [sys].[objects] where [object_id] = object_id(N'[t_payment_comment]') and type in (N'U'))
+begin
+  create table [t_payment_comment]
+  (
+    [id]         [int]           not null,
+	[comment]    [nvarchar](510) not null default (N''),
+	primary key clustered ([id])
+  )
+end

@@ -84,7 +84,7 @@ export namespace Controller.Terminal {
         }
 
 
-        private SalePointButtonClick(e): void {
+        private SalePointButtonClick(e): any {
             let id: string = e.currentTarget.id;
             id = id.replace("set_salepoint_", "");
 
@@ -97,6 +97,9 @@ export namespace Controller.Terminal {
                     }
                 }
             }
+            e.preventDefault();
+            e.stopPropagation();
+            return false;
         }
     }
 }

@@ -48,6 +48,11 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                         "labelReceiveSum": vars._statres("label$received"),
                         "labelSurrenderSum": vars._statres("label$surrender"),
                         "labelComment": vars._statres("label$comment"),
+                        "labelOnCredit": vars._statres("label$oncredit"),
+                        "labelOnTheHouse": vars._statres("label$onthehouse"),
+                        "labelClientLeft": vars._statres("label$clientleft"),
+                        "labelPayment": vars._statres("label$payment"),
+                        "labelCancel": vars._statres("button$label$cancel"),
                         "visibleClient": "none",
                     });
                     result.bind("change", $.proxy(this.changeModel, this));

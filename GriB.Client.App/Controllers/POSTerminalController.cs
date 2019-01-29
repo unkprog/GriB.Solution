@@ -144,13 +144,25 @@ namespace GriB.Client.App.Controllers
         }
 
         [HttpPost]
-        [ActionName("check_close")]
-        public HttpResponseMessage PostChecClose(check_close_params closeparams)
+        [ActionName("check_edit_pos")]
+        public HttpResponseMessage PostCheckEditPos(check_add_pos_params addposparams)
         {
             return TryCatchResponseQuery((query) =>
             {
                 Principal principal = (Principal)HttpContext.Current.User;
-                payment payment = new payment() { ptype = closeparams.paymentType, options = closeparams.paymentOption, sum = closeparams.paymentSum, comment = closeparams.comment };
+                check_position position = Check.SetPosition(query, new check_position() { id = addposparams.check, product = new Models.Editor.product() { id = addposparams.product }, quantity = addposparams.quantity });
+                return Request.CreateResponse(HttpStatusCode.OK, new { newposition = position });
+            });
+        }
+
+        [HttpPost]
+        [ActionName("check_close")]
+        public HttpResponseMessage PostCheckClose(check_close_params closeparams)
+        {
+            return TryCatchResponseQuery((query) =>
+            {
+                Principal principal = (Principal)HttpContext.Current.User;
+                payment payment = new payment() { ptype = closeparams.paymentType, options = 1 + (closeparams.paymentOption > 0 ? 1 << closeparams.paymentOption : 0), sum = closeparams.paymentSum, comment = closeparams.comment, salepoint = new salepoint() { id = closeparams.salepoint } };
                 payment.check = Check.GetCheck(query, closeparams.check);
                 payment.check.client = new client() { id = closeparams.client };
                 payment.check.options = ((payment.check.options & check.ciClose) == check.ciClose ? payment.check.options : payment.check.options + check.ciClose);

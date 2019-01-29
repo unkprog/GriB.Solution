@@ -275,10 +275,15 @@ export namespace Controller.Document.Card {
         }
 
         protected columns(): Interfaces.ICardColumn[] {
+            let payMethod: string = "#if (ptype === 1) {#" + vars._statres("label$cash") + "# } else if (ptype === 2) {#" + vars._statres("label$noncash") + "# } else if (ptype === 3) {#" + vars._statres("label$withoutpayment") + "#}#";
+            payMethod = payMethod + "#if ((options & 2)===2 || (options & 4)===4 || (options & 8)===8) {# (#if ((options & 2)===2) {#" + vars._statres("label$oncredit") + "# } else if ((options & 4)===4) {#" + vars._statres("label$onthehouse") + "# } else if ((options & 8)===8) {#" + vars._statres("label$clientleft") + "#}#)#}#";
+
+
             return [
                 { Header: "", HeaderStyle: "doc-col-conduct", Field: "options", FieldStyle: "doc-col-conduct", FieldTemplate: '#if ((options & 1) === 1) {#<label><input type="checkbox" checked="checked" disabled="disabled"/><span></span></label>#}#' },
                 { Header: vars._statres("label$date"), Field: "cd", FieldTemplate: "#=date_ddmmyyyy_withtime(new Date(cd))#" },
                 { Header: vars._statres("label$salePoint"), Field: "salepoint.name" },
+                { Header: vars._statres("label$methodpayment"), Field: "ptype", FieldTemplate: payMethod },
                 { Header: vars._statres("label$client"), Field: "client.name" },
                 { Header: vars._statres("label$sum"), HeaderStyle: "product-col-sum-auto-rigth", Field: "sum", FieldTemplate: '#=numberToString(sum,2)#', FieldStyle: "product-col-sum-auto-rigth" },
             ];

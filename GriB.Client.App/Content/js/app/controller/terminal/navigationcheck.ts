@@ -135,6 +135,7 @@ export namespace Controller.Terminal {
         public destroyEvents(): void {
             this.controlContainerChecks.unbind();
             utils.destroyTouchClickEvent(this.controlTableBodyPositions.find('.check_pos_q_add'), this.checkPosAddQuantitytButtonClick);
+            utils.destroyTouchClickEvent(this.controlTableBodyPositions.find('.check_pos_q_edit'), this.checkPosEditQuantitytButtonClick);
             utils.destroyTouchClickEvent(this.controlTableBodyPositions.find('.check_pos_q_del'), this.checkPosDelQuantitytButtonClick);
             utils.destroyTouchClickEvent(this.buttonNewCheck, this.NewCheckButtonClick);
             utils.destroyTouchClickEvent(this.buttonCheckClient, this.ClientButtonClick);
@@ -191,10 +192,11 @@ export namespace Controller.Terminal {
             }
 
             this.controlContainerChecks.unbind();
-            this.drawCheckPositions();
-
+            this.drawCheckPositions(false);
             kendo.bind(this.controlContainerChecks, this.model);
             this.model.bind("change", $.proxy(this.changeModel, this));
+
+            controller.calcCheckSum();
 
             if (onSetCurrent)
                 onSetCurrent();
@@ -237,12 +239,13 @@ export namespace Controller.Terminal {
             controller.controlChecks.append(findId);
         }
 
-        private drawCheckPositions(): void {
+        private drawCheckPositions(isBinded: boolean = true): void {
             let controller = this;
             let html: string = '';
             let sum: number = 0;
             let positionsArray: Interfaces.Model.IPOSCheckPosition[] = (controller.currentCheck && controller.currentCheck.positions ? controller.currentCheck.positions : []);
             utils.destroyTouchClickEvent(controller.controlTableBodyPositions.find('.check_pos_q_add'), controller.checkPosAddQuantitytButtonClick);
+            utils.destroyTouchClickEvent(controller.controlTableBodyPositions.find('.check_pos_q_edit'), controller.checkPosEditQuantitytButtonClick);
             utils.destroyTouchClickEvent(controller.controlTableBodyPositions.find('.check_pos_q_del'), controller.checkPosDelQuantitytButtonClick);
 
 
@@ -250,7 +253,7 @@ export namespace Controller.Terminal {
                 html += '<tr id="check_pos_' + i + '">';
                 html += '<td class="product-col-name">' + positionsArray[i].product.name + '</td>';
                 html += '<td class="product-col-btn"><a class="product-col-button-delete check_pos_q_add"><i class="material-icons editor-header">add_circle_outline</i></a></td>';
-                html += '<td class="product-col-quantity-auto">' + positionsArray[i].quantity + '</td>';
+                html += '<td class="product-col-quantity-auto"><div class="doc-edit-ref check_pos_q_edit">' + positionsArray[i].quantity + '</div></td>';
                 html += '<td class="product-col-btn"><a class="product-col-button-delete check_pos_q_del"><i class="material-icons editor-header">remove_circle_outline</i></a></td>';
                 html += '<td class="product-col-sum-auto">' + utils.numberToString(positionsArray[i].price, 2) + '</td>';
                 html += '</tr>';
@@ -258,9 +261,10 @@ export namespace Controller.Terminal {
 
             controller.controlTableBodyPositions.html(html);
             utils.createTouchClickEvent(controller.controlTableBodyPositions.find('.check_pos_q_add'), controller.checkPosAddQuantitytButtonClick, controller);
+            utils.createTouchClickEvent(controller.controlTableBodyPositions.find('.check_pos_q_edit'), controller.checkPosEditQuantitytButtonClick, controller);
             utils.createTouchClickEvent(controller.controlTableBodyPositions.find('.check_pos_q_del'), controller.checkPosDelQuantitytButtonClick, controller);
-            
-            controller.calcCheckSum();
+            if (isBinded === true)
+                controller.calcCheckSum();
         }
 
         private calcCheckSum(): number {
@@ -354,27 +358,59 @@ export namespace Controller.Terminal {
                 controller._AddPosition(product);
         }
 
+        private updateResponsePositions(responseData:any) {
+            let controller = this;
+            let positionsArray: Interfaces.Model.IPOSCheckPosition[] = (controller.currentCheck.positions ? controller.currentCheck.positions : []);
+            let newItem: Interfaces.Model.IPOSCheckPosition = responseData.newposition;
+            let isNotFound: boolean = true;
+            for (let i = 0, iCount = (positionsArray ? positionsArray.length : 0); i < iCount; i++) {
+                if (newItem.index === positionsArray[i].index) {
+                    if (newItem.quantity <= 0)
+                        positionsArray.splice(i, 1);
+                    else
+                        positionsArray[i] = newItem;
+                    isNotFound = false;
+                    break;
+                }
+            }
+            if (isNotFound === true)
+                positionsArray.push(newItem);
+
+            this.drawCheckPositions();
+        }
+
+        public _EditPosition(product: number, qunatity: number): void {
+            let controller = this;
+            if (controller.currentCheck) {
+                this.Service.EditPosCheck(controller.currentCheck.id, product, qunatity, (responseData) => {
+                    controller.updateResponsePositions(responseData);
+                });
+            }
+        }
+
         public _AddPosition(product: number, qunatity:number = 1): void {
             let controller = this;
             if (controller.currentCheck) {
                 this.Service.AddToCheck(controller.currentCheck.id, product, qunatity, (responseData) => {
-                    let positionsArray: Interfaces.Model.IPOSCheckPosition[] = (controller.currentCheck.positions ? controller.currentCheck.positions : []);
-                    let newItem: Interfaces.Model.IPOSCheckPosition = responseData.newposition;
-                    let isNotFound: boolean = true;
-                    for (let i = 0, iCount = (positionsArray ? positionsArray.length : 0); i < iCount; i++) {
-                        if (newItem.index === positionsArray[i].index) {
-                            if (newItem.quantity <= 0)
-                                positionsArray.splice(i, 1);
-                            else
-                                positionsArray[i] = newItem;
-                            isNotFound = false;
-                            break;
-                        }
-                    }
-                    if (isNotFound === true)
-                        positionsArray.push(newItem);
+                    //let positionsArray: Interfaces.Model.IPOSCheckPosition[] = (controller.currentCheck.positions ? controller.currentCheck.positions : []);
+                    //let newItem: Interfaces.Model.IPOSCheckPosition = responseData.newposition;
+                    //let isNotFound: boolean = true;
+                    //for (let i = 0, iCount = (positionsArray ? positionsArray.length : 0); i < iCount; i++) {
+                    //    if (newItem.index === positionsArray[i].index) {
+                    //        if (newItem.quantity <= 0)
+                    //            positionsArray.splice(i, 1);
+                    //        else
+                    //            positionsArray[i] = newItem;
+                    //        isNotFound = false;
+                    //        break;
+                    //    }
+                    //}
+                    //if (isNotFound === true)
+                    //    positionsArray.push(newItem);
 
-                    this.drawCheckPositions();
+                    //this.drawCheckPositions();
+                    controller.updateResponsePositions(responseData);
+
                 });
             }
         }
@@ -386,6 +422,39 @@ export namespace Controller.Terminal {
             if (curRow && curRow.length > 0) {
                 let id: number = +curRow[0].id.replace("check_pos_", "");
                 controller._AddPosition(positionsArray[id].product.id);
+            }
+        }
+
+        private editRowQuantity: number = -1;
+        private checkPosEditQuantitytButtonClick(e): void {
+            let self = this;
+            let positionsArray: Interfaces.Model.IPOSCheckPosition[] = (self.currentCheck.positions ? self.currentCheck.positions : []);
+            let curRow: JQuery = $(e.currentTarget).parent().parent();
+            if (curRow && curRow.length > 0) {
+                self.editRowQuantity = +curRow[0].id.replace("check_pos_", "");
+                vars._app.OpenController({
+                    urlController: 'terminal/quantirynumpad', isModal: true, onLoadController: (controller: Interfaces.IController) => {
+                        let ctrlPaymentPinPad: Interfaces.IControllerPaymentNumPad = controller as Interfaces.IControllerPaymentNumPad;
+                        ctrlPaymentPinPad.EditorSettings.ButtonSetings = { IsSave: false, IsCancel: false };
+                        ctrlPaymentPinPad.TotalSum = positionsArray[self.editRowQuantity].quantity;
+                        ctrlPaymentPinPad.ReceivedSum = undefined;
+                        ctrlPaymentPinPad.SurrenderSum = undefined;
+                        ctrlPaymentPinPad.OnPaymentApply = $.proxy(self.applyQuantity, self);
+                    }
+                });
+            }
+        }
+
+        private applyQuantity(controller: Interfaces.IControllerPayment) {
+            let self = this;
+            if (this.currentCheck) {
+                //this.paymentData.paymentOption = controller.TypeWithOut;
+                //this.paymentData.paymentSum = controller.TotalSum; //(this.paymentData.paymentType === 3 ? 0 : controller.TotalSum);
+                //this.paymentData.comment = controller.Comment;
+                //this.closeCheck(this.paymentData);
+                let positionsArray: Interfaces.Model.IPOSCheckPosition[] = (self.currentCheck.positions ? self.currentCheck.positions : []);
+                if (self.editRowQuantity > -1)
+                    self._EditPosition(positionsArray[self.editRowQuantity].product.id, controller.ReceivedSum);
             }
         }
 
@@ -533,7 +602,7 @@ export namespace Controller.Terminal {
             });
         }
 
-        private paymentData: Interfaces.Model.ICheckCloseParams = { check: 0, paymentType: 0, paymentOption: 0, paymentSum: 0, client: 0, comment: '' };
+        private paymentData: Interfaces.Model.ICheckCloseParams = { check: 0, paymentType: 0, paymentOption: 0, paymentSum: 0, salepoint: 0, client: 0, comment: '' };
         private selectTypePayment(controller: Interfaces.IControllerPaymentType) {
             let self = this;
             if (self.currentCheck) {
@@ -542,7 +611,7 @@ export namespace Controller.Terminal {
                     M.toast({ html: vars._statres("error$terminal$ammountnotset") });
                     return;
                 }
-                self.paymentData = { check: self.currentCheck.id, client: self.currentCheck.client.id, paymentType: controller.SelectedPaymentType, paymentOption: 0, paymentSum: 0, comment: '' };
+                self.paymentData = { check: self.currentCheck.id, salepoint: self.terminal.CurrentSalePoint, client: self.currentCheck.client.id, paymentType: controller.SelectedPaymentType, paymentOption: 0, paymentSum: 0, comment: '' };
                 if (this.paymentData.paymentType === 1) {
                     vars._app.OpenController({
                         urlController: 'terminal/paymentnumpad', isModal: true, onLoadController: (controller: Interfaces.IController) => {

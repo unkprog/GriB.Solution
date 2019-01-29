@@ -169,6 +169,7 @@
 
     export interface ICheckCloseParams {
         check: number;
+        salepoint: number;
         client: number;
         paymentType: number;
         paymentOption: number;

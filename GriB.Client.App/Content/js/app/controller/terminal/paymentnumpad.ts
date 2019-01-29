@@ -22,6 +22,8 @@ export namespace Controller.Terminal {
             this.inputReceivedSum = view.find("#paymentnumpad-view-received");
             this.inputSurrenderSum = view.find("#paymentnumpad-view-surrender");
 
+            this.inputSurrenderSumRow = view.find("#paymentnumpad-view-surrender-row");
+
             this.btnPayment = view.find("#btn-num-apply");
             this.btnPaymentCancel = view.find("#btn-num-cancel");
 

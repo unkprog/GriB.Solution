@@ -51,6 +51,10 @@ export namespace Services {
             this.PostApi({ Action: "/check_add_pos", RequestData: JSON.stringify({ check: check, product: product, quantity: quantity }), Callback: Callback });
         }
 
+        public EditPosCheck(check: number, product: number, quantity: number, Callback: (responseData: any) => void) {
+            this.PostApi({ Action: "/check_edit_pos", RequestData: JSON.stringify({ check: check, product: product, quantity: quantity }), Callback: Callback });
+        }
+
         public CheckClose(checkParamsClose: Interfaces.Model.ICheckCloseParams, Callback: (responseData: any) => void) {
             this.PostApi({ Action: "/check_close", RequestData: JSON.stringify(checkParamsClose), Callback: Callback });
         }

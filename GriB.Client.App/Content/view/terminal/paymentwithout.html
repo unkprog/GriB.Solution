@@ -11,7 +11,7 @@
             <p class="margin-0">
                 <label>
                     <input class="with-gap" name="group1" type="radio" value="1" data-bind="checked: editModel.typeWithOut" />
-                    <span>В долг</span>
+                    <span data-bind="text:labelOnCredit"></span>
                 </label>
             </p>
         </div>
@@ -23,7 +23,7 @@
             <p class="margin-0">
                 <label>
                     <input class="with-gap" name="group1" type="radio" value="2" data-bind="checked: editModel.typeWithOut" />
-                    <span>За счет заведения</span>
+                    <span data-bind="text:labelOnTheHouse"></span>
                 </label>
             </p>
         </div>
@@ -31,7 +31,7 @@
             <p class="margin-0">
                 <label>
                     <input class="with-gap" name="group1" type="radio" value="3" data-bind="checked: editModel.typeWithOut" />
-                    <span>Клиент ушел</span>
+                    <span data-bind="text:labelClientLeft"></span>
                 </label>
             </p>
         </div>
@@ -43,10 +43,10 @@
     <div class="row row-btn-numpad">
 
         <div class="col s4 m4 l2 xl2 offset-l3 offset-xl3 col-btn-numpad">
-            <a id="btn-num-cancel" class="btn btncol">Отмена</a>
+            <a id="btn-num-cancel" class="btn btncol" data-bind="text:labelCancel"></a>
         </div>
         <div class="col s8 m8 l4 xl4 col-btn-numpad">
-            <a id="btn-num-apply" class="btn btncol green darken-1">Оплата</a>
+            <a id="btn-num-apply" class="btn btncol green darken-1" data-bind="text:labelPayment"></a>
         </div>
     </div>
 </div>

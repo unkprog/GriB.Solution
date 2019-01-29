@@ -75,6 +75,9 @@ define(["require", "exports", "app/common/variables", "app/common/utils"], funct
                             }
                         }
                     }
+                    e.preventDefault();
+                    e.stopPropagation();
+                    return false;
                 };
                 return NavigationBar;
             }());

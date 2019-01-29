@@ -31,6 +31,12 @@ export namespace Controller.Terminal {
                 "labelReceiveSum": vars._statres("label$received"),
                 "labelSurrenderSum": vars._statres("label$surrender"),
                 "labelComment": vars._statres("label$comment"),
+
+                "labelOnCredit": vars._statres("label$oncredit"),
+                "labelOnTheHouse": vars._statres("label$onthehouse"),
+                "labelClientLeft": vars._statres("label$clientleft"),
+                "labelPayment": vars._statres("label$payment"),
+                "labelCancel": vars._statres("button$label$cancel"),
                 "visibleClient": "none",
 
             });
@@ -63,6 +69,7 @@ export namespace Controller.Terminal {
         protected inputTotalSum: JQuery;
         protected inputReceivedSum: JQuery;
         protected inputSurrenderSum: JQuery;
+        protected inputSurrenderSumRow: JQuery;
 
         protected changeModel(e: any): void {
             if (e.field === "editModel.totalSum") {

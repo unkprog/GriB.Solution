@@ -152,6 +152,27 @@ namespace GriB.Client.App.Managers.POSTerminal
             return result;
         }
 
+        private const string cmdSetPosition = @"POSTerminal\Check\Position\[set]";
+        public static check_position SetPosition(this Query query, check_position position)
+        {
+            check_position result = position;
+            query.Execute(cmdSetPosition, new SqlParameter[] { new SqlParameter() { ParameterName = "@id", Value = result.id }, new SqlParameter() { ParameterName = "@product", Value = result.product.id }, new SqlParameter() { ParameterName = "@quantity", Value = result.quantity } }
+            , (values) =>
+            {
+                int c = 1;
+                result.index = (int)values[c++];
+                result.product.id = (int)values[c++];
+                result.product.name = (string)values[c++];
+                result.quantity = (double)values[c++];
+                result.price = (double)values[c++];
+            });
+
+            if (result.quantity <= 0)
+                DelPosition(query, result);
+
+            return result;
+        }
+
         private const string cmdDelPosition = @"POSTerminal\Check\Position\[del]";
         public static void DelPosition(this Query query, check_position position)
         {

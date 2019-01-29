@@ -67,6 +67,7 @@ namespace GriB.Client.App.Models.POSTerminal
     public class check_close_params
     {
         public int check         { get; set; }
+        public int salepoint     { get; set; }
         public int client        { get; set; }
         public int paymentType   { get; set; }
         public int paymentOption { get; set; }

@@ -154,6 +154,7 @@ export namespace Controller.Document.Editor {
 
         public ViewResize(e: any): void {
             super.ViewResize(e);
+            this.methodPayment.formSelect();
 
         }
 

@@ -45,7 +45,7 @@ begin
   create table [t_document_comment]
   (
     [id]         [int]           not null,
-	[comment]    [nvarchar](254) not null default (N''),
+	[comment]    [nvarchar](510) not null default (N''),
 	primary key clustered ([id])
   )
 end

@@ -247,12 +247,18 @@ define({
     "label$commenttoorder": "Комментарий к заказу",
     "label$specifyreasoncancel": "Укажите причину отмены",
 
+    "label$changequantity": "Изменить количество",
+    "label$oncredit": "В долг",
+    "label$onthehouse": "За счет заведения",
+    "label$clientleft": "Клиент ушел",
+
     "error$terminal$ammountnotset": "Сумма заказа не задана",
     "error$comment$specifycomment": "Не заполнен комментарий",
 
     "error$numpad$amountinsufficient": "Полученная сумма недостаточна для закрытия чека",
     "error$without$reasonnotspecified": "Не указана прична неоплаты",
-    "error$without$clientnotspecified": "Не указан клиент"
+    "error$without$clientnotspecified": "Не указан клиент",
 
+    "error$quantity$mustgreaterthanzero": "Количество должно быть больше нуля",
 
 });

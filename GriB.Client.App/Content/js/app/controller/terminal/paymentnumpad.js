@@ -33,6 +33,7 @@ define(["require", "exports", "app/common/variables", "app/controller/terminal/p
                     this.inputTotalSum = view.find("#paymentnumpad-view-totalsum");
                     this.inputReceivedSum = view.find("#paymentnumpad-view-received");
                     this.inputSurrenderSum = view.find("#paymentnumpad-view-surrender");
+                    this.inputSurrenderSumRow = view.find("#paymentnumpad-view-surrender-row");
                     this.btnPayment = view.find("#btn-num-apply");
                     this.btnPaymentCancel = view.find("#btn-num-cancel");
                     return _super.prototype.ViewInit.call(this, view);
