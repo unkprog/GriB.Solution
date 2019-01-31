@@ -30,12 +30,17 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/s
                         "visibleCheck": false,
                         "labelTime": vars._statres("label$time"),
                         "checkTime": "",
-                        "visibleClient": false,
                         "labelClient": vars._statres("label$client"),
                         "checkClient": "",
+                        "visibleClient": false,
+                        "checkDiscount": "",
+                        "visibleDiscount": false,
                         "labelPayment": vars._statres("label$payment"),
                         "checkSum": 0,
+                        "checkSumNoDiscount": 0,
                         "checkSumText": "0.00",
+                        "checkSumNoDiscountText": "0.00",
+                        "labetToDiscount": "со скидкой",
                         "labelDiscount": vars._statres("label$discount"),
                         "labelNoDiscount": vars._statres("label$withoutdiscount"),
                         "labelCancelOrder": vars._statres("label$cancelorder"),
@@ -140,7 +145,7 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/s
                     }
                     else if (e.field === "checkClient") {
                         var checkClient = this.model.get("checkClient");
-                        this.model.set("visibleClient", (checkClient && checkClient !== ""));
+                        this.model.set("visibleClient", (checkClient && checkClient !== "" ? "display" : "none"));
                     }
                     else if (e.field === "visibleCheck") {
                         if (this.model.get("visibleCheck") === true)
@@ -148,6 +153,13 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/s
                     }
                     else if (e.field === "checkSum") {
                         this.model.set("checkSumText", utils.numberToString(this.model.get("checkSum"), 2));
+                    }
+                    else if (e.field === "checkSumNoDiscount") {
+                        this.model.set("checkSumNoDiscountText", utils.numberToString(this.model.get("checkSumNoDiscount"), 2));
+                    }
+                    else if (e.field === "checkDiscount") {
+                        var discount = this.model.get("checkDiscount");
+                        this.model.set("visibleDiscount", discount !== 0);
                     }
                 };
                 NavigationCheck.prototype.setCurrentCheck = function (currentCheck, onSetCurrent) {
@@ -159,6 +171,7 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/s
                         $('#check_id_' + controller.currentCheck.id).addClass(['check-select', 'z-depth-1']);
                         //this.model.set("checkSum", this.calcCheckSum());
                         this.model.set("checkTime", utils.date_ddmmyyyy_withtime(controller.currentCheck.cd));
+                        this.model.set("visibleClient", (controller.currentCheck.client && controller.currentCheck.client.name && controller.currentCheck.client.name != ""));
                     }
                     else {
                         this.model.set("checkTime", "");
@@ -232,15 +245,18 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/s
                 NavigationCheck.prototype.calcCheckSum = function () {
                     var controller = this;
                     var result = 0;
+                    var resultDiscount = 0;
                     if (controller.currentCheck) {
                         var positionsArray = (controller.currentCheck.positions ? controller.currentCheck.positions : []);
                         for (var i = 0, iCount = (positionsArray ? positionsArray.length : 0); i < iCount; i++) {
                             positionsArray[i].sum = (positionsArray[i].quantity ? positionsArray[i].quantity : 0) * (positionsArray[i].price ? positionsArray[i].price : 0);
                             result += positionsArray[i].sum;
                         }
-                        result = result - ((controller.currentCheck.discount / 100) * result);
+                        resultDiscount = result - ((controller.currentCheck.discount / 100) * result);
                     }
-                    this.model.set("checkSum", result);
+                    this.model.set("checkDiscount", controller.currentCheck.discount);
+                    this.model.set("checkSum", resultDiscount);
+                    this.model.set("checkSumNoDiscount", result);
                     return result;
                 };
                 NavigationCheck.prototype.newCheckButtonClick = function (e) {

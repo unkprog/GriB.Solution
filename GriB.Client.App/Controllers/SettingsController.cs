@@ -229,6 +229,96 @@ namespace GriB.Client.App.Controllers
         );
         #endregion
 
+        #region Счет
+        [HttpGet]
+        [ActionName("get_accounts")]
+        public HttpResponseMessage GetAccounts()
+        {
+            return TryCatchResponseQuery((query) =>
+            {
+                return Request.CreateResponse(HttpStatusCode.OK, Account.GetAccounts(query));
+            });
+        }
+
+        [HttpGet]
+        [ActionName("get_account")]
+        public HttpResponseMessage GetAccount(int id)
+        {
+            return TryCatchResponseQuery((query) =>
+            {
+                return Request.CreateResponse(HttpStatusCode.OK, new { record = Account.GetAccount(query, id) });
+            });
+        }
+
+        [HttpPost]
+        [ActionName("post_account")]
+        public HttpResponseMessage PostAccount(account account)
+        {
+            return TryCatchResponseQuery((query) =>
+            {
+                Principal principal = (Principal)HttpContext.Current.User;
+                Account.SetAccount(query, account, principal.Data.User.id);
+                return Request.CreateResponse(HttpStatusCode.OK, "Ok");
+            });
+        }
+
+        [HttpGet]
+        [ActionName("del_account")]
+        public HttpResponseMessage DeleteAccount(int id)
+        {
+            return TryCatchResponseQuery((query) =>
+            {
+                Account.DelAccount(query, id, ((Principal)HttpContext.Current.User).Data.User.id);
+                return Request.CreateResponse(HttpStatusCode.OK, "Ok");
+            });
+        }
+        #endregion
+
+        #region Статья расходов и доходов
+        [HttpGet]
+        [ActionName("get_costincomes")]
+        public HttpResponseMessage GetCostIncomes()
+        {
+            return TryCatchResponseQuery((query) =>
+            {
+                return Request.CreateResponse(HttpStatusCode.OK, CostIncome.GetCostIncomes(query, 0));
+            });
+        }
+
+        [HttpGet]
+        [ActionName("get_costincome")]
+        public HttpResponseMessage GetCostIncome(int id)
+        {
+            return TryCatchResponseQuery((query) =>
+            {
+                return Request.CreateResponse(HttpStatusCode.OK, new { record = CostIncome.GetCostIncome(query, id) });
+            });
+        }
+
+        [HttpPost]
+        [ActionName("post_costincome")]
+        public HttpResponseMessage PostCostIncome(costincome costincome)
+        {
+            return TryCatchResponseQuery((query) =>
+            {
+                Principal principal = (Principal)HttpContext.Current.User;
+                CostIncome.SetCostIncome(query, costincome, principal.Data.User.id);
+                return Request.CreateResponse(HttpStatusCode.OK, "Ok");
+            });
+        }
+
+        [HttpGet]
+        [ActionName("del_costincome")]
+        public HttpResponseMessage DeleteCostIncome(int id)
+        {
+            return TryCatchResponseQuery((query) =>
+            {
+                CostIncome.DelCostIncome(query, id, ((Principal)HttpContext.Current.User).Data.User.id);
+                return Request.CreateResponse(HttpStatusCode.OK, "Ok");
+            });
+        }
+        #endregion
+
         #region Валюта
         [HttpGet]
         [ActionName("get_currencies")]

@@ -12,8 +12,11 @@
                 <div class="col s12 m12 l12 xl12">
                     <span class="info-label" data-bind="text:labelTime"></span><span class="info-value" data-bind="text:checkTime"></span>
                 </div>
-                <div class="col s12 m12 l12 xl12">
+                <div class="col s12 m12 l12 xl12" data-bind="visible: visibleClient">
                     <span class="info-label" data-bind="text:labelClient"></span><span class="info-value" data-bind="text:checkClient"></span>
+                </div>
+                <div class="col s12 m12 l12 xl12" data-bind="visible: visibleDiscount">
+                    <span class="info-label" data-bind="text:labelDiscount"></span><span class="info-value" data-bind="text:checkDiscount"></span> %
                 </div>
             </div>
 
@@ -24,7 +27,12 @@
 
             <div id="posterminal-view-check-total" class="row" data-bind="visible: visibleCheck">
                 <div class="col s12 m12 l12 xl12">
-                    <span class="total-text">Итого</span><span class="total-text" data-bind="text:checkSumText"></span>
+                    <div>
+                        <span class="total-text">Итого</span><span class="total-text right" data-bind="text:checkSumNoDiscountText"></span>
+                    </div>
+                    <div>
+                        <span class="total-text" data-bind="text: labetToDiscount, visible: visibleDiscount"></span><span class="total-text right" data-bind="text:checkSumText, visible: visibleDiscount"></span>
+                    </div>
                 </div>
             </div>
 

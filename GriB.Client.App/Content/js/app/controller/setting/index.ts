@@ -19,6 +19,8 @@ export namespace Controller.Setting {
                 "labelOrganization": vars._statres("label$organization"),
                 "labelSalesPoints": vars._statres("label$salesPoints"),
                 "labelEmployees": vars._statres("label$employees"),
+                "labelAccounts": vars._statres("label$accounts"),
+                "labelCostImcomes": vars._statres("label$articlescostincome"),
                 "labelCurrenciesAndUnits": vars._statres("label$currenciesandunits"),
                 "labelCurrencies": vars._statres("label$currencies"),
                 "labelUnits": vars._statres("label$units"),
@@ -36,6 +38,8 @@ export namespace Controller.Setting {
             this.OrganizationButtonClick = this.createTouchClickEvent("btn-organization", this.organizationButtonClick);
             this.SalePointButtonClick = this.createTouchClickEvent("btn-salepoint", this.salePointButtonClick);
             this.EmployeetButtonClick = this.createTouchClickEvent("btn-employee", this.employeetButtonClick);
+            this.AccountButtonClick = this.createTouchClickEvent("btn-account", this.accountButtonClick);
+            this.CostIncomeButtonClick = this.createTouchClickEvent("btn-costincome", this.costIncomeButtonClick);
             this.CurrencyButtonClick = this.createTouchClickEvent("btn-currency", this.currencyButtonClick);
             this.UnitButtonClick = this.createTouchClickEvent("btn-unit", this.unitButtonClick);
             this.CategoryButtonClick = this.createTouchClickEvent("btn-category", this.categoryButtonClick);
@@ -50,6 +54,8 @@ export namespace Controller.Setting {
             this.destroyTouchClickEvent("btn-organization", this.OrganizationButtonClick);
             this.destroyTouchClickEvent("btn-salepoint", this.SalePointButtonClick);
             this.destroyTouchClickEvent("btn-employee", this.EmployeetButtonClick);
+            this.destroyTouchClickEvent("btn-account", this.AccountButtonClick);
+            this.destroyTouchClickEvent("btn-costincome", this.CostIncomeButtonClick);
             this.destroyTouchClickEvent("btn-currency", this.CurrencyButtonClick);
             this.destroyTouchClickEvent("btn-unit", this.UnitButtonClick);
             this.destroyTouchClickEvent("btn-category", this.CategoryButtonClick);
@@ -73,6 +79,16 @@ export namespace Controller.Setting {
         public EmployeetButtonClick: { (e: any): void; };
         private employeetButtonClick(e) {
             vars._main.OpenController({ urlController: "setting/card/employee", backController: this });
+        }
+
+        public AccountButtonClick: { (e: any): void; };
+        private accountButtonClick(e) {
+            vars._main.OpenController({ urlController: "setting/card/account", backController: this });
+        }
+
+        public CostIncomeButtonClick: { (e: any): void; };
+        private costIncomeButtonClick(e) {
+            vars._main.OpenController({ urlController: "setting/card/costincome", backController: this });
         }
 
         public CurrencyButtonClick: { (e: any): void; };

@@ -76,6 +76,14 @@
         defaultsalepoint: number;
     }
 
+    export interface IAccount extends IReferenceModel, IEditorModel {
+        number: string;
+    }
+
+    export interface ICostIncome extends IReferenceModel, IEditorModel {
+        type: number;
+    }
+
     export interface IClientModel extends IPersonModel, IEditorSalePointAccess {
         phone: string;
     }

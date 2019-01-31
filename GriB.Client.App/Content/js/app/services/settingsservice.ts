@@ -56,6 +56,39 @@ export module Services {
         public DelEmployee(id: number, Callback: (responseData: any) => void) {
             this.GetApi({ Action: "/del_employee", RequestData: { id: id }, Callback: Callback });
         }
+        // Счета
+        public GetAccounts(Callback: (responseData: any) => void) {
+            this.GetApi({ Action: "/get_accounts", Callback: Callback });
+        }
+
+        public GetAccount(id: number, Callback: (responseData: any) => void) {
+            this.GetApi({ Action: "/get_account", RequestData: { id: id }, Callback: Callback });
+        }
+
+        public SetAccount(model: Interfaces.Model.IAccount, Callback: (responseData: any) => void) {
+            this.PostApi({ Action: "/post_account", RequestData: JSON.stringify(model), Callback: Callback });
+        }
+
+        public DelAccount(id: number, Callback: (responseData: any) => void) {
+            this.GetApi({ Action: "/del_account", RequestData: { id: id }, Callback: Callback });
+        }
+
+        // Статьи расходов и доходов
+        public GetCostIncomes(Callback: (responseData: any) => void) {
+            this.GetApi({ Action: "/get_costincomes", Callback: Callback });
+        }
+
+        public GetCostIncome(id: number, Callback: (responseData: any) => void) {
+            this.GetApi({ Action: "/get_costincome", RequestData: { id: id }, Callback: Callback });
+        }
+
+        public SetCostIncome(model: Interfaces.Model.ICostIncome, Callback: (responseData: any) => void) {
+            this.PostApi({ Action: "/post_costincome", RequestData: JSON.stringify(model), Callback: Callback });
+        }
+
+        public DelCostIncome(id: number, Callback: (responseData: any) => void) {
+            this.GetApi({ Action: "/del_costincome", RequestData: { id: id }, Callback: Callback });
+        }
 
         // Валюты
         public GetCurrencies(Callback: (responseData: any) => void) {
@@ -207,7 +240,7 @@ export module Services {
             this.GetApi({ Action: "/get_reason", RequestData: { id: id }, Callback: Callback });
         }
 
-        public SetReason(model: Interfaces.Model.IContractor, Callback: (responseData: any) => void) {
+        public SetReason(model: Interfaces.Model.IReason, Callback: (responseData: any) => void) {
             this.PostApi({ Action: "/post_reason", RequestData: JSON.stringify(model), Callback: Callback });
         }
 

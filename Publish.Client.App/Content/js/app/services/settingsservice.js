@@ -63,6 +63,32 @@ define(["require", "exports", "app/common/baseservice"], function (require, expo
             SettingsService.prototype.DelEmployee = function (id, Callback) {
                 this.GetApi({ Action: "/del_employee", RequestData: { id: id }, Callback: Callback });
             };
+            // Счета
+            SettingsService.prototype.GetAccounts = function (Callback) {
+                this.GetApi({ Action: "/get_accounts", Callback: Callback });
+            };
+            SettingsService.prototype.GetAccount = function (id, Callback) {
+                this.GetApi({ Action: "/get_account", RequestData: { id: id }, Callback: Callback });
+            };
+            SettingsService.prototype.SetAccount = function (model, Callback) {
+                this.PostApi({ Action: "/post_account", RequestData: JSON.stringify(model), Callback: Callback });
+            };
+            SettingsService.prototype.DelAccount = function (id, Callback) {
+                this.GetApi({ Action: "/del_account", RequestData: { id: id }, Callback: Callback });
+            };
+            // Статьи расходов и доходов
+            SettingsService.prototype.GetCostIncomes = function (Callback) {
+                this.GetApi({ Action: "/get_costincomes", Callback: Callback });
+            };
+            SettingsService.prototype.GetCostIncome = function (id, Callback) {
+                this.GetApi({ Action: "/get_costincome", RequestData: { id: id }, Callback: Callback });
+            };
+            SettingsService.prototype.SetCostIncome = function (model, Callback) {
+                this.PostApi({ Action: "/post_costincome", RequestData: JSON.stringify(model), Callback: Callback });
+            };
+            SettingsService.prototype.DelCostIncome = function (id, Callback) {
+                this.GetApi({ Action: "/del_costincome", RequestData: { id: id }, Callback: Callback });
+            };
             // Валюты
             SettingsService.prototype.GetCurrencies = function (Callback) {
                 this.GetApi({ Action: "/get_currencies", Callback: Callback });
