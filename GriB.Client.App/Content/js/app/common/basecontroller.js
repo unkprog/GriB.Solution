@@ -422,6 +422,10 @@ define(["require", "exports", "app/common/utils", "app/common/variables", "./var
                 this.clearSearch = this.formSearch.find('#card-view-search-clear');
                 return this.navSearch;
             };
+            BaseCardFilterSettings.prototype.ViewControls = function () {
+            };
+            BaseCardFilterSettings.prototype.ResizeControls = function () {
+            };
             BaseCardFilterSettings.prototype.createEvents = function () {
                 if (this.clearSearch)
                     this.ClearButtonClick = utils.createTouchClickEvent(this.clearSearch, this.clearButtonClick, this);
@@ -547,10 +551,17 @@ define(["require", "exports", "app/common/utils", "app/common/variables", "./var
             };
             BaseCard.prototype.ViewResize = function (e) {
                 _super.prototype.ViewResize.call(this, e);
+                if (this.cardSettings && this.cardSettings.FilterSettings)
+                    this.cardSettings.FilterSettings.ResizeControls();
                 var tbody = this.tableBody;
                 if (tbody && tbody.length > 0) {
                     tbody.height($(window).height() - tbody.offset().top - (0.2 * parseFloat(getComputedStyle(tbody[0]).fontSize)) - 1);
                 }
+            };
+            BaseCard.prototype.ViewShow = function (e) {
+                if (this.cardSettings && this.cardSettings.FilterSettings)
+                    this.cardSettings.FilterSettings.ViewControls();
+                return _super.prototype.ViewShow.call(this, e);
             };
             BaseCard.prototype.ViewHide = function (e) {
                 _super.prototype.ViewHide.call(this, e);

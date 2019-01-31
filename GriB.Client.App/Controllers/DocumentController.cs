@@ -1,10 +1,15 @@
-﻿using GriB.Client.App.Managers.Editors;
+﻿using GriB.Client.App.Managers;
+using GriB.Client.App.Managers.Editors;
 using GriB.Client.App.Managers.POSTerminal;
 using GriB.Client.App.Models.Editor;
 using GriB.Client.App.Models.POSTerminal;
 using GriB.Common.Models.Security;
+using GriB.Common.Web.Http;
+using Newtonsoft.Json.Linq;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
 
@@ -93,15 +98,47 @@ namespace GriB.Client.App.Controllers
         #endregion
 
         #region Движение денег
+        //[HttpPost]
+        //[ActionName("get_payments")]
+        //public HttpResponseMessage GetPayments(payments_params docpar)
+        //{
+        //    return TryCatchResponseQuery((query) =>
+        //    {
+        //        return Request.CreateResponse(HttpStatusCode.OK, Payment.GetPayments(query, docpar));
+        //    });
+        //}
+
+        
+        // TODO: Закешировать список сотрудников!!!
+
         [HttpPost]
         [ActionName("get_payments")]
-        public HttpResponseMessage GetPayments(payments_params docpar)
-        {
-            return TryCatchResponseQuery((query) =>
-            {
-                return Request.CreateResponse(HttpStatusCode.OK, Payment.GetPayments(query, docpar));
-            });
-        }
+        public async Task<HttpResponseMessage> GetPayments(payments_params docpar)
+        => await TryCatchResponseAsync(async () => await CheckResponseError(
+               async () =>
+               {
+                   Principal principal = (Principal)HttpContext.Current.User;
+                   return await Common.Net.Json.GetAsync<JObject>(AppSettings.Server.Register, string.Concat("api/account/employees?db=", principal?.Data?.Database?.id));
+               }
+               , (response) =>
+               {
+                   HttpEmployeesMessage responseMessage = response.ToObject<HttpEmployeesMessage>();
+                   Dictionary<int, employeecard> employees = new Dictionary<int, employeecard>();
+                   return TryCatchResponseQuery((query) =>
+                   {
+                       employeecard employee;
+                       foreach (var emp in responseMessage.Employees)
+                       {
+                           if (!employees.TryGetValue(emp.id, out employee))
+                           {
+                               employee = (employeecard)Employee.GetEmployee(query, new employeecard(emp));
+                               employees.Add(emp.id, employee);
+                           }
+                       }
+                       return Request.CreateResponse(HttpStatusCode.OK, Payment.GetPayments(query, docpar, employees));
+                   });
+               })
+        );
 
         [HttpGet]
         [ActionName("get_payment")]

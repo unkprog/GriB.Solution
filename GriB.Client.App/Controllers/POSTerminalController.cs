@@ -162,7 +162,7 @@ namespace GriB.Client.App.Controllers
             return TryCatchResponseQuery((query) =>
             {
                 Principal principal = (Principal)HttpContext.Current.User;
-                payment payment = new payment() { ptype = closeparams.paymentType, options = 1 + (closeparams.paymentOption > 0 ? 1 << closeparams.paymentOption : 0), sum = closeparams.paymentSum, comment = closeparams.comment, salepoint = new salepoint() { id = closeparams.salepoint } };
+                payment payment = new payment() { doctype = payment.DocTypeDefault, ptype = closeparams.paymentType, options = 1 + (closeparams.paymentOption > 0 ? 1 << closeparams.paymentOption : 0), sum = closeparams.paymentSum, comment = closeparams.comment, salepoint = new salepoint() { id = closeparams.salepoint } };
                 payment.check = Check.GetCheck(query, closeparams.check);
                 payment.check.client = new client() { id = closeparams.client };
                 payment.check.options = ((payment.check.options & check.ciClose) == check.ciClose ? payment.check.options : payment.check.options + check.ciClose);

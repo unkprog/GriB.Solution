@@ -72,6 +72,8 @@
         GetItemsForView(data: Interfaces.Model.IEditorModel[]): Interfaces.Model.IEditorModel[] 
 
         InitControls(): JQuery;
+        ViewControls(): void;
+        ResizeControls(): void;
         createEvents(): void;
         destroyEvents(): void;
 

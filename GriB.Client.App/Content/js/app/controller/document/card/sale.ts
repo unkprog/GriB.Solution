@@ -128,6 +128,13 @@ export namespace Controller.Document.Card {
             return controller.filterControl;
         }
 
+
+        public ViewControls(): void {
+
+        }
+        public ResizeControls(): void {
+        }
+
         public createEvents(): void {
             kendo.bind(this.filterControl, this._model);
             if (this.searchButton) this.SearchButtonClick = utils.createTouchClickEvent(this.searchButton, this.searchButtonClick, this);

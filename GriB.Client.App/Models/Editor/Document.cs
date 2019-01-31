@@ -29,8 +29,12 @@ namespace GriB.Client.App.Models.Editor
         {
             client = 0;
             type = 0;
+            doctype = 0;
         }
+        public int doctype { get; set; }
+        public int options { get; set; }
         public int client { get; set; }
+        public int employee { get; set; }
         public int type { get; set; }
     }
 

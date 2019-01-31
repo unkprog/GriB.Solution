@@ -11,6 +11,7 @@ begin
 	[cu]         [int]      not null default (0),
 	[ud]         [datetime] not null default (getdate()),
 	[uu]         [int]      not null default (0),
+	[doctype]    [int]      not null default (10),
 	[salepoint]  [int]      not null default (0),
 	[check]      [int]      not null default (0),
 	[type]       [int]      not null default (0),

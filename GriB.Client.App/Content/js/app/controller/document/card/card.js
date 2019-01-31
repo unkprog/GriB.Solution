@@ -159,6 +159,10 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                         controller.searchButton = controller.filterControl.find("#card-filter-view-btn-find");
                         return controller.filterControl;
                     };
+                    DocumentCardFilterSettings.prototype.ViewControls = function () {
+                    };
+                    DocumentCardFilterSettings.prototype.ResizeControls = function () {
+                    };
                     DocumentCardFilterSettings.prototype.showSalePointTo = function (isShow) {
                         if (isShow) {
                             this.salePointToControl.removeClass("hide");

@@ -462,6 +462,12 @@ export namespace Controller {
             return this.navSearch;
         }
 
+        public ViewControls(): void {
+
+        }
+        public ResizeControls(): void {
+        }
+
         public createEvents(): void {
             if (this.clearSearch) this.ClearButtonClick = utils.createTouchClickEvent(this.clearSearch, this.clearButtonClick, this);
             if (this.formSearch) {
@@ -604,11 +610,19 @@ export namespace Controller {
 
         public ViewResize(e: any): void {
             super.ViewResize(e);
+            if (this.cardSettings && this.cardSettings.FilterSettings)
+                this.cardSettings.FilterSettings.ResizeControls();
 
             let tbody: JQuery = this.tableBody;
             if (tbody && tbody.length > 0) {
                 tbody.height($(window).height() - tbody.offset().top - (0.2 * parseFloat(getComputedStyle(tbody[0]).fontSize)) - 1);
             }
+        }
+
+        public ViewShow(e): boolean {
+            if (this.cardSettings && this.cardSettings.FilterSettings)
+                this.cardSettings.FilterSettings.ViewControls();
+            return super.ViewShow(e);
         }
 
         public ViewHide(e) {

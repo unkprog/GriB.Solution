@@ -128,6 +128,10 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                         controller.searchButton = controller.filterControl.find("#card-filter-view-btn-find");
                         return controller.filterControl;
                     };
+                    SaleCardFilterSettings.prototype.ViewControls = function () {
+                    };
+                    SaleCardFilterSettings.prototype.ResizeControls = function () {
+                    };
                     SaleCardFilterSettings.prototype.createEvents = function () {
                         kendo.bind(this.filterControl, this._model);
                         if (this.searchButton)

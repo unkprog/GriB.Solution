@@ -165,6 +165,12 @@ export namespace Controller.Document.Card {
             return controller.filterControl;
         }
 
+        public ViewControls(): void {
+
+        }
+        public ResizeControls(): void {
+        }
+
         public showSalePointTo(isShow: boolean) {
             if (isShow) {
                 this.salePointToControl.removeClass("hide");

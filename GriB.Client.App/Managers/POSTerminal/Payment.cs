@@ -13,19 +13,31 @@ namespace GriB.Client.App.Managers.POSTerminal
             int cnt = 0;
             return new payment() { id = (int)values[cnt++], cd = (DateTime)values[cnt++], check = new check() { id = (int)values[cnt++] }, ptype = (int)values[cnt++], sum = (double)values[cnt++], options = (int)values[cnt++], comment = (string)values[cnt++]
             , salepoint = new salepoint() { id = (int)values[cnt++], name = (string)values[cnt++] }
-            , client = new client() { id = (int)values[cnt++], fname = (string)values[cnt++], mname = (string)values[cnt++], lname = (string)values[cnt++] } };
+            , client = new client() { id = (int)values[cnt++], fname = (string)values[cnt++], mname = (string)values[cnt++], lname = (string)values[cnt++] }
+            , cu = (int)values[cnt++], doctype = (int)values[cnt++]
+            };
         }
 
         private const string cmdGet = @"POSTerminal\Payment\[get]";
-        public static List<payment> GetPayments(this Query query, payments_params docpar)
+        public static List<payment> GetPayments(this Query query, payments_params docpar, Dictionary<int, employeecard> employees)
         {
             List<payment> result = new List<payment>();
             query.Execute(cmdGet, new SqlParameter[] { new SqlParameter() { ParameterName = "@id", Value = docpar.id }
-            , new SqlParameter() { ParameterName = "@type", Value = docpar.type }, new SqlParameter() { ParameterName = "@salepoint", Value = docpar.salepoint }, new SqlParameter() { ParameterName = "@client", Value = docpar.client }
-            , new SqlParameter() { ParameterName = "@datefrom", Value = docpar.datefrom }, new SqlParameter() { ParameterName = "@dateto", Value = docpar.dateto }}
+            , new SqlParameter() { ParameterName = "@type", Value = docpar.type }, new SqlParameter() { ParameterName = "@salepoint", Value = docpar.salepoint }, new SqlParameter() { ParameterName = "@employee", Value = docpar.employee }
+            , new SqlParameter() { ParameterName = "@option", Value = (1 << docpar.options) }, new SqlParameter() { ParameterName = "@client", Value = docpar.client }
+            , new SqlParameter() { ParameterName = "@datefrom", Value = docpar.datefrom }, new SqlParameter() { ParameterName = "@dateto", Value = docpar.dateto }, new SqlParameter() { ParameterName = "@doctype", Value = docpar.doctype }}
             , (values) =>
             {
-                result.Add(readFromValues(values));
+                payment item = readFromValues(values);
+                if(employees!= null)
+                {
+                    employeecard empl;
+                    if (employees.TryGetValue(item.cu, out empl))
+                    {
+                        item.employee = empl;
+                    }
+                }
+                result.Add(item);
             });
 
             return result;
@@ -34,7 +46,7 @@ namespace GriB.Client.App.Managers.POSTerminal
         public static payment GetPayment(this Query query, int id)
         {
             payments_params docpar = new payments_params() { id = id };
-            List<payment> payments = GetPayments(query, docpar);
+            List<payment> payments = GetPayments(query, docpar, null);
             payment result = (payments == null || payments.Count == 0 ? new payment() { id = id, ptype = 1, cd = DateTime.Now } : payments[0]);
             return result;
         }
@@ -43,7 +55,7 @@ namespace GriB.Client.App.Managers.POSTerminal
         public static payment SetPayment(this Query query, payment payment, int user)
         {
             payment result = payment;
-            query.Execute(cmdSet, new SqlParameter[] { new SqlParameter("@id", result.id), new SqlParameter("@u", user), new SqlParameter("@check", result.check == null?0:result.check.id), new SqlParameter("@type", result.ptype), new SqlParameter("@sum", result.sum), new SqlParameter("@option", result.options), new SqlParameter("@client", result.client == null ? 0 :result.client.id), new SqlParameter("@salepoint", result.salepoint == null ? 0: result.salepoint.id) }
+            query.Execute(cmdSet, new SqlParameter[] { new SqlParameter("@id", result.id), new SqlParameter("@u", user), new SqlParameter("@doctype", payment.doctype), new SqlParameter("@check", result.check == null?0:result.check.id), new SqlParameter("@type", result.ptype), new SqlParameter("@sum", result.sum), new SqlParameter("@option", result.options), new SqlParameter("@client", result.client == null ? 0 :result.client.id), new SqlParameter("@salepoint", result.salepoint == null ? 0: result.salepoint.id) }
             , (values) =>
             {
                 result.id = (int)values[0];

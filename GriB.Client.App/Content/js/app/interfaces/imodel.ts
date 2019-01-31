@@ -201,7 +201,10 @@
     }
 
     export interface IPaymentParams extends ISaleParams {
+        doctype: number;
         client: number;
+        employee: number;
+        options: number;
         type: number;
     }
 
