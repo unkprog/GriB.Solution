@@ -42,11 +42,14 @@ export namespace Controller.Document.Card {
                 "labelEmployee": vars._statres("label$employee"),
                 "labelClient": vars._statres("label$client"),
                 "labelFind": vars._statres("label$find"),
+                "labelCash": vars._statres("label$cash"),
+                "labelNonCash": vars._statres("label$noncash"),
+                "labelMethodPayment": vars._statres("label$methodpayment"),
+                "labelWithOutPayment": vars._statres("label$withoutpayment"),
                 "labelNotSelected": vars._statres("label$notselected"),
                 "labelOnCredit": vars._statres("label$oncredit"),
                 "labelOnTheHouse": vars._statres("label$onthehouse"),
                 "labelClientLeft": vars._statres("label$clientleft"),
-                "labelWithOutPayment": vars._statres("label$withoutpayment"),
                 "salepoint": {},
                 "employee": {},
                 "client": {},
@@ -55,6 +58,8 @@ export namespace Controller.Document.Card {
                 "datefrom": undefined,
                 "dateto": undefined
             });
+            //let payMethod: string = "#if (ptype === 1) {#" + vars._statres("label$cash") + "# } else if (ptype === 2) {#" + vars._statres("label$noncash") + "# } else if (ptype === 3) {#" + vars._statres("label$withoutpayment") + "#}#";
+
             if (data) {
                 result.set("salepoint", data.salepoint);
                 result.set("employee", data.employee);
@@ -97,6 +102,7 @@ export namespace Controller.Document.Card {
         private employeeClear: JQuery;
         private saleClientControl: JQuery;
         private saleClientClear: JQuery;
+        private typeControl: JQuery;
         private optionControl: JQuery;
         private searchButton: JQuery;
         
@@ -104,13 +110,17 @@ export namespace Controller.Document.Card {
             let controller = this;
             let filterHtml: string = '';
             filterHtml += '<div class="row row-inputs">';
-            filterHtml += '    <div class="input-field col s6 m4 l3 xl2">';
-            filterHtml += '       <input id="card-filter-view-date-start" type="text" class="datepicker">';
-            filterHtml += '       <label for="card-filter-view-date-start" data-bind="text:labelDateFrom"></label>';
-            filterHtml += '    </div>';
-            filterHtml += '    <div class="input-field col s6 m4 l3 xl2">';
-            filterHtml += '       <input id="card-filter-view-date-end" type="text" class="datepicker">';
-            filterHtml += '       <label for="card-filter-view-date-end" data-bind="text:labelDateTo"></label>';
+            filterHtml += '    <div class="input-field col s12 m6 l6 xl4" style="margin-bottom: 0;">';
+            filterHtml += '        <div class="row" style="margin-bottom: 0;">';
+            filterHtml += '            <div class="input-field col s6 m6" style="margin-top: 0;margin-bottom: 0;">';
+            filterHtml += '                 <input id="card-filter-view-date-start" type="text" class="datepicker">';
+            filterHtml += '                 <label for="card-filter-view-date-start" data-bind="text:labelDateFrom"></label>';
+            filterHtml += '            </div>';
+            filterHtml += '            <div class="input-field col s6 m6" style="margin-top: 0;margin-bottom: 0;">';
+            filterHtml += '                <input id="card-filter-view-date-end" type="text" class="datepicker">';
+            filterHtml += '                <label for="card-filter-view-date-end" data-bind="text:labelDateTo"></label>';
+            filterHtml += '            </div>';
+            filterHtml += '        </div>';
             filterHtml += '    </div>';
             filterHtml += '    <div id="card-filter-view-salepoint-col" class="input-field col s12 m6 l6 xl4 col-input-numpad">';
             filterHtml += '       <input id="card-filter-view-salepoint" type="text" disabled class="truncate black-text doc-edit-ref" data-bind="value: salepoint.name">';
@@ -122,9 +132,21 @@ export namespace Controller.Document.Card {
             filterHtml += '       <label for="card-filter-view-employee" data-bind="text:labelEmployee"></label>';
             filterHtml += '       <i id="card-view-employee-clear" class="material-icons editor-header right doc-edit-ref-del">close</i>';
             filterHtml += '    </div>';
-            filterHtml += '</div>';
-            filterHtml += '<div class="row row-inputs">';
-            filterHtml += '    <div class="input-field col s12 m6 l6 xl4 col-input-numpad">';
+            filterHtml += '    <div id="card-filter-view-client-col" class="input-field col s12 m6 l6 xl4 col-input-numpad">';
+            filterHtml += '       <input id="card-filter-view-client" type="text" disabled class="truncate black-text doc-edit-ref" data-bind="value: client.name">';
+            filterHtml += '       <label for="card-filter-view-client" data-bind="text:labelClient"></label>';
+            filterHtml += '       <i id="card-view-client-clear" class="material-icons editor-header right doc-edit-ref-del">close</i>';
+            filterHtml += '    </div>';
+            filterHtml += '    <div class="input-field col s6 m6 l6 xl4 col-input-numpad">';
+            filterHtml += '        <select id="card-filter-view-type" class="validate" data-bind="value:type">';
+            filterHtml += '            <option value="0" data-bind="text:labelNotSelected"></option>';
+            filterHtml += '            <option value="1" data-bind="text:labelCash"></option>';
+            filterHtml += '            <option value="2" data-bind="text:labelNonCash"></option>';
+            filterHtml += '            <option value="3" data-bind="text:labelWithOutPayment"></option>';
+            filterHtml += '        </select>';
+            filterHtml += '        <label for="card-filter-view-type" data-bind="text:labelMethodPayment"></label>';
+            filterHtml += '    </div>';
+            filterHtml += '    <div class="input-field col s6 m6 l6 xl4 col-input-numpad">';
             filterHtml += '        <select id="card-filter-view-option" class="validate" data-bind="value:optionValue">';
             filterHtml += '            <option value="0" data-bind="text:labelNotSelected"></option>';
             filterHtml += '            <option value="1" data-bind="text:labelOnCredit"></option>';
@@ -132,12 +154,6 @@ export namespace Controller.Document.Card {
             filterHtml += '            <option value="3" data-bind="text:labelClientLeft"></option>';
             filterHtml += '        </select>';
             filterHtml += '        <label for="card-filter-view-option" data-bind="text:labelWithOutPayment"></label>';
-            filterHtml += '    </div>';
-
-            filterHtml += '    <div id="card-filter-view-client-col" class="input-field col s12 m6 l6 xl4 col-input-numpad">';
-            filterHtml += '       <input id="card-filter-view-client" type="text" disabled class="truncate black-text doc-edit-ref" data-bind="value: client.name">';
-            filterHtml += '       <label for="card-filter-view-client" data-bind="text:labelClient"></label>';
-            filterHtml += '       <i id="card-view-client-clear" class="material-icons editor-header right doc-edit-ref-del">close</i>';
             filterHtml += '    </div>';
             filterHtml += '</div>';
             filterHtml += '<div class="row row-inputs">';
@@ -171,7 +187,8 @@ export namespace Controller.Document.Card {
             controller.saleClientControl = controller.filterControl.find("#card-filter-view-client-col");
             controller.saleClientClear = this.filterControl.find("#card-view-client-clear");
 
-            controller.optionControl =   controller.filterControl.find("#card-filter-view-option");
+            controller.typeControl = controller.filterControl.find("#card-filter-view-type");
+            controller.optionControl = controller.filterControl.find("#card-filter-view-option");
 
             controller.searchButton = controller.filterControl.find("#card-filter-view-btn-find");
             return controller.filterControl;
@@ -179,10 +196,14 @@ export namespace Controller.Document.Card {
 
 
         public ViewControls(): void {
+            if (this.typeControl)
+                this.typeControl.formSelect();
             if (this.optionControl)
                 this.optionControl.formSelect();
         }
         public ResizeControls(): void {
+            if (this.typeControl)
+                this.typeControl.formSelect();
             if (this.optionControl)
                 this.optionControl.formSelect();
         }
@@ -360,7 +381,8 @@ export namespace Controller.Document.Card {
         }
 
         protected columns(): Interfaces.ICardColumn[] {
-            let payMethod: string = "#if (ptype === 1) {#" + vars._statres("label$cash") + "# } else if (ptype === 2) {#" + vars._statres("label$noncash") + "# } else if (ptype === 3) {#" + vars._statres("label$withoutpayment") + "#}#";
+            //let payMethod: string = "#if (ptype === 1) {#" + vars._statres("label$cash") + "# } else if (ptype === 2) {#" + vars._statres("label$noncash") + "# } else if (ptype === 3) {#" + vars._statres("label$withoutpayment") + "#}#";
+            let payMethod: string = '#if (ptype === 1) {#<i class="material-icons left">attach_money</i># } else if (ptype === 2) {#<i class="material-icons left">credit_card</i># } else if (ptype === 3) {#<i class="material-icons left">money_off</i>#}#';
             payMethod = payMethod + "#if ((options & 2)===2 || (options & 4)===4 || (options & 8)===8) {# (#if ((options & 2)===2) {#" + vars._statres("label$oncredit") + "# } else if ((options & 4)===4) {#" + vars._statres("label$onthehouse") + "# } else if ((options & 8)===8) {#" + vars._statres("label$clientleft") + "#}#)#}#";
 
 
@@ -405,6 +427,12 @@ export namespace Controller.Document.Card {
             return (client ? client.id : 0);
         }
 
+        protected get Type(): number {
+            let settings: PaymentCardFilterSettings = this.CardSettings.FilterSettings as PaymentCardFilterSettings;
+            let type: number = (settings ? settings.Model.get("type") : 0);
+            return type;
+        }
+
         protected get Option(): number {
             let settings: PaymentCardFilterSettings = this.CardSettings.FilterSettings as PaymentCardFilterSettings;
             let option: number = (settings ? settings.Model.get("optionValue") : 0);
@@ -429,7 +457,7 @@ export namespace Controller.Document.Card {
 
         private getDocs(Callback: (responseData: any) => void) {
             this.CardSettings.FilterSettings.saveFilter();
-            let params: Interfaces.Model.IPaymentParams = { id: 0, doctype: this.DocType, salepoint: this.SalePoint, employee: this.Employee, client: this.Client, type: 0, options: this.Option, datefrom: this.DateFrom, dateto: this.DateTo }
+            let params: Interfaces.Model.IPaymentParams = { id: 0, doctype: this.DocType, salepoint: this.SalePoint, employee: this.Employee, client: this.Client, type: this.Type, options: this.Option, datefrom: this.DateFrom, dateto: this.DateTo }
             this.Service.GetPayments(params, (responseData: any) => {
                 if (Callback)
                     Callback(responseData);

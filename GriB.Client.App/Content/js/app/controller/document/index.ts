@@ -38,6 +38,8 @@ export namespace Controller.Document {
             this.SaleButtonClick = this.createTouchClickEvent("btn-sale", this.saleButtonClick);
 
             this.PaymentButtonClick = this.createTouchClickEvent("btn-payment", this.paymentButtonClick);
+            this.DepositButtonClick = this.createTouchClickEvent("btn-deposit", this.depositButtonClick);
+            this.WithdrawalButtonClick = this.createTouchClickEvent("btn-withdrawal", this.withdrawalButtonClick);
 
             //this.ConsumptionButtonClick = this.createTouchClickEvent("btn-consumption", this.consumptionButtonClick);
             //this.ReturnButtonClick = this.createTouchClickEvent("btn-return", this.returnButtonClick);
@@ -51,6 +53,8 @@ export namespace Controller.Document {
             this.destroyTouchClickEvent("btn-sale", this.SaleButtonClick);
 
             this.destroyTouchClickEvent("btn-payment", this.PaymentButtonClick);
+            this.destroyTouchClickEvent("btn-deposit", this.DepositButtonClick);
+            this.destroyTouchClickEvent("btn-withdrawal", this.WithdrawalButtonClick);
 
             //this.destroyTouchClickEvent("btn-consumption", this.ConsumptionButtonClick);
             //this.destroyTouchClickEvent("btn-return", this.ReturnButtonClick);
@@ -81,6 +85,17 @@ export namespace Controller.Document {
         private paymentButtonClick(e) {
             vars._main.OpenController({ urlController: "document/card/payment", backController: this });
         }
+
+        public DepositButtonClick: { (e: any): void; };
+        private depositButtonClick(e) {
+            vars._main.OpenController({ urlController: "document/card/paymentdeposit", backController: this });
+        }
+
+        public WithdrawalButtonClick: { (e: any): void; };
+        private withdrawalButtonClick(e) {
+            vars._main.OpenController({ urlController: "document/card/paymentwithdrawal", backController: this });
+        }
+
 
         //public ConsumptionButtonClick: { (e: any): void; };
         //private consumptionButtonClick(e) {

@@ -24,7 +24,7 @@ namespace GriB.Client.App.Managers.POSTerminal
             List<payment> result = new List<payment>();
             query.Execute(cmdGet, new SqlParameter[] { new SqlParameter() { ParameterName = "@id", Value = docpar.id }
             , new SqlParameter() { ParameterName = "@type", Value = docpar.type }, new SqlParameter() { ParameterName = "@salepoint", Value = docpar.salepoint }, new SqlParameter() { ParameterName = "@employee", Value = docpar.employee }
-            , new SqlParameter() { ParameterName = "@option", Value = (1 << docpar.options) }, new SqlParameter() { ParameterName = "@client", Value = docpar.client }
+            , new SqlParameter() { ParameterName = "@option", Value = (docpar.options != 0 ? (1 << docpar.options) : 0) }, new SqlParameter() { ParameterName = "@client", Value = docpar.client }
             , new SqlParameter() { ParameterName = "@datefrom", Value = docpar.datefrom }, new SqlParameter() { ParameterName = "@dateto", Value = docpar.dateto }, new SqlParameter() { ParameterName = "@doctype", Value = docpar.doctype }}
             , (values) =>
             {

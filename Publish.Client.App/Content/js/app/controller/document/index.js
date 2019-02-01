@@ -51,6 +51,8 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
                     this.MovementButtonClick = this.createTouchClickEvent("btn-movement", this.movementButtonClick);
                     this.SaleButtonClick = this.createTouchClickEvent("btn-sale", this.saleButtonClick);
                     this.PaymentButtonClick = this.createTouchClickEvent("btn-payment", this.paymentButtonClick);
+                    this.DepositButtonClick = this.createTouchClickEvent("btn-deposit", this.depositButtonClick);
+                    this.WithdrawalButtonClick = this.createTouchClickEvent("btn-withdrawal", this.withdrawalButtonClick);
                     //this.ConsumptionButtonClick = this.createTouchClickEvent("btn-consumption", this.consumptionButtonClick);
                     //this.ReturnButtonClick = this.createTouchClickEvent("btn-return", this.returnButtonClick);
                     //this.ProductionButtonClick = this.createTouchClickEvent("btn-production", this.productionButtonClick);
@@ -61,6 +63,8 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
                     this.destroyTouchClickEvent("btn-movement", this.MovementButtonClick);
                     this.destroyTouchClickEvent("btn-sale", this.SaleButtonClick);
                     this.destroyTouchClickEvent("btn-payment", this.PaymentButtonClick);
+                    this.destroyTouchClickEvent("btn-deposit", this.DepositButtonClick);
+                    this.destroyTouchClickEvent("btn-withdrawal", this.WithdrawalButtonClick);
                     //this.destroyTouchClickEvent("btn-consumption", this.ConsumptionButtonClick);
                     //this.destroyTouchClickEvent("btn-return", this.ReturnButtonClick);
                     //this.destroyTouchClickEvent("btn-production", this.ProductionButtonClick);
@@ -79,6 +83,12 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
                 };
                 Index.prototype.paymentButtonClick = function (e) {
                     vars._main.OpenController({ urlController: "document/card/payment", backController: this });
+                };
+                Index.prototype.depositButtonClick = function (e) {
+                    vars._main.OpenController({ urlController: "document/card/paymentdeposit", backController: this });
+                };
+                Index.prototype.withdrawalButtonClick = function (e) {
+                    vars._main.OpenController({ urlController: "document/card/paymentwithdrawal", backController: this });
                 };
                 return Index;
             }(base.Controller.Base));

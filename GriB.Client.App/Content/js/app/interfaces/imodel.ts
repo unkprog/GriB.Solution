@@ -239,6 +239,8 @@
 
     export interface IPayment extends IEditorModel {
         cd: Date;
+        cu: IEmployeeModel;
+        doctype: number;
         check: IPOSCheck;
         ptype: number;
         sum: number;
