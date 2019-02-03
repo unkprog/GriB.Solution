@@ -458,7 +458,9 @@
     <TypeScriptCompile Include="Content\js\app\common\basecontroller.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\about\index.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\dialog\modaldialog.ts" />
+    <TypeScriptCompile Include="Content\js\app\controller\document\card\paymentbase.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\document\card\payment.ts" />
+    <TypeScriptCompile Include="Content\js\app\controller\document\card\encashment.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\document\card\paymentwithdrawal.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\document\card\sale.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\document\card\production.ts" />
@@ -469,9 +471,11 @@
     <TypeScriptCompile Include="Content\js\app\controller\document\card\consumption.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\document\card\arrival.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\document\card\card.ts" />
+    <TypeScriptCompile Include="Content\js\app\controller\document\editor\payment.ts" />
+    <TypeScriptCompile Include="Content\js\app\controller\document\editor\encashment.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\document\editor\paymentwithdrawal.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\document\editor\paymentdeposit.ts" />
-    <TypeScriptCompile Include="Content\js\app\controller\document\editor\payment.ts" />
+    <TypeScriptCompile Include="Content\js\app\controller\document\editor\paymentbase.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\document\editor\movement.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\document\editor\sale.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\document\editor\writeoff.ts" />
@@ -484,6 +488,8 @@
     <TypeScriptCompile Include="Content\js\app\controller\security\recovery.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\security\register.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\security\login.ts" />
+    <TypeScriptCompile Include="Content\js\app\controller\setting\card\income.ts" />
+    <TypeScriptCompile Include="Content\js\app\controller\setting\card\cost.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\setting\card\costincome.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\setting\card\card.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\setting\card\client.ts" />

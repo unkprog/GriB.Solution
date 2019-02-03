@@ -1,8 +1,8 @@
 ﻿import vars = require('app/common/variables');
-import card = require('app/controller/document/card/payment');
+import card = require('app/controller/document/card/paymentbase');
 
 export namespace Controller.Document.Card {
-    export class PaymentDeposit extends card.Controller.Document.Card.Payment {
+    export class PaymentDeposit extends card.Controller.Document.Card.PaymentBase {
         constructor() {
             super();
             this.Model.set("Header", vars._statres("label$deposit"));
@@ -40,7 +40,7 @@ export namespace Controller.Document.Card {
         public ViewInit(view: JQuery): boolean {
             let result: boolean = super.ViewInit(view);
             let settings: card.Controller.Document.Card.PaymentCardFilterSettings = this.CardSettings.FilterSettings as card.Controller.Document.Card.PaymentCardFilterSettings;
-            //if (settings) settings.showReason(true);
+            if (settings) settings.showWithout(false);
             return result;
         }
 

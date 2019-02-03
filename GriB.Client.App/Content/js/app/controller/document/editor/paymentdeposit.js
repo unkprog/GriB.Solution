@@ -11,7 +11,7 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-define(["require", "exports", "app/controller/document/editor/payment", "app/common/variables"], function (require, exports, base, vars) {
+define(["require", "exports", "app/controller/document/editor/paymentbase", "app/common/variables"], function (require, exports, base, vars) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var Controller;
@@ -26,13 +26,6 @@ define(["require", "exports", "app/controller/document/editor/payment", "app/com
                         return _super.call(this) || this;
                     }
                     Object.defineProperty(PaymentDeposit.prototype, "EditIdName", {
-                        //public get EditorModel(): Interfaces.Model.IPayment {
-                        //    let model: Interfaces.Model.IPayment = this.Model.get("editModel").toJSON();
-                        //    return model;
-                        //}
-                        //protected createEditorSettings(): Interfaces.IEditorSettings {
-                        //    return { EditIdName: this.EditIdName, Load: $.proxy(this.Service.GetPayment, this.Service), Save: $.proxy(this.Service.SetPayment, this.Service) };
-                        //}
                         get: function () {
                             return "id_paymentdeposit";
                         },
@@ -46,8 +39,15 @@ define(["require", "exports", "app/controller/document/editor/payment", "app/com
                         }
                         return model;
                     };
+                    PaymentDeposit.prototype.ViewInit = function (view) {
+                        var result = _super.prototype.ViewInit.call(this, view);
+                        if (this.methodPaymentWitOut)
+                            this.methodPaymentWitOut.remove();
+                        this.incomeControl.removeClass("hide");
+                        return result;
+                    };
                     return PaymentDeposit;
-                }(base.Controller.Document.Editor.Payment));
+                }(base.Controller.Document.Editor.PaymentBase));
                 Editor.PaymentDeposit = PaymentDeposit;
             })(Editor = Document.Editor || (Document.Editor = {}));
         })(Document = Controller.Document || (Controller.Document = {}));

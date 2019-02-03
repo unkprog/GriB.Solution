@@ -286,6 +286,26 @@ namespace GriB.Client.App.Controllers
         }
 
         [HttpGet]
+        [ActionName("get_costs")]
+        public HttpResponseMessage GetCosts()
+        {
+            return TryCatchResponseQuery((query) =>
+            {
+                return Request.CreateResponse(HttpStatusCode.OK, CostIncome.GetCostIncomes(query, 2));
+            });
+        }
+
+        [HttpGet]
+        [ActionName("get_incomes")]
+        public HttpResponseMessage GetIncomes()
+        {
+            return TryCatchResponseQuery((query) =>
+            {
+                return Request.CreateResponse(HttpStatusCode.OK, CostIncome.GetCostIncomes(query, 1));
+            });
+        }
+
+        [HttpGet]
         [ActionName("get_costincome")]
         public HttpResponseMessage GetCostIncome(int id)
         {

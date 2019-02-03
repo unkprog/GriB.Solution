@@ -17,6 +17,8 @@ namespace GriB.Client.App.Models.POSTerminal
         public client    client    { get; set; }
         public salepoint    salepoint { get; set; }
         public employeecard employee  { get; set; }
+        public costincome costincome { get; set; }
+        public account account { get; set; }
         public string       comment   { get; set; }
     }
 }

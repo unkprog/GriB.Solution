@@ -15,6 +15,8 @@ namespace GriB.Client.App.Managers.POSTerminal
             , salepoint = new salepoint() { id = (int)values[cnt++], name = (string)values[cnt++] }
             , client = new client() { id = (int)values[cnt++], fname = (string)values[cnt++], mname = (string)values[cnt++], lname = (string)values[cnt++] }
             , cu = (int)values[cnt++], doctype = (int)values[cnt++]
+            , costincome = new costincome() { id = (int)values[cnt++], name = (string)values[cnt++] }
+            , account = new account() { id = (int)values[cnt++], name = (string)values[cnt++] }
             };
         }
 
@@ -55,7 +57,10 @@ namespace GriB.Client.App.Managers.POSTerminal
         public static payment SetPayment(this Query query, payment payment, int user)
         {
             payment result = payment;
-            query.Execute(cmdSet, new SqlParameter[] { new SqlParameter("@id", result.id), new SqlParameter("@u", user), new SqlParameter("@doctype", payment.doctype), new SqlParameter("@check", result.check == null?0:result.check.id), new SqlParameter("@type", result.ptype), new SqlParameter("@sum", result.sum), new SqlParameter("@option", result.options), new SqlParameter("@client", result.client == null ? 0 :result.client.id), new SqlParameter("@salepoint", result.salepoint == null ? 0: result.salepoint.id) }
+            query.Execute(cmdSet, new SqlParameter[] { new SqlParameter("@id", result.id), new SqlParameter("@u", user), new SqlParameter("@doctype", payment.doctype), new SqlParameter("@check", result.check == null?0:result.check.id), new SqlParameter("@type", result.ptype), new SqlParameter("@sum", result.sum)
+                , new SqlParameter("@option", result.options), new SqlParameter("@client", result.client == null ? 0 :result.client.id), new SqlParameter("@salepoint", result.salepoint == null ? 0: result.salepoint.id)
+                , new SqlParameter("@costincome", result.costincome == null ? 0 :result.costincome.id), new SqlParameter("@account", result.account == null ? 0 :result.account.id)
+            }
             , (values) =>
             {
                 result.id = (int)values[0];

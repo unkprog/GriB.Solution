@@ -11,7 +11,7 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-define(["require", "exports", "app/common/variables", "app/controller/document/card/payment"], function (require, exports, vars, card) {
+define(["require", "exports", "app/common/variables", "app/controller/document/card/paymentbase"], function (require, exports, vars, card) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var Controller;
@@ -70,11 +70,12 @@ define(["require", "exports", "app/common/variables", "app/controller/document/c
                     PaymentDeposit.prototype.ViewInit = function (view) {
                         var result = _super.prototype.ViewInit.call(this, view);
                         var settings = this.CardSettings.FilterSettings;
-                        //if (settings) settings.showReason(true);
+                        if (settings)
+                            settings.showWithout(false);
                         return result;
                     };
                     return PaymentDeposit;
-                }(card.Controller.Document.Card.Payment));
+                }(card.Controller.Document.Card.PaymentBase));
                 Card.PaymentDeposit = PaymentDeposit;
             })(Card = Document.Card || (Document.Card = {}));
         })(Document = Controller.Document || (Controller.Document = {}));

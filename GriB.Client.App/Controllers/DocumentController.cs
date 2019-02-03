@@ -147,6 +147,7 @@ namespace GriB.Client.App.Controllers
             return TryCatchResponseQuery((query) =>
             {
                 payment result = Payment.GetPayment(query, id);
+                Payment.GetComment(query, result);
                 return Request.CreateResponse(HttpStatusCode.OK, new { record = result });
             });
         }
@@ -159,6 +160,7 @@ namespace GriB.Client.App.Controllers
             {
                 Principal principal = (Principal)HttpContext.Current.User;
                 Payment.SetPayment(query, payment, principal.Data.User.id);
+                Payment.SetComment(query, payment);
                 return Request.CreateResponse(HttpStatusCode.OK, "Ok");
             });
         }

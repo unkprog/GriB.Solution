@@ -80,6 +80,12 @@ define(["require", "exports", "app/common/baseservice"], function (require, expo
             SettingsService.prototype.GetCostIncomes = function (Callback) {
                 this.GetApi({ Action: "/get_costincomes", Callback: Callback });
             };
+            SettingsService.prototype.GetCosts = function (Callback) {
+                this.GetApi({ Action: "/get_costs", Callback: Callback });
+            };
+            SettingsService.prototype.GetIncomes = function (Callback) {
+                this.GetApi({ Action: "/get_incomes", Callback: Callback });
+            };
             SettingsService.prototype.GetCostIncome = function (id, Callback) {
                 this.GetApi({ Action: "/get_costincome", RequestData: { id: id }, Callback: Callback });
             };

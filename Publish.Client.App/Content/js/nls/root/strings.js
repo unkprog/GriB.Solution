@@ -139,6 +139,8 @@ define({
     /////////////////////////////////////////////////////////////////////////////////////////////
     "label$articlecostincome": "Статья расходов и доходов",
     "label$articletype": "Тип статьи",
+    "label$articlecost": "Статья раходов",
+    "label$articleincome": "Статья доходов",
     "label$cost": "Расход",
     "label$income": "Доход",
 

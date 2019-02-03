@@ -78,6 +78,14 @@ export module Services {
             this.GetApi({ Action: "/get_costincomes", Callback: Callback });
         }
 
+        public GetCosts(Callback: (responseData: any) => void) {
+            this.GetApi({ Action: "/get_costs", Callback: Callback });
+        }
+
+        public GetIncomes(Callback: (responseData: any) => void) {
+            this.GetApi({ Action: "/get_incomes", Callback: Callback });
+        }
+
         public GetCostIncome(id: number, Callback: (responseData: any) => void) {
             this.GetApi({ Action: "/get_costincome", RequestData: { id: id }, Callback: Callback });
         }

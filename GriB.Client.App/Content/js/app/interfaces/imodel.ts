@@ -245,7 +245,8 @@
         ptype: number;
         sum: number;
         options: number;
-        client: IClientModel
+        client: IClientModel;
+        costincome: ICostIncome
         salepoint: ISalepoint;
         comment: string;
     }

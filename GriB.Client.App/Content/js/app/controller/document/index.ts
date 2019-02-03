@@ -38,6 +38,7 @@ export namespace Controller.Document {
             this.SaleButtonClick = this.createTouchClickEvent("btn-sale", this.saleButtonClick);
 
             this.PaymentButtonClick = this.createTouchClickEvent("btn-payment", this.paymentButtonClick);
+            this.EncashmentButtonClick = this.createTouchClickEvent("btn-encashment", this.encashmentButtonClick);
             this.DepositButtonClick = this.createTouchClickEvent("btn-deposit", this.depositButtonClick);
             this.WithdrawalButtonClick = this.createTouchClickEvent("btn-withdrawal", this.withdrawalButtonClick);
 
@@ -53,6 +54,7 @@ export namespace Controller.Document {
             this.destroyTouchClickEvent("btn-sale", this.SaleButtonClick);
 
             this.destroyTouchClickEvent("btn-payment", this.PaymentButtonClick);
+            this.destroyTouchClickEvent("btn-encashment", this.EncashmentButtonClick);
             this.destroyTouchClickEvent("btn-deposit", this.DepositButtonClick);
             this.destroyTouchClickEvent("btn-withdrawal", this.WithdrawalButtonClick);
 
@@ -84,6 +86,11 @@ export namespace Controller.Document {
         public PaymentButtonClick: { (e: any): void; };
         private paymentButtonClick(e) {
             vars._main.OpenController({ urlController: "document/card/payment", backController: this });
+        }
+
+        public EncashmentButtonClick: { (e: any): void; };
+        private encashmentButtonClick(e) {
+            vars._main.OpenController({ urlController: "document/card/encashment", backController: this });
         }
 
         public DepositButtonClick: { (e: any): void; };
