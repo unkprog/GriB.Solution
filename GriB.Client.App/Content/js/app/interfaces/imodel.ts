@@ -193,11 +193,14 @@
         comment: string;
     }
 
-    export interface ISaleParams {
-        id: number;
-        salepoint: number;
+    export interface IDateParams {
         datefrom: Date;
         dateto: Date;
+    }
+
+    export interface ISaleParams extends IDateParams {
+        id: number;
+        salepoint: number;
     }
 
     export interface IPaymentParams extends ISaleParams {
@@ -249,5 +252,17 @@
         costincome: ICostIncome
         salepoint: ISalepoint;
         comment: string;
+    }
+
+    export interface IReportFilter extends IDateParams {
+
+    }
+
+    export interface IReportSaleFilter extends IReportFilter {
+
+    }
+
+    export interface IReportModel {
+
     }
 }

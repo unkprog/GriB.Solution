@@ -14,8 +14,8 @@ export namespace Controller.Document.Card {
             });
         }
 
-        protected columns(): Interfaces.ICardColumn[] {
-            let result: Interfaces.ICardColumn[] = super.columns();
+        protected columns(): Interfaces.IBaseColumn[] {
+            let result: Interfaces.IBaseColumn[] = super.columns();
             result.splice(3, 0, { Header: vars._statres("label$contractor"), Field: "contractor.name" },);
             return result;
         }

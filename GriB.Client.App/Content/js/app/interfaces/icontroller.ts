@@ -57,13 +57,16 @@
         Cancel(): void;
     }
 
-    export interface ICardColumn {
+    export interface IBaseColumn {
         Header?: string;
         HeaderStyle?: string;
         HeaderTemplate?: string;
         Field?: string;
         FieldStyle?: string;
         FieldTemplate?: string;
+    }
+
+    export interface ICardColumn extends IBaseColumn {
     }
 
     export interface ICardFilterSettings {
@@ -96,7 +99,6 @@
         Load: (callback: (responseData: any) => void) => void;
         Delete: (id: number, callback: (responseData: any) => void) => void;
     }
-
 
 
     export interface IEditorButtonSettings {
@@ -174,5 +176,22 @@
         IsRequireComment: boolean;
         Comment: string;
         OnApply(controller: IControllerCheckComment): void;
+    }
+
+    export interface IReportColumn extends IBaseColumn {
+    }
+
+    export interface IReportSettings {
+      
+        Columns?: IReportColumn[];
+    }
+
+    export interface IControllerReport extends IControllerEditor {
+        SaveFilter(): void;
+        RestoreFilter(): void;
+        Filter: Interfaces.Model.IReportFilter;
+        ReportSettings: Interfaces.IReportSettings;
+
+        Columns: Interfaces.IReportColumn[];
     }
 }

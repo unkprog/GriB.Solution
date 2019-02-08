@@ -43,11 +43,6 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                         enumerable: true,
                         configurable: true
                     });
-                    PaymentCardFilterSettings.prototype.getDefDate = function () {
-                        var dateTime = new Date();
-                        dateTime.setHours(0, 0, 0, 0); // = new Date(dateTime.getFullYear(), dateTime.getMonth(), dateTime.getDate(), 0, 0, 0, 0);
-                        return dateTime;
-                    };
                     PaymentCardFilterSettings.prototype.createModel = function () {
                         var data = this.restoreFilter();
                         var result = new kendo.data.ObservableObject({
@@ -89,10 +84,8 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                         var result;
                         var saved = window.localStorage.getItem(this.fieldSearch);
                         if (!saved || saved === "\"{}\"") {
-                            var dateTime = utils.date_ddmmyyyy(this.getDefDate());
-                            result = {
-                                salepoint: {}, employee: {}, client: {}, type: 0, option: 0, datefrom: dateTime, dateto: dateTime
-                            };
+                            var dateTime = utils.date_ddmmyyyy(utils.dateToday());
+                            result = { salepoint: {}, employee: {}, client: {}, type: 0, option: 0, datefrom: dateTime, dateto: dateTime };
                         }
                         else
                             result = JSON.parse(saved);

@@ -63,8 +63,14 @@ define(["require", "exports"], function (require, exports) {
         return date.toLocaleString();
     }
     exports.dateToLongString = dateToLongString;
+    function dateToday() {
+        var result = new Date();
+        result.setHours(0, 0, 0, 0);
+        return result;
+    }
+    exports.dateToday = dateToday;
     function date_ddmmyyyy(date) {
-        var _date = (date ? date : new Date());
+        var _date = (date ? (typeof date === 'string' || date instanceof String ? new Date(date) : date) : new Date());
         var yyyy = _date.getFullYear().toString();
         var mm = (_date.getMonth() + 1).toString(); // getMonth() is zero-based         
         var dd = _date.getDate().toString();

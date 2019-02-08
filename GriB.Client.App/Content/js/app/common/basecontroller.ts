@@ -695,7 +695,7 @@ export namespace Controller {
 
        
         protected getTableHeaderHtml(): string {
-            let columns: Interfaces.ICardColumn[] = this.CardSettings.Columns;
+            let columns: Interfaces.IBaseColumn[] = this.CardSettings.Columns;
             let html: string = '';
 
             html += '<tr>';
@@ -718,7 +718,7 @@ export namespace Controller {
         private templateRow: Function;
         protected getTableRowTemplate(): string {
             let setting: Interfaces.ICardSettings = this.CardSettings;
-            let columns: Interfaces.ICardColumn[] = setting.Columns;
+            let columns: Interfaces.IBaseColumn[] = setting.Columns;
             let html: string = '';
 
             html += '<tr';
@@ -917,6 +917,216 @@ export namespace Controller {
         }
 
         public Close(): void {
+        }
+    }
+
+    export class BaseReport extends BaseEditor implements Interfaces.IControllerReport {
+
+        constructor() {
+            super();
+            this.reportSettings = this.createReportSettings();
+            this.RestoreFilter();
+        }
+
+        protected createModel(): kendo.data.ObservableObject {
+            return new kendo.data.ObservableObject({
+                "Header": "",
+                "filterModel": {},
+                "reportModel": {},
+            });
+        }
+
+        protected get FilterName(): string {
+            return "reportFilter";
+        }
+
+        public SaveFilter(): void {
+            window.localStorage.setItem(this.FilterName, this.getSaveFilter());
+        }
+
+        protected getSaveFilter(): string {
+            return JSON.stringify(this.Filter);
+        }
+
+        public RestoreFilter(): void {
+            let filter: Interfaces.Model.IReportFilter;
+            let saved: any = window.localStorage.getItem(this.FilterName);
+            if (!saved || saved === "\"{}\"") {
+                filter = this.getDefaultFilter();
+            }
+            else
+                filter = JSON.parse(saved);
+            this.Filter = filter;
+        }
+
+        protected getDefaultFilter(): Interfaces.Model.IReportFilter {
+            return undefined;
+        }
+
+        public get Filter(): Interfaces.Model.IReportFilter {
+            return this.Model.get("filterModel").toJSON() as Interfaces.Model.IReportFilter;
+        }
+
+        public set Filter(filter: Interfaces.Model.IReportFilter) {
+            this.Model.set("filterModel", filter);
+        }
+
+        protected createReportSettings(): Interfaces.IReportSettings {
+            return { Columns: this.Columns };
+        }
+
+        private reportSettings: Interfaces.IReportSettings;
+        public get ReportSettings(): Interfaces.IReportSettings {
+            return this.reportSettings;
+        }
+
+
+        public get Columns(): Interfaces.IReportColumn[] {
+            return this.columns();
+        }
+
+        protected columns(): Interfaces.IReportColumn[] {
+            return [];
+        }
+
+        private tableRow: JQuery;
+        private tableHead: JQuery;
+        private tableBody: JQuery;
+
+        public ViewInit(view: JQuery): boolean {
+            let result: boolean = super.ViewInit(view);
+            let controls: Array<JQuery> = [];
+
+            controls.push(this.initTableRow());
+
+            view.append(controls);
+            
+            this.setupTable();
+            return result;
+        }
+
+        protected initTableRow(): JQuery {
+            let navbarHeader: string = '<div class="row row-table-report">';
+            navbarHeader += '    <div class="col s12 m12 l12 xl12 col-table">';
+            navbarHeader += '        <table class="highlight">';
+            navbarHeader += '            <thead></thead>';
+            navbarHeader += '            <tbody></tbody>';
+            navbarHeader += '        </table>';
+            navbarHeader += '    </div>';
+            navbarHeader += '</div>';
+            this.tableRow = $(navbarHeader);
+            this.tableHead = this.tableRow.find('thead');
+            this.tableBody = this.tableRow.find('tbody');
+
+            return this.tableRow;
+        }
+
+        public ViewResize(e: any): void {
+            super.ViewResize(e);
+            let tbody: JQuery = this.tableBody;
+            if (tbody && tbody.length > 0) {
+                tbody.height($(window).height() - tbody.offset().top - (0.2 * parseFloat(getComputedStyle(tbody[0]).fontSize)) - 1);
+            }
+        }
+
+        public ViewShow(e): boolean {
+            return super.ViewShow(e);
+        }
+
+        public ViewHide(e: any) {
+            this.SaveFilter();
+            super.ViewHide(e);
+        }
+
+        private rows: JQuery;
+        private setupTable(): void {
+            this.tableHead.html(this.getTableHeaderHtml());
+            this.setupRows();
+            this.rows = this.tableBody.find('tr');
+            //this.createTouchClickEvent(this.rows, this.rowClick);
+        }
+
+        protected setupRows(): void {
+            //this.selectedRow = null;
+
+            //if (this.rows)
+            //    this.destroyTouchClickEvent(this.rows, this.rowClick);
+
+            this.tableBody.html(this.getTableBodyHtml());
+            this.rows = this.tableBody.find('tr');
+            //this.createTouchClickEvent(this.rows, this.rowClick);
+        }
+
+
+        protected getTableHeaderHtml(): string {
+            let columns: Interfaces.IReportColumn[] = this.ReportSettings.Columns;
+            let html: string = '';
+
+            html += '<tr>';
+            for (let i = 0, icount = columns && columns.length ? columns.length : 0; i < icount; i++) {
+                html += '   <th';
+                if (columns[i].HeaderStyle) {
+                    html += ' class="';
+                    html += columns[i].HeaderStyle;
+                    html += '"';
+                }
+                html += '>';
+                html += (columns[i].HeaderTemplate ? columns[i].HeaderTemplate : columns[i].Header);
+                html += '</th>';
+            }
+            html += '</tr>';
+
+            return html;
+        }
+
+        private templateRow: Function;
+        protected getTableRowTemplate(): string {
+            let setting: Interfaces.IReportSettings = this.ReportSettings;
+            let columns: Interfaces.IReportColumn[] = setting.Columns;
+            let html: string = '';
+
+            html += '<tr';
+            //if (setting.FieldId) {
+            //    html += ' id="table-row-#=';
+            //    html += setting.FieldId;
+            //    html += '#"';
+            //}
+            html += '>';
+
+            for (let i = 0, icount = (columns && columns.length ? columns.length : 0); i < icount; i++) {
+                html += '   <td';
+                if (columns[i].FieldStyle) {
+                    html += ' class="';
+                    html += columns[i].FieldStyle;
+                    html += '"';
+                }
+                html += '>';
+                if (columns[i].FieldTemplate)
+                    html += columns[i].FieldTemplate;
+                else {
+                    html += '#=';
+                    html += columns[i].Field;
+                    html += '#';
+                }
+                html += '</td>';
+            }
+            html += '</tr>';
+
+            return html;
+        }
+
+        protected getTableBodyHtml(): string {
+            let html: string = '';
+            let data: Interfaces.Model.IReportModel[] = this.Model.get("reportModel");
+
+            if (data && data.length > 0) {
+                if (!this.templateRow)
+                    this.templateRow = kendo.template(this.getTableRowTemplate());
+                for (let i = 0, icount = (data && data.length ? data.length : 0); i < icount; i++) {
+                    html += this.templateRow(data[i]);
+                }
+            }
+            return html;
         }
     }
 }

@@ -4,6 +4,7 @@
         "jquery": "lib/jquery-3.3.1.min",
         "materialize": "lib/materialize/materialize",
         "materialize.pagination": "lib/materialize/materialize.pagination",
+        "chartjs": "lib/chartjs/Chart.min",
         "kendo.core": "lib/kendo/kendo.core.es5.min",
         "kendo.data": "lib/kendo/kendo.data.es5.min",
         "kendo.data.odata": "lib/kendo/kendo.data.odata.es5.min",

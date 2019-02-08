@@ -165,9 +165,12 @@ input[type='number']:hover::-webkit-outer-spin-button {
   -webkit-appearance: none;
   margin: 0; }
 
-.row-table {
+.row-table, .row-table-report {
   padding: 0.2em;
   margin: 0; }
+
+.row-table-report {
+  font-size: 0.85em; }
 
 .col-table {
   padding: 0 !important; }
@@ -208,6 +211,10 @@ input[type='number']:hover::-webkit-outer-spin-button {
 .product-col-quantity-auto {
   width: auto;
   text-align: center; }
+
+.product-col-quantity-auto-right {
+  width: auto;
+  text-align: right; }
 
 .product-col-unit {
   width: 8%; }
@@ -320,7 +327,7 @@ input[type='number']:hover::-webkit-outer-spin-button {
   font-weight: normal; }
 
 .total-text {
-  /*margin: 5px;*/
+  margin: 5px;
   font-size: 2em;
   font-weight: bold; }
 

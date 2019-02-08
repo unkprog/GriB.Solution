@@ -54,8 +54,14 @@ export function dateToLongString(date: Date): string {
     return date.toLocaleString();
 }
 
-export function date_ddmmyyyy(date: Date): string {
-    let _date = (date ? date : new Date());
+export function dateToday(): Date {
+    let result: Date = new Date();
+    result.setHours(0, 0, 0, 0);
+    return result;
+}
+
+export function date_ddmmyyyy(date: Date | string): string {
+    let _date: Date = (date ? (typeof date === 'string' || date instanceof String ? new Date(date as string) : date) : new Date());
     var yyyy = _date.getFullYear().toString();
     var mm = (_date.getMonth() + 1).toString(); // getMonth() is zero-based         
     var dd = _date.getDate().toString();

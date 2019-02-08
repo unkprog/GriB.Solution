@@ -28,14 +28,19 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
                 };
                 Index.prototype.createModel = function () {
                     return new kendo.data.ObservableObject({
-                        "Header": "POS Cloud",
+                        "Header": vars._statres("label$reports"),
+                        "labelReports": vars._statres("label$reports"),
+                        "labelReportSales": vars._statres("report$sales"),
                     });
                 };
-                Index.prototype.ViewInit = function (view) {
-                    return _super.prototype.ViewInit.call(this, view);
+                Index.prototype.createEvents = function () {
+                    this.ReportSalesButtonClick = this.createTouchClickEvent("btn-report-sales", this.reportSalesButtonClick);
                 };
-                Index.prototype.ViewHide = function (e) {
-                    _super.prototype.ViewHide.call(this, e);
+                Index.prototype.destroyEvents = function () {
+                    this.destroyTouchClickEvent("btn-report-sales", this.ReportSalesButtonClick);
+                };
+                Index.prototype.reportSalesButtonClick = function (e) {
+                    vars._main.OpenController({ urlController: "report/sales/index", backController: this });
                 };
                 return Index;
             }(base.Controller.Base));

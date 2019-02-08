@@ -205,9 +205,13 @@ input[type='number']:hover::-webkit-outer-spin-button {
     margin: 0;
 }
 
-.row-table {
+.row-table, .row-table-report {
     padding: 0.2em;
     margin: 0;
+}
+
+.row-table-report {
+    font-size: 0.85em;
 }
 
 .col-table {
@@ -257,6 +261,11 @@ input[type='number']:hover::-webkit-outer-spin-button {
 .product-col-quantity-auto {
     width: auto;
     text-align: center;
+}
+
+.product-col-quantity-auto-right {
+    width: auto;
+    text-align: right;
 }
 
 .product-col-unit {

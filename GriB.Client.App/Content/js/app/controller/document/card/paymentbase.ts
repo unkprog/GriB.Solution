@@ -26,12 +26,6 @@ export namespace Controller.Document.Card {
             return this._model;
         }
 
-        private getDefDate(): Date {
-            let dateTime: Date = new Date();
-            dateTime.setHours(0, 0, 0, 0);// = new Date(dateTime.getFullYear(), dateTime.getMonth(), dateTime.getDate(), 0, 0, 0, 0);
-            return dateTime;
-        }
-
         protected createModel(): kendo.data.ObservableObject {
             let data: any = this.restoreFilter();
            
@@ -77,9 +71,8 @@ export namespace Controller.Document.Card {
             let result: any;
             let saved: any = window.localStorage.getItem(this.fieldSearch);
             if (!saved || saved === "\"{}\"") {
-                let dateTime: string = utils.date_ddmmyyyy(this.getDefDate());
-                result = {
-                    salepoint: {}, employee: {}, client: {}, type: 0, option:0, datefrom: dateTime, dateto: dateTime };
+                let dateTime: string = utils.date_ddmmyyyy(utils.dateToday());
+                result = { salepoint: {}, employee: {}, client: {}, type: 0, option:0, datefrom: dateTime, dateto: dateTime };
             }
             else
                 result = JSON.parse(saved);
@@ -425,11 +418,11 @@ export namespace Controller.Document.Card {
             };
         }
 
-        protected get Columns(): Interfaces.ICardColumn[] {
+        protected get Columns(): Interfaces.IBaseColumn[] {
             return this.columns();
         }
 
-        protected columns(): Interfaces.ICardColumn[] {
+        protected columns(): Interfaces.IBaseColumn[] {
             //let payMethod: string = "#if (ptype === 1) {#" + vars._statres("label$cash") + "# } else if (ptype === 2) {#" + vars._statres("label$noncash") + "# } else if (ptype === 3) {#" + vars._statres("label$withoutpayment") + "#}#";
             let payMethod: string = '#if (ptype === 1) {#<i class="material-icons left">attach_money</i># } else if (ptype === 2) {#<i class="material-icons left">credit_card</i># } else if (ptype === 3) {#<i class="material-icons left">money_off</i>#}#';
             payMethod = payMethod + "#if ((options & 2)===2 || (options & 4)===4 || (options & 8)===8) {# (#if ((options & 2)===2) {#" + vars._statres("label$oncredit") + "# } else if ((options & 4)===4) {#" + vars._statres("label$onthehouse") + "# } else if ((options & 8)===8) {#" + vars._statres("label$clientleft") + "#}#)#}#";

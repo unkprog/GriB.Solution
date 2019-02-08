@@ -227,11 +227,11 @@ export namespace Controller.Document.Card {
             };
         }
 
-        protected get Columns(): Interfaces.ICardColumn[] {
+        protected get Columns(): Interfaces.IBaseColumn[] {
             return this.columns();
         }
 
-        protected columns(): Interfaces.ICardColumn[] {
+        protected columns(): Interfaces.IBaseColumn[] {
             return [
                 { Header: "", HeaderStyle: "doc-col-conduct", Field: "options", FieldStyle: "doc-col-conduct", FieldTemplate: '#if ((options & 1) === 1) {#<label><input type="checkbox" checked="checked" disabled="disabled"/><span></span></label>#}#' },
                 { Header: vars._statres("label$date"), Field: "cd", FieldTemplate: "#=date_ddmmyyyy_withtime(new Date(cd))#" },

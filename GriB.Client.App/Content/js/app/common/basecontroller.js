@@ -806,6 +806,191 @@ define(["require", "exports", "app/common/utils", "app/common/variables", "./var
             return BaseCard;
         }(Base));
         Controller.BaseCard = BaseCard;
+        var BaseReport = /** @class */ (function (_super) {
+            __extends(BaseReport, _super);
+            function BaseReport() {
+                var _this = _super.call(this) || this;
+                _this.reportSettings = _this.createReportSettings();
+                _this.RestoreFilter();
+                return _this;
+            }
+            BaseReport.prototype.createModel = function () {
+                return new kendo.data.ObservableObject({
+                    "Header": "",
+                    "filterModel": {},
+                    "reportModel": {},
+                });
+            };
+            Object.defineProperty(BaseReport.prototype, "FilterName", {
+                get: function () {
+                    return "reportFilter";
+                },
+                enumerable: true,
+                configurable: true
+            });
+            BaseReport.prototype.SaveFilter = function () {
+                window.localStorage.setItem(this.FilterName, this.getSaveFilter());
+            };
+            BaseReport.prototype.getSaveFilter = function () {
+                return JSON.stringify(this.Filter);
+            };
+            BaseReport.prototype.RestoreFilter = function () {
+                var filter;
+                var saved = window.localStorage.getItem(this.FilterName);
+                if (!saved || saved === "\"{}\"") {
+                    filter = this.getDefaultFilter();
+                }
+                else
+                    filter = JSON.parse(saved);
+                this.Filter = filter;
+            };
+            BaseReport.prototype.getDefaultFilter = function () {
+                return undefined;
+            };
+            Object.defineProperty(BaseReport.prototype, "Filter", {
+                get: function () {
+                    return this.Model.get("filterModel").toJSON();
+                },
+                set: function (filter) {
+                    this.Model.set("filterModel", filter);
+                },
+                enumerable: true,
+                configurable: true
+            });
+            BaseReport.prototype.createReportSettings = function () {
+                return { Columns: this.Columns };
+            };
+            Object.defineProperty(BaseReport.prototype, "ReportSettings", {
+                get: function () {
+                    return this.reportSettings;
+                },
+                enumerable: true,
+                configurable: true
+            });
+            Object.defineProperty(BaseReport.prototype, "Columns", {
+                get: function () {
+                    return this.columns();
+                },
+                enumerable: true,
+                configurable: true
+            });
+            BaseReport.prototype.columns = function () {
+                return [];
+            };
+            BaseReport.prototype.ViewInit = function (view) {
+                var result = _super.prototype.ViewInit.call(this, view);
+                var controls = [];
+                controls.push(this.initTableRow());
+                view.append(controls);
+                this.setupTable();
+                return result;
+            };
+            BaseReport.prototype.initTableRow = function () {
+                var navbarHeader = '<div class="row row-table-report">';
+                navbarHeader += '    <div class="col s12 m12 l12 xl12 col-table">';
+                navbarHeader += '        <table class="highlight">';
+                navbarHeader += '            <thead></thead>';
+                navbarHeader += '            <tbody></tbody>';
+                navbarHeader += '        </table>';
+                navbarHeader += '    </div>';
+                navbarHeader += '</div>';
+                this.tableRow = $(navbarHeader);
+                this.tableHead = this.tableRow.find('thead');
+                this.tableBody = this.tableRow.find('tbody');
+                return this.tableRow;
+            };
+            BaseReport.prototype.ViewResize = function (e) {
+                _super.prototype.ViewResize.call(this, e);
+                var tbody = this.tableBody;
+                if (tbody && tbody.length > 0) {
+                    tbody.height($(window).height() - tbody.offset().top - (0.2 * parseFloat(getComputedStyle(tbody[0]).fontSize)) - 1);
+                }
+            };
+            BaseReport.prototype.ViewShow = function (e) {
+                return _super.prototype.ViewShow.call(this, e);
+            };
+            BaseReport.prototype.ViewHide = function (e) {
+                this.SaveFilter();
+                _super.prototype.ViewHide.call(this, e);
+            };
+            BaseReport.prototype.setupTable = function () {
+                this.tableHead.html(this.getTableHeaderHtml());
+                this.setupRows();
+                this.rows = this.tableBody.find('tr');
+                //this.createTouchClickEvent(this.rows, this.rowClick);
+            };
+            BaseReport.prototype.setupRows = function () {
+                //this.selectedRow = null;
+                //if (this.rows)
+                //    this.destroyTouchClickEvent(this.rows, this.rowClick);
+                this.tableBody.html(this.getTableBodyHtml());
+                this.rows = this.tableBody.find('tr');
+                //this.createTouchClickEvent(this.rows, this.rowClick);
+            };
+            BaseReport.prototype.getTableHeaderHtml = function () {
+                var columns = this.ReportSettings.Columns;
+                var html = '';
+                html += '<tr>';
+                for (var i = 0, icount = columns && columns.length ? columns.length : 0; i < icount; i++) {
+                    html += '   <th';
+                    if (columns[i].HeaderStyle) {
+                        html += ' class="';
+                        html += columns[i].HeaderStyle;
+                        html += '"';
+                    }
+                    html += '>';
+                    html += (columns[i].HeaderTemplate ? columns[i].HeaderTemplate : columns[i].Header);
+                    html += '</th>';
+                }
+                html += '</tr>';
+                return html;
+            };
+            BaseReport.prototype.getTableRowTemplate = function () {
+                var setting = this.ReportSettings;
+                var columns = setting.Columns;
+                var html = '';
+                html += '<tr';
+                //if (setting.FieldId) {
+                //    html += ' id="table-row-#=';
+                //    html += setting.FieldId;
+                //    html += '#"';
+                //}
+                html += '>';
+                for (var i = 0, icount = (columns && columns.length ? columns.length : 0); i < icount; i++) {
+                    html += '   <td';
+                    if (columns[i].FieldStyle) {
+                        html += ' class="';
+                        html += columns[i].FieldStyle;
+                        html += '"';
+                    }
+                    html += '>';
+                    if (columns[i].FieldTemplate)
+                        html += columns[i].FieldTemplate;
+                    else {
+                        html += '#=';
+                        html += columns[i].Field;
+                        html += '#';
+                    }
+                    html += '</td>';
+                }
+                html += '</tr>';
+                return html;
+            };
+            BaseReport.prototype.getTableBodyHtml = function () {
+                var html = '';
+                var data = this.Model.get("reportModel");
+                if (data && data.length > 0) {
+                    if (!this.templateRow)
+                        this.templateRow = kendo.template(this.getTableRowTemplate());
+                    for (var i = 0, icount = (data && data.length ? data.length : 0); i < icount; i++) {
+                        html += this.templateRow(data[i]);
+                    }
+                }
+                return html;
+            };
+            return BaseReport;
+        }(BaseEditor));
+        Controller.BaseReport = BaseReport;
     })(Controller = exports.Controller || (exports.Controller = {}));
 });
 //# sourceMappingURL=basecontroller.js.map

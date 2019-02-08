@@ -4,7 +4,7 @@ import base = require('app/common/basecontroller');
 export namespace Controller.Report {
     export class Index extends base.Controller.Base {
         constructor() {
-           super();
+            super();
         }
 
         protected createOptions(): Interfaces.IControllerOptions {
@@ -13,16 +13,23 @@ export namespace Controller.Report {
 
         protected createModel(): kendo.data.ObservableObject {
             return new kendo.data.ObservableObject({
-                "Header": "POS Cloud",
+                "Header": vars._statres("label$reports"),
+                "labelReports": vars._statres("label$reports"),
+                "labelReportSales": vars._statres("report$sales"),
             });
         }
 
-        public ViewInit(view): boolean {
-            return super.ViewInit(view);
+        protected createEvents(): void {
+            this.ReportSalesButtonClick = this.createTouchClickEvent("btn-report-sales", this.reportSalesButtonClick);
         }
 
-        public ViewHide(e) {
-            super.ViewHide(e);
+        protected destroyEvents(): void {
+            this.destroyTouchClickEvent("btn-report-sales", this.ReportSalesButtonClick);
+        }
+
+        public ReportSalesButtonClick: { (e: any): void; };
+        private reportSalesButtonClick(e) {
+            vars._main.OpenController({ urlController: "report/sales/index", backController: this });
         }
     }
 }
