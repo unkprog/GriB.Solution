@@ -956,7 +956,8 @@ export namespace Controller {
             }
             else
                 filter = JSON.parse(saved);
-            this.Filter = filter;
+            this.Model.set("filterModel", filter);
+           // this.Filter = filter;
         }
 
         protected getDefaultFilter(): Interfaces.Model.IReportFilter {
@@ -1039,8 +1040,9 @@ export namespace Controller {
         }
 
         private rows: JQuery;
-        private setupTable(): void {
-            this.tableHead.html(this.getTableHeaderHtml());
+        protected setupTable(): void {
+            let headerHtml: string = this.getTableHeaderHtml();
+            this.tableHead.html(headerHtml);
             this.setupRows();
             this.rows = this.tableBody.find('tr');
             //this.createTouchClickEvent(this.rows, this.rowClick);
@@ -1053,17 +1055,27 @@ export namespace Controller {
             //    this.destroyTouchClickEvent(this.rows, this.rowClick);
 
             this.tableBody.html(this.getTableBodyHtml());
+            let valueSum: number;
+            for (let j = 0, jcount = (this.sumFieldsInfo.fields && this.sumFieldsInfo.fields.length ? this.sumFieldsInfo.fields.length : 0); j < jcount; j++) {
+                valueSum = this.sumFieldsInfo.sumFied[this.sumFieldsInfo.fields[j]];
+                this.tableHead.find('#' + this.sumFieldsInfo.fields[j] + '_sum').html(utils.numberToString(valueSum ? valueSum : 0, 2));
+            }
             this.rows = this.tableBody.find('tr');
             //this.createTouchClickEvent(this.rows, this.rowClick);
         }
 
-
+        private sumFieldsInfo: any;
         protected getTableHeaderHtml(): string {
             let columns: Interfaces.IReportColumn[] = this.ReportSettings.Columns;
             let html: string = '';
+            let isSum: boolean = false;
+
+            this.sumFieldsInfo = { fields: [], sumFied: {} };
 
             html += '<tr>';
             for (let i = 0, icount = columns && columns.length ? columns.length : 0; i < icount; i++) {
+                if (columns[i].IsSum && columns[i].IsSum === true)
+                    isSum = true;
                 html += '   <th';
                 if (columns[i].HeaderStyle) {
                     html += ' class="';
@@ -1075,6 +1087,29 @@ export namespace Controller {
                 html += '</th>';
             }
             html += '</tr>';
+
+            if (isSum === true) {
+                html += '<tr>';
+                for (let i = 0, icount = columns && columns.length ? columns.length : 0; i < icount; i++) {
+                    html += '   <th';
+                    if (columns[i].IsSum === true) {
+                        html += (' id="' + columns[i].Field + '_sum"');
+                        this.sumFieldsInfo.fields.push(columns[i].Field);
+                        this.sumFieldsInfo.sumFied[columns[i].Field] = 0;
+                    }
+                    if (columns[i].HeaderStyle) {
+                        html += ' class="';
+                        html += columns[i].HeaderStyle;
+                        html += '"';
+                    }
+                    html += '>';
+                    if (columns[i].IsSum === true) {
+                        html += 'test';
+                    }
+                    html += '</th>';
+                }
+                html += '</tr>';
+            }
 
             return html;
         }
@@ -1120,10 +1155,13 @@ export namespace Controller {
             let data: Interfaces.Model.IReportModel[] = this.Model.get("reportModel");
 
             if (data && data.length > 0) {
-                if (!this.templateRow)
+               //if (!this.templateRow)
                     this.templateRow = kendo.template(this.getTableRowTemplate());
                 for (let i = 0, icount = (data && data.length ? data.length : 0); i < icount; i++) {
                     html += this.templateRow(data[i]);
+                    for (let j = 0, jcount = (this.sumFieldsInfo.fields && this.sumFieldsInfo.fields.length ? this.sumFieldsInfo.fields.length : 0); j < jcount; j++) {
+                        this.sumFieldsInfo.sumFied[this.sumFieldsInfo.fields[j]] += data[i][this.sumFieldsInfo.fields[j]];
+                    }
                 }
             }
             return html;

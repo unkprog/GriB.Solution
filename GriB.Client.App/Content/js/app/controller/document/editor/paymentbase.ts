@@ -210,6 +210,7 @@ export namespace Controller.Document.Editor {
                 this.destroyTouchClickEvent(this.incomeClearControl, this.ClearIncomeButtonClick);
                 this.destroyTouchClickEvent(this.incomeControl, this.IncomeButtonClick);
 
+                this.destroyTouchClickEvent(this.clientClearControl, this.ClearClientButtonClick);
                 this.destroyTouchClickEvent(this.clientControl, this.ClientButtonClick);
                 this.destroyTouchClickEvent(this.salePointControl, this.SalePointButtonClick);
             }

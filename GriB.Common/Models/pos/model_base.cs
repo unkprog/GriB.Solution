@@ -9,7 +9,8 @@ namespace GriB.Common.Models.pos
         public model_base() { }
         public model_base(model_base mbase)
         {
-            id = mbase.id;
+            if (mbase != null)
+                id = mbase.id;
         }
     }
 

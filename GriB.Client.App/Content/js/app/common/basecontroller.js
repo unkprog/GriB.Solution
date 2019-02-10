@@ -842,7 +842,8 @@ define(["require", "exports", "app/common/utils", "app/common/variables", "./var
                 }
                 else
                     filter = JSON.parse(saved);
-                this.Filter = filter;
+                this.Model.set("filterModel", filter);
+                // this.Filter = filter;
             };
             BaseReport.prototype.getDefaultFilter = function () {
                 return undefined;
@@ -914,7 +915,8 @@ define(["require", "exports", "app/common/utils", "app/common/variables", "./var
                 _super.prototype.ViewHide.call(this, e);
             };
             BaseReport.prototype.setupTable = function () {
-                this.tableHead.html(this.getTableHeaderHtml());
+                var headerHtml = this.getTableHeaderHtml();
+                this.tableHead.html(headerHtml);
                 this.setupRows();
                 this.rows = this.tableBody.find('tr');
                 //this.createTouchClickEvent(this.rows, this.rowClick);
@@ -924,14 +926,23 @@ define(["require", "exports", "app/common/utils", "app/common/variables", "./var
                 //if (this.rows)
                 //    this.destroyTouchClickEvent(this.rows, this.rowClick);
                 this.tableBody.html(this.getTableBodyHtml());
+                var valueSum;
+                for (var j = 0, jcount = (this.sumFieldsInfo.fields && this.sumFieldsInfo.fields.length ? this.sumFieldsInfo.fields.length : 0); j < jcount; j++) {
+                    valueSum = this.sumFieldsInfo.sumFied[this.sumFieldsInfo.fields[j]];
+                    this.tableHead.find('#' + this.sumFieldsInfo.fields[j] + '_sum').html(utils.numberToString(valueSum ? valueSum : 0, 2));
+                }
                 this.rows = this.tableBody.find('tr');
                 //this.createTouchClickEvent(this.rows, this.rowClick);
             };
             BaseReport.prototype.getTableHeaderHtml = function () {
                 var columns = this.ReportSettings.Columns;
                 var html = '';
+                var isSum = false;
+                this.sumFieldsInfo = { fields: [], sumFied: {} };
                 html += '<tr>';
                 for (var i = 0, icount = columns && columns.length ? columns.length : 0; i < icount; i++) {
+                    if (columns[i].IsSum && columns[i].IsSum === true)
+                        isSum = true;
                     html += '   <th';
                     if (columns[i].HeaderStyle) {
                         html += ' class="';
@@ -943,6 +954,28 @@ define(["require", "exports", "app/common/utils", "app/common/variables", "./var
                     html += '</th>';
                 }
                 html += '</tr>';
+                if (isSum === true) {
+                    html += '<tr>';
+                    for (var i = 0, icount = columns && columns.length ? columns.length : 0; i < icount; i++) {
+                        html += '   <th';
+                        if (columns[i].IsSum === true) {
+                            html += (' id="' + columns[i].Field + '_sum"');
+                            this.sumFieldsInfo.fields.push(columns[i].Field);
+                            this.sumFieldsInfo.sumFied[columns[i].Field] = 0;
+                        }
+                        if (columns[i].HeaderStyle) {
+                            html += ' class="';
+                            html += columns[i].HeaderStyle;
+                            html += '"';
+                        }
+                        html += '>';
+                        if (columns[i].IsSum === true) {
+                            html += 'test';
+                        }
+                        html += '</th>';
+                    }
+                    html += '</tr>';
+                }
                 return html;
             };
             BaseReport.prototype.getTableRowTemplate = function () {
@@ -980,10 +1013,13 @@ define(["require", "exports", "app/common/utils", "app/common/variables", "./var
                 var html = '';
                 var data = this.Model.get("reportModel");
                 if (data && data.length > 0) {
-                    if (!this.templateRow)
-                        this.templateRow = kendo.template(this.getTableRowTemplate());
+                    //if (!this.templateRow)
+                    this.templateRow = kendo.template(this.getTableRowTemplate());
                     for (var i = 0, icount = (data && data.length ? data.length : 0); i < icount; i++) {
                         html += this.templateRow(data[i]);
+                        for (var j = 0, jcount = (this.sumFieldsInfo.fields && this.sumFieldsInfo.fields.length ? this.sumFieldsInfo.fields.length : 0); j < jcount; j++) {
+                            this.sumFieldsInfo.sumFied[this.sumFieldsInfo.fields[j]] += data[i][this.sumFieldsInfo.fields[j]];
+                        }
                     }
                 }
                 return html;

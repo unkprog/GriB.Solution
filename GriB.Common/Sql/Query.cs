@@ -23,6 +23,11 @@ namespace GriB.Common.Sql
 
             string commandText = IO.Helper.ReadFileAsString(string.Concat(path, @"\", command, ".sql"));
 
+            this.ExecuteQuery(commandText, sqlParameters, action);
+        }
+
+        public void ExecuteQuery(string commandText, SqlParameter[] sqlParameters, Action<object[]> action)
+        {
             if (string.IsNullOrEmpty(commandText))
                 return;
 

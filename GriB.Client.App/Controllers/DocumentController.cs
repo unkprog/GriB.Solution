@@ -123,18 +123,9 @@ namespace GriB.Client.App.Controllers
                , (response) =>
                {
                    HttpEmployeesMessage responseMessage = response.ToObject<HttpEmployeesMessage>();
-                   Dictionary<int, employeecard> employees = new Dictionary<int, employeecard>();
                    return TryCatchResponseQuery((query) =>
                    {
-                       employeecard employee;
-                       foreach (var emp in responseMessage.Employees)
-                       {
-                           if (!employees.TryGetValue(emp.id, out employee))
-                           {
-                               employee = (employeecard)Employee.GetEmployee(query, new employeecard(emp));
-                               employees.Add(emp.id, employee);
-                           }
-                       }
+                       Dictionary<int, employeecard> employees = GetFindEmployees(query, responseMessage);
                        return Request.CreateResponse(HttpStatusCode.OK, Payment.GetPayments(query, docpar, employees));
                    });
                })

@@ -179,6 +179,7 @@
     }
 
     export interface IReportColumn extends IBaseColumn {
+        IsSum?: boolean;
     }
 
     export interface IReportSettings {

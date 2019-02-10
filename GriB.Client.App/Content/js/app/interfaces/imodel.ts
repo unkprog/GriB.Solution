@@ -260,6 +260,15 @@
 
     export interface IReportSaleFilter extends IReportFilter {
 
+        salepoint: ISalepoint;
+        product: IProduct;
+        employee: IEmployeeModel;
+        client: IClientModel;
+
+        IsShowSalepoint: boolean;
+        IsShowProduct: boolean;
+        IsShowEmployee: boolean;
+        IsShowClient: boolean;
     }
 
     export interface IReportModel {
