@@ -112,8 +112,8 @@ export namespace Controller.Report.Sales {
             if (this.Filter.IsShowEmployee) columns.push({ Header: vars._statres("label$employee"), Field: "employee.name" });
             if (this.Filter.IsShowClient) columns.push({ Header: vars._statres("label$client"), Field: "client.name" });
 
-            columns.push({ Header: vars._statres("label$quantity"), HeaderStyle: "product-col-quantity-auto-right", Field: "quantity", FieldTemplate: '#=numberToString(quantity,2)#', FieldStyle: "product-col-quantity-auto-right", IsSum: true })
-            columns.push({ Header: vars._statres("label$sum"), HeaderStyle: "product-col-sum-auto-rigth", Field: "sum", FieldTemplate: '#=numberToString(sum,2)#', FieldStyle: "product-col-sum-auto-rigth", IsSum: true });
+            columns.push({ Header: vars._statres("label$quantity"), HeaderStyle: "product-col-quantity-auto-right", Field: "quantity", FieldTemplate: '#=numberToString(quantity,2)#', FieldStyle: "product-col-quantity-auto-right", IsSum: true, IsOrder: true })
+            columns.push({ Header: vars._statres("label$sum"), HeaderStyle: "product-col-sum-auto-rigth", Field: "sum", FieldTemplate: '#=numberToString(sum,2)#', FieldStyle: "product-col-sum-auto-rigth", IsSum: true, IsOrder: true  });
             return columns;
         }
 
@@ -274,8 +274,9 @@ export namespace Controller.Report.Sales {
         }
 
         public BuildButtonClick: { (e: any): void; };
-        private buildButtonClick(e) {
+        protected buildButtonClick(e) {
             let self = this;
+            super.buildButtonClick(e);
             this.Service.GetSales(this.Filter as Interfaces.Model.IReportSaleFilter , (responseData: any) => {
                 this.Model.set("reportModel", responseData);
                 this.ReportSettings.Columns = this.columns(); 

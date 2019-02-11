@@ -508,3 +508,6 @@ input[type='number']:hover::-webkit-outer-spin-button {
 
 .reportcheck {
   margin-top: -2.2em; }
+
+.ccursor {
+  cursor: pointer; }

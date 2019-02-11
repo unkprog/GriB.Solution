@@ -672,10 +672,11 @@ define(["require", "exports", "app/common/utils", "app/common/variables", "./var
                 var html = '';
                 var data = (this.cardSettings && this.cardSettings.FilterSettings ? this.cardSettings.FilterSettings.GetItemsForView(this.Model.get("cardModel")) : this.Model.get("cardModel"));
                 if (data && data.length > 0) {
-                    if (!this.templateRow)
-                        this.templateRow = kendo.template(this.getTableRowTemplate());
-                    for (var i = 0, icount = (data && data.length ? data.length : 0); i < icount; i++) {
-                        html += this.templateRow(data[i]);
+                    var templateRow = vars.getTemplate(this.getTableRowTemplate());
+                    if (templateRow) {
+                        for (var i = 0, icount = (data && data.length ? data.length : 0); i < icount; i++) {
+                            html += templateRow(data[i]);
+                        }
                     }
                 }
                 return html;
@@ -914,9 +915,19 @@ define(["require", "exports", "app/common/utils", "app/common/variables", "./var
                 this.SaveFilter();
                 _super.prototype.ViewHide.call(this, e);
             };
+            BaseReport.prototype.destroyEvents = function () {
+                this.detachSortEvents();
+                _super.prototype.destroyEvents.call(this);
+            };
+            BaseReport.prototype.buildButtonClick = function (e) {
+                var self = this;
+                self.detachSortEvents();
+            };
             BaseReport.prototype.setupTable = function () {
+                this.detachSortEvents();
                 var headerHtml = this.getTableHeaderHtml();
                 this.tableHead.html(headerHtml);
+                this.attachSortEvents();
                 this.setupRows();
                 this.rows = this.tableBody.find('tr');
                 //this.createTouchClickEvent(this.rows, this.rowClick);
@@ -938,15 +949,23 @@ define(["require", "exports", "app/common/utils", "app/common/variables", "./var
                 var columns = this.ReportSettings.Columns;
                 var html = '';
                 var isSum = false;
-                this.sumFieldsInfo = { fields: [], sumFied: {} };
+                this.sumFieldsInfo = { fields: [], sumFied: {}, orderfields: [] };
                 html += '<tr>';
                 for (var i = 0, icount = columns && columns.length ? columns.length : 0; i < icount; i++) {
                     if (columns[i].IsSum && columns[i].IsSum === true)
                         isSum = true;
                     html += '   <th';
-                    if (columns[i].HeaderStyle) {
+                    if (columns[i].HeaderStyle || columns[i].IsOrder === true) {
+                        if (columns[i].IsOrder === true) {
+                            html += ' id="sort_' + i + '"';
+                        }
                         html += ' class="';
-                        html += columns[i].HeaderStyle;
+                        if (columns[i].HeaderStyle)
+                            html += columns[i].HeaderStyle;
+                        if (columns[i].IsOrder === true) {
+                            this.sumFieldsInfo.orderfields.push({ field: columns[i].Field, typeSort: 0, index: i });
+                            html += (columns[i].HeaderStyle ? ' ' : '') + 'ccursor';
+                        }
                         html += '"';
                     }
                     html += '>';
@@ -963,20 +982,38 @@ define(["require", "exports", "app/common/utils", "app/common/variables", "./var
                             this.sumFieldsInfo.fields.push(columns[i].Field);
                             this.sumFieldsInfo.sumFied[columns[i].Field] = 0;
                         }
-                        if (columns[i].HeaderStyle) {
+                        if (columns[i].HeaderStyle || columns[i].IsOrder === true) {
                             html += ' class="';
                             html += columns[i].HeaderStyle;
                             html += '"';
                         }
                         html += '>';
                         if (columns[i].IsSum === true) {
-                            html += 'test';
+                            html += '0.00';
                         }
                         html += '</th>';
                     }
                     html += '</tr>';
                 }
                 return html;
+            };
+            BaseReport.prototype.attachSortEvents = function () {
+                var columns = this.ReportSettings.Columns;
+                for (var i = 0, icount = columns && columns.length ? columns.length : 0; i < icount; i++) {
+                    if (columns[i].IsOrder === true) {
+                        var strId = 'sort_' + i;
+                        this.createTouchClickEvent(strId, this.sortButtonClick);
+                    }
+                }
+            };
+            BaseReport.prototype.detachSortEvents = function () {
+                var columns = this.ReportSettings.Columns;
+                for (var i = 0, icount = columns && columns.length ? columns.length : 0; i < icount; i++) {
+                    if (columns[i].IsOrder === true) {
+                        var strId = 'sort_' + i;
+                        this.destroyTouchClickEvent(strId, this.sortButtonClick);
+                    }
+                }
             };
             BaseReport.prototype.getTableRowTemplate = function () {
                 var setting = this.ReportSettings;
@@ -1013,16 +1050,49 @@ define(["require", "exports", "app/common/utils", "app/common/variables", "./var
                 var html = '';
                 var data = this.Model.get("reportModel");
                 if (data && data.length > 0) {
-                    //if (!this.templateRow)
-                    this.templateRow = kendo.template(this.getTableRowTemplate());
-                    for (var i = 0, icount = (data && data.length ? data.length : 0); i < icount; i++) {
-                        html += this.templateRow(data[i]);
-                        for (var j = 0, jcount = (this.sumFieldsInfo.fields && this.sumFieldsInfo.fields.length ? this.sumFieldsInfo.fields.length : 0); j < jcount; j++) {
-                            this.sumFieldsInfo.sumFied[this.sumFieldsInfo.fields[j]] += data[i][this.sumFieldsInfo.fields[j]];
+                    var templateRow = vars.getTemplate(this.getTableRowTemplate());
+                    if (templateRow) {
+                        for (var i = 0, icount = (data && data.length ? data.length : 0); i < icount; i++) {
+                            html += templateRow(data[i]);
+                            for (var j = 0, jcount = (this.sumFieldsInfo.fields && this.sumFieldsInfo.fields.length ? this.sumFieldsInfo.fields.length : 0); j < jcount; j++) {
+                                if (i === 0)
+                                    this.sumFieldsInfo.sumFied[this.sumFieldsInfo.fields[j]] = data[i][this.sumFieldsInfo.fields[j]];
+                                else
+                                    this.sumFieldsInfo.sumFied[this.sumFieldsInfo.fields[j]] += data[i][this.sumFieldsInfo.fields[j]];
+                            }
                         }
                     }
                 }
                 return html;
+            };
+            BaseReport.prototype.sortButtonClick = function (e) {
+                var self = this;
+                var strId = e.currentTarget.id;
+                strId = strId.replace('sort_', '');
+                var i = +strId;
+                var setting = self.ReportSettings;
+                var columns = setting.Columns;
+                var orderfields = [];
+                var colName = columns[i].Field;
+                orderfields = self.sumFieldsInfo.orderfields;
+                //orderfields.push({ field: columns[i].Field, typeSort: 0, index: i });
+                orderfields.filter(function (x) { return x.field == colName; });
+                var findResult = $.grep(orderfields, function (x) { return x.field == colName; });
+                var typeSort = 0;
+                if (findResult && findResult.length > 0) {
+                    typeSort = findResult[0].typeSort;
+                }
+                var data = this.Model.get("reportModel");
+                data.sort(function (a, b) {
+                    var aval = a[colName];
+                    var bval = b[colName];
+                    return (typeSort === 0 || typeSort === 2 ? aval - bval : bval - aval);
+                });
+                if (findResult && findResult.length > 0) {
+                    findResult[0].typeSort = (typeSort === 0 || typeSort === 2 ? 1 : 2);
+                }
+                self.Model.set("reportModel", data);
+                self.setupRows();
             };
             return BaseReport;
         }(BaseEditor));

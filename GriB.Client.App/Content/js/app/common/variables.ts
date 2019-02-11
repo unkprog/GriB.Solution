@@ -50,3 +50,17 @@ export function unRegisterController(crtlId: string): void {
 
 export declare let _editorData: any;
 _editorData = {};
+
+export declare let _templates: any;
+_templates = {};
+
+export function getTemplate(template: string): Function {
+    let result: Function;
+    let hash: number = window.strToHashCode(template);
+    result = _templates[''+hash];
+    if (!result) {
+        result = kendo.template(template);
+        _templates['' + hash] = result;
+    }
+    return result;
+}

@@ -842,7 +842,8 @@ define(["require", "exports", "app/common/utils", "app/common/variables", "./var
                 }
                 else
                     filter = JSON.parse(saved);
-                this.Filter = filter;
+                this.Model.set("filterModel", filter);
+                // this.Filter = filter;
             };
             BaseReport.prototype.getDefaultFilter = function () {
                 return undefined;
@@ -1012,8 +1013,8 @@ define(["require", "exports", "app/common/utils", "app/common/variables", "./var
                 var html = '';
                 var data = this.Model.get("reportModel");
                 if (data && data.length > 0) {
-                    if (!this.templateRow)
-                        this.templateRow = kendo.template(this.getTableRowTemplate());
+                    //if (!this.templateRow)
+                    this.templateRow = kendo.template(this.getTableRowTemplate());
                     for (var i = 0, icount = (data && data.length ? data.length : 0); i < icount; i++) {
                         html += this.templateRow(data[i]);
                         for (var j = 0, jcount = (this.sumFieldsInfo.fields && this.sumFieldsInfo.fields.length ? this.sumFieldsInfo.fields.length : 0); j < jcount; j++) {

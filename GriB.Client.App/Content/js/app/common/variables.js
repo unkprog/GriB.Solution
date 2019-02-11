@@ -31,5 +31,17 @@ define(["require", "exports", "i18n!nls/strings"], function (require, exports) {
     }
     exports.unRegisterController = unRegisterController;
     exports._editorData = {};
+    exports._templates = {};
+    function getTemplate(template) {
+        var result;
+        var hash = window.strToHashCode(template);
+        result = exports._templates['' + hash];
+        if (!result) {
+            result = kendo.template(template);
+            exports._templates['' + hash] = result;
+        }
+        return result;
+    }
+    exports.getTemplate = getTemplate;
 });
 //# sourceMappingURL=variables.js.map

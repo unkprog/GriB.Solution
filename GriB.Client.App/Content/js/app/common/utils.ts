@@ -96,3 +96,26 @@ export function numberToString(value: number, decimal: number): string {
     return result;
 }
 window.numberToString = numberToString;
+
+/**
+ * @see http://stackoverflow.com/q/7616461/940217
+ * @return {number}
+ */
+
+export function strToHashCode(value: string): number {
+    var hash = 0;
+    if (value && value.length !== 0) {
+        if (Array.prototype.reduce) {
+            hash = value.split("").reduce(function (a, b) { a = ((a << 5) - a) + b.charCodeAt(0); return a & a }, 0);
+        }
+        else {
+            for (let i = 0, icount = value.length ; i < icount; i++) {
+                var character = value.charCodeAt(i);
+                hash = ((hash << 5) - hash) + character;
+                hash = hash & hash; // Convert to 32bit integer
+            }
+        }
+    }
+    return hash;
+}
+window.strToHashCode = strToHashCode

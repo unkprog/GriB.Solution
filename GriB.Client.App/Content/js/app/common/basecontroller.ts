@@ -715,7 +715,6 @@ export namespace Controller {
             return html;
         }
 
-        private templateRow: Function;
         protected getTableRowTemplate(): string {
             let setting: Interfaces.ICardSettings = this.CardSettings;
             let columns: Interfaces.IBaseColumn[] = setting.Columns;
@@ -756,10 +755,11 @@ export namespace Controller {
             let data: Interfaces.Model.IEditorModel[] = (this.cardSettings && this.cardSettings.FilterSettings ? this.cardSettings.FilterSettings.GetItemsForView(this.Model.get("cardModel")) : this.Model.get("cardModel"));
 
             if (data && data.length > 0) {
-                if (!this.templateRow)
-                    this.templateRow = kendo.template(this.getTableRowTemplate());
-                for (let i = 0, icount = (data && data.length ? data.length : 0); i < icount; i++) {
-                        html += this.templateRow(data[i]);
+                let templateRow = vars.getTemplate(this.getTableRowTemplate());
+                if (templateRow) {
+                    for (let i = 0, icount = (data && data.length ? data.length : 0); i < icount; i++) {
+                        html += templateRow(data[i]);
+                    }
                 }
             }
             return html;
@@ -1039,10 +1039,22 @@ export namespace Controller {
             super.ViewHide(e);
         }
 
+        protected destroyEvents() {
+            this.detachSortEvents();
+            super.destroyEvents();
+        }
+
+        protected buildButtonClick(e) {
+            let self = this;
+            self.detachSortEvents();
+        }
+
         private rows: JQuery;
         protected setupTable(): void {
+            this.detachSortEvents();
             let headerHtml: string = this.getTableHeaderHtml();
             this.tableHead.html(headerHtml);
+            this.attachSortEvents();
             this.setupRows();
             this.rows = this.tableBody.find('tr');
             //this.createTouchClickEvent(this.rows, this.rowClick);
@@ -1070,16 +1082,24 @@ export namespace Controller {
             let html: string = '';
             let isSum: boolean = false;
 
-            this.sumFieldsInfo = { fields: [], sumFied: {} };
+            this.sumFieldsInfo = { fields: [], sumFied: {}, orderfields: [] };
 
             html += '<tr>';
             for (let i = 0, icount = columns && columns.length ? columns.length : 0; i < icount; i++) {
                 if (columns[i].IsSum && columns[i].IsSum === true)
                     isSum = true;
                 html += '   <th';
-                if (columns[i].HeaderStyle) {
+                if (columns[i].HeaderStyle || columns[i].IsOrder === true) {
+                    if (columns[i].IsOrder === true) {
+                        html += ' id="sort_' + i + '"';
+                    }
+
                     html += ' class="';
-                    html += columns[i].HeaderStyle;
+                    if (columns[i].HeaderStyle)  html += columns[i].HeaderStyle;
+                    if (columns[i].IsOrder === true) {
+                        this.sumFieldsInfo.orderfields.push({ field: columns[i].Field, typeSort: 0, index: i });
+                        html += (columns[i].HeaderStyle ? ' ' : '') + 'ccursor';
+                    }
                     html += '"';
                 }
                 html += '>';
@@ -1097,14 +1117,14 @@ export namespace Controller {
                         this.sumFieldsInfo.fields.push(columns[i].Field);
                         this.sumFieldsInfo.sumFied[columns[i].Field] = 0;
                     }
-                    if (columns[i].HeaderStyle) {
+                    if (columns[i].HeaderStyle || columns[i].IsOrder === true) {
                         html += ' class="';
                         html += columns[i].HeaderStyle;
                         html += '"';
                     }
                     html += '>';
                     if (columns[i].IsSum === true) {
-                        html += 'test';
+                        html += '0.00';
                     }
                     html += '</th>';
                 }
@@ -1114,7 +1134,26 @@ export namespace Controller {
             return html;
         }
 
-        private templateRow: Function;
+        protected attachSortEvents(): void {
+            let columns: Interfaces.IReportColumn[] = this.ReportSettings.Columns;
+            for (let i = 0, icount = columns && columns.length ? columns.length : 0; i < icount; i++) {
+                if (columns[i].IsOrder === true) {
+                    let strId: string = 'sort_' + i;
+                    this.createTouchClickEvent(strId, this.sortButtonClick);
+                }
+            }
+        }
+
+        protected detachSortEvents(): void {
+            let columns: Interfaces.IReportColumn[] = this.ReportSettings.Columns;
+            for (let i = 0, icount = columns && columns.length ? columns.length : 0; i < icount; i++) {
+                if (columns[i].IsOrder === true) {
+                    let strId: string = 'sort_' + i;
+                    this.destroyTouchClickEvent(strId, this.sortButtonClick);
+                }
+            }
+        }
+
         protected getTableRowTemplate(): string {
             let setting: Interfaces.IReportSettings = this.ReportSettings;
             let columns: Interfaces.IReportColumn[] = setting.Columns;
@@ -1155,16 +1194,52 @@ export namespace Controller {
             let data: Interfaces.Model.IReportModel[] = this.Model.get("reportModel");
 
             if (data && data.length > 0) {
-               //if (!this.templateRow)
-                    this.templateRow = kendo.template(this.getTableRowTemplate());
-                for (let i = 0, icount = (data && data.length ? data.length : 0); i < icount; i++) {
-                    html += this.templateRow(data[i]);
-                    for (let j = 0, jcount = (this.sumFieldsInfo.fields && this.sumFieldsInfo.fields.length ? this.sumFieldsInfo.fields.length : 0); j < jcount; j++) {
-                        this.sumFieldsInfo.sumFied[this.sumFieldsInfo.fields[j]] += data[i][this.sumFieldsInfo.fields[j]];
+                let templateRow = vars.getTemplate(this.getTableRowTemplate());
+                if (templateRow) {
+                    for (let i = 0, icount = (data && data.length ? data.length : 0); i < icount; i++) {
+                        html += templateRow(data[i]);
+                        for (let j = 0, jcount = (this.sumFieldsInfo.fields && this.sumFieldsInfo.fields.length ? this.sumFieldsInfo.fields.length : 0); j < jcount; j++) {
+                            if (i === 0)
+                                this.sumFieldsInfo.sumFied[this.sumFieldsInfo.fields[j]] = data[i][this.sumFieldsInfo.fields[j]];
+                            else
+                                this.sumFieldsInfo.sumFied[this.sumFieldsInfo.fields[j]] += data[i][this.sumFieldsInfo.fields[j]];
+                        }
                     }
                 }
             }
             return html;
+        }
+
+        private sortButtonClick(e) {
+            let self = this;
+            let strId: string = e.currentTarget.id;
+            strId = strId.replace('sort_', '');
+            let i: number = +strId;
+            let setting: Interfaces.IReportSettings = self.ReportSettings;
+            let columns: Interfaces.IReportColumn[] = setting.Columns;
+
+            let orderfields = [];
+            let colName: string = columns[i].Field;
+            orderfields = self.sumFieldsInfo.orderfields;
+            //orderfields.push({ field: columns[i].Field, typeSort: 0, index: i });
+            orderfields.filter(x => x.field == colName)
+            var findResult = $.grep(orderfields, function (x) { return x.field == colName; });
+            let typeSort: number = 0;
+            if (findResult && findResult.length > 0) {
+                typeSort = findResult[0].typeSort;
+            }
+
+            let data: Interfaces.Model.IReportModel[] = this.Model.get("reportModel");
+            data.sort(function (a, b: any) {
+                let aval: number = a[colName];
+                let bval: number = b[colName];
+                return  (typeSort === 0 || typeSort === 2 ?  aval - bval : bval - aval);
+            })
+            if (findResult && findResult.length > 0) {
+                findResult[0].typeSort = (typeSort === 0 || typeSort === 2 ? 1 : 2);
+            }
+            self.Model.set("reportModel", data);
+            self.setupRows();
         }
     }
 }

@@ -180,6 +180,7 @@
 
     export interface IReportColumn extends IBaseColumn {
         IsSum?: boolean;
+        IsOrder?: boolean;
     }
 
     export interface IReportSettings {

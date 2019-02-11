@@ -10,6 +10,55 @@
         </div>
     </div>
     <div class="row row-inputs">
+        <div id="report-sales-view-salepoint-row" class="input-field col s12 m6 l3 xl3 col-input-numpad">
+            <input id="report-sales-view-salepoint" type="text" disabled class="truncate black-text" data-bind="value: filterModel.salepoint.name" style="cursor:pointer;font-weight:bold;">
+            <label for="report-sales-view-salepoint" data-bind="text:labelSalepoint"></label>
+            <i id="report-sales-view-salepoint-clear" class="material-icons editor-header right doc-edit-ref-del">close</i>
+        </div>
+        <div id="report-sales-view-product-row" class="input-field col s12 m6 l3 xl3 col-input-numpad">
+            <input id="report-sales-view-product" type="text" disabled class="truncate black-text" data-bind="value: filterModel.product.name" style="cursor:pointer;font-weight:bold;">
+            <label for="report-sales-view-product" data-bind="text:labelProduct"></label>
+            <i id="report-sales-view-product-clear" class="material-icons editor-header right doc-edit-ref-del">close</i>
+        </div>
+        <div id="report-sales-view-employee-row" class="input-field col s12 m6 l3 xl3 col-input-numpad">
+            <input id="report-sales-view-employee" type="text" disabled class="truncate black-text" data-bind="value: filterModel.employee.name" style="cursor:pointer;font-weight:bold;">
+            <label for="report-sales-view-employee" data-bind="text:labelEmployee"></label>
+            <i id="report-sales-view-employee-clear" class="material-icons editor-header right doc-edit-ref-del">close</i>
+        </div>
+        <div id="report-sales-view-client-row" class="input-field col s12 m6 l3 xl3 col-input-numpad">
+            <input id="report-sales-view-client" type="text" disabled class="truncate black-text" data-bind="value: filterModel.client.name" style="cursor:pointer;font-weight:bold;">
+            <label for="report-sales-view-client" data-bind="text:labelClient"></label>
+            <i id="report-sales-view-client-clear" class="material-icons editor-header right doc-edit-ref-del">close</i>
+        </div>
+    </div>
+
+    <div class="row row-inputs">
+        <div class="input-field col s12 m6 l3 xl3">
+            <label class="reportcheck">
+                <input id="report-sales-view-showsalepoint" type="checkbox" data-bind="checked:filterModel.IsShowSalepoint" />
+                <span data-bind="text:labelSalepoint"></span>
+            </label>
+        </div>
+        <div class="input-field col s12 m6 l3 xl3">
+            <label class="reportcheck">
+                <input id="report-sales-view-showproduct" type="checkbox" data-bind="checked:filterModel.IsShowProduct" />
+                <span data-bind="text:labelProduct"></span>
+            </label>
+        </div>
+        <div class="input-field col s12 m6 l3 xl3">
+            <label class="reportcheck">
+                <input id="report-sales-view-showemployee" type="checkbox" data-bind="checked:filterModel.IsShowEmployee" />
+                <span data-bind="text:labelEmployee"></span>
+            </label>
+        </div>
+        <div class="input-field col s12 m6 l3 xl3">
+            <label class="reportcheck">
+                <input id="report-sales-view-showclient" type="checkbox" data-bind="checked:filterModel.IsShowClient" />
+                <span data-bind="text:labelClient"></span>
+            </label>
+        </div>
+    </div>
+    <div class="row row-inputs">
         <div class="input-field col s12 m12 l12 xl12 col-input-numpad" style="margin-top: 0;">
             <a id="report-sales-view-btn-build" class="btn btncol" data-bind="text:labelBuild"></a>
 
