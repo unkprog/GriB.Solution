@@ -24,8 +24,6 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                     __extends(Index, _super);
                     function Index() {
                         var _this = _super.call(this) || this;
-                        if (_this.EditorSettings && _this.EditorSettings.ButtonSetings)
-                            _this.EditorSettings.ButtonSetings.IsSave = false;
                         _this.Model.set("Header", vars._statres("report$sales"));
                         return _this;
                     }

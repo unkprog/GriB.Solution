@@ -511,3 +511,9 @@ input[type='number']:hover::-webkit-outer-spin-button {
 
 .ccursor {
   cursor: pointer; }
+
+.chart-container {
+  position: relative;
+  margin: auto;
+  height: 80vh;
+  width: 80vw; }

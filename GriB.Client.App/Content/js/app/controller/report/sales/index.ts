@@ -6,10 +6,6 @@ export namespace Controller.Report.Sales {
     export class Index extends base.Controller.Report.ReportWithService {
         constructor() {
             super();
-            if (this.EditorSettings && this.EditorSettings.ButtonSetings)
-                this.EditorSettings.ButtonSetings.IsSave = false;
-
-
             this.Model.set("Header", vars._statres("report$sales"));
         }
 

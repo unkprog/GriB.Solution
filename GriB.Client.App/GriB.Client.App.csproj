@@ -177,6 +177,7 @@
     <Content Include="Content\view\index - Копировать.html" />
     <Content Include="Content\view\index.html" />
     <Content Include="Content\view\main.html" />
+    <Content Include="Content\view\report\dashboard\test.html" />
     <Content Include="Content\view\report\sales\detalize.html" />
     <Content Include="Content\view\report\sales\index.html" />
     <Content Include="Content\view\report\index.html" />
@@ -492,6 +493,7 @@
     <TypeScriptCompile Include="Content\js\app\controller\document\index.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\main.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\report\basereport.ts" />
+    <TypeScriptCompile Include="Content\js\app\controller\report\dashboard\test.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\report\sales\detalize.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\report\sales\index.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\report\index.ts" />

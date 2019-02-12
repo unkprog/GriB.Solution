@@ -25,9 +25,9 @@
     };
 })();
 
-require(["domReady", "jquery"], function (domReady, jquery) {
+require(["domReady", "jquery"], function (domReady, _jquery) {
     $("#progress-container").show();
-    require(["materialize", "materialize.pagination", "kendo.binder"], function (materialize, materializePager, kendoBinder) {
+    require(["materialize", "materialize.pagination", "kendo.binder", "chartjs"], function (_materialize, _materializePager, _kendoBinder, _chartjs) {
         domReady(function () {
             require(["app/application"], function (app) {
                 var _app = new app.App.Application();

@@ -813,35 +813,36 @@ define(["require", "exports", "app/common/utils", "app/common/variables", "./var
             return BaseCard;
         }(Base));
         Controller.BaseCard = BaseCard;
-        var BaseReport = /** @class */ (function (_super) {
-            __extends(BaseReport, _super);
-            function BaseReport() {
+        var BaseReportWithFilter = /** @class */ (function (_super) {
+            __extends(BaseReportWithFilter, _super);
+            function BaseReportWithFilter() {
                 var _this = _super.call(this) || this;
-                _this.reportSettings = _this.createReportSettings();
+                if (_this.EditorSettings && _this.EditorSettings.ButtonSetings)
+                    _this.EditorSettings.ButtonSetings.IsSave = false;
                 _this.RestoreFilter();
                 return _this;
             }
-            BaseReport.prototype.createModel = function () {
+            BaseReportWithFilter.prototype.createModel = function () {
                 return new kendo.data.ObservableObject({
                     "Header": "",
                     "filterModel": {},
                     "reportModel": {},
                 });
             };
-            Object.defineProperty(BaseReport.prototype, "FilterName", {
+            Object.defineProperty(BaseReportWithFilter.prototype, "FilterName", {
                 get: function () {
                     return "reportFilter";
                 },
                 enumerable: true,
                 configurable: true
             });
-            BaseReport.prototype.SaveFilter = function () {
+            BaseReportWithFilter.prototype.SaveFilter = function () {
                 window.localStorage.setItem(this.FilterName, this.getSaveFilter());
             };
-            BaseReport.prototype.getSaveFilter = function () {
+            BaseReportWithFilter.prototype.getSaveFilter = function () {
                 return JSON.stringify(this.Filter);
             };
-            BaseReport.prototype.RestoreFilter = function () {
+            BaseReportWithFilter.prototype.RestoreFilter = function () {
                 var filter;
                 var saved = window.localStorage.getItem(this.FilterName);
                 if (!saved || saved === "\"{}\"") {
@@ -852,10 +853,10 @@ define(["require", "exports", "app/common/utils", "app/common/variables", "./var
                 this.Model.set("filterModel", filter);
                 // this.Filter = filter;
             };
-            BaseReport.prototype.getDefaultFilter = function () {
+            BaseReportWithFilter.prototype.getDefaultFilter = function () {
                 return undefined;
             };
-            Object.defineProperty(BaseReport.prototype, "Filter", {
+            Object.defineProperty(BaseReportWithFilter.prototype, "Filter", {
                 get: function () {
                     return this.Model.get("filterModel").toJSON();
                 },
@@ -865,6 +866,16 @@ define(["require", "exports", "app/common/utils", "app/common/variables", "./var
                 enumerable: true,
                 configurable: true
             });
+            return BaseReportWithFilter;
+        }(BaseEditor));
+        Controller.BaseReportWithFilter = BaseReportWithFilter;
+        var BaseReport = /** @class */ (function (_super) {
+            __extends(BaseReport, _super);
+            function BaseReport() {
+                var _this = _super.call(this) || this;
+                _this.reportSettings = _this.createReportSettings();
+                return _this;
+            }
             BaseReport.prototype.createReportSettings = function () {
                 return { Columns: this.Columns };
             };
@@ -1123,7 +1134,7 @@ define(["require", "exports", "app/common/utils", "app/common/variables", "./var
                 self.setupRows();
             };
             return BaseReport;
-        }(BaseEditor));
+        }(BaseReportWithFilter));
         Controller.BaseReport = BaseReport;
     })(Controller = exports.Controller || (exports.Controller = {}));
 });

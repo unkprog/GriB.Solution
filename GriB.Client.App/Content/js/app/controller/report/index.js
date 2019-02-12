@@ -35,12 +35,17 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
                 };
                 Index.prototype.createEvents = function () {
                     this.ReportSalesButtonClick = this.createTouchClickEvent("btn-report-sales", this.reportSalesButtonClick);
+                    this.ReportTestButtonClick = this.createTouchClickEvent("btn-report-test", this.reportTestButtonClick);
                 };
                 Index.prototype.destroyEvents = function () {
                     this.destroyTouchClickEvent("btn-report-sales", this.ReportSalesButtonClick);
+                    this.destroyTouchClickEvent("btn-report-test", this.ReportTestButtonClick);
                 };
                 Index.prototype.reportSalesButtonClick = function (e) {
                     vars._main.OpenController({ urlController: "report/sales/index", backController: this });
+                };
+                Index.prototype.reportTestButtonClick = function (e) {
+                    vars._main.OpenController({ urlController: "report/dashboard/test", backController: this });
                 };
                 return Index;
             }(base.Controller.Base));

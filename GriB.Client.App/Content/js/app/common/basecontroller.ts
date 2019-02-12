@@ -928,11 +928,12 @@ export namespace Controller {
         }
     }
 
-    export class BaseReport extends BaseEditor implements Interfaces.IControllerReport {
+    export class BaseReportWithFilter extends BaseEditor implements Interfaces.IControllerReportWithFilter {
 
         constructor() {
             super();
-            this.reportSettings = this.createReportSettings();
+            if (this.EditorSettings && this.EditorSettings.ButtonSetings)
+                this.EditorSettings.ButtonSetings.IsSave = false;
             this.RestoreFilter();
         }
 
@@ -965,7 +966,7 @@ export namespace Controller {
             else
                 filter = JSON.parse(saved);
             this.Model.set("filterModel", filter);
-           // this.Filter = filter;
+            // this.Filter = filter;
         }
 
         protected getDefaultFilter(): Interfaces.Model.IReportFilter {
@@ -978,6 +979,14 @@ export namespace Controller {
 
         public set Filter(filter: Interfaces.Model.IReportFilter) {
             this.Model.set("filterModel", filter);
+        }
+    }
+
+    export class BaseReport extends BaseReportWithFilter implements Interfaces.IControllerReport {
+
+        constructor() {
+            super();
+            this.reportSettings = this.createReportSettings();
         }
 
         protected createReportSettings(): Interfaces.IReportSettings {

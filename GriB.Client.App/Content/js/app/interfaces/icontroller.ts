@@ -188,10 +188,13 @@
         Columns?: IReportColumn[];
     }
 
-    export interface IControllerReport extends IControllerEditor {
+    export interface IControllerReportWithFilter extends IControllerEditor {
         SaveFilter(): void;
         RestoreFilter(): void;
         Filter: Interfaces.Model.IReportFilter;
+    }
+
+    export interface IControllerReport extends IControllerReportWithFilter {
         ReportSettings: Interfaces.IReportSettings;
 
         Columns: Interfaces.IReportColumn[];

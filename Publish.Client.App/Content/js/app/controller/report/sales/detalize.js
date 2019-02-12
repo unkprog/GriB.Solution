@@ -109,6 +109,20 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                             _this.setupTable();
                         });
                     };
+                    Detalize.prototype.OnDetalize = function (e) {
+                        var cur = e.currentTarget;
+                        var self = this;
+                        var curfilter = self.Filter;
+                        var index = +e.currentTarget.id.replace('table-row-', '');
+                        var item = this.Model.get("reportModel")[index];
+                        vars._editorData["id_sale"] = item.id;
+                        vars._app.OpenController({
+                            urlController: 'document/editor/sale', isModal: true, onLoadController: function (controller) {
+                                var ctrlSale = controller;
+                                ctrlSale.EditorSettings.ButtonSetings.IsSave = false;
+                            }
+                        });
+                    };
                     return Detalize;
                 }(base.Controller.Report.ReportWithService));
                 Sales.Detalize = Detalize;

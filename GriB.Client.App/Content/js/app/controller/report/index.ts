@@ -21,15 +21,22 @@ export namespace Controller.Report {
 
         protected createEvents(): void {
             this.ReportSalesButtonClick = this.createTouchClickEvent("btn-report-sales", this.reportSalesButtonClick);
+            this.ReportTestButtonClick = this.createTouchClickEvent("btn-report-test", this.reportTestButtonClick);
         }
 
         protected destroyEvents(): void {
             this.destroyTouchClickEvent("btn-report-sales", this.ReportSalesButtonClick);
+            this.destroyTouchClickEvent("btn-report-test", this.ReportTestButtonClick);
         }
 
         public ReportSalesButtonClick: { (e: any): void; };
         private reportSalesButtonClick(e) {
             vars._main.OpenController({ urlController: "report/sales/index", backController: this });
+        }
+
+        public ReportTestButtonClick: { (e: any): void; };
+        private reportTestButtonClick(e) {
+            vars._main.OpenController({ urlController: "report/dashboard/test", backController: this });
         }
     }
 }
