@@ -265,10 +265,10 @@
         employee: IEmployeeModel;
         client: IClientModel;
 
-        IsShowSalepoint: boolean;
-        IsShowProduct: boolean;
-        IsShowEmployee: boolean;
-        IsShowClient: boolean;
+        IsShowSalepoint?: boolean;
+        IsShowProduct?: boolean;
+        IsShowEmployee?: boolean;
+        IsShowClient?: boolean;
     }
 
     export interface IReportModel {

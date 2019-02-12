@@ -106,13 +106,13 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                     Index.prototype.columns = function () {
                         var columns = [];
                         if (this.Filter.IsShowSalepoint)
-                            columns.push({ Header: vars._statres("label$salePoint"), Field: "salepoint.name" });
+                            columns.push({ Header: vars._statres("label$salePoint"), Field: "salepoint.name", IsOrder: true });
                         if (this.Filter.IsShowProduct)
-                            columns.push({ Header: vars._statres("label$product"), Field: "product.name" });
+                            columns.push({ Header: vars._statres("label$product"), Field: "product.name", IsOrder: true });
                         if (this.Filter.IsShowEmployee)
-                            columns.push({ Header: vars._statres("label$employee"), Field: "employee.name" });
+                            columns.push({ Header: vars._statres("label$employee"), Field: "employee.name", IsOrder: true });
                         if (this.Filter.IsShowClient)
-                            columns.push({ Header: vars._statres("label$client"), Field: "client.name" });
+                            columns.push({ Header: vars._statres("label$client"), Field: "client.name", IsOrder: true });
                         columns.push({ Header: vars._statres("label$quantity"), HeaderStyle: "product-col-quantity-auto-right", Field: "quantity", FieldTemplate: '#=numberToString(quantity,2)#', FieldStyle: "product-col-quantity-auto-right", IsSum: true, IsOrder: true });
                         columns.push({ Header: vars._statres("label$sum"), HeaderStyle: "product-col-sum-auto-rigth", Field: "sum", FieldTemplate: '#=numberToString(sum,2)#', FieldStyle: "product-col-sum-auto-rigth", IsSum: true, IsOrder: true });
                         return columns;
@@ -259,6 +259,30 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                             _this.Model.set("reportModel", responseData);
                             _this.ReportSettings.Columns = _this.columns();
                             _this.setupTable();
+                        });
+                    };
+                    Index.prototype.OnDetalize = function (e) {
+                        var cur = e.currentTarget;
+                        var self = this;
+                        var curfilter = self.Filter;
+                        var index = +e.currentTarget.id.replace('table-row-', '');
+                        var item = this.Model.get("reportModel")[index];
+                        vars._app.OpenController({
+                            urlController: 'report/sales/detalize', isModal: true, onLoadController: function (controller) {
+                                var ctrlDetalize = controller;
+                                var filter = {
+                                    datefrom: curfilter.datefrom, dateto: curfilter.dateto, salepoint: curfilter.salepoint, employee: curfilter.employee, client: curfilter.employee, product: curfilter.product
+                                };
+                                if (item.salepoint && item.salepoint.id && item.salepoint.id !== 0)
+                                    filter.salepoint = item.salepoint;
+                                if (item.employee && item.employee.id && item.employee.id !== 0)
+                                    filter.employee = item.employee;
+                                if (item.client && item.client.id && item.client.id !== 0)
+                                    filter.client = item.client;
+                                if (item.product && item.product.id && item.product.id !== 0)
+                                    filter.product = item.product;
+                                ctrlDetalize.Model.set("filterModel", filter);
+                            }
                         });
                     };
                     return Index;

@@ -42,4 +42,14 @@ namespace GriB.Client.App.Models.Report
         public double quantity { get; set; }
         public double sum      { get; set; }
     }
+
+    public class ReportSaleDetailRow : ReportSaleRow
+    {
+        public ReportSaleDetailRow() : base()
+        {
+        }
+        public int id { get; set; }
+        public DateTime cd { get; set; }
+        public double discount { get; set; }
+    }
 }

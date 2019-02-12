@@ -74,6 +74,10 @@ export namespace Controller {
             return utils.createTouchClickEvent(elemName, clickFunc, this, this.View);
         }
 
+        protected createDblTouchClickEvent(elemName: string | JQuery, clickFunc: any): any {
+            return utils.createDblTouchClickEvent(elemName, clickFunc, this, this.View);
+        }
+
         protected createClickEvent(elemName: string | JQuery, clickFunc: any): any {
             return utils.createClickEvent(elemName, clickFunc, this, this.View);
         }
@@ -92,6 +96,10 @@ export namespace Controller {
 
         protected destroyTouchClickEvent(elemName: string | JQuery, proxyFunc: any): any {
             utils.destroyTouchClickEvent(elemName, proxyFunc, this.View);
+        }
+
+        protected destroyDblTouchClickEvent(elemName: string | JQuery, proxyFunc: any): any {
+            utils.destroyDblTouchClickEvent(elemName, proxyFunc, this.View);
         }
 
         protected destroyClickEvent(elemName: string | JQuery, proxyFunc: any): any {
@@ -1041,6 +1049,8 @@ export namespace Controller {
 
         protected destroyEvents() {
             this.detachSortEvents();
+            if (this.rows)
+                this.destroyDblTouchClickEvent(this.rows, this.rowClick);
             super.destroyEvents();
         }
 
@@ -1056,15 +1066,14 @@ export namespace Controller {
             this.tableHead.html(headerHtml);
             this.attachSortEvents();
             this.setupRows();
-            this.rows = this.tableBody.find('tr');
             //this.createTouchClickEvent(this.rows, this.rowClick);
         }
 
         protected setupRows(): void {
             //this.selectedRow = null;
 
-            //if (this.rows)
-            //    this.destroyTouchClickEvent(this.rows, this.rowClick);
+            if (this.rows)
+                this.destroyDblTouchClickEvent(this.rows, this.rowClick);
 
             this.tableBody.html(this.getTableBodyHtml());
             let valueSum: number;
@@ -1073,7 +1082,7 @@ export namespace Controller {
                 this.tableHead.find('#' + this.sumFieldsInfo.fields[j] + '_sum').html(utils.numberToString(valueSum ? valueSum : 0, 2));
             }
             this.rows = this.tableBody.find('tr');
-            //this.createTouchClickEvent(this.rows, this.rowClick);
+            this.createDblTouchClickEvent(this.rows, this.rowClick);
         }
 
         private sumFieldsInfo: any;
@@ -1159,13 +1168,7 @@ export namespace Controller {
             let columns: Interfaces.IReportColumn[] = setting.Columns;
             let html: string = '';
 
-            html += '<tr';
-            //if (setting.FieldId) {
-            //    html += ' id="table-row-#=';
-            //    html += setting.FieldId;
-            //    html += '#"';
-            //}
-            html += '>';
+            html += '<tr id="table-row-#=rowtmpitem#">';
 
             for (let i = 0, icount = (columns && columns.length ? columns.length : 0); i < icount; i++) {
                 html += '   <td';
@@ -1197,6 +1200,7 @@ export namespace Controller {
                 let templateRow = vars.getTemplate(this.getTableRowTemplate());
                 if (templateRow) {
                     for (let i = 0, icount = (data && data.length ? data.length : 0); i < icount; i++) {
+                        data[i]["rowtmpitem"] = i;
                         html += templateRow(data[i]);
                         for (let j = 0, jcount = (this.sumFieldsInfo.fields && this.sumFieldsInfo.fields.length ? this.sumFieldsInfo.fields.length : 0); j < jcount; j++) {
                             if (i === 0)
@@ -1208,6 +1212,18 @@ export namespace Controller {
                 }
             }
             return html;
+        }
+
+        
+        private rowClick(e) {
+            this.OnDetalize(e);
+            e.preventDefault();
+            e.stopPropagation();
+            return false;
+        }
+
+        protected OnDetalize(e) {
+
         }
 
         private sortButtonClick(e) {
@@ -1229,12 +1245,28 @@ export namespace Controller {
                 typeSort = findResult[0].typeSort;
             }
 
+            let colNameSplit: Array<string> = colName.split('.');
+
             let data: Interfaces.Model.IReportModel[] = this.Model.get("reportModel");
-            data.sort(function (a, b: any) {
-                let aval: number = a[colName];
-                let bval: number = b[colName];
-                return  (typeSort === 0 || typeSort === 2 ?  aval - bval : bval - aval);
-            })
+            if (columns[i].IsSum === true) {
+                data.sort(function (a, b: any) {
+                    let aval: any = a[colNameSplit[0]];
+                    for (let i = 1, icount = colNameSplit.length; i < icount; i++) aval = aval[colNameSplit[i]];
+                    let bval: any = b[colNameSplit[0]];
+                    for (let i = 1, icount = colNameSplit.length; i < icount; i++) bval = bval[colNameSplit[i]];
+                    return (typeSort === 0 || typeSort === 2 ? aval - bval : bval - aval);
+                });
+            }
+            else {
+                data.sort(function (a, b: any) {
+                    let aval: any = a[colNameSplit[0]];
+                    for (let i = 1, icount = colNameSplit.length; i < icount; i++) aval = aval[colNameSplit[i]];
+                    let bval: any = b[colNameSplit[0]];
+                    for (let i = 1, icount = colNameSplit.length; i < icount; i++) bval = bval[colNameSplit[i]];
+                    return (typeSort === 0 || typeSort === 2 ? aval.localeCompare(bval) : bval.localeCompare(aval));
+                });
+
+            }
             if (findResult && findResult.length > 0) {
                 findResult[0].typeSort = (typeSort === 0 || typeSort === 2 ? 1 : 2);
             }

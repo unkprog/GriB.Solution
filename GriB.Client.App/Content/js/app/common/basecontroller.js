@@ -84,6 +84,9 @@ define(["require", "exports", "app/common/utils", "app/common/variables", "./var
             Base.prototype.createTouchClickEvent = function (elemName, clickFunc) {
                 return utils.createTouchClickEvent(elemName, clickFunc, this, this.View);
             };
+            Base.prototype.createDblTouchClickEvent = function (elemName, clickFunc) {
+                return utils.createDblTouchClickEvent(elemName, clickFunc, this, this.View);
+            };
             Base.prototype.createClickEvent = function (elemName, clickFunc) {
                 return utils.createClickEvent(elemName, clickFunc, this, this.View);
             };
@@ -99,6 +102,9 @@ define(["require", "exports", "app/common/utils", "app/common/variables", "./var
             };
             Base.prototype.destroyTouchClickEvent = function (elemName, proxyFunc) {
                 utils.destroyTouchClickEvent(elemName, proxyFunc, this.View);
+            };
+            Base.prototype.destroyDblTouchClickEvent = function (elemName, proxyFunc) {
+                utils.destroyDblTouchClickEvent(elemName, proxyFunc, this.View);
             };
             Base.prototype.destroyClickEvent = function (elemName, proxyFunc) {
                 utils.destroyClickEvent(elemName, proxyFunc, this.View);
@@ -917,6 +923,8 @@ define(["require", "exports", "app/common/utils", "app/common/variables", "./var
             };
             BaseReport.prototype.destroyEvents = function () {
                 this.detachSortEvents();
+                if (this.rows)
+                    this.destroyDblTouchClickEvent(this.rows, this.rowClick);
                 _super.prototype.destroyEvents.call(this);
             };
             BaseReport.prototype.buildButtonClick = function (e) {
@@ -929,13 +937,12 @@ define(["require", "exports", "app/common/utils", "app/common/variables", "./var
                 this.tableHead.html(headerHtml);
                 this.attachSortEvents();
                 this.setupRows();
-                this.rows = this.tableBody.find('tr');
                 //this.createTouchClickEvent(this.rows, this.rowClick);
             };
             BaseReport.prototype.setupRows = function () {
                 //this.selectedRow = null;
-                //if (this.rows)
-                //    this.destroyTouchClickEvent(this.rows, this.rowClick);
+                if (this.rows)
+                    this.destroyDblTouchClickEvent(this.rows, this.rowClick);
                 this.tableBody.html(this.getTableBodyHtml());
                 var valueSum;
                 for (var j = 0, jcount = (this.sumFieldsInfo.fields && this.sumFieldsInfo.fields.length ? this.sumFieldsInfo.fields.length : 0); j < jcount; j++) {
@@ -943,7 +950,7 @@ define(["require", "exports", "app/common/utils", "app/common/variables", "./var
                     this.tableHead.find('#' + this.sumFieldsInfo.fields[j] + '_sum').html(utils.numberToString(valueSum ? valueSum : 0, 2));
                 }
                 this.rows = this.tableBody.find('tr');
-                //this.createTouchClickEvent(this.rows, this.rowClick);
+                this.createDblTouchClickEvent(this.rows, this.rowClick);
             };
             BaseReport.prototype.getTableHeaderHtml = function () {
                 var columns = this.ReportSettings.Columns;
@@ -1019,13 +1026,7 @@ define(["require", "exports", "app/common/utils", "app/common/variables", "./var
                 var setting = this.ReportSettings;
                 var columns = setting.Columns;
                 var html = '';
-                html += '<tr';
-                //if (setting.FieldId) {
-                //    html += ' id="table-row-#=';
-                //    html += setting.FieldId;
-                //    html += '#"';
-                //}
-                html += '>';
+                html += '<tr id="table-row-#=rowtmpitem#">';
                 for (var i = 0, icount = (columns && columns.length ? columns.length : 0); i < icount; i++) {
                     html += '   <td';
                     if (columns[i].FieldStyle) {
@@ -1053,6 +1054,7 @@ define(["require", "exports", "app/common/utils", "app/common/variables", "./var
                     var templateRow = vars.getTemplate(this.getTableRowTemplate());
                     if (templateRow) {
                         for (var i = 0, icount = (data && data.length ? data.length : 0); i < icount; i++) {
+                            data[i]["rowtmpitem"] = i;
                             html += templateRow(data[i]);
                             for (var j = 0, jcount = (this.sumFieldsInfo.fields && this.sumFieldsInfo.fields.length ? this.sumFieldsInfo.fields.length : 0); j < jcount; j++) {
                                 if (i === 0)
@@ -1064,6 +1066,14 @@ define(["require", "exports", "app/common/utils", "app/common/variables", "./var
                     }
                 }
                 return html;
+            };
+            BaseReport.prototype.rowClick = function (e) {
+                this.OnDetalize(e);
+                e.preventDefault();
+                e.stopPropagation();
+                return false;
+            };
+            BaseReport.prototype.OnDetalize = function (e) {
             };
             BaseReport.prototype.sortButtonClick = function (e) {
                 var self = this;
@@ -1082,12 +1092,30 @@ define(["require", "exports", "app/common/utils", "app/common/variables", "./var
                 if (findResult && findResult.length > 0) {
                     typeSort = findResult[0].typeSort;
                 }
+                var colNameSplit = colName.split('.');
                 var data = this.Model.get("reportModel");
-                data.sort(function (a, b) {
-                    var aval = a[colName];
-                    var bval = b[colName];
-                    return (typeSort === 0 || typeSort === 2 ? aval - bval : bval - aval);
-                });
+                if (columns[i].IsSum === true) {
+                    data.sort(function (a, b) {
+                        var aval = a[colNameSplit[0]];
+                        for (var i_1 = 1, icount = colNameSplit.length; i_1 < icount; i_1++)
+                            aval = aval[colNameSplit[i_1]];
+                        var bval = b[colNameSplit[0]];
+                        for (var i_2 = 1, icount = colNameSplit.length; i_2 < icount; i_2++)
+                            bval = bval[colNameSplit[i_2]];
+                        return (typeSort === 0 || typeSort === 2 ? aval - bval : bval - aval);
+                    });
+                }
+                else {
+                    data.sort(function (a, b) {
+                        var aval = a[colNameSplit[0]];
+                        for (var i_3 = 1, icount = colNameSplit.length; i_3 < icount; i_3++)
+                            aval = aval[colNameSplit[i_3]];
+                        var bval = b[colNameSplit[0]];
+                        for (var i_4 = 1, icount = colNameSplit.length; i_4 < icount; i_4++)
+                            bval = bval[colNameSplit[i_4]];
+                        return (typeSort === 0 || typeSort === 2 ? aval.localeCompare(bval) : bval.localeCompare(aval));
+                    });
+                }
                 if (findResult && findResult.length > 0) {
                     findResult[0].typeSort = (typeSort === 0 || typeSort === 2 ? 1 : 2);
                 }

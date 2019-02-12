@@ -6,6 +6,14 @@
     return result;
 }
 
+export function createDblTouchClickEvent(elemName: string | JQuery, clickFunc: any, thisObject: any, view?: JQuery): any {
+    var result = $.proxy(clickFunc, thisObject);
+    var elem: JQuery = elemName instanceof $ ? <JQuery>elemName : (view ? view.find("#" + elemName) : $("#" + elemName));
+    for (let i = 0, iCount = elem.length; i < iCount; i++)
+        elem[i].addEventListener(("ontouchstart" in window) ? "touchend" : "dblclick", result, false);
+    return result;
+}
+
 export function createClickEvent(elemName: string | JQuery, clickFunc: any, thisObject: any, view?: JQuery): any {
     var result = $.proxy(clickFunc, thisObject);
     var elem: JQuery = elemName instanceof $ ? <JQuery>elemName : (view ? view.find("#" + elemName) : $("#" + elemName));
@@ -18,6 +26,12 @@ export function destroyTouchClickEvent(elemName: string | JQuery, proxyFunc: any
     let elem: JQuery = elemName instanceof $ ? <JQuery>elemName : (view ? view.find("#" + elemName) : $("#" + elemName));
     for (let i = 0, iCount = elem.length; i < iCount; i++)
         elem[i].removeEventListener(("ontouchstart" in window) ? "touchend" : "click", proxyFunc);
+}
+
+export function destroyDblTouchClickEvent(elemName: string | JQuery, proxyFunc: any, view?: JQuery): any {
+    let elem: JQuery = elemName instanceof $ ? <JQuery>elemName : (view ? view.find("#" + elemName) : $("#" + elemName));
+    for (let i = 0, iCount = elem.length; i < iCount; i++)
+        elem[i].removeEventListener(("ontouchstart" in window) ? "touchend" : "dblclick", proxyFunc);
 }
 
 export function destroyClickEvent(elemName: string | JQuery, proxyFunc: any, view?: JQuery): any {

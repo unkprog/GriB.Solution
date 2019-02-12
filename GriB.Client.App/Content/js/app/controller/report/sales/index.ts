@@ -107,10 +107,10 @@ export namespace Controller.Report.Sales {
         protected columns(): Interfaces.IReportColumn[] {
             let columns: Interfaces.IReportColumn[] = [];
 
-            if (this.Filter.IsShowSalepoint) columns.push({ Header: vars._statres("label$salePoint"), Field: "salepoint.name" });
-            if (this.Filter.IsShowProduct) columns.push({ Header: vars._statres("label$product"), Field: "product.name" });
-            if (this.Filter.IsShowEmployee) columns.push({ Header: vars._statres("label$employee"), Field: "employee.name" });
-            if (this.Filter.IsShowClient) columns.push({ Header: vars._statres("label$client"), Field: "client.name" });
+            if (this.Filter.IsShowSalepoint) columns.push({ Header: vars._statres("label$salePoint"), Field: "salepoint.name", IsOrder: true });
+            if (this.Filter.IsShowProduct) columns.push({ Header: vars._statres("label$product"), Field: "product.name", IsOrder: true });
+            if (this.Filter.IsShowEmployee) columns.push({ Header: vars._statres("label$employee"), Field: "employee.name", IsOrder: true });
+            if (this.Filter.IsShowClient) columns.push({ Header: vars._statres("label$client"), Field: "client.name", IsOrder: true });
 
             columns.push({ Header: vars._statres("label$quantity"), HeaderStyle: "product-col-quantity-auto-right", Field: "quantity", FieldTemplate: '#=numberToString(quantity,2)#', FieldStyle: "product-col-quantity-auto-right", IsSum: true, IsOrder: true })
             columns.push({ Header: vars._statres("label$sum"), HeaderStyle: "product-col-sum-auto-rigth", Field: "sum", FieldTemplate: '#=numberToString(sum,2)#', FieldStyle: "product-col-sum-auto-rigth", IsSum: true, IsOrder: true  });
@@ -281,6 +281,28 @@ export namespace Controller.Report.Sales {
                 this.Model.set("reportModel", responseData);
                 this.ReportSettings.Columns = this.columns(); 
                 this.setupTable();
+            });
+        }
+
+        protected OnDetalize(e) {
+            let cur = e.currentTarget;
+            let self = this;
+            let curfilter: Interfaces.Model.IReportSaleFilter = self.Filter;
+            let index: number = +e.currentTarget.id.replace('table-row-', '');
+            let item: any = this.Model.get("reportModel")[index];
+            vars._app.OpenController({
+                urlController: 'report/sales/detalize', isModal: true, onLoadController: (controller: Interfaces.IController) => {
+                    let ctrlDetalize: Interfaces.IControllerReport = controller as Interfaces.IControllerReport;
+                    let filter: Interfaces.Model.IReportSaleFilter = {
+                        datefrom: curfilter.datefrom, dateto: curfilter.dateto, salepoint: curfilter.salepoint, employee: curfilter.employee, client: curfilter.employee, product: curfilter.product
+                    }
+                    if (item.salepoint && item.salepoint.id && item.salepoint.id !== 0) filter.salepoint = item.salepoint;
+                    if (item.employee && item.employee.id && item.employee.id !== 0) filter.employee = item.employee;
+                    if (item.client && item.client.id && item.client.id !== 0) filter.client = item.client;
+                    if (item.product && item.product.id && item.product.id !== 0) filter.product = item.product;
+
+                    ctrlDetalize.Model.set("filterModel", filter);
+                }
             });
         }
     }

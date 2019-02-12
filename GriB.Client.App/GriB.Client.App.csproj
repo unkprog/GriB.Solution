@@ -177,6 +177,7 @@
     <Content Include="Content\view\index - Копировать.html" />
     <Content Include="Content\view\index.html" />
     <Content Include="Content\view\main.html" />
+    <Content Include="Content\view\report\sales\detalize.html" />
     <Content Include="Content\view\report\sales\index.html" />
     <Content Include="Content\view\report\index.html" />
     <Content Include="Content\view\security\recovery.html" />
@@ -302,7 +303,8 @@
     <Content Include="Scripts\Query\POSTerminal\Payment\[get].sql" />
     <Content Include="Scripts\Query\POSTerminal\Payment\[set].sql" />
     <Content Include="Scripts\Query\POSTerminal\[get].sql" />
-    <Content Include="Scripts\Query\Report\[sales].sql" />
+    <Content Include="Scripts\Query\Report\Sales\[salesdetail].sql" />
+    <Content Include="Scripts\Query\Report\Sales\[sales].sql" />
     <Content Include="Scripts\Sql\01.001.[t_orgtype].sql" />
     <Content Include="Scripts\Sql\07.001.[t_change].sql" />
     <Content Include="Scripts\Sql\08.001.[t_client].sql" />
@@ -490,6 +492,7 @@
     <TypeScriptCompile Include="Content\js\app\controller\document\index.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\main.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\report\basereport.ts" />
+    <TypeScriptCompile Include="Content\js\app\controller\report\sales\detalize.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\report\sales\index.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\report\index.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\security\account.ts" />

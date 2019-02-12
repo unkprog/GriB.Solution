@@ -29,11 +29,14 @@ namespace GriB.Common.Models.pos
 
         public model_sys(model_sys sys) : base(sys)
         {
-            d  = sys.d;
-            cd = sys.cd;
-            cu = sys.cu;
-            ud = sys.ud;
-            uu = sys.uu;
+            if (sys != null)
+            {
+                d  = sys.d;
+                cd = sys.cd;
+                cu = sys.cu;
+                ud = sys.ud;
+                uu = sys.uu;
+            }
         }
     }
 

@@ -27,15 +27,18 @@ namespace GriB.Common.Models.pos.settings
 
         public employee(employee empl) : base(empl)
         {
-            pid = empl.pid;
-            phone = empl.phone;
-            pass = empl.pass;
-            sex = empl.sex;
-            birth = empl.birth;
-            fname = empl.fname;
-            mname = empl.mname;
-            lname = empl.lname;
-            email = empl.email;
+            if (empl != null)
+            {
+                pid = empl.pid;
+                phone = empl.phone;
+                pass = empl.pass;
+                sex = empl.sex;
+                birth = empl.birth;
+                fname = empl.fname;
+                mname = empl.mname;
+                lname = empl.lname;
+                email = empl.email;
+            }
         }
     }
 

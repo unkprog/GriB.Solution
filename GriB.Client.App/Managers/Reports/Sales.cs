@@ -45,7 +45,7 @@ namespace GriB.Client.App.Managers.Reports
             if (filter.IsShowClient)    join = string.Concat(join, Environment.NewLine, "left outer join [t_client_person] [cp] with(nolock) on [rep].[client]    = [cp].[id]");
 
             string result = string.Concat("select ", fields, "[rep].[quantity], [rep].[totalsum]"
-                                         , Environment.NewLine, "from (select ", groupBy, string.IsNullOrEmpty(groupBy) ? "" : ", ", "[quantity] = sum([p].[quantity]), [totalsum]=sum([p].[quantity] * [p].[price])"
+                                         , Environment.NewLine, "from (select ", groupBy, string.IsNullOrEmpty(groupBy) ? "" : ", ", "[quantity] = sum([p].[quantity]), [totalsum]=sum((1.0 - ([d].[discount]/100.0)) * [p].[quantity] * [p].[price])"
                                          , Environment.NewLine, "      from [t_check_position] [p] with(nolock)"
                                          , Environment.NewLine, "      inner join [t_check] [d] with(nolock) on [p].[id] = [d].[id]"
                                          , Environment.NewLine, "      where [d].[d] = 0 and ([d].[options] & 1) = 1"
@@ -72,6 +72,44 @@ namespace GriB.Client.App.Managers.Reports
             , (values) =>
             {
                 ReportSaleRow item = readFromValues(filter, values);
+                if (employees != null)
+                {
+                    employeecard empl;
+                    if (employees.TryGetValue(item.cu, out empl))
+                        item.employee = empl;
+                }
+                result.Add(item);
+            });
+
+            return result;
+        }
+
+
+        private static ReportSaleDetailRow readFromValuesDetail(object[] values)
+        {
+            int cnt = 0;
+            ReportSaleDetailRow result = new ReportSaleDetailRow()
+            {
+                id = (int)values[cnt++],
+                cd = (DateTime)values[cnt++],
+                cu = (int)values[cnt++],
+                salepoint = new salepoint() { id = (int)values[cnt++], name = (string)values[cnt++] },
+                product = new product() { id = (int)values[cnt++], name = (string)values[cnt++] },
+                client = new client() { id = (int)values[cnt++], fname = (string)values[cnt++], mname = (string)values[cnt++], lname = (string)values[cnt++] },
+                quantity = (double)values[cnt++], discount= (double)values[cnt++], sum = (double)values[cnt++]
+            };
+            return result;
+        }
+        private const string cmdGetDetail = @"Report\Sales\[salesdetail]";
+        public static List<ReportSaleDetailRow> GetSalesDetail(this Query query, ReportSaleFilter filter, Dictionary<int, employeecard> employees)
+        {
+            List<ReportSaleDetailRow> result = new List<ReportSaleDetailRow>();
+            query.Execute(cmdGetDetail, new SqlParameter[] { new SqlParameter() { ParameterName = "@datefrom", Value = filter.datefrom }, new SqlParameter() { ParameterName = "@dateto", Value = filter.dateto }
+            , new SqlParameter() { ParameterName = "@salepoint", Value = filter.salepoint == null ? 0 : filter.salepoint.id }, new SqlParameter() { ParameterName = "@product", Value = filter.product == null ? 0 : filter.product.id }
+            , new SqlParameter() { ParameterName = "@employee", Value = filter.employee == null ? 0 : filter.employee.id }, new SqlParameter() { ParameterName = "@client", Value = filter.client == null ? 0 : filter.client.id }}
+            , (values) =>
+            {
+                ReportSaleDetailRow item = readFromValuesDetail(values);
                 if (employees != null)
                 {
                     employeecard empl;

@@ -113,8 +113,8 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                             columns.push({ Header: vars._statres("label$employee"), Field: "employee.name" });
                         if (this.Filter.IsShowClient)
                             columns.push({ Header: vars._statres("label$client"), Field: "client.name" });
-                        columns.push({ Header: vars._statres("label$quantity"), HeaderStyle: "product-col-quantity-auto-right", Field: "quantity", FieldTemplate: '#=numberToString(quantity,2)#', FieldStyle: "product-col-quantity-auto-right", IsSum: true });
-                        columns.push({ Header: vars._statres("label$sum"), HeaderStyle: "product-col-sum-auto-rigth", Field: "sum", FieldTemplate: '#=numberToString(sum,2)#', FieldStyle: "product-col-sum-auto-rigth", IsSum: true });
+                        columns.push({ Header: vars._statres("label$quantity"), HeaderStyle: "product-col-quantity-auto-right", Field: "quantity", FieldTemplate: '#=numberToString(quantity,2)#', FieldStyle: "product-col-quantity-auto-right", IsSum: true, IsOrder: true });
+                        columns.push({ Header: vars._statres("label$sum"), HeaderStyle: "product-col-sum-auto-rigth", Field: "sum", FieldTemplate: '#=numberToString(sum,2)#', FieldStyle: "product-col-sum-auto-rigth", IsSum: true, IsOrder: true });
                         return columns;
                     };
                     Index.prototype.createEvents = function () {
@@ -254,6 +254,7 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                     Index.prototype.buildButtonClick = function (e) {
                         var _this = this;
                         var self = this;
+                        _super.prototype.buildButtonClick.call(this, e);
                         this.Service.GetSales(this.Filter, function (responseData) {
                             _this.Model.set("reportModel", responseData);
                             _this.ReportSettings.Columns = _this.columns();
