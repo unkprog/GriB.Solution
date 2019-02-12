@@ -228,6 +228,7 @@
         reason: IReason;
         typecost: number;
         positions: IDocumentModelPosition[];
+        discount: number;
         sum: number;
         comment: string;
     }

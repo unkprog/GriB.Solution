@@ -93,6 +93,21 @@ export namespace Controller.Report.Sales {
                 this.setupTable();
             });
         }
+
+        protected OnDetalize(e) {
+            let cur = e.currentTarget;
+            let self = this;
+            let curfilter: Interfaces.Model.IReportSaleFilter = self.Filter;
+            let index: number = +e.currentTarget.id.replace('table-row-', '');
+            let item: any = this.Model.get("reportModel")[index];
+            vars._editorData["id_sale"] = item.id;
+            vars._app.OpenController({
+                urlController: 'document/editor/sale', isModal: true, onLoadController: (controller: Interfaces.IController) => {
+                    let ctrlSale: Interfaces.IControllerEditor = controller as Interfaces.IControllerEditor;
+                    ctrlSale.EditorSettings.ButtonSetings.IsSave = false;
+                }
+            });
+        }
     }
 }
 

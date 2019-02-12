@@ -9,6 +9,14 @@ define(["require", "exports"], function (require, exports) {
         return result;
     }
     exports.createTouchClickEvent = createTouchClickEvent;
+    function createDblTouchClickEvent(elemName, clickFunc, thisObject, view) {
+        var result = $.proxy(clickFunc, thisObject);
+        var elem = elemName instanceof $ ? elemName : (view ? view.find("#" + elemName) : $("#" + elemName));
+        for (var i = 0, iCount = elem.length; i < iCount; i++)
+            elem[i].addEventListener(("ontouchstart" in window) ? "touchend" : "dblclick", result, false);
+        return result;
+    }
+    exports.createDblTouchClickEvent = createDblTouchClickEvent;
     function createClickEvent(elemName, clickFunc, thisObject, view) {
         var result = $.proxy(clickFunc, thisObject);
         var elem = elemName instanceof $ ? elemName : (view ? view.find("#" + elemName) : $("#" + elemName));
@@ -23,6 +31,12 @@ define(["require", "exports"], function (require, exports) {
             elem[i].removeEventListener(("ontouchstart" in window) ? "touchend" : "click", proxyFunc);
     }
     exports.destroyTouchClickEvent = destroyTouchClickEvent;
+    function destroyDblTouchClickEvent(elemName, proxyFunc, view) {
+        var elem = elemName instanceof $ ? elemName : (view ? view.find("#" + elemName) : $("#" + elemName));
+        for (var i = 0, iCount = elem.length; i < iCount; i++)
+            elem[i].removeEventListener(("ontouchstart" in window) ? "touchend" : "dblclick", proxyFunc);
+    }
+    exports.destroyDblTouchClickEvent = destroyDblTouchClickEvent;
     function destroyClickEvent(elemName, proxyFunc, view) {
         var elem = elemName instanceof $ ? elemName : (view ? view.find("#" + elemName) : $("#" + elemName));
         for (var i = 0, iCount = elem.length; i < iCount; i++)

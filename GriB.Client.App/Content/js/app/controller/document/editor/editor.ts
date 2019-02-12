@@ -216,6 +216,7 @@ export namespace Controller.Document.Editor {
             let self = this;
             let model: Interfaces.Model.IDocumentModel = this.EditorModel;
             let data: Interfaces.Model.IDocumentModelPosition[] = model.positions;
+            let discountMult: number = (1.0 - ((model.discount ? model.discount : 0.0)/100.0));
             let html: string = '';
 
             if (this.btnAddPosition)
@@ -224,7 +225,7 @@ export namespace Controller.Document.Editor {
             this.positionRows.unbind();
             if (data && data.length > 0) {
                 for (let i = 0, icount = (data && data.length ? data.length : 0); i < icount; i++) {
-                    data[i].sum = Math.round((data[i].quantity * data[i].price) * 100) / 100;
+                    data[i].sum = Math.round((discountMult * data[i].quantity * data[i].price) * 100) / 100;
 
                     html += '<tr data-index="' + i + '">';
                     html += '<td class="product-col-name" data-bind="text:editModel.positions[' + i + '].product.name"></td>';

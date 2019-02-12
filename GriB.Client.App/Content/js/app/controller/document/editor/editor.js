@@ -217,13 +217,14 @@ define(["require", "exports", "app/common/basecontroller", "app/services/documen
                         var self = this;
                         var model = this.EditorModel;
                         var data = model.positions;
+                        var discountMult = (1.0 - ((model.discount ? model.discount : 0.0) / 100.0));
                         var html = '';
                         if (this.btnAddPosition)
                             this.destroyTouchClickEvent(this.btnAddPosition, this.AddPositionButtonClick);
                         this.positionRows.unbind();
                         if (data && data.length > 0) {
                             for (var i = 0, icount = (data && data.length ? data.length : 0); i < icount; i++) {
-                                data[i].sum = Math.round((data[i].quantity * data[i].price) * 100) / 100;
+                                data[i].sum = Math.round((discountMult * data[i].quantity * data[i].price) * 100) / 100;
                                 html += '<tr data-index="' + i + '">';
                                 html += '<td class="product-col-name" data-bind="text:editModel.positions[' + i + '].product.name"></td>';
                                 if (this.EditorSettings.ButtonSetings && this.EditorSettings.ButtonSetings.IsSave === true)

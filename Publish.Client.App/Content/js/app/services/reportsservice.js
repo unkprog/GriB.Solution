@@ -29,7 +29,10 @@ define(["require", "exports", "app/common/baseservice"], function (require, expo
                 configurable: true
             });
             ReportsService.prototype.GetSales = function (model, Callback) {
-                this.PostApi({ Action: "/post_sales", RequestData: JSON.stringify(model), Callback: Callback });
+                this.PostApi({ Action: "/sales", RequestData: JSON.stringify(model), Callback: Callback });
+            };
+            ReportsService.prototype.GetSalesDetail = function (model, Callback) {
+                this.PostApi({ Action: "/salesdetail", RequestData: JSON.stringify(model), Callback: Callback });
             };
             return ReportsService;
         }(base.Services.BaseService));
