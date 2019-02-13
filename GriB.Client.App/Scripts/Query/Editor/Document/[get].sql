@@ -1,4 +1,4 @@
-﻿select [t].[id], [t].[doctype], [t].[option], [t].[date], [t].[salepoint], [t].[salepointto], [t].[contractor], [t].[typecost], [t].[reason]
+﻿select [t].[id], [t].[doctype], [t].[options], [t].[date], [t].[salepoint], [t].[salepointto], [t].[contractor], [t].[typecost], [t].[reason]
      , [salepointname] = isnull([sp].[name], ''), [salepointtoname] = isnull([spto].[name], ''), [contractorname] = isnull([c].[name], ''), [reasonname] = isnull([r].[name], ''), [sum] = isnull((select sum([quantity] * [price]) from [t_document_position] with(nolock) where [id] = [t].[id]), 0)
 from [t_document] [t] with(nolock)
 left outer join [t_org]        [sp]   with(nolock) on [t].[salepoint]   = [sp].[id]

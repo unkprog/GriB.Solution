@@ -8,6 +8,15 @@
             <input id="report-sales-view-date-end" type="text" class="datepicker">
             <label for="report-sales-view-date-end" data-bind="text:labelDateTo"></label>
         </div>
+        <div class="input-field col s12 m4 l6 xl6">
+            <select id="report-sales-view-showfields" multiple data-bind="value:selectedFields">
+                <option value="1" data-bind="text:labelSalepoint"></option>
+                <option value="2" data-bind="text:labelProduct"></option>
+                <option value="3" data-bind="text:labelEmployee"></option>
+                <option value="4" data-bind="text:labelClient"></option>
+            </select>
+            <label data-bind="text:labelShowFields"></label>
+        </div>
     </div>
     <div class="row row-inputs">
         <div id="report-sales-view-salepoint-row" class="input-field col s12 m6 l3 xl3 col-input-numpad">
@@ -31,37 +40,9 @@
             <i id="report-sales-view-client-clear" class="material-icons editor-header right doc-edit-ref-del">close</i>
         </div>
     </div>
-
-    <div class="row row-inputs">
-        <div class="input-field col s12 m6 l3 xl3">
-            <label class="reportcheck">
-                <input id="report-sales-view-showsalepoint" type="checkbox" data-bind="checked:filterModel.IsShowSalepoint" />
-                <span data-bind="text:labelSalepoint"></span>
-            </label>
-        </div>
-        <div class="input-field col s12 m6 l3 xl3">
-            <label class="reportcheck">
-                <input id="report-sales-view-showproduct" type="checkbox" data-bind="checked:filterModel.IsShowProduct" />
-                <span data-bind="text:labelProduct"></span>
-            </label>
-        </div>
-        <div class="input-field col s12 m6 l3 xl3">
-            <label class="reportcheck">
-                <input id="report-sales-view-showemployee" type="checkbox" data-bind="checked:filterModel.IsShowEmployee" />
-                <span data-bind="text:labelEmployee"></span>
-            </label>
-        </div>
-        <div class="input-field col s12 m6 l3 xl3">
-            <label class="reportcheck">
-                <input id="report-sales-view-showclient" type="checkbox" data-bind="checked:filterModel.IsShowClient" />
-                <span data-bind="text:labelClient"></span>
-            </label>
-        </div>
-    </div>
     <div class="row row-inputs">
         <div class="input-field col s12 m12 l12 xl12 col-input-numpad" style="margin-top: 0;">
             <a id="report-sales-view-btn-build" class="btn btncol" data-bind="text:labelBuild"></a>
-
         </div>
     </div>
 </div>

@@ -34,8 +34,10 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                         return new kendo.data.ObservableObject({
                             "Header": "",
                             "filterModel": {},
+                            "selectedFields": [],
                             "labelDateFrom": vars._statres("label$date$from"),
                             "labelDateTo": vars._statres("label$date$to"),
+                            "labelShowFields": vars._statres("label$showfields"),
                             "labelSalepoint": vars._statres("label$salePoint"),
                             "labelProduct": vars._statres("label$product"),
                             "labelEmployee": vars._statres("label$employee"),
@@ -82,6 +84,7 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                         });
                         controller.dateFromControl.val(utils.date_ddmmyyyy(controller.Model.get("filterModel.datefrom")));
                         controller.dateToControl.val(utils.date_ddmmyyyy(controller.Model.get("filterModel.dateto")));
+                        controller.showFieldsControl = view.find("#report-sales-view-showfields");
                         controller.salepointControl = view.find("#report-sales-view-salepoint-row");
                         controller.salepointClearControl = view.find("#report-sales-view-salepoint-clear");
                         controller.productControl = view.find("#report-sales-view-product-row");
@@ -91,8 +94,32 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                         controller.clientControl = view.find("#report-sales-view-client-row");
                         controller.clientClearControl = view.find("#report-sales-view-client-clear");
                         controller.buildButton = view.find("#report-sales-view-btn-build");
+                        var selectedFields = [];
+                        var filter = this.Model.get("filterModel");
+                        if (filter.IsShowSalepoint)
+                            selectedFields.push(1);
+                        if (filter.IsShowProduct)
+                            selectedFields.push(2);
+                        if (filter.IsShowEmployee)
+                            selectedFields.push(3);
+                        if (filter.IsShowClient)
+                            selectedFields.push(4);
+                        this.Model.set("selectedFields", selectedFields);
                         var result = _super.prototype.ViewInit.call(this, view);
                         return result;
+                    };
+                    Index.prototype.ViewResize = function (e) {
+                        _super.prototype.ViewResize.call(this, e);
+                        //try {
+                        //    this.showFieldsControl.formSelect();
+                        //}
+                        //catch (ex) {
+                        //    console.log(JSON.stringify( ex));
+                        //}
+                    };
+                    Index.prototype.ViewShow = function (e) {
+                        this.showFieldsControl.formSelect();
+                        return _super.prototype.ViewShow.call(this, e);
                     };
                     Object.defineProperty(Index.prototype, "Filter", {
                         get: function () {
@@ -127,8 +154,10 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                         this.ClearEmployeeButtonClick = this.createTouchClickEvent(this.employeeClearControl, this.clearEmployeeButtonClick);
                         this.ClientButtonClick = this.createTouchClickEvent(this.clientControl, this.clientButtonClick);
                         this.ClearClientButtonClick = this.createTouchClickEvent(this.clientClearControl, this.clearClientButtonClick);
+                        this.Model.bind("change", $.proxy(this.changeModel, this));
                     };
                     Index.prototype.destroyEvents = function () {
+                        this.Model.unbind("change");
                         this.destroyTouchClickEvent(this.salepointClearControl, this.ClearSalepointButtonClick);
                         this.destroyTouchClickEvent(this.salepointControl, this.SalepointButtonClick);
                         this.destroyTouchClickEvent(this.productClearControl, this.ClearProductButtonClick);
@@ -140,6 +169,29 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                         if (this.buildButton)
                             utils.destroyTouchClickEvent(this.buildButton, this.BuildButtonClick);
                         _super.prototype.destroyEvents.call(this);
+                    };
+                    Index.prototype.changeModel = function (e) {
+                        if (e.field === "selectedFields") {
+                            var selectedFields = this.Model.get("selectedFields");
+                            var filter = this.Model.get("filterModel");
+                            filter.IsShowSalepoint = false;
+                            filter.IsShowProduct = false;
+                            filter.IsShowEmployee = false;
+                            filter.IsShowClient = false;
+                            if (selectedFields) {
+                                for (var i = 0, icount = selectedFields.length; i < icount; i++) {
+                                    if (selectedFields[i] == 1)
+                                        filter.IsShowSalepoint = true;
+                                    else if (selectedFields[i] == 2)
+                                        filter.IsShowProduct = true;
+                                    else if (selectedFields[i] == 3)
+                                        filter.IsShowEmployee = true;
+                                    else if (selectedFields[i] == 4)
+                                        filter.IsShowClient = true;
+                                }
+                            }
+                            this.Model.set("filterModel", filter);
+                        }
                     };
                     Index.prototype.salepointButtonClick = function (e) {
                         var self = this;
@@ -250,13 +302,12 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                         return false;
                     };
                     Index.prototype.buildButtonClick = function (e) {
-                        var _this = this;
                         var self = this;
                         _super.prototype.buildButtonClick.call(this, e);
-                        this.Service.GetSales(this.Filter, function (responseData) {
-                            _this.Model.set("reportModel", responseData);
-                            _this.ReportSettings.Columns = _this.columns();
-                            _this.setupTable();
+                        this.Service.GetSales(self.Filter, function (responseData) {
+                            self.Model.set("reportModel", responseData);
+                            self.ReportSettings.Columns = self.columns();
+                            self.setupTable();
                         });
                     };
                     Index.prototype.OnDetalize = function (e) {

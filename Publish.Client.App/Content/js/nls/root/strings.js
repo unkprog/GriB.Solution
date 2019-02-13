@@ -287,5 +287,13 @@ define({
     /////////////////////////////////////////////////////////////////////////////////////////////
 
     "report$sales": "Отчет по продажам",
+    "report$stocks": "Отчет по складу",
     "label$build": "Построить",
+    "label$showfields": "Выводить поля",
+    "label$quantity$deb$beg":"Приход на начало периода",
+    "label$quantity$cre$beg": "Расход на начало периода",
+    "label$quantity$deb": "Приход за период",
+    "label$quantity$cre": "Расход за период",
+    "label$quantity$deb$end": "Приход на конец периода",
+    "label$quantity$cre$end": "Расход на конец периода",
 });

@@ -259,17 +259,29 @@
 
     }
 
-    export interface IReportSaleFilter extends IReportFilter {
-
+    export interface IReportBaseFilter extends IReportFilter
+    {
         salepoint: ISalepoint;
+        IsShowSalepoint?: boolean;
+    }
+
+    export interface ReportFilterWithProduct extends IReportBaseFilter
+    {
         product: IProduct;
+        IsShowProduct?: boolean;
+    }
+
+
+    export interface IReportSaleFilter extends ReportFilterWithProduct {
+
         employee: IEmployeeModel;
         client: IClientModel;
 
-        IsShowSalepoint?: boolean;
-        IsShowProduct?: boolean;
         IsShowEmployee?: boolean;
         IsShowClient?: boolean;
+    }
+
+    export interface IReportStockFilter extends ReportFilterWithProduct {
     }
 
     export interface IReportModel {

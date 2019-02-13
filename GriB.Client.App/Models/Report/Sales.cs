@@ -3,26 +3,7 @@ using System;
 
 namespace GriB.Client.App.Models.Report
 {
-    public class ReportSaleFilter
-    {
-        public ReportSaleFilter()
-        {
-            datefrom = new DateTime(1899, 12, 30);
-            dateto = new DateTime(1899, 12, 30);
-        }
-        public DateTime datefrom { get; set; }
-        public DateTime dateto { get; set; }
-
-        public salepoint    salepoint { get; set; }
-        public product      product   { get; set; }
-        public employeecard employee  { get; set; }
-        public client       client    { get; set; }
-
-        public bool IsShowSalepoint { get; set; }
-        public bool IsShowProduct   { get; set; }
-        public bool IsShowEmployee  { get; set; }
-        public bool IsShowClient    { get; set; }
-    }
+    
 
     public class ReportSaleRow
     {

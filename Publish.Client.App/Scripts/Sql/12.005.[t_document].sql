@@ -12,7 +12,7 @@ begin
 	[ud]          [datetime]      not null default (getdate()),
 	[uu]          [int]           not null default (0),
 	[doctype]     [int]           not null default (0),
-	[option]      [int]           not null default (0),
+	[options]     [int]           not null default (0),
 	[date]        [datetime]      not null default (getdate()),
 	[salepoint]   [int]           not null default (0),
 	[salepointto] [int]           not null default (0),

@@ -18,5 +18,9 @@ export module Services {
         public GetSalesDetail(model: Interfaces.Model.IReportSaleFilter, Callback: (responseData: any) => void) {
             this.PostApi({ Action: "/salesdetail", RequestData: JSON.stringify(model), Callback: Callback });
         }
+
+        public GetStocks(model: Interfaces.Model.IReportStockFilter, Callback: (responseData: any) => void) {
+            this.PostApi({ Action: "/stocks", RequestData: JSON.stringify(model), Callback: Callback });
+        }
     }
 }

@@ -42,7 +42,7 @@ namespace GriB.Client.App.Managers.Editors
         public static document SetDocument(this Query query, document document, int user)
         {
             document result = document;
-            query.Execute(cmdSet, new SqlParameter[] { new SqlParameter("@id", result.id), new SqlParameter("@u", user), new SqlParameter("@doctype", result.doctype), new SqlParameter("@option", result.options), new SqlParameter("@date", result.date), new SqlParameter("@typecost", result.typecost)
+            query.Execute(cmdSet, new SqlParameter[] { new SqlParameter("@id", result.id), new SqlParameter("@u", user), new SqlParameter("@doctype", result.doctype), new SqlParameter("@options", result.options), new SqlParameter("@date", result.date), new SqlParameter("@typecost", result.typecost)
             , new SqlParameter("@salepoint",  result.salepoint == null ? 0 : result.salepoint.id), new SqlParameter("@salepointto", result.salepointto ==null ? 0 : result.salepointto.id)
             , new SqlParameter("@contractor",  result.contractor == null? 0 : result.contractor.id), new SqlParameter("@reason", result.reason == null ? 0 : result.reason.id) }
             , (values) =>

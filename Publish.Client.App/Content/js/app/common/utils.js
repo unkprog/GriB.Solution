@@ -83,8 +83,18 @@ define(["require", "exports"], function (require, exports) {
         return result;
     }
     exports.dateToday = dateToday;
+    function date_parse(date) {
+        var result; // = new Date();
+        var split1 = date.split(' ');
+        var splitDate = (split1.length > 0 ? split1[0].split('.') : []);
+        var splitTime = (split1.length > 1 ? split1[1].split(':') : []);
+        result = new Date(parseInt(splitDate[2], 10), parseInt(splitDate[1], 10) - 1, parseInt(splitDate[0], 10), splitTime.length > 0 ? parseInt(splitTime[0], 10) : 0, splitTime.length > 1 ? parseInt(splitTime[1], 10) : 0, splitTime.length > 2 ? parseInt(splitTime[2], 10) : 0);
+        return result;
+    }
+    exports.date_parse = date_parse;
+    window.date_parse = date_parse;
     function date_ddmmyyyy(date) {
-        var _date = (date ? (typeof date === 'string' || date instanceof String ? new Date(date) : date) : new Date());
+        var _date = (date ? (typeof date === 'string' || date instanceof String ? date_parse(date) : date) : new Date());
         var yyyy = _date.getFullYear().toString();
         var mm = (_date.getMonth() + 1).toString(); // getMonth() is zero-based         
         var dd = _date.getDate().toString();

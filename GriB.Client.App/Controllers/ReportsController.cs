@@ -40,7 +40,7 @@ namespace GriB.Client.App.Controllers
         [HttpPost]
         [ActionName("salesdetail")]
         public async Task<HttpResponseMessage> ReportSalesDetail(ReportSaleFilter filter)
-       => await TryCatchResponseAsync(async () => await CheckResponseError(
+        => await TryCatchResponseAsync(async () => await CheckResponseError(
               async () =>
               {
                   Principal principal = (Principal)HttpContext.Current.User;
@@ -56,5 +56,15 @@ namespace GriB.Client.App.Controllers
                   });
               })
        );
+
+        [HttpPost]
+        [ActionName("stocks")]
+        public HttpResponseMessage ReportStocks(ReportStockFilter  filter)
+        {
+            return TryCatchResponseQuery((query) =>
+            {
+                return Request.CreateResponse(HttpStatusCode.OK, Stocks.GetStocks(query, filter));
+            });
+        }
     }
 }

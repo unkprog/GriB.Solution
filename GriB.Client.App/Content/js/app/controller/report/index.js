@@ -31,18 +31,24 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
                         "Header": vars._statres("label$reports"),
                         "labelReports": vars._statres("label$reports"),
                         "labelReportSales": vars._statres("report$sales"),
+                        "labelReportStocks": vars._statres("report$stocks"),
                     });
                 };
                 Index.prototype.createEvents = function () {
                     this.ReportSalesButtonClick = this.createTouchClickEvent("btn-report-sales", this.reportSalesButtonClick);
+                    this.ReportStocksButtonClick = this.createTouchClickEvent("btn-report-stocks", this.reportStocksButtonClick);
                     this.ReportTestButtonClick = this.createTouchClickEvent("btn-report-test", this.reportTestButtonClick);
                 };
                 Index.prototype.destroyEvents = function () {
                     this.destroyTouchClickEvent("btn-report-sales", this.ReportSalesButtonClick);
+                    this.destroyTouchClickEvent("btn-report-stocks", this.ReportStocksButtonClick);
                     this.destroyTouchClickEvent("btn-report-test", this.ReportTestButtonClick);
                 };
                 Index.prototype.reportSalesButtonClick = function (e) {
                     vars._main.OpenController({ urlController: "report/sales/index", backController: this });
+                };
+                Index.prototype.reportStocksButtonClick = function (e) {
+                    vars._main.OpenController({ urlController: "report/stocks/index", backController: this });
                 };
                 Index.prototype.reportTestButtonClick = function (e) {
                     vars._main.OpenController({ urlController: "report/dashboard/test", backController: this });

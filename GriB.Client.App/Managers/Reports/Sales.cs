@@ -9,7 +9,7 @@ namespace GriB.Client.App.Managers.Reports
 {
     public static class Sales
     {
-        private static DateTime minReportDate = new DateTime(1899, 12, 30);
+       
         private static ReportSaleRow readFromValues(ReportSaleFilter filter, object[] values)
         {
             int cnt = 0;
@@ -49,8 +49,8 @@ namespace GriB.Client.App.Managers.Reports
                                          , Environment.NewLine, "      from [t_check_position] [p] with(nolock)"
                                          , Environment.NewLine, "      inner join [t_check] [d] with(nolock) on [p].[id] = [d].[id]"
                                          , Environment.NewLine, "      where [d].[d] = 0 and ([d].[options] & 1) = 1"
-                                         , filter.datefrom <= minReportDate ? "" : string.Concat(Environment.NewLine, "      and [d].[cd] >= @datefrom")
-                                         , filter.dateto   <= minReportDate ? "" : string.Concat(Environment.NewLine, "      and [d].[cd] <= @dateto")
+                                         , filter.datefrom <= Constants.minReportDate ? "" : string.Concat(Environment.NewLine, "      and [d].[cd] >= @datefrom")
+                                         , filter.dateto   <= Constants.minReportDate ? "" : string.Concat(Environment.NewLine, "      and [d].[cd] <= @dateto")
                                          , filter.salepoint == null || filter.salepoint .id == 0 ? "" : string.Concat(Environment.NewLine, "      and [d].[salepoint] = @salepoint")
                                          , filter.product == null || filter.product .id == 0? "" : string.Concat(Environment.NewLine, "      and [p].[product] = @product")
                                          , filter.employee == null || filter.employee.id == 0 ? "" : string.Concat(Environment.NewLine, "      and [d].[cu] = @employee")

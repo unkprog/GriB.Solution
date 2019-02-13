@@ -74,8 +74,22 @@ export function dateToday(): Date {
     return result;
 }
 
+export function date_parse(date: string): Date {
+    let result: Date; // = new Date();
+    let split1: Array<string> = date.split(' ');
+    let splitDate: Array<string> = (split1.length > 0 ? split1[0].split('.') : []);
+    let splitTime: Array<string> = (split1.length > 1 ? split1[1].split(':') : []);
+
+
+    result = new Date(parseInt(splitDate[2], 10), parseInt(splitDate[1], 10) - 1, parseInt(splitDate[0], 10)
+        , splitTime.length > 0 ? parseInt(splitTime[0], 10) : 0, splitTime.length > 1 ? parseInt(splitTime[1], 10) : 0, splitTime.length > 2 ? parseInt(splitTime[2], 10) : 0);
+
+    return result;
+}
+window.date_parse = date_parse;
+
 export function date_ddmmyyyy(date: Date | string): string {
-    let _date: Date = (date ? (typeof date === 'string' || date instanceof String ? new Date(date as string) : date) : new Date());
+    let _date: Date = (date ? (typeof date === 'string' || date instanceof String ? date_parse(date as string) : date) : new Date());
     var yyyy = _date.getFullYear().toString();
     var mm = (_date.getMonth() + 1).toString(); // getMonth() is zero-based         
     var dd = _date.getDate().toString();
