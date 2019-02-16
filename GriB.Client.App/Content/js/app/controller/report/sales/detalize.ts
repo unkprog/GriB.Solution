@@ -19,13 +19,6 @@ export namespace Controller.Report.Sales {
             return new kendo.data.ObservableObject({
                 "Header": "",
                 "filterModel": {},
-                "labelDateFrom": vars._statres("label$date$from"),
-                "labelDateTo": vars._statres("label$date$to"),
-                "labelSalepoint": vars._statres("label$salePoint"),
-                "labelProduct": vars._statres("label$product"),
-                "labelEmployee": vars._statres("label$employee"),
-                "labelClient": vars._statres("label$client"),
-                "labelBuild": vars._statres("label$build"),
             });
         }
 
@@ -35,15 +28,13 @@ export namespace Controller.Report.Sales {
 
         protected getDefaultFilter(): Interfaces.Model.IReportSaleFilter {
             return {
-                datefrom: utils.dateToday(), dateto: utils.dateToday(), salepoint: undefined, product: undefined, employee: undefined, client: undefined, IsShowSalepoint:true, IsShowProduct: true, IsShowEmployee: false, IsShowClient: false };
+                datefrom: utils.date_ddmmyyyy(utils.dateToday()), dateto: utils.date_ddmmyyyy(utils.dateToday()), salepoint: undefined, product: undefined, employee: undefined, client: undefined, IsShowSalepoint:true, IsShowProduct: true, IsShowEmployee: false, IsShowClient: false };
         }
 
         protected getSaveFilter(): string {
             let controller = this;
-            let _datefrom: Date = controller.Model.get("filterModel.datefrom");
-            let _dateto: Date = controller.Model.get("filterModel.dateto");
             let filterToSave = {
-                datefrom: utils.date_ddmmyyyy(_datefrom), dateto: utils.date_ddmmyyyy(_dateto)
+                datefrom: controller.Model.get("filterModel.datefrom"), dateto: controller.Model.get("filterModel.dateto")
                 , salepoint: this.Model.get("filterModel.salepoint"), product: this.Model.get("filterModel.product"), employee: this.Model.get("filterModel.employee"), client: this.Model.get("filterModel.client")
                 , IsShowSalepoint: this.Model.get("filterModel.IsShowSalepoint"), IsShowProduct: this.Model.get("filterModel.IsShowProduct"), IsShowEmployee: this.Model.get("filterModel.IsShowEmployee"), IsShowClient: this.Model.get("filterModel.IsShowClient")
             };
@@ -88,9 +79,9 @@ export namespace Controller.Report.Sales {
             let self = this;
             super.buildButtonClick(e);
             this.Service.GetSalesDetail(this.Filter as Interfaces.Model.IReportSaleFilter, (responseData: any) => {
-                this.Model.set("reportModel", responseData);
-                this.ReportSettings.Columns = this.columns(); 
-                this.setupTable();
+                self.Model.set("reportModel", responseData);
+                self.ReportSettings.Columns = self.columns(); 
+                self.setupTable();
             });
         }
 

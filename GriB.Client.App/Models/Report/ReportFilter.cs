@@ -1,5 +1,6 @@
-﻿using GriB.Client.App.Models.Editor;
-using System;
+﻿using System;
+using GriB.Client.App.Managers.Reports;
+using GriB.Client.App.Models.Editor;
 
 namespace GriB.Client.App.Models.Report
 {
@@ -7,12 +8,12 @@ namespace GriB.Client.App.Models.Report
     {
         public ReportFilterWithDates()
         {
-            datefrom = new DateTime(1899, 12, 30);
-            dateto = new DateTime(1899, 12, 30);
+            datefrom = Helper.MinReportDate();
+            dateto = Helper.MinReportDate();
         }
 
-        public DateTime datefrom { get; set; }
-        public DateTime dateto { get; set; }
+        public string datefrom { get; set; }
+        public string dateto { get; set; }
 
     }
     public class ReportBaseFilter : ReportFilterWithDates

@@ -33,4 +33,16 @@ namespace GriB.Client.App.Models.Report
         public DateTime cd { get; set; }
         public double discount { get; set; }
     }
+
+    public class ReportSaleTimeRow
+    {
+        public ReportSaleTimeRow()
+        {
+            time = string.Empty;
+        }
+        public string time { get; set; }
+
+        public double count { get; set; }
+        public double countpos { get; set; }
+    }
 }

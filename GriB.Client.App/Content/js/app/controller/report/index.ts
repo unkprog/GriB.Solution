@@ -17,19 +17,20 @@ export namespace Controller.Report {
                 "labelReports": vars._statres("label$reports"),
                 "labelReportSales": vars._statres("report$sales"),
                 "labelReportStocks": vars._statres("report$stocks"),
+                "labelReportSalesTime": vars._statres("report$sales$time"),
             });
         }
 
         protected createEvents(): void {
             this.ReportSalesButtonClick = this.createTouchClickEvent("btn-report-sales", this.reportSalesButtonClick);
             this.ReportStocksButtonClick = this.createTouchClickEvent("btn-report-stocks", this.reportStocksButtonClick);
-            this.ReportTestButtonClick = this.createTouchClickEvent("btn-report-test", this.reportTestButtonClick);
+            this.ReportSalesTimeButtonClick = this.createTouchClickEvent("btn-report-salestime", this.reportSalesTimeButtonClick);
         }
 
         protected destroyEvents(): void {
             this.destroyTouchClickEvent("btn-report-sales", this.ReportSalesButtonClick);
             this.destroyTouchClickEvent("btn-report-stocks", this.ReportStocksButtonClick);
-            this.destroyTouchClickEvent("btn-report-test", this.ReportTestButtonClick);
+            this.destroyTouchClickEvent("btn-report-salestime", this.ReportSalesTimeButtonClick);
         }
 
         public ReportSalesButtonClick: { (e: any): void; };
@@ -42,9 +43,9 @@ export namespace Controller.Report {
             vars._main.OpenController({ urlController: "report/stocks/index", backController: this });
         }
 
-        public ReportTestButtonClick: { (e: any): void; };
-        private reportTestButtonClick(e) {
-            vars._main.OpenController({ urlController: "report/dashboard/test", backController: this });
+        public ReportSalesTimeButtonClick: { (e: any): void; };
+        private reportSalesTimeButtonClick(e) {
+            vars._main.OpenController({ urlController: "report/dashboard/salestime", backController: this });
         }
     }
 }

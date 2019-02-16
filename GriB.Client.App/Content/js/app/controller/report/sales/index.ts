@@ -34,22 +34,20 @@ export namespace Controller.Report.Sales {
         }
 
         protected getDefaultFilter(): Interfaces.Model.IReportSaleFilter {
-            return {
-                datefrom: utils.dateToday(), dateto: utils.dateToday(), salepoint: undefined, product: undefined, employee: undefined, client: undefined, IsShowSalepoint:true, IsShowProduct: true, IsShowEmployee: false, IsShowClient: false };
+            return { datefrom: utils.date_ddmmyyyy(utils.dateToday()), dateto: utils.date_ddmmyyyy(utils.dateToday()), salepoint: undefined, product: undefined, employee: undefined, client: undefined, IsShowSalepoint:true, IsShowProduct: true, IsShowEmployee: false, IsShowClient: false };
         }
 
-        protected getSaveFilter(): string {
-            let controller = this;
-            let _datefrom: Date = controller.Model.get("filterModel.datefrom");
-            let _dateto: Date = controller.Model.get("filterModel.dateto");
-            let filterToSave = {
-                datefrom: utils.date_ddmmyyyy(_datefrom), dateto: utils.date_ddmmyyyy(_dateto)
-                , salepoint: this.Model.get("filterModel.salepoint"), product: this.Model.get("filterModel.product"), employee: this.Model.get("filterModel.employee"), client: this.Model.get("filterModel.client")
-                , IsShowSalepoint: this.Model.get("filterModel.IsShowSalepoint"), IsShowProduct: this.Model.get("filterModel.IsShowProduct"), IsShowEmployee: this.Model.get("filterModel.IsShowEmployee"), IsShowClient: this.Model.get("filterModel.IsShowClient")
-            };
-            return JSON.stringify(filterToSave);
+        //protected getSaveFilter(): string {
+        //    let controller = this;
+        //    super.getSaveFilter();
+        //    let filterToSave = {
+        //        datefrom: controller.Model.get("filterModel.datefrom"), dateto: controller.Model.get("filterModel.dateto")
+        //        , salepoint: this.Model.get("filterModel.salepoint"), product: this.Model.get("filterModel.product"), employee: this.Model.get("filterModel.employee"), client: this.Model.get("filterModel.client")
+        //        , IsShowSalepoint: this.Model.get("filterModel.IsShowSalepoint"), IsShowProduct: this.Model.get("filterModel.IsShowProduct"), IsShowEmployee: this.Model.get("filterModel.IsShowEmployee"), IsShowClient: this.Model.get("filterModel.IsShowClient")
+        //    };
+        //    return JSON.stringify(filterToSave);
 
-        }
+        //}
 
         private dateFromControl: JQuery;
         private dateToControl: JQuery;
@@ -71,18 +69,18 @@ export namespace Controller.Report.Sales {
             controller.dateFromControl = view.find("#report-sales-view-date-start");
             controller.dateFromControl.datepicker({
                 format: "dd.mm.yyyy", onSelect: function (newDate: Date) {
-                    controller.Model.set("filterModel.datefrom", newDate);
+                    controller.Model.set("filterModel.datefrom", utils.date_ddmmyyyy(newDate));
                 }
             });
             controller.dateToControl = view.find("#report-sales-view-date-end");
             controller.dateToControl.datepicker({
                 format: "dd.mm.yyyy", onSelect: function (newDate: Date) {
-                    controller.Model.set("filterModel.dateto", newDate);
+                    controller.Model.set("filterModel.dateto", utils.date_ddmmyyyy(newDate));
                 }
             });
 
-            controller.dateFromControl.val(utils.date_ddmmyyyy(controller.Model.get("filterModel.datefrom")));
-            controller.dateToControl.val(utils.date_ddmmyyyy(controller.Model.get("filterModel.dateto")));
+            controller.dateFromControl.val(controller.Model.get("filterModel.datefrom"));
+            controller.dateToControl.val(controller.Model.get("filterModel.dateto"));
 
             controller.showFieldsControl = view.find("#report-sales-view-showfields");
             controller.salepointControl = view.find("#report-sales-view-salepoint-row");
@@ -322,7 +320,8 @@ export namespace Controller.Report.Sales {
         protected buildButtonClick(e) {
             let self = this;
             super.buildButtonClick(e);
-            this.Service.GetSales(self.Filter as Interfaces.Model.IReportSaleFilter , (responseData: any) => {
+            let filter: Interfaces.Model.IReportSaleFilter = self.Filter;
+            this.Service.GetSales(filter, (responseData: any) => {
                 self.Model.set("reportModel", responseData);
                 self.ReportSettings.Columns = self.columns(); 
                 self.setupTable();
@@ -330,7 +329,6 @@ export namespace Controller.Report.Sales {
         }
 
         protected OnDetalize(e) {
-            let cur = e.currentTarget;
             let self = this;
             let curfilter: Interfaces.Model.IReportSaleFilter = self.Filter;
             let index: number = +e.currentTarget.id.replace('table-row-', '');
@@ -339,7 +337,7 @@ export namespace Controller.Report.Sales {
                 urlController: 'report/sales/detalize', isModal: true, onLoadController: (controller: Interfaces.IController) => {
                     let ctrlDetalize: Interfaces.IControllerReport = controller as Interfaces.IControllerReport;
                     let filter: Interfaces.Model.IReportSaleFilter = {
-                        datefrom: curfilter.datefrom, dateto: curfilter.dateto, salepoint: curfilter.salepoint, employee: curfilter.employee, client: curfilter.employee, product: curfilter.product
+                        datefrom: curfilter.datefrom, dateto: curfilter.dateto, salepoint: curfilter.salepoint, employee: curfilter.employee, client: curfilter.client, product: curfilter.product
                     }
                     if (item.salepoint && item.salepoint.id && item.salepoint.id !== 0) filter.salepoint = item.salepoint;
                     if (item.employee && item.employee.id && item.employee.id !== 0) filter.employee = item.employee;

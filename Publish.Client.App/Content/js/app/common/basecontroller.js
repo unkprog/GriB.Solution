@@ -854,7 +854,7 @@ define(["require", "exports", "app/common/utils", "app/common/variables", "./var
                 // this.Filter = filter;
             };
             BaseReportWithFilter.prototype.getDefaultFilter = function () {
-                return undefined;
+                return { datefrom: utils.date_ddmmyyyy(utils.dateToday()), dateto: utils.date_ddmmyyyy(utils.dateToday()) };
             };
             Object.defineProperty(BaseReportWithFilter.prototype, "Filter", {
                 get: function () {
@@ -909,7 +909,7 @@ define(["require", "exports", "app/common/utils", "app/common/variables", "./var
                 navbarHeader += '    <div class="col s12 m12 l12 xl12 col-table">';
                 navbarHeader += '        <table class="highlight">';
                 navbarHeader += '            <thead></thead>';
-                navbarHeader += '            <tbody></tbody>';
+                navbarHeader += '            <tbody style="overflow-y: scroll;"></tbody>';
                 navbarHeader += '        </table>';
                 navbarHeader += '    </div>';
                 navbarHeader += '</div>';
@@ -967,11 +967,13 @@ define(["require", "exports", "app/common/utils", "app/common/variables", "./var
                 var columns = this.ReportSettings.Columns;
                 var html = '';
                 var isSum = false;
+                var isGroupHeader = false;
                 this.sumFieldsInfo = { fields: [], sumFied: {}, orderfields: [] };
+                var knSupport = kendo;
                 html += '<tr>';
                 for (var i = 0, icount = columns && columns.length ? columns.length : 0; i < icount; i++) {
-                    if (columns[i].IsSum && columns[i].IsSum === true)
-                        isSum = true;
+                    //if (columns[i].IsSum && columns[i].IsSum === true)
+                    //    isSum = true;
                     html += '   <th';
                     if (columns[i].HeaderStyle || columns[i].IsOrder === true) {
                         if (columns[i].IsOrder === true) {
@@ -988,31 +990,15 @@ define(["require", "exports", "app/common/utils", "app/common/variables", "./var
                     }
                     html += '>';
                     html += (columns[i].HeaderTemplate ? columns[i].HeaderTemplate : columns[i].Header);
+                    if (columns[i].IsSum && columns[i].IsSum === true) {
+                        html += ('<br/><span id="' + columns[i].Field + '_sum">0.00</span>');
+                        this.sumFieldsInfo.fields.push(columns[i].Field);
+                        this.sumFieldsInfo.sumFied[columns[i].Field] = 0;
+                    }
                     html += '</th>';
                 }
+                html += '<th style="width:' + (knSupport.support.browser.chrome === true ? "18" : "17") + 'px;"></th>';
                 html += '</tr>';
-                if (isSum === true) {
-                    html += '<tr>';
-                    for (var i = 0, icount = columns && columns.length ? columns.length : 0; i < icount; i++) {
-                        html += '   <th';
-                        if (columns[i].IsSum === true) {
-                            html += (' id="' + columns[i].Field + '_sum"');
-                            this.sumFieldsInfo.fields.push(columns[i].Field);
-                            this.sumFieldsInfo.sumFied[columns[i].Field] = 0;
-                        }
-                        if (columns[i].HeaderStyle || columns[i].IsOrder === true) {
-                            html += ' class="';
-                            html += columns[i].HeaderStyle;
-                            html += '"';
-                        }
-                        html += '>';
-                        if (columns[i].IsSum === true) {
-                            html += '0.00';
-                        }
-                        html += '</th>';
-                    }
-                    html += '</tr>';
-                }
                 return html;
             };
             BaseReport.prototype.attachSortEvents = function () {

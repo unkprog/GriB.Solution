@@ -41,13 +41,13 @@ export namespace Controller.Document.Card {
                 "labelSalepoint": vars._statres("label$salePoint"),
                 "labelFind": vars._statres("label$find"),
                 "salepoint": {},
-                "datefrom": undefined,
-                "dateto": undefined
+                "datefrom": '',
+                "dateto": ''
             });
             if (data) {
                 result.set("salepoint", data.salepoint);
-                result.set("datefrom", utils.date_from_ddmmyyyy(data.datefrom));
-                result.set("dateto", utils.date_from_ddmmyyyy(data.dateto));
+                result.set("datefrom", data.datefrom);
+                result.set("dateto", data.dateto);
             }
             return result;
         }
@@ -65,9 +65,7 @@ export namespace Controller.Document.Card {
         }
 
         public saveFilter() {
-            let _datefrom: Date = this._model.get("datefrom");
-            let _dateto: Date = this._model.get("dateto");
-            let dataToSave = { salepoint: this._model.get("salepoint"), datefrom: utils.date_ddmmyyyy(_datefrom), dateto: utils.date_ddmmyyyy(_dateto) };
+            let dataToSave = { salepoint: this._model.get("salepoint"), datefrom: this._model.get("datefrom"), dateto: this._model.get("dateto") };
             let toSave: string = JSON.stringify(dataToSave);
             window.localStorage.setItem(this.fieldSearch, toSave);
         }
@@ -107,18 +105,18 @@ export namespace Controller.Document.Card {
             controller.dateFromControl = controller.filterControl.find("#card-filter-view-date-start");
             controller.dateFromControl.datepicker({
                 format: "dd.mm.yyyy", onSelect: function (newDate: Date) {
-                    controller._model.set("datefrom", newDate);
+                    controller._model.set("datefrom", utils.date_ddmmyyyy(newDate));
                 }
             });
             controller.dateToControl = controller.filterControl.find("#card-filter-view-date-end");
             controller.dateToControl.datepicker({
                 format: "dd.mm.yyyy", onSelect: function (newDate: Date) {
-                    controller._model.set("dateto", newDate);
+                    controller._model.set("dateto", utils.date_ddmmyyyy(newDate));
                 }
             });
 
-            controller.dateFromControl.val(utils.date_ddmmyyyy(controller._model.get("datefrom")));
-            controller.dateToControl.val(utils.date_ddmmyyyy(controller._model.get("dateto")));
+            controller.dateFromControl.val(controller._model.get("datefrom"));
+            controller.dateToControl.val(controller._model.get("dateto"));
 
 
             controller.salePointControl = this.filterControl.find("#card-filter-view-salepoint-col");
@@ -254,20 +252,20 @@ export namespace Controller.Document.Card {
 
         protected get SalePoint(): number {
             let settings: SaleCardFilterSettings = this.CardSettings.FilterSettings as SaleCardFilterSettings;
-            let salepoint: Interfaces.Model.ISalepoint = (settings ? settings.Model.get("salepoint") : undefined);
+            let salepoint: Interfaces.Model.ISalepoint = (settings ? settings.Model.get("salepoint") : '');
             return (salepoint ? salepoint.id : 0);
         }
 
-        protected get DateFrom(): Date {
+        protected get DateFrom(): string {
             let settings: SaleCardFilterSettings = this.CardSettings.FilterSettings as SaleCardFilterSettings;
-            let date: Date = (settings ? settings.Model.get("datefrom") : undefined);
-            return (date ? date : new Date(1899, 11, 30, 0, 0, 0, 0));
+            let date: string = (settings ? settings.Model.get("datefrom") : '');
+            return (utils.isNullOrEmpty(date) ? '30.12.1899' : date);
         }
 
-        protected get DateTo(): Date {
+        protected get DateTo(): string {
             let settings: SaleCardFilterSettings = this.CardSettings.FilterSettings as SaleCardFilterSettings;
-            let date: Date = (settings ? settings.Model.get("dateto") : undefined);
-            return (date ? new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1) : new Date(1899, 11, 30, 0, 0, 0, 0));
+            let date: string = (settings ? settings.Model.get("dateto") : undefined);
+            return (utils.isNullOrEmpty(date) ? '30.12.1899' : date);
         }
 
         private getDocs(Callback: (responseData: any) => void) {

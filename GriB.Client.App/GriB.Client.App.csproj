@@ -177,10 +177,11 @@
     <Content Include="Content\view\index - Копировать.html" />
     <Content Include="Content\view\index.html" />
     <Content Include="Content\view\main.html" />
-    <Content Include="Content\view\report\dashboard\test.html" />
+    <Content Include="Content\view\report\dashboard\salestime.html" />
     <Content Include="Content\view\report\sales\detalize.html" />
     <Content Include="Content\view\report\sales\index.html" />
     <Content Include="Content\view\report\index.html" />
+    <Content Include="Content\view\report\stocks\detalize.html" />
     <Content Include="Content\view\report\stocks\index.html" />
     <Content Include="Content\view\security\recovery.html" />
     <Content Include="Content\view\security\register.html" />
@@ -306,7 +307,8 @@
     <Content Include="Scripts\Query\POSTerminal\Payment\[set].sql" />
     <Content Include="Scripts\Query\POSTerminal\[get].sql" />
     <Content Include="Scripts\Query\Report\Sales\[salesdetail].sql" />
-    <Content Include="Scripts\Query\Report\Sales\[sales].sql" />
+    <Content Include="Scripts\Query\Report\Sales\[salestime].sql" />
+    <Content Include="Scripts\Query\Report\Stocks\[stocksdetail].sql" />
     <Content Include="Scripts\Sql\01.001.[t_orgtype].sql" />
     <Content Include="Scripts\Sql\07.001.[t_change].sql" />
     <Content Include="Scripts\Sql\08.001.[t_client].sql" />
@@ -361,6 +363,7 @@
     <Compile Include="Managers\POSTerminal\Payment.cs" />
     <Compile Include="Managers\POSTerminal\Terminal.cs" />
     <Compile Include="Managers\Reports\Constants.cs" />
+    <Compile Include="Managers\Reports\Helper.cs" />
     <Compile Include="Managers\Reports\Sales.cs" />
     <Compile Include="Managers\Reports\Stocks.cs" />
     <Compile Include="Models\Editor\CostIncome.cs" />
@@ -498,10 +501,11 @@
     <TypeScriptCompile Include="Content\js\app\controller\document\index.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\main.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\report\basereport.ts" />
-    <TypeScriptCompile Include="Content\js\app\controller\report\dashboard\test.ts" />
+    <TypeScriptCompile Include="Content\js\app\controller\report\dashboard\salestime.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\report\sales\detalize.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\report\sales\index.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\report\index.ts" />
+    <TypeScriptCompile Include="Content\js\app\controller\report\stocks\detalize.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\report\stocks\index.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\security\account.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\security\recovery.ts" />

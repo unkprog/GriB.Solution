@@ -53,37 +53,24 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                         configurable: true
                     });
                     Index.prototype.getDefaultFilter = function () {
-                        return {
-                            datefrom: utils.dateToday(), dateto: utils.dateToday(), salepoint: undefined, product: undefined, employee: undefined, client: undefined, IsShowSalepoint: true, IsShowProduct: true, IsShowEmployee: false, IsShowClient: false
-                        };
-                    };
-                    Index.prototype.getSaveFilter = function () {
-                        var controller = this;
-                        var _datefrom = controller.Model.get("filterModel.datefrom");
-                        var _dateto = controller.Model.get("filterModel.dateto");
-                        var filterToSave = {
-                            datefrom: utils.date_ddmmyyyy(_datefrom), dateto: utils.date_ddmmyyyy(_dateto),
-                            salepoint: this.Model.get("filterModel.salepoint"), product: this.Model.get("filterModel.product"), employee: this.Model.get("filterModel.employee"), client: this.Model.get("filterModel.client"),
-                            IsShowSalepoint: this.Model.get("filterModel.IsShowSalepoint"), IsShowProduct: this.Model.get("filterModel.IsShowProduct"), IsShowEmployee: this.Model.get("filterModel.IsShowEmployee"), IsShowClient: this.Model.get("filterModel.IsShowClient")
-                        };
-                        return JSON.stringify(filterToSave);
+                        return { datefrom: utils.date_ddmmyyyy(utils.dateToday()), dateto: utils.date_ddmmyyyy(utils.dateToday()), salepoint: undefined, product: undefined, employee: undefined, client: undefined, IsShowSalepoint: true, IsShowProduct: true, IsShowEmployee: false, IsShowClient: false };
                     };
                     Index.prototype.ViewInit = function (view) {
                         var controller = this;
                         controller.dateFromControl = view.find("#report-sales-view-date-start");
                         controller.dateFromControl.datepicker({
                             format: "dd.mm.yyyy", onSelect: function (newDate) {
-                                controller.Model.set("filterModel.datefrom", newDate);
+                                controller.Model.set("filterModel.datefrom", utils.date_ddmmyyyy(newDate));
                             }
                         });
                         controller.dateToControl = view.find("#report-sales-view-date-end");
                         controller.dateToControl.datepicker({
                             format: "dd.mm.yyyy", onSelect: function (newDate) {
-                                controller.Model.set("filterModel.dateto", newDate);
+                                controller.Model.set("filterModel.dateto", utils.date_ddmmyyyy(newDate));
                             }
                         });
-                        controller.dateFromControl.val(utils.date_ddmmyyyy(controller.Model.get("filterModel.datefrom")));
-                        controller.dateToControl.val(utils.date_ddmmyyyy(controller.Model.get("filterModel.dateto")));
+                        controller.dateFromControl.val(controller.Model.get("filterModel.datefrom"));
+                        controller.dateToControl.val(controller.Model.get("filterModel.dateto"));
                         controller.showFieldsControl = view.find("#report-sales-view-showfields");
                         controller.salepointControl = view.find("#report-sales-view-salepoint-row");
                         controller.salepointClearControl = view.find("#report-sales-view-salepoint-clear");
@@ -304,14 +291,14 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                     Index.prototype.buildButtonClick = function (e) {
                         var self = this;
                         _super.prototype.buildButtonClick.call(this, e);
-                        this.Service.GetSales(self.Filter, function (responseData) {
+                        var filter = self.Filter;
+                        this.Service.GetSales(filter, function (responseData) {
                             self.Model.set("reportModel", responseData);
                             self.ReportSettings.Columns = self.columns();
                             self.setupTable();
                         });
                     };
                     Index.prototype.OnDetalize = function (e) {
-                        var cur = e.currentTarget;
                         var self = this;
                         var curfilter = self.Filter;
                         var index = +e.currentTarget.id.replace('table-row-', '');
@@ -320,7 +307,7 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                             urlController: 'report/sales/detalize', isModal: true, onLoadController: function (controller) {
                                 var ctrlDetalize = controller;
                                 var filter = {
-                                    datefrom: curfilter.datefrom, dateto: curfilter.dateto, salepoint: curfilter.salepoint, employee: curfilter.employee, client: curfilter.employee, product: curfilter.product
+                                    datefrom: curfilter.datefrom, dateto: curfilter.dateto, salepoint: curfilter.salepoint, employee: curfilter.employee, client: curfilter.client, product: curfilter.product
                                 };
                                 if (item.salepoint && item.salepoint.id && item.salepoint.id !== 0)
                                     filter.salepoint = item.salepoint;

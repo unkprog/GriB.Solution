@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using GriB.Client.App.Managers.Reports;
 using GriB.Common.Models.pos;
 
 namespace GriB.Client.App.Models.Editor
@@ -10,13 +11,13 @@ namespace GriB.Client.App.Models.Editor
         {
             id = 0;
             salepoint = 0;
-            datefrom = new DateTime(1899, 12, 30);
-            dateto = new DateTime(1899, 12, 30);
+            datefrom = Constants.minReportDate.ToString("dd.MM.yyyy");
+            dateto = Constants.minReportDate.ToString("dd.MM.yyyy");
         }
         public int id { get; set; }
         public int salepoint { get; set; }
-        public DateTime datefrom { get; set; }
-        public DateTime dateto { get; set; }
+        public string datefrom { get; set; }
+        public string dateto { get; set; }
     }
 
     public class sales_params : base_params

@@ -970,7 +970,7 @@ export namespace Controller {
         }
 
         protected getDefaultFilter(): Interfaces.Model.IReportFilter {
-            return undefined;
+            return { datefrom: utils.date_ddmmyyyy(utils.dateToday()), dateto: utils.date_ddmmyyyy(utils.dateToday()) };
         }
 
         public get Filter(): Interfaces.Model.IReportFilter {
@@ -1028,7 +1028,7 @@ export namespace Controller {
             navbarHeader += '    <div class="col s12 m12 l12 xl12 col-table">';
             navbarHeader += '        <table class="highlight">';
             navbarHeader += '            <thead></thead>';
-            navbarHeader += '            <tbody></tbody>';
+            navbarHeader += '            <tbody style="overflow-y: scroll;"></tbody>';
             navbarHeader += '        </table>';
             navbarHeader += '    </div>';
             navbarHeader += '</div>';
@@ -1094,26 +1094,31 @@ export namespace Controller {
             this.createDblTouchClickEvent(this.rows, this.rowClick);
         }
 
-        private sumFieldsInfo: any;
+        protected sumFieldsInfo: any;
+
+
+
         protected getTableHeaderHtml(): string {
             let columns: Interfaces.IReportColumn[] = this.ReportSettings.Columns;
             let html: string = '';
             let isSum: boolean = false;
-
+            let isGroupHeader: boolean = false;
             this.sumFieldsInfo = { fields: [], sumFied: {}, orderfields: [] };
+            let knSupport: any = kendo;
 
             html += '<tr>';
             for (let i = 0, icount = columns && columns.length ? columns.length : 0; i < icount; i++) {
-                if (columns[i].IsSum && columns[i].IsSum === true)
-                    isSum = true;
+                //if (columns[i].IsSum && columns[i].IsSum === true)
+                //    isSum = true;
                 html += '   <th';
+             
                 if (columns[i].HeaderStyle || columns[i].IsOrder === true) {
                     if (columns[i].IsOrder === true) {
                         html += ' id="sort_' + i + '"';
                     }
 
                     html += ' class="';
-                    if (columns[i].HeaderStyle)  html += columns[i].HeaderStyle;
+                    if (columns[i].HeaderStyle) html += columns[i].HeaderStyle;
                     if (columns[i].IsOrder === true) {
                         this.sumFieldsInfo.orderfields.push({ field: columns[i].Field, typeSort: 0, index: i });
                         html += (columns[i].HeaderStyle ? ' ' : '') + 'ccursor';
@@ -1122,32 +1127,15 @@ export namespace Controller {
                 }
                 html += '>';
                 html += (columns[i].HeaderTemplate ? columns[i].HeaderTemplate : columns[i].Header);
+                if (columns[i].IsSum && columns[i].IsSum === true) {
+                    html += ('<br/><span id="' + columns[i].Field + '_sum">0.00</span>');
+                    this.sumFieldsInfo.fields.push(columns[i].Field);
+                    this.sumFieldsInfo.sumFied[columns[i].Field] = 0;
+                }
                 html += '</th>';
             }
+            html += '<th style="width:' + (knSupport.support.browser.chrome === true ? "18" : "17") + 'px;"></th>';
             html += '</tr>';
-
-            if (isSum === true) {
-                html += '<tr>';
-                for (let i = 0, icount = columns && columns.length ? columns.length : 0; i < icount; i++) {
-                    html += '   <th';
-                    if (columns[i].IsSum === true) {
-                        html += (' id="' + columns[i].Field + '_sum"');
-                        this.sumFieldsInfo.fields.push(columns[i].Field);
-                        this.sumFieldsInfo.sumFied[columns[i].Field] = 0;
-                    }
-                    if (columns[i].HeaderStyle || columns[i].IsOrder === true) {
-                        html += ' class="';
-                        html += columns[i].HeaderStyle;
-                        html += '"';
-                    }
-                    html += '>';
-                    if (columns[i].IsSum === true) {
-                        html += '0.00';
-                    }
-                    html += '</th>';
-                }
-                html += '</tr>';
-            }
 
             return html;
         }

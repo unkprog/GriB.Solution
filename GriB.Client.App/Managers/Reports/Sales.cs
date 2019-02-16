@@ -44,13 +44,15 @@ namespace GriB.Client.App.Managers.Reports
             if (filter.IsShowSalepoint) join = string.Concat(join, Environment.NewLine, "left outer join [t_org]           [s]  with(nolock) on [s].[d]  = 0 and [rep].[salepoint] = [s].[id]");
             if (filter.IsShowClient)    join = string.Concat(join, Environment.NewLine, "left outer join [t_client_person] [cp] with(nolock) on [rep].[client]    = [cp].[id]");
 
+            DateTime datefrom, dateto;
+
             string result = string.Concat("select ", fields, "[rep].[quantity], [rep].[totalsum]"
                                          , Environment.NewLine, "from (select ", groupBy, string.IsNullOrEmpty(groupBy) ? "" : ", ", "[quantity] = sum([p].[quantity]), [totalsum]=sum((1.0 - ([d].[discount]/100.0)) * [p].[quantity] * [p].[price])"
                                          , Environment.NewLine, "      from [t_check_position] [p] with(nolock)"
                                          , Environment.NewLine, "      inner join [t_check] [d] with(nolock) on [p].[id] = [d].[id]"
                                          , Environment.NewLine, "      where [d].[d] = 0 and ([d].[options] & 1) = 1"
-                                         , filter.datefrom <= Constants.minReportDate ? "" : string.Concat(Environment.NewLine, "      and [d].[cd] >= @datefrom")
-                                         , filter.dateto   <= Constants.minReportDate ? "" : string.Concat(Environment.NewLine, "      and [d].[cd] <= @dateto")
+                                         , Helper.IsExistsDate(filter.datefrom, out datefrom) ? string.Concat(Environment.NewLine, "      and [d].[cd] >= @datefrom") : ""
+                                         , Helper.IsExistsDate(filter.dateto, out dateto) ? string.Concat(Environment.NewLine, "      and [d].[cd] <= @dateto") : ""
                                          , filter.salepoint == null || filter.salepoint .id == 0 ? "" : string.Concat(Environment.NewLine, "      and [d].[salepoint] = @salepoint")
                                          , filter.product == null || filter.product .id == 0? "" : string.Concat(Environment.NewLine, "      and [p].[product] = @product")
                                          , filter.employee == null || filter.employee.id == 0 ? "" : string.Concat(Environment.NewLine, "      and [d].[cu] = @employee")
@@ -66,7 +68,7 @@ namespace GriB.Client.App.Managers.Reports
         public static List<ReportSaleRow> GetSales(this Query query, ReportSaleFilter filter, Dictionary<int, employeecard> employees)
         {
             List<ReportSaleRow> result = new List<ReportSaleRow>();
-            query.ExecuteQuery(cmdGet(filter), new SqlParameter[] { new SqlParameter() { ParameterName = "@datefrom", Value = filter.datefrom }, new SqlParameter() { ParameterName = "@dateto", Value = filter.dateto }
+            query.ExecuteQuery(cmdGet(filter), new SqlParameter[] { new SqlParameter() { ParameterName = "@datefrom", Value = Helper.Date(filter.datefrom) }, new SqlParameter() { ParameterName = "@dateto", Value = Helper.DateReportEnd(filter.dateto) }
             , new SqlParameter() { ParameterName = "@salepoint", Value = filter.salepoint == null ? 0 : filter.salepoint.id }, new SqlParameter() { ParameterName = "@product", Value = filter.product == null ? 0 : filter.product.id }
             , new SqlParameter() { ParameterName = "@employee", Value = filter.employee == null ? 0 : filter.employee.id }, new SqlParameter() { ParameterName = "@client", Value = filter.client == null ? 0 : filter.client.id }}
             , (values) =>
@@ -100,11 +102,12 @@ namespace GriB.Client.App.Managers.Reports
             };
             return result;
         }
+
         private const string cmdGetDetail = @"Report\Sales\[salesdetail]";
         public static List<ReportSaleDetailRow> GetSalesDetail(this Query query, ReportSaleFilter filter, Dictionary<int, employeecard> employees)
         {
             List<ReportSaleDetailRow> result = new List<ReportSaleDetailRow>();
-            query.Execute(cmdGetDetail, new SqlParameter[] { new SqlParameter() { ParameterName = "@datefrom", Value = filter.datefrom }, new SqlParameter() { ParameterName = "@dateto", Value = filter.dateto }
+            query.Execute(cmdGetDetail, new SqlParameter[] { new SqlParameter() { ParameterName = "@datefrom", Value = Helper.Date(filter.datefrom) }, new SqlParameter() { ParameterName = "@dateto", Value = Helper.DateReportEnd(filter.dateto) }
             , new SqlParameter() { ParameterName = "@salepoint", Value = filter.salepoint == null ? 0 : filter.salepoint.id }, new SqlParameter() { ParameterName = "@product", Value = filter.product == null ? 0 : filter.product.id }
             , new SqlParameter() { ParameterName = "@employee", Value = filter.employee == null ? 0 : filter.employee.id }, new SqlParameter() { ParameterName = "@client", Value = filter.client == null ? 0 : filter.client.id }}
             , (values) =>
@@ -117,6 +120,20 @@ namespace GriB.Client.App.Managers.Reports
                         item.employee = empl;
                 }
                 result.Add(item);
+            });
+
+            return result;
+        }
+
+        private const string cmdGetTime = @"Report\Sales\[[salestime]]";
+        public static List<ReportSaleTimeRow> GetReportSalesTime(this Query query, ReportSaleFilter filter)
+        {
+            List<ReportSaleTimeRow> result = new List<ReportSaleTimeRow>();
+            query.Execute(cmdGetTime, new SqlParameter[] { new SqlParameter() { ParameterName = "@datefrom", Value = Helper.Date(filter.datefrom) }, new SqlParameter() { ParameterName = "@dateto", Value = Helper.DateReportEnd(filter.dateto) }
+            , new SqlParameter() { ParameterName = "@salepoint", Value = filter.salepoint == null ? 0 : filter.salepoint.id }, new SqlParameter() { ParameterName = "@product", Value = filter.product == null ? 0 : filter.product.id }}
+            , (values) =>
+            {
+                result.Add(new ReportSaleTimeRow() { time = (string)values[0], count = (double)values[1], countpos = (double)values[1] });
             });
 
             return result;

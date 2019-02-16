@@ -8,5 +8,6 @@ namespace GriB.Client.App.Managers.Reports
     public static class Constants
     {
         internal static readonly DateTime minReportDate = new DateTime(1899, 12, 30);
+        internal static readonly string dateFormat = "dd.MM.yyyy";
     }
 }

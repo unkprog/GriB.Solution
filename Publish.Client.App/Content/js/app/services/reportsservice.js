@@ -37,6 +37,9 @@ define(["require", "exports", "app/common/baseservice"], function (require, expo
             ReportsService.prototype.GetStocks = function (model, Callback) {
                 this.PostApi({ Action: "/stocks", RequestData: JSON.stringify(model), Callback: Callback });
             };
+            ReportsService.prototype.GetStocksDetail = function (model, Callback) {
+                this.PostApi({ Action: "/stocksdetail", RequestData: JSON.stringify(model), Callback: Callback });
+            };
             return ReportsService;
         }(base.Services.BaseService));
         Services.ReportsService = ReportsService;

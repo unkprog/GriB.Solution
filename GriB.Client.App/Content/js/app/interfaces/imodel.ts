@@ -194,8 +194,8 @@
     }
 
     export interface IDateParams {
-        datefrom: Date;
-        dateto: Date;
+        datefrom: string;
+        dateto: string;
     }
 
     export interface ISaleParams extends IDateParams {

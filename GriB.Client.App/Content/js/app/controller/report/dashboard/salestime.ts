@@ -3,13 +3,13 @@ import svc = require('app/services/reportsservice');
 import vars = require('app/common/variables');
 
 export namespace Controller.Report.Dashboard {
-    export class ReportTestDashboard extends base.Controller.BaseReportWithFilter {
+    export class ReportSalesTimeDashboard extends base.Controller.BaseReportWithFilter {
         constructor() {
             super();
         }
 
         protected createOptions(): Interfaces.IControllerOptions {
-            return { Url: "/Content/view/report/dashboard/test.html", Id: "report-dashboard-test-view" };
+            return { Url: "/Content/view/report/dashboard/salestime.html", Id: "report-dashboard-salestime-view" };
         }
 
         private chartControl: JQuery;
@@ -22,8 +22,8 @@ export namespace Controller.Report.Dashboard {
 
             var Chart = require('chartjs');
 
-            controller.chartContainerControl = view.find('#report-dashboard-test-view-chart-container');
-            controller.chartControl = view.find('#report-dashboard-test-view-chart');
+            controller.chartContainerControl = view.find('#report-dashboard-salestime-view-chart-container');
+            controller.chartControl = view.find('#report-dashboard-salestime-view-chart');
             var ctx: any = (controller.chartControl[0] as any).getContext('2d');
             var myChart = new Chart(ctx, {
                 type: 'bar',
@@ -77,4 +77,4 @@ export namespace Controller.Report.Dashboard {
     }
 }
 
-vars.registerController("report/dashboard/test", function (module: any): Interfaces.IController { return new module.Controller.Report.Dashboard.ReportTestDashboard(); });
+vars.registerController("report/dashboard/salestime", function (module: any): Interfaces.IController { return new module.Controller.Report.Dashboard.ReportSalesTimeDashboard(); });

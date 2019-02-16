@@ -42,13 +42,6 @@ define(["require", "exports", "app/common/variables", "app/controller/document/e
                         enumerable: true,
                         configurable: true
                     });
-                    Object.defineProperty(Sale.prototype, "DocFormatDate", {
-                        get: function () {
-                            return "dd.mm.yyyy ";
-                        },
-                        enumerable: true,
-                        configurable: true
-                    });
                     Sale.prototype.createEditorSettings = function () {
                         return { EditIdName: this.EditIdName, Load: $.proxy(this.Service.GetSale, this.Service), Save: $.proxy(this.Service.SetDocument, this.Service) };
                     };

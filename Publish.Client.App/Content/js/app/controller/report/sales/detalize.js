@@ -36,13 +36,6 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                         return new kendo.data.ObservableObject({
                             "Header": "",
                             "filterModel": {},
-                            "labelDateFrom": vars._statres("label$date$from"),
-                            "labelDateTo": vars._statres("label$date$to"),
-                            "labelSalepoint": vars._statres("label$salePoint"),
-                            "labelProduct": vars._statres("label$product"),
-                            "labelEmployee": vars._statres("label$employee"),
-                            "labelClient": vars._statres("label$client"),
-                            "labelBuild": vars._statres("label$build"),
                         });
                     };
                     Object.defineProperty(Detalize.prototype, "FilterName", {
@@ -54,15 +47,13 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                     });
                     Detalize.prototype.getDefaultFilter = function () {
                         return {
-                            datefrom: utils.dateToday(), dateto: utils.dateToday(), salepoint: undefined, product: undefined, employee: undefined, client: undefined, IsShowSalepoint: true, IsShowProduct: true, IsShowEmployee: false, IsShowClient: false
+                            datefrom: utils.date_ddmmyyyy(utils.dateToday()), dateto: utils.date_ddmmyyyy(utils.dateToday()), salepoint: undefined, product: undefined, employee: undefined, client: undefined, IsShowSalepoint: true, IsShowProduct: true, IsShowEmployee: false, IsShowClient: false
                         };
                     };
                     Detalize.prototype.getSaveFilter = function () {
                         var controller = this;
-                        var _datefrom = controller.Model.get("filterModel.datefrom");
-                        var _dateto = controller.Model.get("filterModel.dateto");
                         var filterToSave = {
-                            datefrom: utils.date_ddmmyyyy(_datefrom), dateto: utils.date_ddmmyyyy(_dateto),
+                            datefrom: controller.Model.get("filterModel.datefrom"), dateto: controller.Model.get("filterModel.dateto"),
                             salepoint: this.Model.get("filterModel.salepoint"), product: this.Model.get("filterModel.product"), employee: this.Model.get("filterModel.employee"), client: this.Model.get("filterModel.client"),
                             IsShowSalepoint: this.Model.get("filterModel.IsShowSalepoint"), IsShowProduct: this.Model.get("filterModel.IsShowProduct"), IsShowEmployee: this.Model.get("filterModel.IsShowEmployee"), IsShowClient: this.Model.get("filterModel.IsShowClient")
                         };
@@ -100,13 +91,12 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                         _super.prototype.destroyEvents.call(this);
                     };
                     Detalize.prototype.buildButtonClick = function (e) {
-                        var _this = this;
                         var self = this;
                         _super.prototype.buildButtonClick.call(this, e);
                         this.Service.GetSalesDetail(this.Filter, function (responseData) {
-                            _this.Model.set("reportModel", responseData);
-                            _this.ReportSettings.Columns = _this.columns();
-                            _this.setupTable();
+                            self.Model.set("reportModel", responseData);
+                            self.ReportSettings.Columns = self.columns();
+                            self.setupTable();
                         });
                     };
                     Detalize.prototype.OnDetalize = function (e) {

@@ -66,5 +66,25 @@ namespace GriB.Client.App.Controllers
                 return Request.CreateResponse(HttpStatusCode.OK, Stocks.GetStocks(query, filter));
             });
         }
+
+        [HttpPost]
+        [ActionName("stocksdetail")]
+        public async Task<HttpResponseMessage> ReportStocksDetail(ReportStockFilter filter)
+        => await TryCatchResponseAsync(async () => await CheckResponseError(
+              async () =>
+              {
+                  Principal principal = (Principal)HttpContext.Current.User;
+                  return await Common.Net.Json.GetAsync<JObject>(AppSettings.Server.Register, string.Concat("api/account/employees?db=", principal?.Data?.Database?.id));
+              }
+              , (response) =>
+              {
+                  HttpEmployeesMessage responseMessage = response.ToObject<HttpEmployeesMessage>();
+                  return TryCatchResponseQuery((query) =>
+                  {
+                      Dictionary<int, employeecard> employees = GetFindEmployees(query, responseMessage);
+                      return Request.CreateResponse(HttpStatusCode.OK, Stocks.GetStocksDetail(query, filter, employees));
+                  });
+              })
+       );
     }
 }

@@ -19,7 +19,7 @@ namespace GriB.Client.App.Managers.Editors
             query.Execute(cmdGet, new SqlParameter[] { new SqlParameter() { ParameterName = "@id", Value = docpar.id }, new SqlParameter() { ParameterName = "@doctype", Value = docpar.doctype }
             , new SqlParameter() { ParameterName = "@salepoint", Value = docpar.salepoint }, new SqlParameter() { ParameterName = "@salepointto", Value = docpar.salepointto }
             , new SqlParameter() { ParameterName = "@contractor", Value = docpar.contractor }, new SqlParameter() { ParameterName = "@reason", Value = docpar.reason }
-            , new SqlParameter() { ParameterName = "@datefrom", Value = docpar.datefrom }, new SqlParameter() { ParameterName = "@dateto", Value = docpar.dateto} }
+            , new SqlParameter() { ParameterName = "@datefrom", Value = Reports.Helper.Date(docpar.datefrom) }, new SqlParameter() { ParameterName = "@dateto", Value = Reports.Helper.DateReportEnd(docpar.dateto) } }
             , (values) =>
             {
                 result.Add(readFromValues(values));

@@ -637,6 +637,15 @@ input[type='number']:hover::-webkit-outer-spin-button {
     margin-top: -2.2em;
 }
 
+.report-total {
+    background-color: #efebe9;
+    font-weight: bold;
+}
+
+.report-total-right-border {
+    border-right: 1px solid rgba(0, 0, 0, 0.12);
+}
+
 .ccursor {
     cursor: pointer;
 }

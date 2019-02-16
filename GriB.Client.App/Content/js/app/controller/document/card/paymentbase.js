@@ -65,8 +65,8 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                             "client": {},
                             "type": 0,
                             "optionValue": 0,
-                            "datefrom": undefined,
-                            "dateto": undefined
+                            "datefrom": '',
+                            "dateto": ''
                         });
                         //let payMethod: string = "#if (ptype === 1) {#" + vars._statres("label$cash") + "# } else if (ptype === 2) {#" + vars._statres("label$noncash") + "# } else if (ptype === 3) {#" + vars._statres("label$withoutpayment") + "#}#";
                         if (data) {
@@ -75,8 +75,8 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                             result.set("client", data.client);
                             result.set("type", data.type);
                             result.set("optionValue", data.type);
-                            result.set("datefrom", utils.date_from_ddmmyyyy(data.datefrom));
-                            result.set("dateto", utils.date_from_ddmmyyyy(data.dateto));
+                            result.set("datefrom", data.datefrom);
+                            result.set("dateto", data.dateto);
                         }
                         return result;
                     };
@@ -92,9 +92,7 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                         return result;
                     };
                     PaymentCardFilterSettings.prototype.saveFilter = function () {
-                        var _datefrom = this._model.get("datefrom");
-                        var _dateto = this._model.get("dateto");
-                        var dataToSave = { salepoint: this._model.get("salepoint"), employee: this._model.get("employee"), client: this._model.get("client"), type: this._model.get("type"), option: this._model.get("optionValue"), datefrom: utils.date_ddmmyyyy(_datefrom), dateto: utils.date_ddmmyyyy(_dateto) };
+                        var dataToSave = { salepoint: this._model.get("salepoint"), employee: this._model.get("employee"), client: this._model.get("client"), type: this._model.get("type"), option: this._model.get("optionValue"), datefrom: this._model.get("datefrom"), dateto: this._model.get("dateto") };
                         var toSave = JSON.stringify(dataToSave);
                         window.localStorage.setItem(this.fieldSearch, toSave);
                     };
@@ -158,17 +156,17 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                         controller.dateFromControl = controller.filterControl.find("#card-filter-view-date-start");
                         controller.dateFromControl.datepicker({
                             format: "dd.mm.yyyy", onSelect: function (newDate) {
-                                controller._model.set("datefrom", newDate);
+                                controller._model.set("datefrom", utils.date_ddmmyyyy(newDate));
                             }
                         });
                         controller.dateToControl = controller.filterControl.find("#card-filter-view-date-end");
                         controller.dateToControl.datepicker({
                             format: "dd.mm.yyyy", onSelect: function (newDate) {
-                                controller._model.set("dateto", newDate);
+                                controller._model.set("dateto", utils.date_ddmmyyyy(newDate));
                             }
                         });
-                        controller.dateFromControl.val(utils.date_ddmmyyyy(controller._model.get("datefrom")));
-                        controller.dateToControl.val(utils.date_ddmmyyyy(controller._model.get("dateto")));
+                        controller.dateFromControl.val(controller._model.get("datefrom"));
+                        controller.dateToControl.val(controller._model.get("dateto"));
                         controller.salePointControl = controller.filterControl.find("#card-filter-view-salepoint-col");
                         controller.salePointClear = controller.filterControl.find("#card-view-salepoint-clear");
                         controller.employeeControl = controller.filterControl.find("#card-filter-view-employee-col");
@@ -485,8 +483,8 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                     Object.defineProperty(PaymentBase.prototype, "DateFrom", {
                         get: function () {
                             var settings = this.CardSettings.FilterSettings;
-                            var date = (settings ? settings.Model.get("datefrom") : undefined);
-                            return (date ? date : new Date(1899, 11, 30, 0, 0, 0, 0));
+                            var date = (settings ? settings.Model.get("datefrom") : '');
+                            return (utils.isNullOrEmpty(date) ? '30.12.1899' : date);
                         },
                         enumerable: true,
                         configurable: true
@@ -494,8 +492,8 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                     Object.defineProperty(PaymentBase.prototype, "DateTo", {
                         get: function () {
                             var settings = this.CardSettings.FilterSettings;
-                            var date = (settings ? settings.Model.get("dateto") : undefined);
-                            return (date ? new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1) : new Date(1899, 11, 30, 0, 0, 0, 0));
+                            var date = (settings ? settings.Model.get("dateto") : '');
+                            return (utils.isNullOrEmpty(date) ? '30.12.1899' : date);
                         },
                         enumerable: true,
                         configurable: true

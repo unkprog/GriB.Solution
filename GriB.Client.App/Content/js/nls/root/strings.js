@@ -217,6 +217,7 @@ define({
     "label$movementgoods": "Движение товара",
     "label$movementfunds": "Движение денег",
     "label$arrival": "Приход",
+    "label$arrival$fromstock": "Приход с другого склада",
     "label$writeoff": "Списание",
     "label$movement": "Перемещение",
     "label$return": "Возврат",
@@ -288,12 +289,20 @@ define({
 
     "report$sales": "Отчет по продажам",
     "report$stocks": "Отчет по складу",
+    "report$sales$time": "Отчет по времени продажи",
+
     "label$build": "Построить",
     "label$showfields": "Выводить поля",
+    "label$beginofperiod": "На начало периода",
+    "label$overperiod": "За период",
+    "label$endofperiod": "На конец периода",
     "label$quantity$deb$beg":"Приход на начало периода",
     "label$quantity$cre$beg": "Расход на начало периода",
     "label$quantity$deb": "Приход за период",
     "label$quantity$cre": "Расход за период",
     "label$quantity$deb$end": "Приход на конец периода",
     "label$quantity$cre$end": "Расход на конец периода",
+    "label$document": "Документ",
+    "label$expense": "Расход",
+    "label$total": "Итого",
 });

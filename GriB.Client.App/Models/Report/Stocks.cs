@@ -24,13 +24,23 @@ namespace GriB.Client.App.Models.Report
         public double quantityEnd    => quantityDebEnd - quantityCreEnd;
     }
 
-    //public class ReportSaleDetailRow : ReportSaleRow
-    //{
-    //    public ReportSaleDetailRow() : base()
-    //    {
-    //    }
-    //    public int id { get; set; }
-    //    public DateTime cd { get; set; }
-    //    public double discount { get; set; }
-    //}
+    public class ReportStocksDetailRow
+    {
+        public ReportStocksDetailRow()
+        {
+            salepoint = new salepoint();
+            product = new product();
+            employee = new employeecard(new Common.Models.pos.settings.employee());
+        }
+        public salepoint salepoint { get; set; }
+        public product product { get; set; }
+        public employeecard employee { get; set; }
+
+        public int id { get; set; }
+        public DateTime cd { get; set; }
+        public int cu { get; set; }
+        public int doctype { get; set; }
+        public double quantity { get; set; }
+        public double sum { get; set; }
+    }
 }

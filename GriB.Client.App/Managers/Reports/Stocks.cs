@@ -42,6 +42,9 @@ namespace GriB.Client.App.Managers.Reports
             if (filter.IsShowSalepoint) join = string.Concat(join, Environment.NewLine, "left outer join [t_org]           [s]  with(nolock) on [s].[d]  = 0 and [rep].[salepoint] = [s].[id]");
             if (filter.IsShowProduct)   join = string.Concat(join, Environment.NewLine, "left outer join [t_product]       [p]  with(nolock) on [p].[d]  = 0 and [rep].[product]   = [p].[id]");
 
+            DateTime dateto;
+            bool isExistsDateTo = Helper.IsExistsDate(filter.dateto, out dateto);
+
             string result = string.Concat("select ", fields, string.IsNullOrEmpty(fields) ? "" : ", ", " [rep].[quantityDebBeg], [rep].[quantityCreBeg], [rep].[quantityDeb], [rep].[quantityCre]"
                                          , Environment.NewLine, "from (select ", fieldsRep, string.IsNullOrEmpty(fieldsRep) ? "" : ", ", "[quantityDebBeg]=sum([rep].[quantityDebBeg]), [quantityCreBeg]=sum([rep].[quantityCreBeg]), [quantityDeb]=sum([rep].[quantityDeb]), [quantityCre]=sum([rep].[quantityCre])"
                                          , Environment.NewLine, "     from ("
@@ -51,9 +54,10 @@ namespace GriB.Client.App.Managers.Reports
                                          , Environment.NewLine, "           from [t_check_position] [p] with(nolock)"
                                          , Environment.NewLine, "           inner join [t_check] [d] with(nolock) on [p].[id] = [d].[id]"
                                          , Environment.NewLine, "           where [d].[d] = 0 and ([d].[options] & 1) = 1"
-                                         , Environment.NewLine, "             and (@dateto <= '18991230' or (@dateto > '18991230' and [d].[cd] <= @dateto))"
-                                         , filter.salepoint == null || filter.salepoint.id == 0 ? "" : string.Concat(Environment.NewLine, "             and [d].[salepoint] = @salepoint")
-                                         , filter.product == null || filter.product.id == 0 ? "" : string.Concat(Environment.NewLine, "             and [p].[product] = @product"), string.IsNullOrEmpty(groupBy) ? "" : string.Concat(Environment.NewLine, "      group by ", groupBy)
+                                         , isExistsDateTo ? string.Concat(Environment.NewLine, "             and [d].[cd] <= @dateto") : ""
+                                         , Helper.IsEmptyValue(filter.salepoint) ? "" : string.Concat(Environment.NewLine, "             and [d].[salepoint] = @salepoint")
+                                         , Helper.IsEmptyValue(filter.product) ? "" : string.Concat(Environment.NewLine, "             and [p].[product] = @product")
+                                         , string.IsNullOrEmpty(groupBy) ? "" : string.Concat(Environment.NewLine, "      group by ", groupBy)
                                          , Environment.NewLine, "           union all"
                                          , Environment.NewLine, "           select ", groupBy, string.IsNullOrEmpty(groupBy) ? "" : ", "
                                          , Environment.NewLine, "                  [quantityDebBeg] = sum(case when [d].[cd] <  @datefrom and [d].[doctype] = 10        then [p].[quantity] else 0 end)"
@@ -63,9 +67,9 @@ namespace GriB.Client.App.Managers.Reports
                                          , Environment.NewLine, "           from [t_document_position] [p] with(nolock)"
                                          , Environment.NewLine, "           inner join [t_document] [d] with(nolock) on [p].[id] = [d].[id]"
                                          , Environment.NewLine, "           where [d].[d] = 0 and ([d].[options] & 1) = 1"
-                                         , Environment.NewLine, "             and (@dateto <= '18991230' or (@dateto > '18991230' and [d].[cd] <= @dateto))"
-                                         , filter.salepoint == null || filter.salepoint.id == 0 ? "" : string.Concat(Environment.NewLine, "             and [d].[salepoint] = @salepoint")
-                                         , filter.product == null || filter.product.id == 0 ? "" : string.Concat(Environment.NewLine, "             and [p].[product] = @product")
+                                         , isExistsDateTo ? string.Concat(Environment.NewLine, "             and [d].[cd] <= @dateto") : ""
+                                         , Helper.IsEmptyValue(filter.salepoint) ? "" : string.Concat(Environment.NewLine, "             and [d].[salepoint] = @salepoint")
+                                         , Helper.IsEmptyValue(filter.product) ? "" : string.Concat(Environment.NewLine, "             and [p].[product] = @product")
                                          , string.IsNullOrEmpty(groupBy) ? "" : string.Concat(Environment.NewLine, "      group by ", groupBy)
                                          , Environment.NewLine, "           union all"
                                          , Environment.NewLine, "           select ", groupBy, string.IsNullOrEmpty(groupBy) ? "" : ", "
@@ -74,9 +78,9 @@ namespace GriB.Client.App.Managers.Reports
                                          , Environment.NewLine, "           from [t_document_position] [p] with(nolock)"
                                          , Environment.NewLine, "           inner join [t_document] [d] with(nolock) on [p].[id] = [d].[id]"
                                          , Environment.NewLine, "           where [d].[d] = 0 and ([d].[options] & 1) = 1 and [d].[doctype] in (50)"
-                                         , Environment.NewLine, "             and (@dateto <= '18991230' or (@dateto > '18991230' and [d].[cd] <= @dateto))"
-                                         , filter.salepoint == null || filter.salepoint.id == 0 ? "" : string.Concat(Environment.NewLine, "             and [d].[salepoint] = @salepoint")
-                                         , filter.product == null || filter.product.id == 0 ? "" : string.Concat(Environment.NewLine, "             and [p].[product] = @product")
+                                         , isExistsDateTo ? string.Concat(Environment.NewLine, "             and [d].[cd] <= @dateto") : ""
+                                         , Helper.IsEmptyValue(filter.salepoint) ? "" : string.Concat(Environment.NewLine, "             and [d].[salepoint] = @salepoint")
+                                         , Helper.IsEmptyValue(filter.product) ? "" : string.Concat(Environment.NewLine, "             and [p].[product] = @product")
                                          , string.IsNullOrEmpty(groupBy) ? "" : string.Concat(Environment.NewLine, "      group by ", groupBy)
                                          , Environment.NewLine, "          ) [rep]"
                                          , string.IsNullOrEmpty(fieldsRep) ? "" : string.Concat(Environment.NewLine, "      group by ", fieldsRep)
@@ -89,11 +93,49 @@ namespace GriB.Client.App.Managers.Reports
         public static List<ReportStockRow> GetStocks(this Query query, ReportStockFilter filter)
         {
             List<ReportStockRow> result = new List<ReportStockRow>();
-            query.ExecuteQuery(cmdGet(filter), new SqlParameter[] { new SqlParameter() { ParameterName = "@datefrom", Value = filter.datefrom }, new SqlParameter() { ParameterName = "@dateto", Value = filter.dateto }
-            , new SqlParameter() { ParameterName = "@salepoint", Value = filter.salepoint == null ? 0 : filter.salepoint.id }, new SqlParameter() { ParameterName = "@product", Value = filter.product == null ? 0 : filter.product.id }}
+            query.ExecuteQuery(cmdGet(filter), new SqlParameter[] { new SqlParameter() { ParameterName = "@datefrom", Value = Helper.Date(filter.datefrom) }, new SqlParameter() { ParameterName = "@dateto", Value = Helper.DateReportEnd(filter.dateto) }
+            , new SqlParameter() { ParameterName = "@salepoint", Value = Helper.GetSqlParamValue(filter.salepoint) }, new SqlParameter() { ParameterName = "@product", Value = Helper.GetSqlParamValue(filter.product) }}
             , (values) =>
             {
                 ReportStockRow item = readFromValues(filter, values);
+                result.Add(item);
+            });
+
+            return result;
+        }
+
+        private static ReportStocksDetailRow readFromValuesDetail(object[] values)
+        {
+            int cnt = 0;
+            ReportStocksDetailRow result = new ReportStocksDetailRow()
+            {
+                id = (int)values[cnt++],
+                cd = (DateTime)values[cnt++],
+                cu = (int)values[cnt++],
+                doctype = (int)values[cnt++],
+                salepoint = new salepoint() { id = (int)values[cnt++], name = (string)values[cnt++] },
+                product = new product() { id = (int)values[cnt++], name = (string)values[cnt++] },
+                quantity = (double)values[cnt++],
+                sum = (double)values[cnt++]
+            };
+            return result;
+        }
+
+        private const string cmdGetDetail = @"Report\Stocks\[stocksdetail]";
+        public static List<ReportStocksDetailRow> GetStocksDetail(this Query query, ReportStockFilter filter, Dictionary<int, employeecard> employees)
+        {
+            List<ReportStocksDetailRow> result = new List<ReportStocksDetailRow>();
+            query.Execute(cmdGetDetail, new SqlParameter[] { new SqlParameter() { ParameterName = "@datefrom", Value = Helper.Date(filter.datefrom) }, new SqlParameter() { ParameterName = "@dateto", Value = Helper.DateReportEnd(filter.dateto) }
+            , new SqlParameter() { ParameterName = "@salepoint", Value = Helper.GetSqlParamValue(filter.salepoint) }, new SqlParameter() { ParameterName = "@product", Value = Helper.GetSqlParamValue(filter.product) }}
+            , (values) =>
+            {
+                ReportStocksDetailRow item = readFromValuesDetail(values);
+                if (employees != null)
+                {
+                    employeecard empl;
+                    if (employees.TryGetValue(item.cu, out empl))
+                        item.employee = empl;
+                }
                 result.Add(item);
             });
 

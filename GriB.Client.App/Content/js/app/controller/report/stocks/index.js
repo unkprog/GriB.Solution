@@ -52,7 +52,7 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                     });
                     Index.prototype.getDefaultFilter = function () {
                         return {
-                            datefrom: utils.dateToday(), dateto: utils.dateToday(), salepoint: undefined, product: undefined, IsShowSalepoint: true, IsShowProduct: false
+                            datefrom: utils.date_ddmmyyyy(utils.dateToday()), dateto: utils.date_ddmmyyyy(utils.dateToday()), salepoint: undefined, product: undefined, IsShowSalepoint: true, IsShowProduct: false
                         };
                     };
                     Index.prototype.getSaveFilter = function () {
@@ -71,13 +71,13 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                         controller.dateFromControl = view.find("#report-stocks-view-date-start");
                         controller.dateFromControl.datepicker({
                             format: "dd.mm.yyyy", onSelect: function (newDate) {
-                                controller.Model.set("filterModel.datefrom", newDate);
+                                controller.Model.set("filterModel.datefrom", utils.date_ddmmyyyy(newDate));
                             }
                         });
                         controller.dateToControl = view.find("#report-stocks-view-date-end");
                         controller.dateToControl.datepicker({
                             format: "dd.mm.yyyy", onSelect: function (newDate) {
-                                controller.Model.set("filterModel.dateto", newDate);
+                                controller.Model.set("filterModel.dateto", utils.date_ddmmyyyy(newDate));
                             }
                         });
                         controller.dateFromControl.val(utils.date_ddmmyyyy(controller.Model.get("filterModel.datefrom")));
@@ -124,13 +124,79 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                             columns.push({ Header: vars._statres("label$salePoint"), Field: "salepoint.name", IsOrder: true });
                         if (this.Filter.IsShowProduct)
                             columns.push({ Header: vars._statres("label$product"), Field: "product.name", IsOrder: true });
-                        columns.push({ Header: vars._statres("label$quantity$deb$beg"), HeaderStyle: "product-col-quantity-auto-right", Field: "quantityDebBeg", FieldTemplate: '#=numberToString(quantityDebBeg,2)#', FieldStyle: "product-col-quantity-auto-right", IsSum: true, IsOrder: true });
-                        columns.push({ Header: vars._statres("label$quantity$cre$beg"), HeaderStyle: "product-col-quantity-auto-right", Field: "quantityCreBeg", FieldTemplate: '#=numberToString(quantityCreBeg,2)#', FieldStyle: "product-col-quantity-auto-right", IsSum: true, IsOrder: true });
-                        columns.push({ Header: vars._statres("label$quantity$deb"), HeaderStyle: "product-col-quantity-auto-right", Field: "quantityDeb", FieldTemplate: '#=numberToString(quantityDeb,2)#', FieldStyle: "product-col-quantity-auto-right", IsSum: true, IsOrder: true });
-                        columns.push({ Header: vars._statres("label$quantity$cre"), HeaderStyle: "product-col-quantity-auto-right", Field: "quantityCre", FieldTemplate: '#=numberToString(quantityCre,2)#', FieldStyle: "product-col-quantity-auto-right", IsSum: true, IsOrder: true });
-                        columns.push({ Header: vars._statres("label$quantity$deb$end"), HeaderStyle: "product-col-quantity-auto-right", Field: "quantityDebEnd", FieldTemplate: '#=numberToString(quantityDebEnd,2)#', FieldStyle: "product-col-quantity-auto-right", IsSum: true, IsOrder: true });
-                        columns.push({ Header: vars._statres("label$quantity$cre$end"), HeaderStyle: "product-col-quantity-auto-right", Field: "quantityCreEnd", FieldTemplate: '#=numberToString(quantityCreEnd,2)#', FieldStyle: "product-col-quantity-auto-right", IsSum: true, IsOrder: true });
+                        columns.push({ Header: vars._statres("label$arrival"), HeaderGroupName: vars._statres("label$beginofperiod"), HeaderStyle: "product-col-quantity-auto-right", Field: "quantityDebBeg", FieldTemplate: '#=numberToString(quantityDebBeg,2)#', FieldStyle: "product-col-quantity-auto-right", IsSum: true, IsOrder: true });
+                        columns.push({ Header: vars._statres("label$expense"), HeaderGroupName: vars._statres("label$beginofperiod"), HeaderStyle: "product-col-quantity-auto-right", Field: "quantityCreBeg", FieldTemplate: '#=numberToString(quantityCreBeg,2)#', FieldStyle: "product-col-quantity-auto-right", IsSum: true, IsOrder: true });
+                        columns.push({ Header: vars._statres("label$total"), HeaderGroupName: vars._statres("label$beginofperiod"), HeaderStyle: "product-col-quantity-auto-right report-total-right-border", Field: "quantityBeg", FieldTemplate: '#=numberToString(quantityBeg,2)#', FieldStyle: "product-col-quantity-auto-right report-total report-total-right-border", IsSum: true, IsOrder: true });
+                        columns.push({ Header: vars._statres("label$arrival"), HeaderGroupName: vars._statres("label$overperiod"), HeaderStyle: "product-col-quantity-auto-right", Field: "quantityDeb", FieldTemplate: '#=numberToString(quantityDeb,2)#', FieldStyle: "product-col-quantity-auto-right", IsSum: true, IsOrder: true });
+                        columns.push({ Header: vars._statres("label$expense"), HeaderGroupName: vars._statres("label$overperiod"), HeaderStyle: "product-col-quantity-auto-right", Field: "quantityCre", FieldTemplate: '#=numberToString(quantityCre,2)#', FieldStyle: "product-col-quantity-auto-right", IsSum: true, IsOrder: true });
+                        columns.push({ Header: vars._statres("label$total"), HeaderGroupName: vars._statres("label$overperiod"), HeaderStyle: "product-col-quantity-auto-right report-total-right-border", Field: "quantity", FieldTemplate: '#=numberToString(quantity,2)#', FieldStyle: "product-col-quantity-auto-right report-total report-total-right-border", IsSum: true, IsOrder: true });
+                        columns.push({ Header: vars._statres("label$arrival"), HeaderGroupName: vars._statres("label$endofperiod"), HeaderStyle: "product-col-quantity-auto-right", Field: "quantityDebEnd", FieldTemplate: '#=numberToString(quantityDebEnd,2)#', FieldStyle: "product-col-quantity-auto-right", IsSum: true, IsOrder: true });
+                        columns.push({ Header: vars._statres("label$expense"), HeaderGroupName: vars._statres("label$endofperiod"), HeaderStyle: "product-col-quantity-auto-right", Field: "quantityCreEnd", FieldTemplate: '#=numberToString(quantityCreEnd,2)#', FieldStyle: "product-col-quantity-auto-right", IsSum: true, IsOrder: true });
+                        columns.push({ Header: vars._statres("label$total"), HeaderGroupName: vars._statres("label$endofperiod"), HeaderStyle: "product-col-quantity-auto-right report-total-right-border", Field: "quantityEnd", FieldTemplate: '#=numberToString(quantityEnd,2)#', FieldStyle: "product-col-quantity-auto-right report-total report-total-right-border", IsSum: true, IsOrder: true });
                         return columns;
+                    };
+                    Index.prototype.getTableHeaderHtml = function () {
+                        var columns = this.ReportSettings.Columns;
+                        var html = '';
+                        var isSum = false;
+                        var isGroupHeader = false;
+                        var colNum = -1;
+                        this.sumFieldsInfo = { fields: [], sumFied: {}, orderfields: [] };
+                        var knSupport = kendo;
+                        html += '<tr>';
+                        if (this.Filter.IsShowSalepoint) {
+                            colNum = colNum + 1;
+                            html += '   <th rowspan="2" id="sort_' + colNum + '" class="ccursor report-total-right-border">';
+                            html += vars._statres("label$salePoint");
+                            html += '   </th>';
+                        }
+                        if (this.Filter.IsShowProduct) {
+                            colNum = colNum + 1;
+                            html += '   <th rowspan="2" id="sort_' + colNum + '" class="ccursor report-total-right-border">';
+                            html += vars._statres("label$product");
+                            html += '   </th>';
+                        }
+                        html += '   <th colspan="3" class="product-col-quantity-auto report-total-right-border">';
+                        html += vars._statres("label$beginofperiod");
+                        html += '   </th>';
+                        html += '   <th colspan="3" class="product-col-quantity-auto report-total-right-border">';
+                        html += vars._statres("label$overperiod");
+                        html += '   </th>';
+                        html += '   <th colspan="3" class="product-col-quantity-auto report-total-right-border">';
+                        html += vars._statres("label$endofperiod");
+                        html += '   </th>';
+                        html += '<th style="width:' + (knSupport.support.browser.chrome === true ? "18" : "17") + 'px;"></th>';
+                        html += '</tr>';
+                        html += '<tr>';
+                        for (var i = colNum + 1, icount = columns && columns.length ? columns.length : 0; i < icount; i++) {
+                            //if (columns[i].IsSum && columns[i].IsSum === true)
+                            //    isSum = true;
+                            html += '   <th';
+                            if (columns[i].HeaderStyle || columns[i].IsOrder === true) {
+                                if (columns[i].IsOrder === true) {
+                                    html += ' id="sort_' + i + '"';
+                                }
+                                html += ' class="';
+                                if (columns[i].HeaderStyle)
+                                    html += columns[i].HeaderStyle;
+                                if (columns[i].IsOrder === true) {
+                                    this.sumFieldsInfo.orderfields.push({ field: columns[i].Field, typeSort: 0, index: i });
+                                    html += (columns[i].HeaderStyle ? ' ' : '') + 'ccursor';
+                                }
+                                html += '"';
+                            }
+                            html += '>';
+                            html += (columns[i].HeaderTemplate ? columns[i].HeaderTemplate : columns[i].Header);
+                            if (columns[i].IsSum && columns[i].IsSum === true) {
+                                html += ('<br/><span id="' + columns[i].Field + '_sum">0.00</span>');
+                                this.sumFieldsInfo.fields.push(columns[i].Field);
+                                this.sumFieldsInfo.sumFied[columns[i].Field] = 0;
+                            }
+                            html += '</th>';
+                        }
+                        html += '<th style="width:' + (knSupport.support.browser.chrome === true ? "18" : "17") + 'px;"></th>';
+                        html += '</tr>';
+                        return html;
                     };
                     Index.prototype.createEvents = function () {
                         _super.prototype.createEvents.call(this);
@@ -226,7 +292,8 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                     Index.prototype.buildButtonClick = function (e) {
                         var self = this;
                         _super.prototype.buildButtonClick.call(this, e);
-                        this.Service.GetStocks(self.Filter, function (responseData) {
+                        var filter = self.Filter;
+                        this.Service.GetStocks(filter, function (responseData) {
                             self.Model.set("reportModel", responseData);
                             self.ReportSettings.Columns = self.columns();
                             self.setupTable();
@@ -237,19 +304,19 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                         var curfilter = self.Filter;
                         var index = +e.currentTarget.id.replace('table-row-', '');
                         var item = this.Model.get("reportModel")[index];
-                        //vars._app.OpenController({
-                        //    urlController: 'report/sales/detalize', isModal: true, onLoadController: (controller: Interfaces.IController) => {
-                        //        let ctrlDetalize: Interfaces.IControllerReport = controller as Interfaces.IControllerReport;
-                        //        let filter: Interfaces.Model.IReportSaleFilter = {
-                        //            datefrom: curfilter.datefrom, dateto: curfilter.dateto, salepoint: curfilter.salepoint, employee: curfilter.employee, client: curfilter.employee, product: curfilter.product
-                        //        }
-                        //        if (item.salepoint && item.salepoint.id && item.salepoint.id !== 0) filter.salepoint = item.salepoint;
-                        //        if (item.employee && item.employee.id && item.employee.id !== 0) filter.employee = item.employee;
-                        //        if (item.client && item.client.id && item.client.id !== 0) filter.client = item.client;
-                        //        if (item.product && item.product.id && item.product.id !== 0) filter.product = item.product;
-                        //        ctrlDetalize.Model.set("filterModel", filter);
-                        //    }
-                        //});
+                        vars._app.OpenController({
+                            urlController: 'report/stocks/detalize', isModal: true, onLoadController: function (controller) {
+                                var ctrlDetalize = controller;
+                                var filter = {
+                                    datefrom: curfilter.datefrom, dateto: curfilter.dateto, salepoint: curfilter.salepoint, product: curfilter.product
+                                };
+                                if (item.salepoint && item.salepoint.id && item.salepoint.id !== 0)
+                                    filter.salepoint = item.salepoint;
+                                if (item.product && item.product.id && item.product.id !== 0)
+                                    filter.product = item.product;
+                                ctrlDetalize.Model.set("filterModel", filter);
+                            }
+                        });
                     };
                     return Index;
                 }(base.Controller.Report.ReportWithService));

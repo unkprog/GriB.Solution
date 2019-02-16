@@ -179,6 +179,7 @@
     }
 
     export interface IReportColumn extends IBaseColumn {
+        HeaderGroupName?: string;
         IsSum?: boolean;
         IsOrder?: boolean;
     }

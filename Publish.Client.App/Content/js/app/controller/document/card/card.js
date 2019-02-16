@@ -62,16 +62,16 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                             "salepointto": {},
                             "contractor": {},
                             "reason": {},
-                            "datefrom": undefined,
-                            "dateto": undefined
+                            "datefrom": "",
+                            "dateto": ""
                         });
                         if (data) {
                             result.set("salepoint", data.salepoint);
                             result.set("salepointto", data.salepointto);
                             result.set("contractor", data.contractor);
                             result.set("reason", data.reason);
-                            result.set("datefrom", utils.date_from_ddmmyyyy(data.datefrom));
-                            result.set("dateto", utils.date_from_ddmmyyyy(data.dateto));
+                            result.set("datefrom", data.datefrom);
+                            result.set("dateto", data.dateto);
                         }
                         return result;
                     };
@@ -88,9 +88,7 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                         return result;
                     };
                     DocumentCardFilterSettings.prototype.saveFilter = function () {
-                        var _datefrom = this._model.get("datefrom");
-                        var _dateto = this._model.get("dateto");
-                        var dataToSave = { salepoint: this._model.get("salepoint"), salepointto: this._model.get("salepointto"), contractor: this._model.get("contractor"), reason: this._model.get("reason"), datefrom: utils.date_ddmmyyyy(_datefrom), dateto: utils.date_ddmmyyyy(_dateto) };
+                        var dataToSave = { salepoint: this._model.get("salepoint"), salepointto: this._model.get("salepointto"), contractor: this._model.get("contractor"), reason: this._model.get("reason"), datefrom: this._model.get("datefrom"), dateto: this._model.get("dateto") };
                         var toSave = JSON.stringify(dataToSave);
                         window.localStorage.setItem(this.fieldSearch, toSave);
                     };
@@ -137,13 +135,13 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                         controller.dateFromControl = controller.filterControl.find("#card-filter-view-date-start");
                         controller.dateFromControl.datepicker({
                             format: "dd.mm.yyyy", onSelect: function (newDate) {
-                                controller._model.set("datefrom", newDate);
+                                controller._model.set("datefrom", utils.date_ddmmyyyy(newDate));
                             }
                         });
                         controller.dateToControl = controller.filterControl.find("#card-filter-view-date-end");
                         controller.dateToControl.datepicker({
                             format: "dd.mm.yyyy", onSelect: function (newDate) {
-                                controller._model.set("dateto", newDate);
+                                controller._model.set("dateto", utils.date_ddmmyyyy(newDate));
                             }
                         });
                         controller.dateFromControl.val(utils.date_ddmmyyyy(controller._model.get("datefrom")));
@@ -478,7 +476,7 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                         get: function () {
                             var settings = this.CardSettings.FilterSettings;
                             var date = (settings ? settings.Model.get("datefrom") : undefined);
-                            return (date ? date : new Date(1899, 11, 30, 0, 0, 0, 0));
+                            return (utils.isNullOrEmpty(date) ? '30.12.1899' : date);
                         },
                         enumerable: true,
                         configurable: true
@@ -487,7 +485,7 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                         get: function () {
                             var settings = this.CardSettings.FilterSettings;
                             var date = (settings ? settings.Model.get("dateto") : undefined);
-                            return (date ? new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1) : new Date(1899, 11, 30, 0, 0, 0, 0));
+                            return (utils.isNullOrEmpty(date) ? '30.12.1899' : date);
                         },
                         enumerable: true,
                         configurable: true

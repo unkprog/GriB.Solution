@@ -18,10 +18,6 @@ export namespace Controller.Document.Editor {
             return "id_sale";
         }
 
-        protected get DocFormatDate(): string {
-            return "dd.mm.yyyy ";
-        }
-
         protected createEditorSettings(): Interfaces.IEditorSettings {
             return { EditIdName: this.EditIdName, Load: $.proxy(this.Service.GetSale, this.Service), Save: $.proxy(this.Service.SetDocument, this.Service) };
         }

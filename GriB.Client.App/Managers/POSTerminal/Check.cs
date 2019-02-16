@@ -43,7 +43,7 @@ namespace GriB.Client.App.Managers.POSTerminal
             List<checkcard> result = new List<checkcard>();
             query.Execute(cmdGetSale, new SqlParameter[] { new SqlParameter() { ParameterName = "@id", Value = docpar.id }
             , new SqlParameter() { ParameterName = "@salepoint", Value = docpar.salepoint }
-            , new SqlParameter() { ParameterName = "@datefrom", Value = docpar.datefrom }, new SqlParameter() { ParameterName = "@dateto", Value = docpar.dateto} }
+            , new SqlParameter() { ParameterName = "@datefrom", Value = Reports.Helper.Date(docpar.datefrom) }, new SqlParameter() { ParameterName = "@dateto", Value = Reports.Helper.DateReportEnd(docpar.dateto) } }
             , (values) =>
             {
                 result.Add(readSaleFromValues(values));
