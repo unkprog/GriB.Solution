@@ -34,7 +34,18 @@ namespace GriB.Client.App.Models.Report
         public double discount { get; set; }
     }
 
-    public class ReportSaleTimeRow
+    public class ReportSaleBaseTimeRow
+    {
+        public ReportSaleBaseTimeRow()
+        {
+
+        }
+
+        public double count    { get; set; }
+        public double countpos { get; set; }
+    }
+
+    public class ReportSaleTimeRow : ReportSaleBaseTimeRow
     {
         public ReportSaleTimeRow()
         {
@@ -42,7 +53,15 @@ namespace GriB.Client.App.Models.Report
         }
         public string time { get; set; }
 
-        public double count { get; set; }
-        public double countpos { get; set; }
+    }
+
+    public class ReportSaleDayWeekRow : ReportSaleBaseTimeRow
+    {
+        public ReportSaleDayWeekRow()
+        {
+            dayweek = 0;
+        }
+        public int dayweek { get; set; }
+
     }
 }

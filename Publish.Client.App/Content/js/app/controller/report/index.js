@@ -30,19 +30,21 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
                     return new kendo.data.ObservableObject({
                         "Header": vars._statres("label$reports"),
                         "labelReports": vars._statres("label$reports"),
+                        "labelCharts": vars._statres("label$charts"),
                         "labelReportSales": vars._statres("report$sales"),
                         "labelReportStocks": vars._statres("report$stocks"),
+                        "labelReportSalesTime": vars._statres("report$sales$time"),
                     });
                 };
                 Index.prototype.createEvents = function () {
                     this.ReportSalesButtonClick = this.createTouchClickEvent("btn-report-sales", this.reportSalesButtonClick);
                     this.ReportStocksButtonClick = this.createTouchClickEvent("btn-report-stocks", this.reportStocksButtonClick);
-                    this.ReportTestButtonClick = this.createTouchClickEvent("btn-report-test", this.reportTestButtonClick);
+                    this.ReportSalesTimeButtonClick = this.createTouchClickEvent("btn-report-salestime", this.reportSalesTimeButtonClick);
                 };
                 Index.prototype.destroyEvents = function () {
                     this.destroyTouchClickEvent("btn-report-sales", this.ReportSalesButtonClick);
                     this.destroyTouchClickEvent("btn-report-stocks", this.ReportStocksButtonClick);
-                    this.destroyTouchClickEvent("btn-report-test", this.ReportTestButtonClick);
+                    this.destroyTouchClickEvent("btn-report-salestime", this.ReportSalesTimeButtonClick);
                 };
                 Index.prototype.reportSalesButtonClick = function (e) {
                     vars._main.OpenController({ urlController: "report/sales/index", backController: this });
@@ -50,8 +52,8 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
                 Index.prototype.reportStocksButtonClick = function (e) {
                     vars._main.OpenController({ urlController: "report/stocks/index", backController: this });
                 };
-                Index.prototype.reportTestButtonClick = function (e) {
-                    vars._main.OpenController({ urlController: "report/dashboard/test", backController: this });
+                Index.prototype.reportSalesTimeButtonClick = function (e) {
+                    vars._main.OpenController({ urlController: "report/dashboard/salestime", backController: this });
                 };
                 return Index;
             }(base.Controller.Base));

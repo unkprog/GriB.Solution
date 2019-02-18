@@ -30,6 +30,7 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
                     return new kendo.data.ObservableObject({
                         "Header": vars._statres("label$reports"),
                         "labelReports": vars._statres("label$reports"),
+                        "labelCharts": vars._statres("label$charts"),
                         "labelReportSales": vars._statres("report$sales"),
                         "labelReportStocks": vars._statres("report$stocks"),
                         "labelReportSalesTime": vars._statres("report$sales$time"),

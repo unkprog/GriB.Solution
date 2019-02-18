@@ -24,7 +24,7 @@ define(["require", "exports", "app/common/basecontroller", "app/services/reports
                     __extends(ReportSalesTimeDashboard, _super);
                     function ReportSalesTimeDashboard() {
                         var _this = _super.call(this) || this;
-                        _this.weekNames = ["", vars._statres("label$dayweek$sun"), vars._statres("label$dayweek$mon"), vars._statres("label$dayweek$tue"), vars._statres("label$dayweek$wed"), vars._statres("label$dayweek$thu"), vars._statres("label$dayweek$fri"), vars._statres("label$dayweek$sat")];
+                        _this.weekNames = ["", "Вс", "Пн", "Вт", "Ср", "Чт", "Пт", "Сб"];
                         return _this;
                     }
                     ReportSalesTimeDashboard.prototype.createOptions = function () {
@@ -32,7 +32,7 @@ define(["require", "exports", "app/common/basecontroller", "app/services/reports
                     };
                     ReportSalesTimeDashboard.prototype.createModel = function () {
                         return new kendo.data.ObservableObject({
-                            "Header": vars._statres("report$sales$time"),
+                            "Header": "",
                             "filterModel": {},
                             "selectedFields": [],
                             "labelDateFrom": vars._statres("label$date$from"),
@@ -202,8 +202,8 @@ define(["require", "exports", "app/common/basecontroller", "app/services/reports
                     ReportSalesTimeDashboard.prototype.getChartData = function () {
                         var controller = this;
                         var result = {
-                            weeks: { labels: [], datasets: [{ label: vars._statres("label$checks"), data: [], borderColor: '#f44336', backgroundColor: 'transparent' }, { label: vars._statres("label$positions"), data: [], borderColor: '#2196f3', backgroundColor: 'transparent' }] },
-                            times: { labels: [], datasets: [{ label: vars._statres("label$checks"), data: [], borderColor: '#f44336', backgroundColor: 'transparent' }, { label: vars._statres("label$positions"), data: [], borderColor: '#2196f3', backgroundColor: 'transparent' }] }
+                            weeks: { labels: [], datasets: [{ label: 'Чеки', data: [], borderColor: '#f44336', backgroundColor: 'transparent' }, { label: 'Позиции', data: [], borderColor: '#2196f3', backgroundColor: 'transparent' }] },
+                            times: { labels: [], datasets: [{ label: 'Чеки', data: [], borderColor: '#f44336', backgroundColor: 'transparent' }, { label: 'Позиции', data: [], borderColor: '#2196f3', backgroundColor: 'transparent' }] }
                         };
                         var rowsweek = controller.Model.get("reportModel").dayweeks;
                         for (var i = 0, icount = (rowsweek ? rowsweek.length : 0); i < icount; i++) {
@@ -236,7 +236,7 @@ define(["require", "exports", "app/common/basecontroller", "app/services/reports
                                     maintainAspectRatio: false,
                                     title: {
                                         display: true,
-                                        text: vars._statres("label$daysofweek")
+                                        text: 'По дням недели'
                                     },
                                     scales: {
                                         yAxes: [{
@@ -245,6 +245,13 @@ define(["require", "exports", "app/common/basecontroller", "app/services/reports
                                                 }
                                             }]
                                     },
+                                    onClick: function (evt) {
+                                        var firstPoint = controller.chartWeeks.getElementAtEvent(evt)[0];
+                                        if (firstPoint) {
+                                            var label = controller.chartWeeks.data.labels[firstPoint._index];
+                                            var value = controller.chartWeeks.data.datasets[firstPoint._datasetIndex].data[firstPoint._index];
+                                        }
+                                    }
                                 }
                             });
                         }
@@ -261,7 +268,7 @@ define(["require", "exports", "app/common/basecontroller", "app/services/reports
                                     maintainAspectRatio: false,
                                     title: {
                                         display: true,
-                                        text: vars._statres("label$intime")
+                                        text: 'По времении'
                                     },
                                     scales: {
                                         yAxes: [{
@@ -270,6 +277,13 @@ define(["require", "exports", "app/common/basecontroller", "app/services/reports
                                                 }
                                             }]
                                     },
+                                    onClick: function (evt) {
+                                        var firstPoint = controller.chartTimes.getElementAtEvent(evt)[0];
+                                        if (firstPoint) {
+                                            var label = controller.chartTimes.data.labels[firstPoint._index];
+                                            var value = controller.chartTimes.data.datasets[firstPoint._datasetIndex].data[firstPoint._index];
+                                        }
+                                    }
                                 }
                             });
                         }

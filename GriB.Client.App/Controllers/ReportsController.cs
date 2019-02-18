@@ -58,6 +58,16 @@ namespace GriB.Client.App.Controllers
        );
 
         [HttpPost]
+        [ActionName("salestime")]
+        public HttpResponseMessage ReportSalesTime(ReportSaleFilter filter)
+        {
+            return TryCatchResponseQuery((query) =>
+            {
+                return Request.CreateResponse(HttpStatusCode.OK, new { times = Sales.GetReportSalesTime(query, filter), dayweeks = Sales.GetReportSalesDayWeek(query, filter) } );
+            });
+        }
+
+        [HttpPost]
         [ActionName("stocks")]
         public HttpResponseMessage ReportStocks(ReportStockFilter  filter)
         {

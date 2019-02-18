@@ -140,16 +140,10 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/s
                         var checkTime = this.model.get("checkTime");
                         var isVisible = (checkTime && checkTime !== "");
                         this.model.set("visibleCheck", isVisible);
-                        if (isVisible === true)
-                            this.ViewResize({});
                     }
                     else if (e.field === "checkClient") {
                         var checkClient = this.model.get("checkClient");
                         this.model.set("visibleClient", (checkClient && checkClient !== "" ? "display" : "none"));
-                    }
-                    else if (e.field === "visibleCheck") {
-                        if (this.model.get("visibleCheck") === true)
-                            this.ViewResize({});
                     }
                     else if (e.field === "checkSum") {
                         this.model.set("checkSumText", utils.numberToString(this.model.get("checkSum"), 2));
@@ -160,6 +154,9 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/s
                     else if (e.field === "checkDiscount") {
                         var discount = this.model.get("checkDiscount");
                         this.model.set("visibleDiscount", discount !== 0);
+                    }
+                    else if (e.field === "visibleClient" || e.field === "visibleDiscount" || e.field === "visibleCheck") {
+                        this.ViewResize({});
                     }
                 };
                 NavigationCheck.prototype.setCurrentCheck = function (currentCheck, onSetCurrent) {

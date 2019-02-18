@@ -306,6 +306,7 @@ export namespace Controller {
         private navHeader: JQuery;
         private btnSave: JQuery;
         private btnCancel: JQuery;
+        private tooltips: JQuery;
         public ViewInit(view: JQuery): boolean {
 
             let navbarHeader: string = '<div class="navbar-fixed editor-header">';
@@ -319,8 +320,8 @@ export namespace Controller {
 
             this.navHeader = $(navbarHeader);
 
-            this.btnSave = $('<li><a id="editor-btn-save" class="editor-header-button"><i class="material-icons editor-header">done</i></a></li>');
-            this.btnCancel = $('<li><a id="editor-btn-cancel" class="editor-header-button"><i class="material-icons editor-header">close</i></a></li>');
+            this.btnSave = $('<li><a id="editor-btn-save" class="editor-header-button tooltipped" data-position="bottom" data-tooltip="' + vars._statres("button$label$save") + '"><i class="material-icons editor-header">done</i></a></li>');
+            this.btnCancel = $('<li><a id="editor-btn-cancel" class="editor-header-button tooltipped" data-position="bottom" data-tooltip="' + vars._statres("button$label$cancel") + '"><i class="material-icons editor-header">close</i></a></li>');
 
             if (this.editorSettings.ButtonSetings.IsSave === true) this.navHeader.find("#editButtons").append(this.btnSave);
             if (this.editorSettings.ButtonSetings.IsCancel === true) this.navHeader.find("#editButtons").append(this.btnCancel);
@@ -328,10 +329,18 @@ export namespace Controller {
             if (this.editorSettings.ButtonSetings.IsSave === true || this.editorSettings.ButtonSetings.IsCancel === true)
                 view.prepend(this.navHeader);
 
+            this.tooltips = this.navHeader.find(".tooltipped");
             super.ViewInit(view);
 
             return this.loadData();
 
+        }
+
+       
+        public ViewShow(e): boolean {
+            if (this.tooltips)
+                this.tooltips.tooltip();
+            return super.ViewShow(e);
         }
 
         public ViewHide(e) {
@@ -340,6 +349,8 @@ export namespace Controller {
                 this.btnSave.remove();
             if (this.btnCancel)
                 this.btnCancel.remove();
+            if (this.tooltips)
+                this.tooltips.tooltip("destroy");
         }
 
         protected createEvents(): void {
@@ -557,6 +568,7 @@ export namespace Controller {
         private tableRow: JQuery;
         private tableHead: JQuery;
         private tableBody: JQuery;
+        private tooltips: JQuery;
 
         public ViewInit(view: JQuery): boolean {
             let controls: Array<JQuery> = [];
@@ -584,17 +596,17 @@ export namespace Controller {
             navbarHeader += '    </div>';
             this.navHeader = $(navbarHeader);
 
-            if (this.CardSettings.IsEdit) this.btnEdit = $('<li><a id="card-btn-edit" class="editor-header-button"><i class="material-icons editor-header">edit</i></a></li>');
-            if (this.CardSettings.IsAdd) this.btnAdd = $('<li><a id="card-btn-add" class="editor-header-button"><i class="material-icons editor-header">add</i></a></li>');
-            if (this.CardSettings.IsAddCopy) this.btnAddCopy = $('<li><a id="card-btn-addcopy" class="editor-header-button"><i class="material-icons editor-header">exposure_plus_1</i></a></li>');
-            if (this.CardSettings.IsDelete) this.btnDelete = $('<li><a id="card-btn-delete" class="editor-header-button"><i class="material-icons editor-header">delete_forever</i></a></li>');
-            if (this.CardSettings.IsSelect) this.btnSelect = $('<li><a id="editor-btn-select" class="editor-header-button"><i class="material-icons editor-header">done</i></a></li>');
+            if (this.CardSettings.IsEdit) this.btnEdit = $('<li><a id="card-btn-edit" class="editor-header-button tooltipped" data-position="bottom" data-tooltip="' + vars._statres("button$label$edit") + '"><i class="material-icons editor-header">edit</i></a></li>');
+            if (this.CardSettings.IsAdd) this.btnAdd = $('<li><a id="card-btn-add" class="editor-header-button tooltipped" data-position="bottom" data-tooltip="' + vars._statres("button$label$add") + '"><i class="material-icons editor-header">add</i></a></li>');
+            if (this.CardSettings.IsAddCopy) this.btnAddCopy = $('<li><a id="card-btn-addcopy" class="editor-header-button tooltipped" data-position="bottom" data-tooltip="' + vars._statres("button$label$addcopy") + '"><i class="material-icons editor-header">exposure_plus_1</i></a></li>');
+            if (this.CardSettings.IsDelete) this.btnDelete = $('<li><a id="card-btn-delete" class="editor-header-button tooltipped" data-position="bottom" data-tooltip="' + vars._statres("button$label$delete") + '"><i class="material-icons editor-header">delete_forever</i></a></li>');
+            if (this.CardSettings.IsSelect) this.btnSelect = $('<li><a id="editor-btn-select" class="editor-header-button tooltipped" data-position="bottom" data-tooltip="' + vars._statres("button$label$select") + '"><i class="material-icons editor-header">done</i></a></li>');
 
-            this.btnClose = $('<li><a id="card-btn-close" class="editor-header-button"><i class="material-icons editor-header">close</i></a></li>');
+            this.btnClose = $('<li><a id="card-btn-close" class="editor-header-button tooltipped" data-position="bottom" data-tooltip="' + vars._statres("button$label$cancel") + '"><i class="material-icons editor-header">close</i></a></li>');
 
             let cardButtons: JQuery = this.navHeader.find("#cardButtons");
             cardButtons.append(this.btnEdit).append(this.btnAdd).append(this.btnAddCopy).append(this.btnDelete).append(this.btnSelect).append(this.btnClose);
-
+            this.tooltips = cardButtons.find(".tooltipped");
             return this.navHeader;
         }
 
@@ -630,6 +642,8 @@ export namespace Controller {
         public ViewShow(e): boolean {
             if (this.cardSettings && this.cardSettings.FilterSettings)
                 this.cardSettings.FilterSettings.ViewControls();
+            if (this.tooltips)
+                this.tooltips.tooltip();
             return super.ViewShow(e);
         }
 
@@ -647,6 +661,8 @@ export namespace Controller {
                 this.btnClose.remove();
             if (this.btnSelect)
                 this.btnSelect.remove();
+            if (this.tooltips)
+                this.tooltips.tooltip("destroy");
         }
 
         private proxySearch;
@@ -664,7 +680,10 @@ export namespace Controller {
         protected destroyEvents(): void {
             if (this.cardSettings && this.cardSettings.FilterSettings)
                 this.cardSettings.FilterSettings.destroyEvents();
-            this.destroyTouchClickEvent(this.rows, this.rowClick);
+            if (this.rows) {
+                this.destroyTouchClickEvent(this.rows, this.rowClick);
+                this.destroyDblTouchClickEvent(this.rows, this.rowDblClick);
+            }
             this.destroyTouchClickEvent(this.btnSelect, this.SelectButtonClick);
             this.destroyTouchClickEvent(this.btnEdit, this.EditButtonClick);
             this.destroyTouchClickEvent(this.btnAdd, this.AddButtonClick);
@@ -686,19 +705,25 @@ export namespace Controller {
         private setupTable(): void {
             this.tableHead.html(this.getTableHeaderHtml());
             this.setupRows();
-            this.rows = this.tableBody.find('tr');
-            this.createTouchClickEvent(this.rows, this.rowClick);
+            
         }
 
         protected setupRows(): void {
             this.selectedRow = null;
 
-            if (this.rows)
+            if (this.rows) {
                 this.destroyTouchClickEvent(this.rows, this.rowClick);
+                this.destroyDblTouchClickEvent(this.rows, this.rowDblClick);
+            }
+         
 
             this.tableBody.html(this.getTableBodyHtml());
             this.rows = this.tableBody.find('tr');
-            this.createTouchClickEvent(this.rows, this.rowClick);
+            this.rows = this.tableBody.find('tr');
+            if (this.rows) {
+                this.createTouchClickEvent(this.rows, this.rowClick);
+                this.createDblTouchClickEvent(this.rows, this.rowDblClick);
+            }
         }
 
        
@@ -782,6 +807,14 @@ export namespace Controller {
                 this.selectedRow.addClass("row-active z-depth-1 brown lighten-5");
         }
 
+        private rowDblClick(e): void {
+            if (this.selectedRow)
+                this.selectedRow.removeClass("row-active z-depth-1 brown lighten-5");
+            this.selectedRow = $(e.currentTarget);
+            if (this.selectedRow)
+                this.selectedRow.addClass("row-active z-depth-1 brown lighten-5");
+            this.editButtonClick(e);
+        }
 
         public EditButtonClick: { (e: any): void; };
         private editButtonClick(e): void {
@@ -1075,7 +1108,7 @@ export namespace Controller {
             this.tableHead.html(headerHtml);
             this.attachSortEvents();
             this.setupRows();
-            //this.createTouchClickEvent(this.rows, this.rowClick);
+            
         }
 
         protected setupRows(): void {

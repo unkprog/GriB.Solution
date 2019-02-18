@@ -125,7 +125,7 @@ namespace GriB.Client.App.Managers.Reports
             return result;
         }
 
-        private const string cmdGetTime = @"Report\Sales\[[salestime]]";
+        private const string cmdGetTime = @"Report\Sales\[salestime]";
         public static List<ReportSaleTimeRow> GetReportSalesTime(this Query query, ReportSaleFilter filter)
         {
             List<ReportSaleTimeRow> result = new List<ReportSaleTimeRow>();
@@ -133,8 +133,35 @@ namespace GriB.Client.App.Managers.Reports
             , new SqlParameter() { ParameterName = "@salepoint", Value = filter.salepoint == null ? 0 : filter.salepoint.id }, new SqlParameter() { ParameterName = "@product", Value = filter.product == null ? 0 : filter.product.id }}
             , (values) =>
             {
-                result.Add(new ReportSaleTimeRow() { time = (string)values[0], count = (double)values[1], countpos = (double)values[1] });
+                result.Add(new ReportSaleTimeRow() { time = (string)values[0], count = (double)values[1], countpos = (double)values[2] });
             });
+
+            while (result.Count > 0 && (result[result.Count - 1].count == 0 && result[result.Count - 1].countpos == 0))
+                result.RemoveAt(result.Count - 1);
+
+            while (result.Count > 0 && (result[0].count == 0 && result[0].countpos == 0))
+                result.RemoveAt(0);
+
+            return result;
+        }
+
+
+        private const string cmdGetDayWeek = @"Report\Sales\[salesdayweek]";
+        public static List<ReportSaleDayWeekRow> GetReportSalesDayWeek(this Query query, ReportSaleFilter filter)
+        {
+            List<ReportSaleDayWeekRow> result = new List<ReportSaleDayWeekRow>();
+            query.Execute(cmdGetDayWeek, new SqlParameter[] { new SqlParameter() { ParameterName = "@datefrom", Value = Helper.Date(filter.datefrom) }, new SqlParameter() { ParameterName = "@dateto", Value = Helper.DateReportEnd(filter.dateto) }
+            , new SqlParameter() { ParameterName = "@salepoint", Value = filter.salepoint == null ? 0 : filter.salepoint.id }, new SqlParameter() { ParameterName = "@product", Value = filter.product == null ? 0 : filter.product.id }}
+            , (values) =>
+            {
+                result.Add(new ReportSaleDayWeekRow() { dayweek = (int)values[0], count = (double)values[1], countpos = (double)values[2] });
+            });
+
+            //while (result.Count > 0 && (result[result.Count - 1].count == 0 && result[result.Count - 1].countpos == 0))
+            //    result.RemoveAt(result.Count - 1);
+
+            //while (result.Count > 0 && (result[0].count == 0 && result[0].countpos == 0))
+            //    result.RemoveAt(0);
 
             return result;
         }

@@ -305,16 +305,22 @@ define(["require", "exports", "app/common/utils", "app/common/variables", "./var
                 navbarHeader += '        </nav>';
                 navbarHeader += '    </div>';
                 this.navHeader = $(navbarHeader);
-                this.btnSave = $('<li><a id="editor-btn-save" class="editor-header-button"><i class="material-icons editor-header">done</i></a></li>');
-                this.btnCancel = $('<li><a id="editor-btn-cancel" class="editor-header-button"><i class="material-icons editor-header">close</i></a></li>');
+                this.btnSave = $('<li><a id="editor-btn-save" class="editor-header-button tooltipped" data-position="bottom" data-tooltip="' + vars._statres("button$label$save") + '"><i class="material-icons editor-header">done</i></a></li>');
+                this.btnCancel = $('<li><a id="editor-btn-cancel" class="editor-header-button tooltipped" data-position="bottom" data-tooltip="' + vars._statres("button$label$cancel") + '"><i class="material-icons editor-header">close</i></a></li>');
                 if (this.editorSettings.ButtonSetings.IsSave === true)
                     this.navHeader.find("#editButtons").append(this.btnSave);
                 if (this.editorSettings.ButtonSetings.IsCancel === true)
                     this.navHeader.find("#editButtons").append(this.btnCancel);
                 if (this.editorSettings.ButtonSetings.IsSave === true || this.editorSettings.ButtonSetings.IsCancel === true)
                     view.prepend(this.navHeader);
+                this.tooltips = this.navHeader.find(".tooltipped");
                 _super.prototype.ViewInit.call(this, view);
                 return this.loadData();
+            };
+            BaseEditor.prototype.ViewShow = function (e) {
+                if (this.tooltips)
+                    this.tooltips.tooltip();
+                return _super.prototype.ViewShow.call(this, e);
             };
             BaseEditor.prototype.ViewHide = function (e) {
                 _super.prototype.ViewHide.call(this, e);
@@ -322,6 +328,8 @@ define(["require", "exports", "app/common/utils", "app/common/variables", "./var
                     this.btnSave.remove();
                 if (this.btnCancel)
                     this.btnCancel.remove();
+                if (this.tooltips)
+                    this.tooltips.tooltip("destroy");
             };
             BaseEditor.prototype.createEvents = function () {
                 this.SaveButtonClick = this.createTouchClickEvent(this.btnSave, this.saveButtonClick);
@@ -527,18 +535,19 @@ define(["require", "exports", "app/common/utils", "app/common/variables", "./var
                 navbarHeader += '    </div>';
                 this.navHeader = $(navbarHeader);
                 if (this.CardSettings.IsEdit)
-                    this.btnEdit = $('<li><a id="card-btn-edit" class="editor-header-button"><i class="material-icons editor-header">edit</i></a></li>');
+                    this.btnEdit = $('<li><a id="card-btn-edit" class="editor-header-button tooltipped" data-position="bottom" data-tooltip="' + vars._statres("button$label$edit") + '"><i class="material-icons editor-header">edit</i></a></li>');
                 if (this.CardSettings.IsAdd)
-                    this.btnAdd = $('<li><a id="card-btn-add" class="editor-header-button"><i class="material-icons editor-header">add</i></a></li>');
+                    this.btnAdd = $('<li><a id="card-btn-add" class="editor-header-button tooltipped" data-position="bottom" data-tooltip="' + vars._statres("button$label$add") + '"><i class="material-icons editor-header">add</i></a></li>');
                 if (this.CardSettings.IsAddCopy)
-                    this.btnAddCopy = $('<li><a id="card-btn-addcopy" class="editor-header-button"><i class="material-icons editor-header">exposure_plus_1</i></a></li>');
+                    this.btnAddCopy = $('<li><a id="card-btn-addcopy" class="editor-header-button tooltipped" data-position="bottom" data-tooltip="' + vars._statres("button$label$addcopy") + '"><i class="material-icons editor-header">exposure_plus_1</i></a></li>');
                 if (this.CardSettings.IsDelete)
-                    this.btnDelete = $('<li><a id="card-btn-delete" class="editor-header-button"><i class="material-icons editor-header">delete_forever</i></a></li>');
+                    this.btnDelete = $('<li><a id="card-btn-delete" class="editor-header-button tooltipped" data-position="bottom" data-tooltip="' + vars._statres("button$label$delete") + '"><i class="material-icons editor-header">delete_forever</i></a></li>');
                 if (this.CardSettings.IsSelect)
-                    this.btnSelect = $('<li><a id="editor-btn-select" class="editor-header-button"><i class="material-icons editor-header">done</i></a></li>');
-                this.btnClose = $('<li><a id="card-btn-close" class="editor-header-button"><i class="material-icons editor-header">close</i></a></li>');
+                    this.btnSelect = $('<li><a id="editor-btn-select" class="editor-header-button tooltipped" data-position="bottom" data-tooltip="' + vars._statres("button$label$select") + '"><i class="material-icons editor-header">done</i></a></li>');
+                this.btnClose = $('<li><a id="card-btn-close" class="editor-header-button tooltipped" data-position="bottom" data-tooltip="' + vars._statres("button$label$cancel") + '"><i class="material-icons editor-header">close</i></a></li>');
                 var cardButtons = this.navHeader.find("#cardButtons");
                 cardButtons.append(this.btnEdit).append(this.btnAdd).append(this.btnAddCopy).append(this.btnDelete).append(this.btnSelect).append(this.btnClose);
+                this.tooltips = cardButtons.find(".tooltipped");
                 return this.navHeader;
             };
             BaseCard.prototype.initTableRow = function () {
@@ -567,6 +576,8 @@ define(["require", "exports", "app/common/utils", "app/common/variables", "./var
             BaseCard.prototype.ViewShow = function (e) {
                 if (this.cardSettings && this.cardSettings.FilterSettings)
                     this.cardSettings.FilterSettings.ViewControls();
+                if (this.tooltips)
+                    this.tooltips.tooltip();
                 return _super.prototype.ViewShow.call(this, e);
             };
             BaseCard.prototype.ViewHide = function (e) {
@@ -583,6 +594,8 @@ define(["require", "exports", "app/common/utils", "app/common/variables", "./var
                     this.btnClose.remove();
                 if (this.btnSelect)
                     this.btnSelect.remove();
+                if (this.tooltips)
+                    this.tooltips.tooltip("destroy");
             };
             BaseCard.prototype.createEvents = function () {
                 this.EditButtonClick = this.createTouchClickEvent(this.btnEdit, this.editButtonClick);
@@ -597,7 +610,10 @@ define(["require", "exports", "app/common/utils", "app/common/variables", "./var
             BaseCard.prototype.destroyEvents = function () {
                 if (this.cardSettings && this.cardSettings.FilterSettings)
                     this.cardSettings.FilterSettings.destroyEvents();
-                this.destroyTouchClickEvent(this.rows, this.rowClick);
+                if (this.rows) {
+                    this.destroyTouchClickEvent(this.rows, this.rowClick);
+                    this.destroyDblTouchClickEvent(this.rows, this.rowDblClick);
+                }
                 this.destroyTouchClickEvent(this.btnSelect, this.SelectButtonClick);
                 this.destroyTouchClickEvent(this.btnEdit, this.EditButtonClick);
                 this.destroyTouchClickEvent(this.btnAdd, this.AddButtonClick);
@@ -614,16 +630,20 @@ define(["require", "exports", "app/common/utils", "app/common/variables", "./var
             BaseCard.prototype.setupTable = function () {
                 this.tableHead.html(this.getTableHeaderHtml());
                 this.setupRows();
-                this.rows = this.tableBody.find('tr');
-                this.createTouchClickEvent(this.rows, this.rowClick);
             };
             BaseCard.prototype.setupRows = function () {
                 this.selectedRow = null;
-                if (this.rows)
+                if (this.rows) {
                     this.destroyTouchClickEvent(this.rows, this.rowClick);
+                    this.destroyDblTouchClickEvent(this.rows, this.rowDblClick);
+                }
                 this.tableBody.html(this.getTableBodyHtml());
                 this.rows = this.tableBody.find('tr');
-                this.createTouchClickEvent(this.rows, this.rowClick);
+                this.rows = this.tableBody.find('tr');
+                if (this.rows) {
+                    this.createTouchClickEvent(this.rows, this.rowClick);
+                    this.createDblTouchClickEvent(this.rows, this.rowDblClick);
+                }
             };
             BaseCard.prototype.getTableHeaderHtml = function () {
                 var columns = this.CardSettings.Columns;
@@ -693,6 +713,14 @@ define(["require", "exports", "app/common/utils", "app/common/variables", "./var
                 this.selectedRow = $(e.currentTarget);
                 if (this.selectedRow)
                     this.selectedRow.addClass("row-active z-depth-1 brown lighten-5");
+            };
+            BaseCard.prototype.rowDblClick = function (e) {
+                if (this.selectedRow)
+                    this.selectedRow.removeClass("row-active z-depth-1 brown lighten-5");
+                this.selectedRow = $(e.currentTarget);
+                if (this.selectedRow)
+                    this.selectedRow.addClass("row-active z-depth-1 brown lighten-5");
+                this.editButtonClick(e);
             };
             BaseCard.prototype.editButtonClick = function (e) {
                 if (this.selectedRow) {
@@ -948,7 +976,6 @@ define(["require", "exports", "app/common/utils", "app/common/variables", "./var
                 this.tableHead.html(headerHtml);
                 this.attachSortEvents();
                 this.setupRows();
-                //this.createTouchClickEvent(this.rows, this.rowClick);
             };
             BaseReport.prototype.setupRows = function () {
                 //this.selectedRow = null;

@@ -10,6 +10,7 @@
     recalculateDimensions(): JQuery;
     chips(methodName?: any, paramName?: any): JQuery;
     collapsible(methodName?: any, paramName?: any): JQuery;
+    tooltip(methodName?: any, paramName?: any): JQuery;
 }
 
 
@@ -36,8 +37,13 @@ declare namespace M {
         function getInstance(elems: any): any;
         function updateTabIndicator(): JQuery;
     }
+
     export namespace Dropdown {
         function getInstance(elems: any): any;
+    }
+
+    export namespace Tooltip {
+        function init(elems: any, options?: any): JQuery;
     }
 }
 

@@ -162,16 +162,10 @@ export namespace Controller.Terminal {
                 let checkTime: string = this.model.get("checkTime");
                 let isVisible: boolean = (checkTime && checkTime !== "");
                 this.model.set("visibleCheck", isVisible);
-                if (isVisible === true)
-                    this.ViewResize({});
             }
             else if (e.field === "checkClient") {
                 let checkClient: string = this.model.get("checkClient");
                 this.model.set("visibleClient", (checkClient && checkClient !== "" ? "display" : "none"));
-            }
-            else if (e.field === "visibleCheck") {
-                if (this.model.get("visibleCheck") === true)
-                    this.ViewResize({});
             }
             else if (e.field === "checkSum") {
                 this.model.set("checkSumText", utils.numberToString(this.model.get("checkSum"), 2));
@@ -182,6 +176,9 @@ export namespace Controller.Terminal {
             else if (e.field === "checkDiscount") {
                 let discount: number = this.model.get("checkDiscount");
                 this.model.set("visibleDiscount", discount !== 0);
+            }
+            else if (e.field === "visibleClient" || e.field === "visibleDiscount" || e.field === "visibleCheck") {
+                this.ViewResize({});
             }
         }
 

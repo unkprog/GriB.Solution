@@ -11,11 +11,13 @@ define({
     /////////////////////////////////////////////////////////////////////////////////////////////
     "button$label$ok": "OK",
     "button$label$add": "Добавить",
+    "button$label$addcopy": "Дублировать",
     "button$label$save": "Сохранить",
     "button$label$addValue": "Добавить значение",
     "button$label$edit": "Редактировать",
     "button$label$cancel": "Отмена",
     "button$label$delete": "Удалить",
+    "button$label$select": "Выбрать",
     "button$label$find": "Поиск",
 
     "button$label$demo": "Демо",
@@ -290,6 +292,7 @@ define({
     "report$sales": "Отчет по продажам",
     "report$stocks": "Отчет по складу",
     "report$sales$time": "Отчет по времени продажи",
+    "label$charts": "Графики",
 
     "label$build": "Построить",
     "label$showfields": "Выводить поля",
@@ -305,4 +308,17 @@ define({
     "label$document": "Документ",
     "label$expense": "Расход",
     "label$total": "Итого",
+
+
+    "label$daysofweek": "По дням недели",
+    "label$intime": "По времени",
+    "label$checks": "Чеки",
+    "label$positions": "Позиции",
+    "label$dayweek$mon": "Пн",
+    "label$dayweek$tue": "Вт",
+    "label$dayweek$wed": "Ср", 
+    "label$dayweek$thu": "Чт", 
+    "label$dayweek$fri": "Пт",
+    "label$dayweek$sat": "Сб",
+    "label$dayweek$sun": "Вс",
 });
