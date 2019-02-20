@@ -284,7 +284,7 @@
     export interface IReportStockFilter extends ReportFilterWithProduct {
     }
 
-    export interface IReportModel {
+    export interface ITableRowModel {
 
     }
 }

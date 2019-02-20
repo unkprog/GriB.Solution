@@ -1,12 +1,82 @@
 ﻿import vars = require('app/common/variables');
 import utils = require('app/common/utils');
 import base = require('app/controller/report/basereport');
+import ctrl = require('app/common/basecontrol');
 
 export namespace Controller.Report.Stocks {
+
+    export class StockTable extends ctrl.Control.BaseTable {
+
+        public Filter: Interfaces.Model.IReportStockFilter;
+
+        protected getTableHeaderHtml(): string {
+            let columns: Interfaces.Control.ITableColumn[] = this.Columns;
+            let html: string = '';
+            let colNum: number = -1;
+            this.sumFieldsInfo = { fields: [], sumFied: {}, orderfields: [] };
+            let knSupport: any = kendo;
+            html += '<tr>';
+            if (this.Filter.IsShowSalepoint) {
+                colNum = colNum + 1;
+                html += '   <th rowspan="2" id="sort_' + colNum + '" class="ccursor report-total-right-border">';
+                html += vars._statres("label$salePoint");
+                html += '   </th>';
+            }
+
+            if (this.Filter.IsShowProduct) {
+                colNum = colNum + 1;
+                html += '   <th rowspan="2" id="sort_' + colNum + '" class="ccursor report-total-right-border">';
+                html += vars._statres("label$product");
+                html += '   </th>';
+            }
+
+            html += '   <th colspan="3" class="product-col-quantity-auto report-total-right-border">'; html += vars._statres("label$beginofperiod"); html += '   </th>';
+            html += '   <th colspan="3" class="product-col-quantity-auto report-total-right-border">'; html += vars._statres("label$overperiod"); html += '   </th>';
+            html += '   <th colspan="3" class="product-col-quantity-auto report-total-right-border">'; html += vars._statres("label$endofperiod"); html += '   </th>';
+            html += '<th style="width:' + (knSupport.support.browser.chrome === true ? "18" : "17") + 'px;"></th>';
+            html += '</tr>';
+
+            html += '<tr>';
+            for (let i = colNum + 1, icount = columns && columns.length ? columns.length : 0; i < icount; i++) {
+                html += '   <th';
+
+                if (columns[i].HeaderStyle || columns[i].IsOrder === true) {
+                    if (columns[i].IsOrder === true) {
+                        html += ' id="sort_' + i + '"';
+                    }
+
+                    html += ' class="';
+                    if (columns[i].HeaderStyle) html += columns[i].HeaderStyle;
+                    if (columns[i].IsOrder === true) {
+                        this.sumFieldsInfo.orderfields.push({ field: columns[i].Field, typeSort: 0, index: i });
+                        html += (columns[i].HeaderStyle ? ' ' : '') + 'ccursor';
+                    }
+                    html += '"';
+                }
+                html += '>';
+                html += (columns[i].HeaderTemplate ? columns[i].HeaderTemplate : columns[i].Header);
+                if (columns[i].IsSum && columns[i].IsSum === true) {
+                    html += ('<br/><span id="' + columns[i].Field + '_sum">0.00</span>');
+                    this.sumFieldsInfo.fields.push(columns[i].Field);
+                    this.sumFieldsInfo.sumFied[columns[i].Field] = 0;
+                }
+                html += '</th>';
+            }
+
+            html += '<th style="width:' + (knSupport.support.browser.chrome === true ? "18" : "17") + 'px;"></th>';
+            html += '</tr>';
+
+            return html;
+        }
+    }
+
+
     export class Index extends base.Controller.Report.ReportWithService {
         constructor() {
             super();
             this.Model.set("Header", vars._statres("report$stocks"));
+            this.Table = new StockTable();
+            (this.Table as StockTable).Filter = this.Filter;
         }
 
         protected createOptions(): Interfaces.IControllerOptions {
@@ -115,8 +185,8 @@ export namespace Controller.Report.Stocks {
             return this.Model.get("filterModel").toJSON() as Interfaces.Model.IReportStockFilter;
         }
 
-        protected columns(): Interfaces.IReportColumn[] {
-            let columns: Interfaces.IReportColumn[] = [];
+        public get Columns(): Interfaces.Control.ITableColumn[] {
+            let columns: Interfaces.Control.ITableColumn[] = [];
 
             if (this.Filter.IsShowSalepoint) columns.push({ Header: vars._statres("label$salePoint"), Field: "salepoint.name", IsOrder: true });
             if (this.Filter.IsShowProduct) columns.push({ Header: vars._statres("label$product"), Field: "product.name", IsOrder: true });
@@ -133,69 +203,7 @@ export namespace Controller.Report.Stocks {
             return columns;
         }
 
-        protected getTableHeaderHtml(): string {
-            let columns: Interfaces.IReportColumn[] = this.ReportSettings.Columns;
-            let html: string = '';
-            let isSum: boolean = false;
-            let isGroupHeader: boolean = false;
-            let colNum: number = -1;
-            this.sumFieldsInfo = { fields: [], sumFied: {}, orderfields: [] };
-            let knSupport: any = kendo;
-            html += '<tr>';
-            if (this.Filter.IsShowSalepoint) {
-                colNum = colNum + 1;
-                html += '   <th rowspan="2" id="sort_' + colNum + '" class="ccursor report-total-right-border">';
-                html += vars._statres("label$salePoint");
-                html += '   </th>';
-            }
-
-            if (this.Filter.IsShowProduct) {
-                colNum = colNum + 1;
-                html += '   <th rowspan="2" id="sort_' + colNum + '" class="ccursor report-total-right-border">';
-                html += vars._statres("label$product");
-                html += '   </th>';
-            }
-
-            html += '   <th colspan="3" class="product-col-quantity-auto report-total-right-border">'; html += vars._statres("label$beginofperiod"); html += '   </th>';
-            html += '   <th colspan="3" class="product-col-quantity-auto report-total-right-border">'; html += vars._statres("label$overperiod");    html += '   </th>';
-            html += '   <th colspan="3" class="product-col-quantity-auto report-total-right-border">'; html += vars._statres("label$endofperiod");   html += '   </th>';
-            html += '<th style="width:' + (knSupport.support.browser.chrome === true ? "18" : "17") + 'px;"></th>';
-            html += '</tr>';
-
-            html += '<tr>';
-            for (let i = colNum + 1, icount = columns && columns.length ? columns.length : 0; i < icount; i++) {
-                //if (columns[i].IsSum && columns[i].IsSum === true)
-                //    isSum = true;
-                html += '   <th';
-
-                if (columns[i].HeaderStyle || columns[i].IsOrder === true) {
-                    if (columns[i].IsOrder === true) {
-                        html += ' id="sort_' + i + '"';
-                    }
-
-                    html += ' class="';
-                    if (columns[i].HeaderStyle) html += columns[i].HeaderStyle;
-                    if (columns[i].IsOrder === true) {
-                        this.sumFieldsInfo.orderfields.push({ field: columns[i].Field, typeSort: 0, index: i });
-                        html += (columns[i].HeaderStyle ? ' ' : '') + 'ccursor';
-                    }
-                    html += '"';
-                }
-                html += '>';
-                html += (columns[i].HeaderTemplate ? columns[i].HeaderTemplate : columns[i].Header);
-                if (columns[i].IsSum && columns[i].IsSum === true) {
-                    html += ('<br/><span id="' + columns[i].Field + '_sum">0.00</span>');
-                    this.sumFieldsInfo.fields.push(columns[i].Field);
-                    this.sumFieldsInfo.sumFied[columns[i].Field] = 0;
-                }
-                html += '</th>';
-            }
-           
-            html += '<th style="width:' + (knSupport.support.browser.chrome === true ? "18" : "17") + 'px;"></th>';
-            html += '</tr>';
-
-            return html;
-        }
+        
         public createEvents(): void {
             super.createEvents();
             if (this.buildButton) this.BuildButtonClick = utils.createTouchClickEvent(this.buildButton, this.buildButtonClick, this);
@@ -303,17 +311,16 @@ export namespace Controller.Report.Stocks {
             super.buildButtonClick(e);
             let filter: Interfaces.Model.IReportStockFilter = self.Filter;
             this.Service.GetStocks(filter, (responseData: any) => {
-                self.Model.set("reportModel", responseData);
-                self.ReportSettings.Columns = self.columns(); 
-                self.setupTable();
+                (self.Table as StockTable).Filter = this.Filter;
+                self.SetupTable(responseData);
             });
         }
 
-        protected OnDetalize(e) {
+        protected OnDetalize(row: Interfaces.Model.ITableRowModel) {
             let self = this;
             let curfilter: Interfaces.Model.IReportStockFilter = self.Filter;
-            let index: number = +e.currentTarget.id.replace('table-row-', '');
-            let item: any = this.Model.get("reportModel")[index];
+            let item: any = row;
+
             vars._app.OpenController({
                 urlController: 'report/stocks/detalize', isModal: true, onLoadController: (controller: Interfaces.IController) => {
                     let ctrlDetalize: Interfaces.IControllerReport = controller as Interfaces.IControllerReport;

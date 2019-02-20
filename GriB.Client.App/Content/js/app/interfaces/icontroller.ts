@@ -51,77 +51,22 @@
     }
 
     export interface IControllerEditor extends IController {
-        EditorModel: Interfaces.Model.IBaseModel;
-        EditorSettings: Interfaces.IEditorSettings;
+        EditorModel: Model.IBaseModel;
+        EditorSettings: Control.IEditorSettings;
         Save(): void;
         Cancel(): void;
     }
 
-    export interface IBaseColumn {
-        Header?: string;
-        HeaderStyle?: string;
-        HeaderTemplate?: string;
-        Field?: string;
-        FieldStyle?: string;
-        FieldTemplate?: string;
-    }
-
-    export interface ICardColumn extends IBaseColumn {
-    }
-
-    export interface ICardFilterSettings {
-        FieldSearch: string;
-
-        GetItemsForView(data: Interfaces.Model.IEditorModel[]): Interfaces.Model.IEditorModel[] 
-
-        InitControls(): JQuery;
-        ViewControls(): void;
-        ResizeControls(): void;
-        createEvents(): void;
-        destroyEvents(): void;
-
-        saveFilter(): void;
-        restoreFilter(): any;
-    }
-
-    export interface ICardSettings {
-        FilterSettings: Interfaces.ICardFilterSettings;
-        FieldId?: string;
-        ValueIdNew: number;
-        EditIdName: string;
-        IsAdd: boolean;
-        IsAddCopy: boolean;
-        IsEdit: boolean;
-        IsDelete: boolean;
-        IsSelect: boolean;
-        EditController: string;
-        Columns?: ICardColumn[];
-        Load: (callback: (responseData: any) => void) => void;
-        Delete: (id: number, callback: (responseData: any) => void) => void;
-    }
-
-
-    export interface IEditorButtonSettings {
-        IsSave?: boolean;
-        IsCancel?: boolean;
-    }
-
-    export interface IEditorSettings {
-        EditIdName: string;
-        ButtonSetings?: IEditorButtonSettings;
-        Load: (id: number, callback: (responseData: any) => void) => void;
-        Save: (model: Interfaces.Model.IEditorModel, callback: (responseData: any) => void) => void;
-    }
 
     export interface IControllerCard extends IController {
-        CardModel: Interfaces.Model.IEditorModel[];
-        CardSettings: Interfaces.ICardSettings;
+        CardModel: Model.IEditorModel[];
+        CardSettings: Control.ICardSettings;
         Add(): void;
         Delete(): void;
         Edit(): void;
         Close(): void;
         getSelectedRowId(): any;
-        getSelectedRecord(): Interfaces.Model.IBaseModel;
+        getSelectedRecord(): Model.IBaseModel;
         OnSelect(controller: IControllerCard): void;
     }
 
@@ -178,16 +123,8 @@
         OnApply(controller: IControllerCheckComment): void;
     }
 
-    export interface IReportColumn extends IBaseColumn {
-        HeaderGroupName?: string;
-        IsSum?: boolean;
-        IsOrder?: boolean;
-    }
-
-    export interface IReportSettings {
-      
-        Columns?: IReportColumn[];
-    }
+  
+    
 
     export interface IControllerReportWithFilter extends IControllerEditor {
         SaveFilter(): void;
@@ -196,8 +133,7 @@
     }
 
     export interface IControllerReport extends IControllerReportWithFilter {
-        ReportSettings: Interfaces.IReportSettings;
-
-        Columns: Interfaces.IReportColumn[];
+        Columns: Control.ITableColumn[];
+        Table: Control.IControlTable;
     }
 }

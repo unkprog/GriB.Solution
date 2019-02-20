@@ -20,17 +20,17 @@ define(["require", "exports", "app/common/basecontroller", "app/services/reports
         (function (Report) {
             var Dashboard;
             (function (Dashboard) {
-                var ReportSalesTimeDashboard = /** @class */ (function (_super) {
-                    __extends(ReportSalesTimeDashboard, _super);
-                    function ReportSalesTimeDashboard() {
+                var ReportExpressAnalysis = /** @class */ (function (_super) {
+                    __extends(ReportExpressAnalysis, _super);
+                    function ReportExpressAnalysis() {
                         var _this = _super.call(this) || this;
                         _this.weekNames = ["", vars._statres("label$dayweek$sun"), vars._statres("label$dayweek$mon"), vars._statres("label$dayweek$tue"), vars._statres("label$dayweek$wed"), vars._statres("label$dayweek$thu"), vars._statres("label$dayweek$fri"), vars._statres("label$dayweek$sat")];
                         return _this;
                     }
-                    ReportSalesTimeDashboard.prototype.createOptions = function () {
-                        return { Url: "/Content/view/report/dashboard/salestime.html", Id: "report-dashboard-salestime-view" };
+                    ReportExpressAnalysis.prototype.createOptions = function () {
+                        return { Url: "/Content/view/report/dashboard/expressanalysis.html", Id: "report-expana-view" };
                     };
-                    ReportSalesTimeDashboard.prototype.createModel = function () {
+                    ReportExpressAnalysis.prototype.createModel = function () {
                         return new kendo.data.ObservableObject({
                             "Header": vars._statres("report$sales$time"),
                             "filterModel": {},
@@ -43,17 +43,17 @@ define(["require", "exports", "app/common/basecontroller", "app/services/reports
                             "labelBuild": vars._statres("label$build"),
                         });
                     };
-                    Object.defineProperty(ReportSalesTimeDashboard.prototype, "FilterName", {
+                    Object.defineProperty(ReportExpressAnalysis.prototype, "FilterName", {
                         get: function () {
                             return "reportFilterSalesTime";
                         },
                         enumerable: true,
                         configurable: true
                     });
-                    ReportSalesTimeDashboard.prototype.getDefaultFilter = function () {
+                    ReportExpressAnalysis.prototype.getDefaultFilter = function () {
                         return { datefrom: utils.date_ddmmyyyy(utils.dateToday()), dateto: utils.date_ddmmyyyy(utils.dateToday()), salepoint: undefined, product: undefined, employee: undefined, client: undefined, IsShowSalepoint: true, IsShowProduct: true, IsShowEmployee: false, IsShowClient: false };
                     };
-                    ReportSalesTimeDashboard.prototype.getSaveFilter = function () {
+                    ReportExpressAnalysis.prototype.getSaveFilter = function () {
                         var controller = this;
                         var _datefrom = controller.Model.get("filterModel.datefrom");
                         var _dateto = controller.Model.get("filterModel.dateto");
@@ -64,15 +64,15 @@ define(["require", "exports", "app/common/basecontroller", "app/services/reports
                         };
                         return JSON.stringify(filterToSave);
                     };
-                    ReportSalesTimeDashboard.prototype.ViewInit = function (view) {
+                    ReportExpressAnalysis.prototype.ViewInit = function (view) {
                         var controller = this;
-                        controller.dateFromControl = view.find("#report-salestime-view-date-start");
+                        controller.dateFromControl = view.find("#report-expana-view-date-start");
                         controller.dateFromControl.datepicker({
                             format: "dd.mm.yyyy", onSelect: function (newDate) {
                                 controller.Model.set("filterModel.datefrom", utils.date_ddmmyyyy(newDate));
                             }
                         });
-                        controller.dateToControl = view.find("#report-salestime-view-date-end");
+                        controller.dateToControl = view.find("#report-expana-view-date-end");
                         controller.dateToControl.datepicker({
                             format: "dd.mm.yyyy", onSelect: function (newDate) {
                                 controller.Model.set("filterModel.dateto", utils.date_ddmmyyyy(newDate));
@@ -80,23 +80,23 @@ define(["require", "exports", "app/common/basecontroller", "app/services/reports
                         });
                         controller.dateFromControl.val(utils.date_ddmmyyyy(controller.Model.get("filterModel.datefrom")));
                         controller.dateToControl.val(utils.date_ddmmyyyy(controller.Model.get("filterModel.dateto")));
-                        controller.salepointControl = view.find("#report-salestime-view-salepoint-row");
-                        controller.salepointClearControl = view.find("#report-salestime-view-salepoint-clear");
-                        controller.productControl = view.find("#report-salestime-view-product-row");
-                        controller.productClearControl = view.find("#report-salestime-view-product-clear");
-                        controller.buildButton = view.find("#report-salestime-view-btn-build");
-                        controller.chartWeeksContainerControl = view.find('#report-dashboard-salesweek-view-chart-container');
-                        controller.chartWeeksControl = view.find('#report-dashboard-salesweek-view-chart');
-                        controller.chartTimesContainerControl = view.find('#report-dashboard-salestime-view-chart-container');
-                        controller.chartTimesControl = view.find('#report-dashboard-salestime-view-chart');
+                        controller.salepointControl = view.find("#report-expana-view-salepoint-row");
+                        controller.salepointClearControl = view.find("#report-expana-view-salepoint-clear");
+                        controller.productControl = view.find("#report-expana-view-product-row");
+                        controller.productClearControl = view.find("#report-expana-view-product-clear");
+                        controller.buildButton = view.find("#report-expana-view-btn-build");
+                        controller.chartWeeksContainerControl = view.find('#report-expana-week-view-chart-container');
+                        controller.chartWeeksControl = view.find('#report-expana-week-view-chart');
+                        controller.chartTimesContainerControl = view.find('#report-expana-time-view-chart-container');
+                        controller.chartTimesControl = view.find('#report-expana-time-view-chart');
                         var result = _super.prototype.ViewInit.call(this, view);
                         return result;
                     };
-                    ReportSalesTimeDashboard.prototype.ViewResize = function (e) {
+                    ReportExpressAnalysis.prototype.ViewResize = function (e) {
                         _super.prototype.ViewResize.call(this, e);
                         var chartControl = this.chartWeeksContainerControl;
                         if (chartControl && chartControl.length > 0) {
-                            var height = $(window).height() - chartControl.offset().top - (0.2 * parseFloat(getComputedStyle(chartControl[0]).fontSize)) - 1;
+                            var height = $(window).height() / 2; // - chartControl.offset().top - (0.2 * parseFloat(getComputedStyle(chartControl[0]).fontSize)) - 1;
                             if (height < 250)
                                 height = 250;
                             chartControl.height(height);
@@ -106,7 +106,7 @@ define(["require", "exports", "app/common/basecontroller", "app/services/reports
                             }
                         }
                     };
-                    ReportSalesTimeDashboard.prototype.createEvents = function () {
+                    ReportExpressAnalysis.prototype.createEvents = function () {
                         _super.prototype.createEvents.call(this);
                         if (this.buildButton)
                             this.BuildButtonClick = utils.createTouchClickEvent(this.buildButton, this.buildButtonClick, this);
@@ -116,7 +116,7 @@ define(["require", "exports", "app/common/basecontroller", "app/services/reports
                         this.ClearProductButtonClick = this.createTouchClickEvent(this.productClearControl, this.clearProductButtonClick);
                         //this.Model.bind("change", $.proxy(this.changeModel, this));
                     };
-                    ReportSalesTimeDashboard.prototype.destroyEvents = function () {
+                    ReportExpressAnalysis.prototype.destroyEvents = function () {
                         //this.Model.unbind("change");
                         this.destroyTouchClickEvent(this.salepointClearControl, this.ClearSalepointButtonClick);
                         this.destroyTouchClickEvent(this.salepointControl, this.SalepointButtonClick);
@@ -126,7 +126,7 @@ define(["require", "exports", "app/common/basecontroller", "app/services/reports
                             utils.destroyTouchClickEvent(this.buildButton, this.BuildButtonClick);
                         _super.prototype.destroyEvents.call(this);
                     };
-                    ReportSalesTimeDashboard.prototype.salepointButtonClick = function (e) {
+                    ReportExpressAnalysis.prototype.salepointButtonClick = function (e) {
                         var self = this;
                         vars._app.OpenController({
                             urlController: 'setting/card/salepoint', isModal: true, onLoadController: function (controller) {
@@ -140,20 +140,20 @@ define(["require", "exports", "app/common/basecontroller", "app/services/reports
                             }
                         });
                     };
-                    ReportSalesTimeDashboard.prototype.selectSalepoint = function (controller) {
+                    ReportExpressAnalysis.prototype.selectSalepoint = function (controller) {
                         var salepoint = controller.getSelectedRecord();
                         if (salepoint)
                             this.Model.set("filterModel.salepoint", salepoint);
                         M.updateTextFields();
                     };
-                    ReportSalesTimeDashboard.prototype.clearSalepointButtonClick = function (e) {
+                    ReportExpressAnalysis.prototype.clearSalepointButtonClick = function (e) {
                         e.preventDefault();
                         e.stopPropagation();
                         this.Model.set("filterModel.salepoint", {});
                         M.updateTextFields();
                         return false;
                     };
-                    ReportSalesTimeDashboard.prototype.productButtonClick = function (e) {
+                    ReportExpressAnalysis.prototype.productButtonClick = function (e) {
                         var self = this;
                         vars._app.OpenController({
                             urlController: 'setting/card/product', isModal: true, onLoadController: function (controller) {
@@ -167,20 +167,20 @@ define(["require", "exports", "app/common/basecontroller", "app/services/reports
                             }
                         });
                     };
-                    ReportSalesTimeDashboard.prototype.selectProduct = function (controller) {
+                    ReportExpressAnalysis.prototype.selectProduct = function (controller) {
                         var product = controller.getSelectedRecord();
                         if (product)
                             this.Model.set("filterModel.product", product);
                         M.updateTextFields();
                     };
-                    ReportSalesTimeDashboard.prototype.clearProductButtonClick = function (e) {
+                    ReportExpressAnalysis.prototype.clearProductButtonClick = function (e) {
                         e.preventDefault();
                         e.stopPropagation();
                         this.Model.set("filterModel.product", {});
                         M.updateTextFields();
                         return false;
                     };
-                    Object.defineProperty(ReportSalesTimeDashboard.prototype, "Service", {
+                    Object.defineProperty(ReportExpressAnalysis.prototype, "Service", {
                         get: function () {
                             if (!this.reportService)
                                 this.reportService = new svc.Services.ReportsService();
@@ -189,37 +189,39 @@ define(["require", "exports", "app/common/basecontroller", "app/services/reports
                         enumerable: true,
                         configurable: true
                     });
-                    ReportSalesTimeDashboard.prototype.buildButtonClick = function (e) {
+                    ReportExpressAnalysis.prototype.buildButtonClick = function (e) {
                         var self = this;
                         //super.buildButtonClick(e);
                         var filter = self.Filter;
-                        this.Service.GetSalesTime(filter, function (responseData) {
+                        this.Service.GetExpresAnalysisData(filter, function (responseData) {
                             self.Model.set("reportModel", responseData);
                             //self.ReportSettings.Columns = self.columns();
                             self.setupChart();
                         });
                     };
-                    ReportSalesTimeDashboard.prototype.getChartData = function () {
+                    ReportExpressAnalysis.prototype.getChartData = function () {
                         var controller = this;
                         var result = {
-                            weeks: { labels: [], datasets: [{ label: vars._statres("label$checks"), data: [], borderColor: '#f44336', backgroundColor: 'transparent' }, { label: vars._statres("label$positions"), data: [], borderColor: '#2196f3', backgroundColor: 'transparent' }] },
-                            times: { labels: [], datasets: [{ label: vars._statres("label$checks"), data: [], borderColor: '#f44336', backgroundColor: 'transparent' }, { label: vars._statres("label$positions"), data: [], borderColor: '#2196f3', backgroundColor: 'transparent' }] }
+                            weeks: { labels: [], datasets: [{ type: 'line', label: vars._statres("label$sum"), data: [], borderColor: '#2196f3', backgroundColor: '#64b5f6', fill: false }, { label: vars._statres("label$checks"), data: [], borderColor: '#9e9e9e', backgroundColor: '#e0e0e0' }, { type: 'bar', label: vars._statres("label$positions"), data: [], borderColor: '#4caf50', backgroundColor: '#81c784' }] },
+                            times: { labels: [], datasets: [{ type: 'line', label: vars._statres("label$sum"), data: [], borderColor: '#2196f3', backgroundColor: '#64b5f6', fill: false }, { label: vars._statres("label$checks"), data: [], borderColor: '#9e9e9e', backgroundColor: '#e0e0e0' }, { type: 'bar', label: vars._statres("label$positions"), data: [], borderColor: '#4caf50', backgroundColor: '#81c784' }] }
                         };
                         var rowsweek = controller.Model.get("reportModel").dayweeks;
                         for (var i = 0, icount = (rowsweek ? rowsweek.length : 0); i < icount; i++) {
                             result.weeks.labels.push(this.weekNames[rowsweek[i].dayweek]);
-                            result.weeks.datasets[0].data.push(rowsweek[i].count);
-                            result.weeks.datasets[1].data.push(rowsweek[i].countpos);
+                            result.weeks.datasets[0].data.push(rowsweek[i].sumpercent);
+                            result.weeks.datasets[1].data.push(rowsweek[i].countpercent);
+                            result.weeks.datasets[2].data.push(rowsweek[i].countpospercent);
                         }
                         var rowstime = controller.Model.get("reportModel").times;
                         for (var i = 0, icount = (rowstime ? rowstime.length : 0); i < icount; i++) {
                             result.times.labels.push(rowstime[i].time);
-                            result.times.datasets[0].data.push(rowstime[i].count);
-                            result.times.datasets[1].data.push(rowstime[i].countpos);
+                            result.times.datasets[0].data.push(rowstime[i].sumpercent);
+                            result.times.datasets[1].data.push(rowstime[i].countpercent);
+                            result.times.datasets[2].data.push(rowstime[i].countpospercent);
                         }
                         return result;
                     };
-                    ReportSalesTimeDashboard.prototype.setupChart = function () {
+                    ReportExpressAnalysis.prototype.setupChart = function () {
                         var controller = this;
                         var chart = require('chartjs');
                         var chartData = controller.getChartData();
@@ -230,13 +232,13 @@ define(["require", "exports", "app/common/basecontroller", "app/services/reports
                         else {
                             var ctx = controller.chartWeeksControl[0].getContext('2d');
                             controller.chartWeeks = new chart(ctx, {
-                                type: 'line',
+                                type: 'bar',
                                 data: chartData.weeks,
                                 options: {
                                     maintainAspectRatio: false,
                                     title: {
                                         display: true,
-                                        text: vars._statres("label$daysofweek")
+                                        text: vars._statres("label$daysofweek") + ', %'
                                     },
                                     scales: {
                                         yAxes: [{
@@ -255,13 +257,13 @@ define(["require", "exports", "app/common/basecontroller", "app/services/reports
                         else {
                             var ctx = controller.chartTimesControl[0].getContext('2d');
                             controller.chartTimes = new chart(ctx, {
-                                type: 'line',
+                                type: 'bar',
                                 data: chartData.times,
                                 options: {
                                     maintainAspectRatio: false,
                                     title: {
                                         display: true,
-                                        text: vars._statres("label$intime")
+                                        text: vars._statres("label$intime") + ', %'
                                     },
                                     scales: {
                                         yAxes: [{
@@ -274,12 +276,14 @@ define(["require", "exports", "app/common/basecontroller", "app/services/reports
                             });
                         }
                     };
-                    return ReportSalesTimeDashboard;
+                    ReportExpressAnalysis.prototype.setupTable = function () {
+                    };
+                    return ReportExpressAnalysis;
                 }(base.Controller.BaseReportWithFilter));
-                Dashboard.ReportSalesTimeDashboard = ReportSalesTimeDashboard;
+                Dashboard.ReportExpressAnalysis = ReportExpressAnalysis;
             })(Dashboard = Report.Dashboard || (Report.Dashboard = {}));
         })(Report = Controller.Report || (Controller.Report = {}));
     })(Controller = exports.Controller || (exports.Controller = {}));
-    vars.registerController("report/dashboard/salestime", function (module) { return new module.Controller.Report.Dashboard.ReportSalesTimeDashboard(); });
+    vars.registerController("report/dashboard/expressanalysis", function (module) { return new module.Controller.Report.Dashboard.ReportExpressAnalysis(); });
 });
-//# sourceMappingURL=salestime.js.map
+//# sourceMappingURL=expressanalysis.js.map

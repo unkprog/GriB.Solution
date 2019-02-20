@@ -72,18 +72,22 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                         enumerable: true,
                         configurable: true
                     });
-                    Detalize.prototype.columns = function () {
-                        var columns = [];
-                        columns.push({ Header: vars._statres("label$date"), Field: "cd", FieldTemplate: "#=date_ddmmyyyy_withtime(new Date(cd))#" });
-                        columns.push({ Header: vars._statres("label$salePoint"), Field: "salepoint.name", IsOrder: true });
-                        columns.push({ Header: vars._statres("label$employee"), Field: "employee.name", IsOrder: true });
-                        columns.push({ Header: vars._statres("label$product"), Field: "product.name", IsOrder: true });
-                        columns.push({ Header: vars._statres("label$client"), Field: "client.name", IsOrder: true });
-                        columns.push({ Header: vars._statres("label$quantity"), HeaderStyle: "product-col-quantity-auto-right", Field: "quantity", FieldTemplate: '#=numberToString(quantity,2)#', FieldStyle: "product-col-quantity-auto-right", IsSum: true, IsOrder: true });
-                        columns.push({ Header: vars._statres("label$discount"), HeaderStyle: "product-col-quantity-auto-right", Field: "discount", FieldTemplate: '#=discount#', FieldStyle: "product-col-quantity-auto-right", IsSum: false, IsOrder: true });
-                        columns.push({ Header: vars._statres("label$sum"), HeaderStyle: "product-col-sum-auto-rigth", Field: "sum", FieldTemplate: '#=numberToString(sum,2)#', FieldStyle: "product-col-sum-auto-rigth", IsSum: true, IsOrder: true });
-                        return columns;
-                    };
+                    Object.defineProperty(Detalize.prototype, "Columns", {
+                        get: function () {
+                            var columns = [];
+                            columns.push({ Header: vars._statres("label$date"), Field: "cd", FieldTemplate: "#=date_ddmmyyyy_withtime(new Date(cd))#" });
+                            columns.push({ Header: vars._statres("label$salePoint"), Field: "salepoint.name", IsOrder: true });
+                            columns.push({ Header: vars._statres("label$employee"), Field: "employee.name", IsOrder: true });
+                            columns.push({ Header: vars._statres("label$product"), Field: "product.name", IsOrder: true });
+                            columns.push({ Header: vars._statres("label$client"), Field: "client.name", IsOrder: true });
+                            columns.push({ Header: vars._statres("label$quantity"), HeaderStyle: "product-col-quantity-auto-right", Field: "quantity", FieldTemplate: '#=numberToString(quantity,2)#', FieldStyle: "product-col-quantity-auto-right", IsSum: true, IsOrder: true });
+                            columns.push({ Header: vars._statres("label$discount"), HeaderStyle: "product-col-quantity-auto-right", Field: "discount", FieldTemplate: '#=discount#', FieldStyle: "product-col-quantity-auto-right", IsSum: false, IsOrder: true });
+                            columns.push({ Header: vars._statres("label$sum"), HeaderStyle: "product-col-sum-auto-rigth", Field: "sum", FieldTemplate: '#=numberToString(sum,2)#', FieldStyle: "product-col-sum-auto-rigth", IsSum: true, IsOrder: true });
+                            return columns;
+                        },
+                        enumerable: true,
+                        configurable: true
+                    });
                     Detalize.prototype.createEvents = function () {
                         _super.prototype.createEvents.call(this);
                     };
@@ -94,17 +98,11 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                         var self = this;
                         _super.prototype.buildButtonClick.call(this, e);
                         this.Service.GetSalesDetail(this.Filter, function (responseData) {
-                            self.Model.set("reportModel", responseData);
-                            self.ReportSettings.Columns = self.columns();
-                            self.setupTable();
+                            self.SetupTable(responseData);
                         });
                     };
-                    Detalize.prototype.OnDetalize = function (e) {
-                        var cur = e.currentTarget;
-                        var self = this;
-                        var curfilter = self.Filter;
-                        var index = +e.currentTarget.id.replace('table-row-', '');
-                        var item = this.Model.get("reportModel")[index];
+                    Detalize.prototype.OnDetalize = function (row) {
+                        var item = row;
                         vars._editorData["id_sale"] = item.id;
                         vars._app.OpenController({
                             urlController: 'document/editor/sale', isModal: true, onLoadController: function (controller) {

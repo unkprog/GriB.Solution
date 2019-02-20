@@ -18,7 +18,7 @@ export namespace Controller.Document.Editor {
             return "id_sale";
         }
 
-        protected createEditorSettings(): Interfaces.IEditorSettings {
+        protected createEditorSettings(): Interfaces.Control.IEditorSettings {
             return { EditIdName: this.EditIdName, Load: $.proxy(this.Service.GetSale, this.Service), Save: $.proxy(this.Service.SetDocument, this.Service) };
         }
 

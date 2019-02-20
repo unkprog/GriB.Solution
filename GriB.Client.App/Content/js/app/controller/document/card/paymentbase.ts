@@ -4,7 +4,7 @@ import base = require('app/common/basecontroller');
 import svc = require('app/services/documentservice');
 
 export namespace Controller.Document.Card {
-    export class PaymentCardFilterSettings implements Interfaces.ICardFilterSettings {
+    export class PaymentCardFilterSettings implements Interfaces.Control.ICardFilterSettings {
         constructor(setupRows: { (): void; }, fieldSearch:string) {
             this.fieldSearch = fieldSearch;
             this.setupRows = setupRows;
@@ -403,11 +403,11 @@ export namespace Controller.Document.Card {
             return { Url: "/Content/view/document/card/card.html", Id: "card-view" };
         }
 
-        protected createCardFilterSettings(): Interfaces.ICardFilterSettings {
+        protected createCardFilterSettings(): Interfaces.Control.ICardFilterSettings {
             return new PaymentCardFilterSettings($.proxy(this.loadData, this), this.FilterId);
         }
 
-        protected createCardSettings(): Interfaces.ICardSettings {
+        protected createCardSettings(): Interfaces.Control.ICardSettings {
             return {
                 FieldId: "id", FilterSettings: this.createCardFilterSettings(), ValueIdNew: -1, EditIdName: this.EditIdName, EditController: this.EditController,
                 IsAdd: true, IsAddCopy: false, IsEdit: true, IsDelete: true, IsSelect: false,
@@ -416,11 +416,11 @@ export namespace Controller.Document.Card {
             };
         }
 
-        protected get Columns(): Interfaces.IBaseColumn[] {
+        protected get Columns(): Interfaces.Control.IBaseColumn[] {
             return this.columns();
         }
 
-        protected columns(): Interfaces.IBaseColumn[] {
+        protected columns(): Interfaces.Control.IBaseColumn[] {
             //let payMethod: string = "#if (ptype === 1) {#" + vars._statres("label$cash") + "# } else if (ptype === 2) {#" + vars._statres("label$noncash") + "# } else if (ptype === 3) {#" + vars._statres("label$withoutpayment") + "#}#";
             let payMethod: string = '#if (ptype === 1) {#<i class="material-icons left">attach_money</i># } else if (ptype === 2) {#<i class="material-icons left">credit_card</i># } else if (ptype === 3) {#<i class="material-icons left">money_off</i>#}#';
             payMethod = payMethod + "#if ((options & 2)===2 || (options & 4)===4 || (options & 8)===8) {# (#if ((options & 2)===2) {#" + vars._statres("label$oncredit") + "# } else if ((options & 4)===4) {#" + vars._statres("label$onthehouse") + "# } else if ((options & 8)===8) {#" + vars._statres("label$clientleft") + "#}#)#}#";

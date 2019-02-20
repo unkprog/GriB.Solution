@@ -1,6 +1,6 @@
 ﻿import utils = require('app/common/utils');
 import vars = require('app/common/variables');
-import { _app, _main } from './variables';
+import ctrl = require('app/common/basecontrol');
 
 export namespace Controller {
     export class Base implements Interfaces.IController {
@@ -35,10 +35,10 @@ export namespace Controller {
         public get View(): JQuery {
             return this._view;
         }
-       
+
 
         public get Header(): string { return this._model ? this._model.get("Header") : ""; }
-        public set Header(value: string) { if(this._model) this._model.set("Header", value); }
+        public set Header(value: string) { if (this._model) this._model.set("Header", value); }
 
         public ViewInit(view: JQuery): boolean {
             this._view = view;
@@ -56,7 +56,7 @@ export namespace Controller {
         }
 
         //public AfterShow(e: any): void {
-           
+
         //}
 
         public ViewHide(e: any): void {
@@ -127,14 +127,14 @@ export namespace Controller {
             return (this._controllers.length > 0 ? this._controllers[this._controllers.length - 1] : undefined);
         }
 
-        public Pop() : void {
+        public Pop(): void {
             if (this._controllers.length > 0)
                 this._current = this._controllers.pop();
             else
                 this._current = undefined;
         }
 
-        public Push(controller: Interfaces.IController) : void {
+        public Push(controller: Interfaces.IController): void {
             var self = this;
             if (controller) {
                 self._controllers.push(controller);
@@ -192,10 +192,9 @@ export namespace Controller {
 
         public ControllerBack: { (e: any): void; };
         private controllerBack(e): void {
-            if (_app.IsModal)
-                _app.ControllerBack(e);
-            else
-            {
+            if (vars._app.IsModal)
+                vars._app.ControllerBack(e);
+            else {
                 this._controllersStack.Pop();
                 this.RestoreController();
             }
@@ -207,24 +206,24 @@ export namespace Controller {
         }
 
         public OpenController(options: Interfaces.IOpenControllerOptions) {
-            _app.OpenController(options);
+            vars._app.OpenController(options);
         }
 
         public OpenView(options: Interfaces.IOpenViewOptions) {//controller: Interfaces.IController, backController?: Interfaces.IController, isRestore: boolean = false) {
             var self = this;
 
             if (options.isModal && options.isModal === true) {
-                _app.OpenView(options);
+                vars._app.OpenView(options);
                 return;
             }
 
             if ($("#" + options.controller.Options.Id).length > 0) return;     //Already loaded and current
-            _app.ShowLoading();
+            vars._app.ShowLoading();
 
             $.when($.ajax({ url: options.controller.Options.Url, cache: false })).done((template) => {
                 self.OpenViewTemplate({ controller: options.controller, template: template, backController: options.backController, isRestore: options.isRestore });
             }).fail((e) => {
-                _app.HideLoading();
+                vars._app.HideLoading();
             });
         }
 
@@ -258,19 +257,19 @@ export namespace Controller {
                 }
             } finally {
                 if (isInit)
-                    _app.HideLoading();
+                    vars._app.HideLoading();
             }
         }
 
 
         protected SetHeader(controller: Interfaces.IController) {
-             //TODO: Пока не заморачиваемся с заголовком
-                    //let header = controller.Header;
-                    //if (header)
-                    //    self._model.set("AppHeader", header); // + ' ' + self.contentControl.width()
-                    //else
-                    //    if ("POS Cloud" !== self._model.get("AppHeader"))
-                    //        self._model.set("AppHeader", "POS Cloud");
+            //TODO: Пока не заморачиваемся с заголовком
+            //let header = controller.Header;
+            //if (header)
+            //    self._model.set("AppHeader", header); // + ' ' + self.contentControl.width()
+            //else
+            //    if ("POS Cloud" !== self._model.get("AppHeader"))
+            //        self._model.set("AppHeader", "POS Cloud");
         }
     }
 
@@ -294,12 +293,12 @@ export namespace Controller {
             return this.Model.get("editModel").toJSON();
         }
 
-        private editorSettings: Interfaces.IEditorSettings;
-        public get EditorSettings(): Interfaces.IEditorSettings {
+        private editorSettings: Interfaces.Control.IEditorSettings;
+        public get EditorSettings(): Interfaces.Control.IEditorSettings {
             return this.editorSettings;
         }
 
-        protected createEditorSettings(): Interfaces.IEditorSettings {
+        protected createEditorSettings(): Interfaces.Control.IEditorSettings {
             return { EditIdName: "", Load: undefined, Save: undefined };
         }
 
@@ -336,7 +335,7 @@ export namespace Controller {
 
         }
 
-       
+
         public ViewShow(e): boolean {
             if (this.tooltips)
                 this.tooltips.tooltip();
@@ -373,12 +372,12 @@ export namespace Controller {
         public CancelButtonClick: { (e: any): void; };
         private cancelButtonClick(e): void {
             this.Cancel();
-            _main.ControllerBack(e);
+            vars._main.ControllerBack(e);
         }
 
         protected loadData(): boolean {
             let controller = this;
-            if(controller.EditorSettings && controller.EditorSettings.Load) {
+            if (controller.EditorSettings && controller.EditorSettings.Load) {
                 let id: number = (vars._editorData[controller.EditorSettings.EditIdName] ? vars._editorData[controller.EditorSettings.EditIdName] : 0);
                 controller.EditorSettings.Load(id, (responseData) => {
                     if (vars._editorData.isCopy === true)
@@ -399,7 +398,7 @@ export namespace Controller {
 
         protected endLoad(): void {
             M.updateTextFields();
-            _app.HideLoading();
+            vars._app.HideLoading();
             this.View.show();
         }
 
@@ -408,7 +407,7 @@ export namespace Controller {
         }
 
         private endSave(): void {
-            _main.ControllerBack(this);
+            vars._main.ControllerBack(this);
         }
 
         protected getSaveModel(): Interfaces.Model.IEditorModel {
@@ -431,109 +430,6 @@ export namespace Controller {
         }
     }
 
-    export class BaseCardFilterSettings implements Interfaces.ICardFilterSettings {
-        public saveFilter(): void {
-            throw new Error("Method not implemented.");
-        }
-        public restoreFilter() {
-            throw new Error("Method not implemented.");
-        }
-
-        constructor(setupRows: { (): void; }) {
-            this.fieldSearch = "name";
-            this.setupRows = setupRows;
-        }
-
-        private setupRows: { (): void; };
-
-        private fieldSearch: string;
-        public get FieldSearch(): string {
-            return this.fieldSearch;
-        }
-        public set FieldSearch(val: string) {
-            this.fieldSearch = val;
-        }
-
-        private navSearch: JQuery;
-        private formSearch: JQuery;
-        private inputSearch: JQuery;
-        private clearSearch: JQuery;
-
-        private proxySearch;
-
-        public InitControls(): JQuery {
-            let navbarHeader: string = '<nav class="card-search-nav editor-header z-depth-1">';
-            navbarHeader += '   <div class="nav-wrapper">';
-            navbarHeader += '       <form>';
-            navbarHeader += '           <div class="input-field">';
-            navbarHeader += '               <input id="card-view-search" type="search" required value="">';
-            navbarHeader += '               <label class="label-icon" for="search"><i class="material-icons editor-header">search</i></label>';
-            navbarHeader += '               <i id="card-view-search-clear" class="material-icons editor-header">close</i>';
-            navbarHeader += '           </div>';
-            navbarHeader += '       </form>';
-            navbarHeader += '   </div>';
-            navbarHeader += '</nav>';
-            this.navSearch = $(navbarHeader);
-            this.formSearch = this.navSearch.find('form');
-            this.inputSearch = this.formSearch.find('#card-view-search');
-            this.clearSearch = this.formSearch.find('#card-view-search-clear');
-
-            return this.navSearch;
-        }
-
-        public ViewControls(): void {
-
-        }
-        public ResizeControls(): void {
-        }
-
-        public createEvents(): void {
-            if (this.clearSearch) this.ClearButtonClick = utils.createTouchClickEvent(this.clearSearch, this.clearButtonClick, this);
-            if (this.formSearch) {
-                this.proxySearch = $.proxy(this.search, this);
-                this.formSearch.on('submit', this.proxySearch);
-            }
-        }
-
-        private search(e: any) {
-            e.preventDefault();
-            if (this.setupRows)
-                this.setupRows();
-            return false;
-        }
-
-        public destroyEvents(): void {
-            if (this.formSearch) this.formSearch.off('submit', this.proxySearch);
-            if (this.clearSearch) utils.destroyTouchClickEvent(this.clearSearch, this.ClearButtonClick);
-        }
-
-        public ClearButtonClick: { (e: any): void; };
-        private clearButtonClick(e): void {
-            if (this.inputSearch)
-                this.inputSearch.val("");
-            if (this.setupRows)
-                this.setupRows();
-        }
-
-        public GetItemsForView(data: Interfaces.Model.IEditorModel[]): Interfaces.Model.IEditorModel[] {
-            let result: Interfaces.Model.IEditorModel[] = [];
-            let strSearch: string = (this.inputSearch ? this.inputSearch.val() as string : ""); // ($("#card-view-search").val() as string);
-            let fieldSearch: string = this.FieldSearch;
-            let isNotSearch: boolean = (utils.isNullOrEmpty(fieldSearch) || utils.isNullOrEmpty(strSearch));
-            if (!isNotSearch)
-                strSearch = strSearch.toLowerCase();
-            for (let i = 0, icount = (data && data.length ? data.length : 0); i < icount; i++) {
-                if (isNotSearch) {
-                    result.push(data[i]);
-                }
-                else if ((data[i][fieldSearch] as string).toLowerCase().indexOf(strSearch) > -1) {
-                    result.push(data[i]);
-                }
-            }
-            return result;
-        }
-    }
-
     export class BaseCard extends Base implements Interfaces.IControllerCard {
 
         constructor() {
@@ -552,8 +448,8 @@ export namespace Controller {
             return this.Model.get("cardModel").toJSON();
         }
 
-        private cardSettings: Interfaces.ICardSettings;
-        public get CardSettings(): Interfaces.ICardSettings {
+        private cardSettings: Interfaces.Control.ICardSettings;
+        public get CardSettings(): Interfaces.Control.ICardSettings {
             return this.cardSettings;
         }
 
@@ -610,10 +506,10 @@ export namespace Controller {
             return this.navHeader;
         }
 
-       
+
 
         protected initTableRow(): JQuery {
-            let navbarHeader: string =  '<div class="row row-table">';
+            let navbarHeader: string = '<div class="row row-table">';
             navbarHeader += '    <div class="col s12 m12 l12 xl12 col-table">';
             navbarHeader += '        <table class="highlight">';
             navbarHeader += '            <thead></thead>';
@@ -692,11 +588,11 @@ export namespace Controller {
             this.destroyTouchClickEvent(this.btnClose, this.CloseButtonClick);
         }
 
-        protected createCardFilterSettings(): Interfaces.ICardFilterSettings {
-            return new BaseCardFilterSettings($.proxy(this.setupRows, this));
+        protected createCardFilterSettings(): Interfaces.Control.ICardFilterSettings {
+            return new ctrl.Control.BaseCardFilterSettings($.proxy(this.setupRows, this));
         }
 
-        protected createCardSettings(): Interfaces.ICardSettings {
+        protected createCardSettings(): Interfaces.Control.ICardSettings {
             return { FilterSettings: this.createCardFilterSettings(), ValueIdNew: 0, EditIdName: "", IsAdd: false, IsAddCopy: false, IsEdit: false, IsDelete: false, IsSelect: false, EditController: "", Load: undefined, Delete: undefined, Columns: [] };
         }
 
@@ -705,7 +601,7 @@ export namespace Controller {
         private setupTable(): void {
             this.tableHead.html(this.getTableHeaderHtml());
             this.setupRows();
-            
+
         }
 
         protected setupRows(): void {
@@ -715,7 +611,7 @@ export namespace Controller {
                 this.destroyTouchClickEvent(this.rows, this.rowClick);
                 this.destroyDblTouchClickEvent(this.rows, this.rowDblClick);
             }
-         
+
 
             this.tableBody.html(this.getTableBodyHtml());
             this.rows = this.tableBody.find('tr');
@@ -726,9 +622,9 @@ export namespace Controller {
             }
         }
 
-       
+
         protected getTableHeaderHtml(): string {
-            let columns: Interfaces.IBaseColumn[] = this.CardSettings.Columns;
+            let columns: Interfaces.Control.IBaseColumn[] = this.CardSettings.Columns;
             let html: string = '';
 
             html += '<tr>';
@@ -749,8 +645,8 @@ export namespace Controller {
         }
 
         protected getTableRowTemplate(): string {
-            let setting: Interfaces.ICardSettings = this.CardSettings;
-            let columns: Interfaces.IBaseColumn[] = setting.Columns;
+            let setting: Interfaces.Control.ICardSettings = this.CardSettings;
+            let columns: Interfaces.Control.IBaseColumn[] = setting.Columns;
             let html: string = '';
 
             html += '<tr';
@@ -867,13 +763,13 @@ export namespace Controller {
             if (this.OnSelect)
                 this.OnSelect(self as Interfaces.IControllerCard);
             this.Close();
-            _main.ControllerBack(e);
+            vars._main.ControllerBack(e);
         }
 
         public CloseButtonClick: { (e: any): void; };
         private closeButtonClick(e): void {
             this.Close();
-            _main.ControllerBack(e);
+            vars._main.ControllerBack(e);
         }
 
         protected loadData(): boolean {
@@ -891,7 +787,7 @@ export namespace Controller {
 
         protected afterLoad(): void {
             this.setupTable();
-            _app.HideLoading();
+            vars._app.HideLoading();
         }
 
         public Add(): void {
@@ -915,7 +811,7 @@ export namespace Controller {
                 }
             }
         }
-        
+
 
         public Edit(): void {
             let id: any = this.getSelectedRowId();
@@ -974,7 +870,6 @@ export namespace Controller {
             return new kendo.data.ObservableObject({
                 "Header": "",
                 "filterModel": {},
-                "reportModel": {},
             });
         }
 
@@ -1015,66 +910,63 @@ export namespace Controller {
         }
     }
 
+
     export class BaseReport extends BaseReportWithFilter implements Interfaces.IControllerReport {
 
         constructor() {
             super();
-            this.reportSettings = this.createReportSettings();
         }
 
-        protected createReportSettings(): Interfaces.IReportSettings {
-            return { Columns: this.Columns };
+        public get Columns(): Interfaces.Control.ITableColumn[] {
+            let columns: Interfaces.Control.ITableColumn[] = [];
+            return columns;
         }
 
-        private reportSettings: Interfaces.IReportSettings;
-        public get ReportSettings(): Interfaces.IReportSettings {
-            return this.reportSettings;
+        private tableControl: Interfaces.Control.IControlTable;
+        public get Table(): Interfaces.Control.IControlTable {
+            return this.tableControl;
         }
 
-
-        public get Columns(): Interfaces.IReportColumn[] {
-            return this.columns();
+        public set Table(table: Interfaces.Control.IControlTable) {
+            this.tableControl = table;
         }
-
-        protected columns(): Interfaces.IReportColumn[] {
-            return [];
-        }
-
-        private tableRow: JQuery;
-        private tableHead: JQuery;
-        private tableBody: JQuery;
 
         public ViewInit(view: JQuery): boolean {
             let result: boolean = super.ViewInit(view);
             let controls: Array<JQuery> = [];
-
-            controls.push(this.initTableRow());
-
+            controls.push(this.initializeTableRow());
             view.append(controls);
-            
-            this.setupTable();
+
+            this.SetupTable();
             return result;
         }
 
-        protected initTableRow(): JQuery {
-            let navbarHeader: string = '<div class="row row-table-report">';
-            navbarHeader += '    <div class="col s12 m12 l12 xl12 col-table">';
-            navbarHeader += '        <table class="highlight">';
-            navbarHeader += '            <thead></thead>';
-            navbarHeader += '            <tbody style="overflow-y: scroll;"></tbody>';
-            navbarHeader += '        </table>';
-            navbarHeader += '    </div>';
-            navbarHeader += '</div>';
-            this.tableRow = $(navbarHeader);
-            this.tableHead = this.tableRow.find('thead');
-            this.tableBody = this.tableRow.find('tbody');
+        protected SetupTable(rows?: Interfaces.Model.ITableRowModel[]) {
+            this.tableControl.Rows = rows;
+            this.tableControl.Columns = this.Columns;
+            this.tableControl.Setup();
+        }
 
-            return this.tableRow;
+        protected OnDetalize(row: Interfaces.Model.ITableRowModel) {
+
+        }
+
+        protected initializeTableRow(): JQuery {
+            if (!this.tableControl)
+                this.tableControl = new ctrl.Control.BaseTable();
+
+            this.tableControl.OnDetalize = $.proxy(this.OnDetalize, this);
+
+            let tableRow: JQuery = $('<div class="row row-table-report"></div>');
+            let tableCol: JQuery = $('<div class="col s12 m12 l12 xl12 col-table"></div>');
+            tableCol.append(this.tableControl.InitView());
+            tableRow.append(tableCol);
+            return tableRow;
         }
 
         public ViewResize(e: any): void {
             super.ViewResize(e);
-            let tbody: JQuery = this.tableBody;
+            let tbody: JQuery = (this.tableControl ? this.tableControl.TableBody : undefined);
             if (tbody && tbody.length > 0) {
                 tbody.height($(window).height() - tbody.offset().top - (0.2 * parseFloat(getComputedStyle(tbody[0]).fontSize)) - 1);
             }
@@ -1086,222 +978,16 @@ export namespace Controller {
 
         public ViewHide(e: any) {
             this.SaveFilter();
+            this.tableControl.DestroyView();
             super.ViewHide(e);
         }
 
         protected destroyEvents() {
-            this.detachSortEvents();
-            if (this.rows)
-                this.destroyDblTouchClickEvent(this.rows, this.rowClick);
             super.destroyEvents();
         }
 
         protected buildButtonClick(e) {
-            let self = this;
-            self.detachSortEvents();
-        }
-
-        private rows: JQuery;
-        protected setupTable(): void {
-            this.detachSortEvents();
-            let headerHtml: string = this.getTableHeaderHtml();
-            this.tableHead.html(headerHtml);
-            this.attachSortEvents();
-            this.setupRows();
-            
-        }
-
-        protected setupRows(): void {
-            //this.selectedRow = null;
-
-            if (this.rows)
-                this.destroyDblTouchClickEvent(this.rows, this.rowClick);
-
-            this.tableBody.html(this.getTableBodyHtml());
-            let valueSum: number;
-            for (let j = 0, jcount = (this.sumFieldsInfo.fields && this.sumFieldsInfo.fields.length ? this.sumFieldsInfo.fields.length : 0); j < jcount; j++) {
-                valueSum = this.sumFieldsInfo.sumFied[this.sumFieldsInfo.fields[j]];
-                this.tableHead.find('#' + this.sumFieldsInfo.fields[j] + '_sum').html(utils.numberToString(valueSum ? valueSum : 0, 2));
-            }
-            this.rows = this.tableBody.find('tr');
-            this.createDblTouchClickEvent(this.rows, this.rowClick);
-        }
-
-        protected sumFieldsInfo: any;
-
-
-
-        protected getTableHeaderHtml(): string {
-            let columns: Interfaces.IReportColumn[] = this.ReportSettings.Columns;
-            let html: string = '';
-            let isSum: boolean = false;
-            let isGroupHeader: boolean = false;
-            this.sumFieldsInfo = { fields: [], sumFied: {}, orderfields: [] };
-            let knSupport: any = kendo;
-
-            html += '<tr>';
-            for (let i = 0, icount = columns && columns.length ? columns.length : 0; i < icount; i++) {
-                //if (columns[i].IsSum && columns[i].IsSum === true)
-                //    isSum = true;
-                html += '   <th';
-             
-                if (columns[i].HeaderStyle || columns[i].IsOrder === true) {
-                    if (columns[i].IsOrder === true) {
-                        html += ' id="sort_' + i + '"';
-                    }
-
-                    html += ' class="';
-                    if (columns[i].HeaderStyle) html += columns[i].HeaderStyle;
-                    if (columns[i].IsOrder === true) {
-                        this.sumFieldsInfo.orderfields.push({ field: columns[i].Field, typeSort: 0, index: i });
-                        html += (columns[i].HeaderStyle ? ' ' : '') + 'ccursor';
-                    }
-                    html += '"';
-                }
-                html += '>';
-                html += (columns[i].HeaderTemplate ? columns[i].HeaderTemplate : columns[i].Header);
-                if (columns[i].IsSum && columns[i].IsSum === true) {
-                    html += ('<br/><span id="' + columns[i].Field + '_sum">0.00</span>');
-                    this.sumFieldsInfo.fields.push(columns[i].Field);
-                    this.sumFieldsInfo.sumFied[columns[i].Field] = 0;
-                }
-                html += '</th>';
-            }
-            html += '<th style="width:' + (knSupport.support.browser.chrome === true ? "18" : "17") + 'px;"></th>';
-            html += '</tr>';
-
-            return html;
-        }
-
-        protected attachSortEvents(): void {
-            let columns: Interfaces.IReportColumn[] = this.ReportSettings.Columns;
-            for (let i = 0, icount = columns && columns.length ? columns.length : 0; i < icount; i++) {
-                if (columns[i].IsOrder === true) {
-                    let strId: string = 'sort_' + i;
-                    this.createTouchClickEvent(strId, this.sortButtonClick);
-                }
-            }
-        }
-
-        protected detachSortEvents(): void {
-            let columns: Interfaces.IReportColumn[] = this.ReportSettings.Columns;
-            for (let i = 0, icount = columns && columns.length ? columns.length : 0; i < icount; i++) {
-                if (columns[i].IsOrder === true) {
-                    let strId: string = 'sort_' + i;
-                    this.destroyTouchClickEvent(strId, this.sortButtonClick);
-                }
-            }
-        }
-
-        protected getTableRowTemplate(): string {
-            let setting: Interfaces.IReportSettings = this.ReportSettings;
-            let columns: Interfaces.IReportColumn[] = setting.Columns;
-            let html: string = '';
-
-            html += '<tr id="table-row-#=rowtmpitem#">';
-
-            for (let i = 0, icount = (columns && columns.length ? columns.length : 0); i < icount; i++) {
-                html += '   <td';
-                if (columns[i].FieldStyle) {
-                    html += ' class="';
-                    html += columns[i].FieldStyle;
-                    html += '"';
-                }
-                html += '>';
-                if (columns[i].FieldTemplate)
-                    html += columns[i].FieldTemplate;
-                else {
-                    html += '#=';
-                    html += columns[i].Field;
-                    html += '#';
-                }
-                html += '</td>';
-            }
-            html += '</tr>';
-
-            return html;
-        }
-
-        protected getTableBodyHtml(): string {
-            let html: string = '';
-            let data: Interfaces.Model.IReportModel[] = this.Model.get("reportModel");
-
-            if (data && data.length > 0) {
-                let templateRow = vars.getTemplate(this.getTableRowTemplate());
-                if (templateRow) {
-                    for (let i = 0, icount = (data && data.length ? data.length : 0); i < icount; i++) {
-                        data[i]["rowtmpitem"] = i;
-                        html += templateRow(data[i]);
-                        for (let j = 0, jcount = (this.sumFieldsInfo.fields && this.sumFieldsInfo.fields.length ? this.sumFieldsInfo.fields.length : 0); j < jcount; j++) {
-                            if (i === 0)
-                                this.sumFieldsInfo.sumFied[this.sumFieldsInfo.fields[j]] = data[i][this.sumFieldsInfo.fields[j]];
-                            else
-                                this.sumFieldsInfo.sumFied[this.sumFieldsInfo.fields[j]] += data[i][this.sumFieldsInfo.fields[j]];
-                        }
-                    }
-                }
-            }
-            return html;
-        }
-
-        
-        private rowClick(e) {
-            this.OnDetalize(e);
-            e.preventDefault();
-            e.stopPropagation();
-            return false;
-        }
-
-        protected OnDetalize(e) {
-
-        }
-
-        private sortButtonClick(e) {
-            let self = this;
-            let strId: string = e.currentTarget.id;
-            strId = strId.replace('sort_', '');
-            let i: number = +strId;
-            let setting: Interfaces.IReportSettings = self.ReportSettings;
-            let columns: Interfaces.IReportColumn[] = setting.Columns;
-
-            let orderfields = [];
-            let colName: string = columns[i].Field;
-            orderfields = self.sumFieldsInfo.orderfields;
-            //orderfields.push({ field: columns[i].Field, typeSort: 0, index: i });
-            orderfields.filter(x => x.field == colName)
-            var findResult = $.grep(orderfields, function (x) { return x.field == colName; });
-            let typeSort: number = 0;
-            if (findResult && findResult.length > 0) {
-                typeSort = findResult[0].typeSort;
-            }
-
-            let colNameSplit: Array<string> = colName.split('.');
-
-            let data: Interfaces.Model.IReportModel[] = this.Model.get("reportModel");
-            if (columns[i].IsSum === true) {
-                data.sort(function (a, b: any) {
-                    let aval: any = a[colNameSplit[0]];
-                    for (let i = 1, icount = colNameSplit.length; i < icount; i++) aval = aval[colNameSplit[i]];
-                    let bval: any = b[colNameSplit[0]];
-                    for (let i = 1, icount = colNameSplit.length; i < icount; i++) bval = bval[colNameSplit[i]];
-                    return (typeSort === 0 || typeSort === 2 ? aval - bval : bval - aval);
-                });
-            }
-            else {
-                data.sort(function (a, b: any) {
-                    let aval: any = a[colNameSplit[0]];
-                    for (let i = 1, icount = colNameSplit.length; i < icount; i++) aval = aval[colNameSplit[i]];
-                    let bval: any = b[colNameSplit[0]];
-                    for (let i = 1, icount = colNameSplit.length; i < icount; i++) bval = bval[colNameSplit[i]];
-                    return (typeSort === 0 || typeSort === 2 ? aval.localeCompare(bval) : bval.localeCompare(aval));
-                });
-
-            }
-            if (findResult && findResult.length > 0) {
-                findResult[0].typeSort = (typeSort === 0 || typeSort === 2 ? 1 : 2);
-            }
-            self.Model.set("reportModel", data);
-            self.setupRows();
+            this.SetupTable([]);
         }
     }
 }

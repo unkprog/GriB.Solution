@@ -14,7 +14,7 @@ export namespace Controller.Setting.Card {
             });
         }
 
-        protected createCardSettings(): Interfaces.ICardSettings {
+        protected createCardSettings(): Interfaces.Control.ICardSettings {
             return {
                 FieldId: "id", FilterSettings: this.createCardFilterSettings(), ValueIdNew: -1, EditIdName: "id_product", EditController: "setting/editor/product",
                 IsAdd: true, IsAddCopy: true, IsEdit: true, IsDelete: true, IsSelect: false,

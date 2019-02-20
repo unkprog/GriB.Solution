@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System.Linq;
+using System.Net;
 using System.Web;
 using System.Net.Http;
 using System.Web.Http;
@@ -11,6 +12,7 @@ using GriB.Client.App.Models.Report;
 using GriB.Client.App.Managers;
 using GriB.Client.App.Managers.Reports;
 using GriB.Common.Models.Security;
+using System;
 
 namespace GriB.Client.App.Controllers
 {
@@ -66,6 +68,39 @@ namespace GriB.Client.App.Controllers
                 return Request.CreateResponse(HttpStatusCode.OK, new { times = Sales.GetReportSalesTime(query, filter), dayweeks = Sales.GetReportSalesDayWeek(query, filter) } );
             });
         }
+
+        [HttpPost]
+        [ActionName("expressanalysis")]
+        public HttpResponseMessage ReportExpressAnalysis(ReportSaleFilter filter)
+        {
+            return TryCatchResponseQuery((query) =>
+            {
+                List<ReportSaleTimeTableRow> times = Sales.GetReportSalesTimeDashboard(query, filter);
+                List<ReportSaleDayWeekTableRow> dayweeks = Sales.GetReportSalesDayWeekDashboard(query, filter);
+                double count = times.Sum(f => f.count);
+                double countpos = times.Sum(f => f.countpos);
+                double sum = times.Sum(f => f.sum);
+                foreach (ReportSaleTimeTableRow item in times)
+                {
+                    item.countpercent = Math.Round(count > 0 ? 100.0f * (item.count / count) : 0, 2);
+                    item.countpospercent = Math.Round(countpos > 0 ? 100.0f * (item.countpos / countpos) : 0, 2);
+                    item.sumpercent = Math.Round(sum > 0 ? 100.0f * (item.sum / sum) : 0, 2);
+                }
+                count = dayweeks.Sum(f => f.count);
+                countpos = dayweeks.Sum(f => f.countpos);
+                sum = dayweeks.Sum(f => f.sum);
+                foreach (ReportSaleDayWeekTableRow item in dayweeks)
+                {
+                    item.countpercent = Math.Round(count > 0 ? 100.0f * (item.count / count) : 0, 2);
+                    item.countpospercent = Math.Round(countpos > 0 ? 100.0f * (item.countpos / countpos) : 0, 2);
+                    item.sumpercent = Math.Round(sum > 0 ? 100.0f * (item.sum / sum) : 0, 2);
+                }
+
+                return Request.CreateResponse(HttpStatusCode.OK, new { times, dayweeks });
+            });
+        }
+
+        
 
         [HttpPost]
         [ActionName("stocks")]

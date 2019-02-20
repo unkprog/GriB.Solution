@@ -4,7 +4,7 @@ import base = require('app/common/basecontroller');
 import svc = require('app/services/documentservice');
 
 export namespace Controller.Document.Card {
-    export class DocumentCardFilterSettings implements Interfaces.ICardFilterSettings {
+    export class DocumentCardFilterSettings implements Interfaces.Control.ICardFilterSettings {
         constructor(setupRows: { (): void; }, fieldSearch:string) {
             this.fieldSearch = fieldSearch;
             this.setupRows = setupRows;
@@ -396,11 +396,11 @@ export namespace Controller.Document.Card {
             return { Url: "/Content/view/document/card/card.html", Id: "card-view" };
         }
 
-        protected createCardFilterSettings(): Interfaces.ICardFilterSettings {
+        protected createCardFilterSettings(): Interfaces.Control.ICardFilterSettings {
             return new DocumentCardFilterSettings($.proxy(this.loadData, this), this.FilterId);
         }
 
-        protected createCardSettings(): Interfaces.ICardSettings {
+        protected createCardSettings(): Interfaces.Control.ICardSettings {
             return {
                 FieldId: "id", FilterSettings: this.createCardFilterSettings(), ValueIdNew: -1, EditIdName: this.EditIdName, EditController: this.EditController,
                 IsAdd: true, IsAddCopy: false, IsEdit: true, IsDelete: true, IsSelect: false,
@@ -409,11 +409,11 @@ export namespace Controller.Document.Card {
             };
         }
 
-        protected get Columns(): Interfaces.IBaseColumn[] {
+        protected get Columns(): Interfaces.Control.IBaseColumn[] {
             return this.columns();
         }
 
-        protected columns(): Interfaces.IBaseColumn[] {
+        protected columns(): Interfaces.Control.IBaseColumn[] {
             return [
                 { Header: "", HeaderStyle: "doc-col-conduct", Field: "options", FieldStyle: "doc-col-conduct", FieldTemplate: '#if ((options & 1) === 1) {#<label><input type="checkbox" checked="checked" disabled="disabled"/><span></span></label>#}#' },
                 { Header: vars._statres("label$date"), Field: "date", FieldTemplate: "#=date_ddmmyyyy(new Date(date))#" },

@@ -62,7 +62,7 @@ export namespace Controller.Document.Editor {
             return model;
         }
 
-        protected createEditorSettings(): Interfaces.IEditorSettings {
+        protected createEditorSettings(): Interfaces.Control.IEditorSettings {
             return { EditIdName: this.EditIdName, Load: $.proxy(this.Service.GetDocument, this.Service), Save: $.proxy(this.Service.SetDocument, this.Service) };
         }
 

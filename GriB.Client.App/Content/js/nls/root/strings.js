@@ -321,4 +321,6 @@ define({
     "label$dayweek$fri": "Пт",
     "label$dayweek$sat": "Сб",
     "label$dayweek$sun": "Вс",
+
+    "report$expressanalysis": "Экспресс анализ",
 });

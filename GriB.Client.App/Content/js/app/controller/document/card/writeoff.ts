@@ -14,8 +14,8 @@ export namespace Controller.Document.Card {
             });
         }
 
-        protected columns(): Interfaces.IBaseColumn[] {
-            let result: Interfaces.IBaseColumn[] = super.columns();
+        protected columns(): Interfaces.Control.IBaseColumn[] {
+            let result: Interfaces.Control.IBaseColumn[] = super.columns();
             result.splice(4, 0, { Header: vars._statres("label$reason"), Field: "reason.name" });
             return result;
         }

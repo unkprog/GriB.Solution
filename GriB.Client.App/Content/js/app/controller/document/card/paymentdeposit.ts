@@ -8,7 +8,7 @@ export namespace Controller.Document.Card {
             this.Model.set("Header", vars._statres("label$deposit"));
         }
 
-        protected columns(): Interfaces.IBaseColumn[] {
+        protected columns(): Interfaces.Control.IBaseColumn[] {
             let payMethod: string = '#if (ptype === 1) {#<i class="material-icons left">attach_money</i># } else if (ptype === 2) {#<i class="material-icons left">credit_card</i># } else if (ptype === 3) {#<i class="material-icons left">money_off</i>#}#';
             return [
                 { Header: "", HeaderStyle: "doc-col-conduct", Field: "options", FieldStyle: "doc-col-conduct", FieldTemplate: '#if ((options & 1) === 1) {#<label><input type="checkbox" checked="checked" disabled="disabled"/><span></span></label>#}#' },

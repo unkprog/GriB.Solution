@@ -55,8 +55,8 @@ export namespace Controller.Report.Stocks {
             return this.Model.get("filterModel").toJSON() as Interfaces.Model.IReportSaleFilter;
         }
 
-        protected columns(): Interfaces.IReportColumn[] {
-            let columns: Interfaces.IReportColumn[] = [];
+        public get Columns(): Interfaces.Control.ITableColumn[] {
+            let columns: Interfaces.Control.ITableColumn[] = [];
             let doctypeTemplate: string = "#if (doctype === 10) {#" + vars._statres("label$arrival") + "# } else if (doctype === 40) {#" + vars._statres("label$writeoff") + "#} else if (doctype === 50) {#" + vars._statres("label$movement") + "#} else if (doctype === 51) {#" + vars._statres("label$arrival$fromstock") + "#} else {#" + vars._statres("label$sale") + "#}#";
 
             columns.push({ Header: vars._statres("label$document"), Field: "doctype", FieldTemplate: doctypeTemplate, IsOrder: true });
@@ -82,15 +82,12 @@ export namespace Controller.Report.Stocks {
             let self = this;
             super.buildButtonClick(e);
             this.Service.GetStocksDetail(this.Filter as Interfaces.Model.IReportSaleFilter, (responseData: any) => {
-                self.Model.set("reportModel", responseData);
-                self.ReportSettings.Columns = self.columns(); 
-                self.setupTable();
+                self.SetupTable(responseData);
             });
         }
 
-        protected OnDetalize(e) {
-            let index: number = +e.currentTarget.id.replace('table-row-', '');
-            let item: any = this.Model.get("reportModel")[index];
+        protected OnDetalize(row: Interfaces.Model.ITableRowModel) {
+            let item: any = row;
             let ctrlName: string = "";
             let ctrlId: string = "";
             if (item.doctype === 0) {

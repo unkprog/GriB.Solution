@@ -53,8 +53,8 @@ export namespace Controller.Report.Sales {
             return this.Model.get("filterModel").toJSON() as Interfaces.Model.IReportSaleFilter;
         }
 
-        protected columns(): Interfaces.IReportColumn[] {
-            let columns: Interfaces.IReportColumn[] = [];
+        public get Columns(): Interfaces.Control.ITableColumn[] {
+            let columns: Interfaces.Control.ITableColumn[] = [];
             columns.push({ Header: vars._statres("label$date"), Field: "cd", FieldTemplate: "#=date_ddmmyyyy_withtime(new Date(cd))#" });
             columns.push({ Header: vars._statres("label$salePoint"), Field: "salepoint.name", IsOrder: true });
             columns.push({ Header: vars._statres("label$employee"), Field: "employee.name", IsOrder: true });
@@ -79,18 +79,12 @@ export namespace Controller.Report.Sales {
             let self = this;
             super.buildButtonClick(e);
             this.Service.GetSalesDetail(this.Filter as Interfaces.Model.IReportSaleFilter, (responseData: any) => {
-                self.Model.set("reportModel", responseData);
-                self.ReportSettings.Columns = self.columns(); 
-                self.setupTable();
+                self.SetupTable(responseData);
             });
         }
 
-        protected OnDetalize(e) {
-            let cur = e.currentTarget;
-            let self = this;
-            let curfilter: Interfaces.Model.IReportSaleFilter = self.Filter;
-            let index: number = +e.currentTarget.id.replace('table-row-', '');
-            let item: any = this.Model.get("reportModel")[index];
+        protected OnDetalize(row: Interfaces.Model.ITableRowModel) {
+            let item: any = row;
             vars._editorData["id_sale"] = item.id;
             vars._app.OpenController({
                 urlController: 'document/editor/sale', isModal: true, onLoadController: (controller: Interfaces.IController) => {

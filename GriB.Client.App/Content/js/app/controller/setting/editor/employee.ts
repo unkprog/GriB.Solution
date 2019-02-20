@@ -48,7 +48,7 @@ export namespace Controller.Setting.Editor {
             return this.Model.get("editModel").toJSON();
         }
 
-        protected createEditorSettings(): Interfaces.IEditorSettings {
+        protected createEditorSettings(): Interfaces.Control.IEditorSettings {
             return { EditIdName: "id_employee", Load: $.proxy(this.Service.GetEmployee, this.Service), Save: $.proxy(this.Service.SetEmployee, this.Service) };
         }
 

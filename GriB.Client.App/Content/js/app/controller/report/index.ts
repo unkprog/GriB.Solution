@@ -19,6 +19,7 @@ export namespace Controller.Report {
                 "labelReportSales": vars._statres("report$sales"),
                 "labelReportStocks": vars._statres("report$stocks"),
                 "labelReportSalesTime": vars._statres("report$sales$time"),
+                "labelReportExpressAnalysis": vars._statres("report$expressanalysis"),
             });
         }
 
@@ -26,12 +27,15 @@ export namespace Controller.Report {
             this.ReportSalesButtonClick = this.createTouchClickEvent("btn-report-sales", this.reportSalesButtonClick);
             this.ReportStocksButtonClick = this.createTouchClickEvent("btn-report-stocks", this.reportStocksButtonClick);
             this.ReportSalesTimeButtonClick = this.createTouchClickEvent("btn-report-salestime", this.reportSalesTimeButtonClick);
+            this.ReportExpressAnalysisButtonClick = this.createTouchClickEvent("btn-report-expressanalysis", this.reportExpressAnalysisButtonClick);
+            
         }
 
         protected destroyEvents(): void {
             this.destroyTouchClickEvent("btn-report-sales", this.ReportSalesButtonClick);
             this.destroyTouchClickEvent("btn-report-stocks", this.ReportStocksButtonClick);
             this.destroyTouchClickEvent("btn-report-salestime", this.ReportSalesTimeButtonClick);
+            this.destroyTouchClickEvent("btn-report-expressanalysis", this.ReportExpressAnalysisButtonClick);
         }
 
         public ReportSalesButtonClick: { (e: any): void; };
@@ -47,6 +51,11 @@ export namespace Controller.Report {
         public ReportSalesTimeButtonClick: { (e: any): void; };
         private reportSalesTimeButtonClick(e) {
             vars._main.OpenController({ urlController: "report/dashboard/salestime", backController: this });
+        }
+
+        public ReportExpressAnalysisButtonClick: { (e: any): void; };
+        private reportExpressAnalysisButtonClick(e) {
+            vars._main.OpenController({ urlController: "report/dashboard/expressanalysis", backController: this });
         }
     }
 }

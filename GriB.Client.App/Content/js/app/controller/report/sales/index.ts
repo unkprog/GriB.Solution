@@ -125,8 +125,8 @@ export namespace Controller.Report.Sales {
             return this.Model.get("filterModel").toJSON() as Interfaces.Model.IReportSaleFilter;
         }
 
-        protected columns(): Interfaces.IReportColumn[] {
-            let columns: Interfaces.IReportColumn[] = [];
+        public get Columns(): Interfaces.Control.ITableColumn[] {
+            let columns: Interfaces.Control.ITableColumn[] = [];
 
             if (this.Filter.IsShowSalepoint) columns.push({ Header: vars._statres("label$salePoint"), Field: "salepoint.name", IsOrder: true });
             if (this.Filter.IsShowProduct) columns.push({ Header: vars._statres("label$product"), Field: "product.name", IsOrder: true });
@@ -322,17 +322,14 @@ export namespace Controller.Report.Sales {
             super.buildButtonClick(e);
             let filter: Interfaces.Model.IReportSaleFilter = self.Filter;
             this.Service.GetSales(filter, (responseData: any) => {
-                self.Model.set("reportModel", responseData);
-                self.ReportSettings.Columns = self.columns(); 
-                self.setupTable();
+                self.SetupTable(responseData);
             });
         }
 
-        protected OnDetalize(e) {
+        protected OnDetalize(row: Interfaces.Model.ITableRowModel) {
             let self = this;
             let curfilter: Interfaces.Model.IReportSaleFilter = self.Filter;
-            let index: number = +e.currentTarget.id.replace('table-row-', '');
-            let item: any = this.Model.get("reportModel")[index];
+            let item: any = row;
             vars._app.OpenController({
                 urlController: 'report/sales/detalize', isModal: true, onLoadController: (controller: Interfaces.IController) => {
                     let ctrlDetalize: Interfaces.IControllerReport = controller as Interfaces.IControllerReport;

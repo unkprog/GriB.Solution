@@ -43,6 +43,7 @@ namespace GriB.Client.App.Models.Report
 
         public double count    { get; set; }
         public double countpos { get; set; }
+        public double sum      { get; set; }
     }
 
     public class ReportSaleTimeRow : ReportSaleBaseTimeRow
@@ -55,6 +56,17 @@ namespace GriB.Client.App.Models.Report
 
     }
 
+
+    public class ReportSaleTimeTableRow : ReportSaleTimeRow
+    {
+        public double countpercent { get; set; }
+        public double countpospercent { get; set; }
+        public double sumpercent   { get; set; }
+        public double avgsumpos => count == 0 ? 0 : sum / count;
+        public double avgsumcountpos => countpos == 0 ? 0 : sum / countpos;
+        public double avgsum => count == 0 ? 0 : sum / count;
+    }
+
     public class ReportSaleDayWeekRow : ReportSaleBaseTimeRow
     {
         public ReportSaleDayWeekRow()
@@ -62,6 +74,15 @@ namespace GriB.Client.App.Models.Report
             dayweek = 0;
         }
         public int dayweek { get; set; }
+    }
 
+    public class ReportSaleDayWeekTableRow : ReportSaleDayWeekRow
+    {
+        public double countpercent { get; set; }
+        public double countpospercent { get; set; }
+        public double sumpercent { get; set; }
+        public double avgsumpos => count == 0 ? 0 : sum / count;
+        public double avgsumcountpos => countpos == 0 ? 0 : sum / countpos;
+        public double avgsum => count == 0 ? 0 : sum / count;
     }
 }

@@ -308,4 +308,17 @@ define({
     "label$document": "Документ",
     "label$expense": "Расход",
     "label$total": "Итого",
+
+
+    "label$daysofweek": "По дням недели",
+    "label$intime": "По времени",
+    "label$checks": "Чеки",
+    "label$positions": "Позиции",
+    "label$dayweek$mon": "Пн",
+    "label$dayweek$tue": "Вт",
+    "label$dayweek$wed": "Ср", 
+    "label$dayweek$thu": "Чт", 
+    "label$dayweek$fri": "Пт",
+    "label$dayweek$sat": "Сб",
+    "label$dayweek$sun": "Вс",
 });

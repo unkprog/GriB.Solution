@@ -3,7 +3,7 @@
   insert into #ttimes([cudweek])
   select 2 union all select 3 union all select 4 union all select 5 union all select 6 union all select 4 union all select 1 
   
-select [cudweek], [doc_cnt]=avg([doc_cnt]), [pos_cnt]=avg([pos_cnt]), [pos_sum]=avg([pos_sum])
+select [cudweek], [doc_cnt]=sum([doc_cnt]), [pos_cnt]=sum([pos_cnt]), [pos_sum]=sum([pos_sum])
 into #ttimesdoc
 from (
       select [y]=DATEPART(YEAR, [d].[cd]), [m]=DATEPART(MONTH, [d].[cd]), [d]=DATEPART(DAY, [d].[cd])

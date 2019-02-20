@@ -133,7 +133,7 @@ namespace GriB.Client.App.Managers.Reports
             , new SqlParameter() { ParameterName = "@salepoint", Value = filter.salepoint == null ? 0 : filter.salepoint.id }, new SqlParameter() { ParameterName = "@product", Value = filter.product == null ? 0 : filter.product.id }}
             , (values) =>
             {
-                result.Add(new ReportSaleTimeRow() { time = (string)values[0], count = (double)values[1], countpos = (double)values[2] });
+                result.Add(new ReportSaleTimeRow() { time = (string)values[0], count = (double)values[1], countpos = (double)values[2], sum = (double)values[3] });
             });
 
             while (result.Count > 0 && (result[result.Count - 1].count == 0 && result[result.Count - 1].countpos == 0))
@@ -154,14 +154,43 @@ namespace GriB.Client.App.Managers.Reports
             , new SqlParameter() { ParameterName = "@salepoint", Value = filter.salepoint == null ? 0 : filter.salepoint.id }, new SqlParameter() { ParameterName = "@product", Value = filter.product == null ? 0 : filter.product.id }}
             , (values) =>
             {
-                result.Add(new ReportSaleDayWeekRow() { dayweek = (int)values[0], count = (double)values[1], countpos = (double)values[2] });
+                result.Add(new ReportSaleDayWeekRow() { dayweek = (int)values[0], count = (double)values[1], countpos = (double)values[2], sum = (double)values[3] });
             });
 
-            //while (result.Count > 0 && (result[result.Count - 1].count == 0 && result[result.Count - 1].countpos == 0))
-            //    result.RemoveAt(result.Count - 1);
+            return result;
+        }
 
-            //while (result.Count > 0 && (result[0].count == 0 && result[0].countpos == 0))
-            //    result.RemoveAt(0);
+        private const string cmdGetTimeDashboard = @"Report\Sales\[salestime_dashboard]";
+        public static List<ReportSaleTimeTableRow> GetReportSalesTimeDashboard(this Query query, ReportSaleFilter filter)
+        {
+            List<ReportSaleTimeTableRow> result = new List<ReportSaleTimeTableRow>();
+            query.Execute(cmdGetTimeDashboard, new SqlParameter[] { new SqlParameter() { ParameterName = "@datefrom", Value = Helper.Date(filter.datefrom) }, new SqlParameter() { ParameterName = "@dateto", Value = Helper.DateReportEnd(filter.dateto) }
+            , new SqlParameter() { ParameterName = "@salepoint", Value = filter.salepoint == null ? 0 : filter.salepoint.id }, new SqlParameter() { ParameterName = "@product", Value = filter.product == null ? 0 : filter.product.id }}
+            , (values) =>
+            {
+                result.Add(new ReportSaleTimeTableRow() { time = (string)values[0], count = (double)values[1], countpos = (double)values[2], sum = (double)values[3] });
+            });
+
+            while (result.Count > 0 && (result[result.Count - 1].count == 0 && result[result.Count - 1].countpos == 0))
+                result.RemoveAt(result.Count - 1);
+
+            while (result.Count > 0 && (result[0].count == 0 && result[0].countpos == 0))
+                result.RemoveAt(0);
+
+            return result;
+        }
+
+
+        private const string cmdGetDayWeekeDashboard = @"Report\Sales\[salesdayweek_dashboard]";
+        public static List<ReportSaleDayWeekTableRow> GetReportSalesDayWeekDashboard(this Query query, ReportSaleFilter filter)
+        {
+            List<ReportSaleDayWeekTableRow> result = new List<ReportSaleDayWeekTableRow>();
+            query.Execute(cmdGetDayWeekeDashboard, new SqlParameter[] { new SqlParameter() { ParameterName = "@datefrom", Value = Helper.Date(filter.datefrom) }, new SqlParameter() { ParameterName = "@dateto", Value = Helper.DateReportEnd(filter.dateto) }
+            , new SqlParameter() { ParameterName = "@salepoint", Value = filter.salepoint == null ? 0 : filter.salepoint.id }, new SqlParameter() { ParameterName = "@product", Value = filter.product == null ? 0 : filter.product.id }}
+            , (values) =>
+            {
+                result.Add(new ReportSaleDayWeekTableRow() { dayweek = (int)values[0], count = (double)values[1], countpos = (double)values[2], sum = (double)values[3] });
+            });
 
             return result;
         }

@@ -14,13 +14,13 @@ export namespace Controller.Setting.Card {
             });
         }
 
-        protected createCardFilterSettings(): Interfaces.ICardFilterSettings {
-            let result: Interfaces.ICardFilterSettings = super.createCardFilterSettings();
+        protected createCardFilterSettings(): Interfaces.Control.ICardFilterSettings {
+            let result: Interfaces.Control.ICardFilterSettings = super.createCardFilterSettings();
             result.FieldSearch = "name";
             return result;
         }
 
-        protected createCardSettings(): Interfaces.ICardSettings {
+        protected createCardSettings(): Interfaces.Control.ICardSettings {
             return {
                 FieldId: "id", FilterSettings: this.createCardFilterSettings(), ValueIdNew: -1, EditIdName: "id_costincome", EditController: "setting/editor/costincome",
                 IsAdd: true, IsAddCopy: false, IsEdit: true, IsDelete: true, IsSelect: false,

@@ -8,7 +8,7 @@
   union all select '16', '16-17' union all select '17', '17-18' union all select '18', '18-19' union all select '19', '19-20'
   union all select '20', '20-21' union all select '21', '21-22' union all select '22', '22-23' union all select '23', '23-24' 
 
-select [cutime], [doc_cnt]=avg([doc_cnt]), [pos_cnt]=avg([pos_cnt]), [pos_sum]=avg([pos_sum])
+select [cutime], [doc_cnt]=sum([doc_cnt]), [pos_cnt]=sum([pos_cnt]), [pos_sum]=sum([pos_sum])
 into #ttimesdoc
 from (
       select [y]=DATEPART(YEAR, [d].[cd]), [m]=DATEPART(MONTH, [d].[cd]), [d]=DATEPART(DAY, [d].[cd])
@@ -19,10 +19,10 @@ from (
             from [t_check_position] [p] with(nolock)
             inner join [t_check] [d] with(nolock) on [p].[id] = [d].[id]
             where [d].[d] = 0 and ([d].[options] & 1) = 1
-              and (@datefrom <= '18991230' or (@datefrom > '18991230' and [d].[cd] >= @datefrom))
-              and (@dateto <= '18991230' or (@dateto > '18991230' and [d].[cd] <= @dateto))
-              and (@salepoint = 0 or (@salepoint <> 0 and [d].[salepoint] = @salepoint))
-              and (@product = 0 or (@product <> 0 and [p].[product] = @product))
+              --and (@datefrom <= '18991230' or (@datefrom > '18991230' and [d].[cd] >= @datefrom))
+              --and (@dateto <= '18991230' or (@dateto > '18991230' and [d].[cd] <= @dateto))
+              --and (@salepoint = 0 or (@salepoint <> 0 and [d].[salepoint] = @salepoint))
+              --and (@product = 0 or (@product <> 0 and [p].[product] = @product))
             group by [d].[id]
            ) [p]
       inner join [t_check] [d] with(nolock) on [p].[id] = [d].[id]
