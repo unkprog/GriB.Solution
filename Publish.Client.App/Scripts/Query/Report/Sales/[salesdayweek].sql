@@ -3,14 +3,14 @@
   insert into #ttimes([cudweek])
   select 2 union all select 3 union all select 4 union all select 5 union all select 6 union all select 4 union all select 1 
   
-select [cudweek], [doc_cnt]=avg([doc_cnt]), [pos_cnt]=avg([pos_cnt])
+select [cudweek], [doc_cnt]=avg([doc_cnt]), [pos_cnt]=avg([pos_cnt]), [pos_sum]=avg([pos_sum])
 into #ttimesdoc
 from (
       select [y]=DATEPART(YEAR, [d].[cd]), [m]=DATEPART(MONTH, [d].[cd]), [d]=DATEPART(DAY, [d].[cd])
            , [cudweek]=DATEPART(DW, [d].[cd])
-	       , [doc_cnt]=cast(count([d].[id]) as float), [pos_cnt]=sum([p].[pos_cnt])
+	       , [doc_cnt]=cast(count([d].[id]) as float), [pos_cnt]=sum([p].[pos_cnt]), [pos_sum]=sum([p].[pos_sum])
 	  from (
-            select [d].[id], [pos_cnt]=cast(count([p].[id]) as float)
+            select [d].[id], [pos_cnt]=cast(count([p].[id]) as float), [pos_sum]= sum((1.0 - ([d].[discount]/100.0)) *  [p].[quantity] * [p].[price])
             from [t_check_position] [p] with(nolock)
             inner join [t_check] [d] with(nolock) on [p].[id] = [d].[id]
             where [d].[d] = 0 and ([d].[options] & 1) = 1
@@ -26,7 +26,7 @@ from (
      ) [res]
 group by [cudweek]
   
-  select [t].[cudweek], [doc_cnt]=isnull([tt].[doc_cnt], 0), [pos_cnt]=isnull([tt].[pos_cnt], 0)
+  select [t].[cudweek], [doc_cnt]=isnull([tt].[doc_cnt], 0), [pos_cnt]=isnull([tt].[pos_cnt], 0), [pos_sum]=isnull([tt].[pos_sum], 0)
   from #ttimes [t]
   left outer join #ttimesdoc [tt] on [t].[cudweek] = [tt].[cudweek]
   order by [t].[order]

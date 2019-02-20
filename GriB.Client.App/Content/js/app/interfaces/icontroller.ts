@@ -123,9 +123,6 @@
         OnApply(controller: IControllerCheckComment): void;
     }
 
-  
-    
-
     export interface IControllerReportWithFilter extends IControllerEditor {
         SaveFilter(): void;
         RestoreFilter(): void;

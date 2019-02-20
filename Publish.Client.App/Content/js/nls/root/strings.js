@@ -314,6 +314,7 @@ define({
     "label$intime": "По времени",
     "label$checks": "Чеки",
     "label$positions": "Позиции",
+    "label$percent": "%",
     "label$dayweek$mon": "Пн",
     "label$dayweek$tue": "Вт",
     "label$dayweek$wed": "Ср", 
@@ -321,4 +322,14 @@ define({
     "label$dayweek$fri": "Пт",
     "label$dayweek$sat": "Сб",
     "label$dayweek$sun": "Вс",
+
+    "report$expressanalysis": "Экспресс анализ",
+    "label$weekday": "День недели",
+    "label$intervaltime": "Интервал времени",
+    "label$count$cheks": "Кол-во чеков",
+    "label$percent$cheks": "% чеков",
+    "label$count$positions": "Кол-во позиций",
+    "label$percent$positions": "% позиций",
+    "label$percent$sum": "% суммы",
+    "label$avg$chek": "Средний чек",
 });

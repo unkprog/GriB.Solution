@@ -43,5 +43,10 @@ define(["require", "exports", "i18n!nls/strings"], function (require, exports) {
         return result;
     }
     exports.getTemplate = getTemplate;
+    exports.WeekNamesByValue = ["", exports._statres("label$dayweek$sun"), exports._statres("label$dayweek$mon"), exports._statres("label$dayweek$tue"), exports._statres("label$dayweek$wed"), exports._statres("label$dayweek$thu"), exports._statres("label$dayweek$fri"), exports._statres("label$dayweek$sat")];
+    window.WeekNamesByValue = exports.WeekNamesByValue;
+    exports.sumTextColor = '#2196f3';
+    exports.checkTextColor = '#ff9800';
+    exports.positionTextColor = '#4caf50';
 });
 //# sourceMappingURL=variables.js.map

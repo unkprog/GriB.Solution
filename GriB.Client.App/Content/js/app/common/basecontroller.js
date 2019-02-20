@@ -430,7 +430,7 @@ define(["require", "exports", "app/common/utils", "app/common/variables", "app/c
                 var filterControl = (this.cardSettings && this.cardSettings.FilterSettings ? this.cardSettings.FilterSettings.InitControls() : undefined);
                 if (filterControl)
                     controls.push(filterControl);
-                controls.push(this.initTableRow());
+                controls.push(this.initializeTableRow());
                 view.append(controls);
                 _super.prototype.ViewInit.call(this, view);
                 return this.loadData();
@@ -461,7 +461,7 @@ define(["require", "exports", "app/common/utils", "app/common/variables", "app/c
                 this.tooltips = cardButtons.find(".tooltipped");
                 return this.navHeader;
             };
-            BaseCard.prototype.initTableRow = function () {
+            BaseCard.prototype.initializeTableRow = function () {
                 var navbarHeader = '<div class="row row-table">';
                 navbarHeader += '    <div class="col s12 m12 l12 xl12 col-table">';
                 navbarHeader += '        <table class="highlight">';
@@ -807,12 +807,12 @@ define(["require", "exports", "app/common/utils", "app/common/variables", "app/c
             return BaseReportWithFilter;
         }(BaseEditor));
         Controller.BaseReportWithFilter = BaseReportWithFilter;
-        var BaseReport = /** @class */ (function (_super) {
-            __extends(BaseReport, _super);
-            function BaseReport() {
+        var BaseReportTable = /** @class */ (function (_super) {
+            __extends(BaseReportTable, _super);
+            function BaseReportTable() {
                 return _super.call(this) || this;
             }
-            Object.defineProperty(BaseReport.prototype, "Columns", {
+            Object.defineProperty(BaseReportTable.prototype, "Columns", {
                 get: function () {
                     var columns = [];
                     return columns;
@@ -820,7 +820,7 @@ define(["require", "exports", "app/common/utils", "app/common/variables", "app/c
                 enumerable: true,
                 configurable: true
             });
-            Object.defineProperty(BaseReport.prototype, "Table", {
+            Object.defineProperty(BaseReportTable.prototype, "Table", {
                 get: function () {
                     return this.tableControl;
                 },
@@ -830,7 +830,7 @@ define(["require", "exports", "app/common/utils", "app/common/variables", "app/c
                 enumerable: true,
                 configurable: true
             });
-            BaseReport.prototype.ViewInit = function (view) {
+            BaseReportTable.prototype.ViewInit = function (view) {
                 var result = _super.prototype.ViewInit.call(this, view);
                 var controls = [];
                 controls.push(this.initializeTableRow());
@@ -838,14 +838,14 @@ define(["require", "exports", "app/common/utils", "app/common/variables", "app/c
                 this.SetupTable();
                 return result;
             };
-            BaseReport.prototype.SetupTable = function (rows) {
+            BaseReportTable.prototype.SetupTable = function (rows) {
                 this.tableControl.Rows = rows;
                 this.tableControl.Columns = this.Columns;
                 this.tableControl.Setup();
             };
-            BaseReport.prototype.OnDetalize = function (row) {
+            BaseReportTable.prototype.OnDetalize = function (row) {
             };
-            BaseReport.prototype.initializeTableRow = function () {
+            BaseReportTable.prototype.initializeTableRow = function () {
                 if (!this.tableControl)
                     this.tableControl = new ctrl.Control.BaseTable();
                 this.tableControl.OnDetalize = $.proxy(this.OnDetalize, this);
@@ -855,30 +855,30 @@ define(["require", "exports", "app/common/utils", "app/common/variables", "app/c
                 tableRow.append(tableCol);
                 return tableRow;
             };
-            BaseReport.prototype.ViewResize = function (e) {
+            BaseReportTable.prototype.ViewResize = function (e) {
                 _super.prototype.ViewResize.call(this, e);
                 var tbody = (this.tableControl ? this.tableControl.TableBody : undefined);
                 if (tbody && tbody.length > 0) {
                     tbody.height($(window).height() - tbody.offset().top - (0.2 * parseFloat(getComputedStyle(tbody[0]).fontSize)) - 1);
                 }
             };
-            BaseReport.prototype.ViewShow = function (e) {
+            BaseReportTable.prototype.ViewShow = function (e) {
                 return _super.prototype.ViewShow.call(this, e);
             };
-            BaseReport.prototype.ViewHide = function (e) {
+            BaseReportTable.prototype.ViewHide = function (e) {
                 this.SaveFilter();
                 this.tableControl.DestroyView();
                 _super.prototype.ViewHide.call(this, e);
             };
-            BaseReport.prototype.destroyEvents = function () {
+            BaseReportTable.prototype.destroyEvents = function () {
                 _super.prototype.destroyEvents.call(this);
             };
-            BaseReport.prototype.buildButtonClick = function (e) {
+            BaseReportTable.prototype.buildButtonClick = function (e) {
                 this.SetupTable([]);
             };
-            return BaseReport;
+            return BaseReportTable;
         }(BaseReportWithFilter));
-        Controller.BaseReport = BaseReport;
+        Controller.BaseReportTable = BaseReportTable;
     })(Controller = exports.Controller || (exports.Controller = {}));
 });
 //# sourceMappingURL=basecontroller.js.map

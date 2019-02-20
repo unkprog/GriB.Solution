@@ -74,18 +74,22 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                         enumerable: true,
                         configurable: true
                     });
-                    Detalize.prototype.columns = function () {
-                        var columns = [];
-                        var doctypeTemplate = "#if (doctype === 10) {#" + vars._statres("label$arrival") + "# } else if (doctype === 40) {#" + vars._statres("label$writeoff") + "#} else if (doctype === 50) {#" + vars._statres("label$movement") + "#} else if (doctype === 51) {#" + vars._statres("label$arrival$fromstock") + "#} else {#" + vars._statres("label$sale") + "#}#";
-                        columns.push({ Header: vars._statres("label$document"), Field: "doctype", FieldTemplate: doctypeTemplate, IsOrder: true });
-                        columns.push({ Header: vars._statres("label$date"), Field: "cd", FieldTemplate: "#=date_ddmmyyyy_withtime(new Date(cd))#" });
-                        columns.push({ Header: vars._statres("label$salePoint"), Field: "salepoint.name", IsOrder: true });
-                        columns.push({ Header: vars._statres("label$employee"), Field: "employee.name", IsOrder: true });
-                        columns.push({ Header: vars._statres("label$product"), Field: "product.name", IsOrder: true });
-                        columns.push({ Header: vars._statres("label$quantity"), HeaderStyle: "product-col-quantity-auto-right", Field: "quantity", FieldTemplate: '#=numberToString(quantity,2)#', FieldStyle: "product-col-quantity-auto-right", IsSum: true, IsOrder: true });
-                        columns.push({ Header: vars._statres("label$sum"), HeaderStyle: "product-col-sum-auto-rigth", Field: "sum", FieldTemplate: '#=numberToString(sum,2)#', FieldStyle: "product-col-sum-auto-rigth", IsSum: true, IsOrder: true });
-                        return columns;
-                    };
+                    Object.defineProperty(Detalize.prototype, "Columns", {
+                        get: function () {
+                            var columns = [];
+                            var doctypeTemplate = "#if (doctype === 10) {#" + vars._statres("label$arrival") + "# } else if (doctype === 40) {#" + vars._statres("label$writeoff") + "#} else if (doctype === 50) {#" + vars._statres("label$movement") + "#} else if (doctype === 51) {#" + vars._statres("label$arrival$fromstock") + "#} else {#" + vars._statres("label$sale") + "#}#";
+                            columns.push({ Header: vars._statres("label$document"), Field: "doctype", FieldTemplate: doctypeTemplate, IsOrder: true });
+                            columns.push({ Header: vars._statres("label$date"), Field: "cd", FieldTemplate: "#=date_ddmmyyyy_withtime(new Date(cd))#" });
+                            columns.push({ Header: vars._statres("label$salePoint"), Field: "salepoint.name", IsOrder: true });
+                            columns.push({ Header: vars._statres("label$employee"), Field: "employee.name", IsOrder: true });
+                            columns.push({ Header: vars._statres("label$product"), Field: "product.name", IsOrder: true });
+                            columns.push({ Header: vars._statres("label$quantity"), HeaderStyle: "product-col-quantity-auto-right", Field: "quantity", FieldTemplate: '#=numberToString(quantity,2)#', FieldStyle: "product-col-quantity-auto-right", IsSum: true, IsOrder: true });
+                            columns.push({ Header: vars._statres("label$sum"), HeaderStyle: "product-col-sum-auto-rigth", Field: "sum", FieldTemplate: '#=numberToString(sum,2)#', FieldStyle: "product-col-sum-auto-rigth", IsSum: true, IsOrder: true });
+                            return columns;
+                        },
+                        enumerable: true,
+                        configurable: true
+                    });
                     Detalize.prototype.createEvents = function () {
                         _super.prototype.createEvents.call(this);
                     };
@@ -96,14 +100,11 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                         var self = this;
                         _super.prototype.buildButtonClick.call(this, e);
                         this.Service.GetStocksDetail(this.Filter, function (responseData) {
-                            self.Model.set("reportModel", responseData);
-                            self.ReportSettings.Columns = self.columns();
-                            self.setupTable();
+                            self.SetupTable(responseData);
                         });
                     };
-                    Detalize.prototype.OnDetalize = function (e) {
-                        var index = +e.currentTarget.id.replace('table-row-', '');
-                        var item = this.Model.get("reportModel")[index];
+                    Detalize.prototype.OnDetalize = function (row) {
+                        var item = row;
                         var ctrlName = "";
                         var ctrlId = "";
                         if (item.doctype === 0) {

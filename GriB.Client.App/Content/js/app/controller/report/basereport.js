@@ -33,7 +33,7 @@ define(["require", "exports", "app/common/basecontroller", "app/services/reports
                     configurable: true
                 });
                 return ReportWithService;
-            }(base.Controller.BaseReport));
+            }(base.Controller.BaseReportTable));
             Report.ReportWithService = ReportWithService;
         })(Report = Controller.Report || (Controller.Report = {}));
     })(Controller = exports.Controller || (exports.Controller = {}));

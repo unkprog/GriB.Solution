@@ -2,7 +2,7 @@
 import svc = require('app/services/reportsservice');
 
 export namespace Controller.Report {
-    export class ReportWithService extends base.Controller.BaseReport {
+    export class ReportWithService extends base.Controller.BaseReportTable {
         constructor() {
             super();
         }

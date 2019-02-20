@@ -151,7 +151,7 @@ export namespace Control {
 
         public DestroyView() {
             this.detachSortEvents();
-            if (this.rows)
+            if (this.tableRows)
                 utils.destroyDblTouchClickEvent(this.tableRows, this.RowClick, this.tableControl);
         }
 
@@ -314,6 +314,8 @@ export namespace Control {
 
             let orderfields = [];
             let colName: string = columns[i].Field;
+            let isSum: boolean = columns[i].IsSum;
+            let isNum: boolean = columns[i].IsNumber;
             orderfields = self.sumFieldsInfo.orderfields;
 
             orderfields.filter(x => x.field == colName)
@@ -326,7 +328,7 @@ export namespace Control {
             let colNameSplit: Array<string> = colName.split('.');
 
             let data: Interfaces.Model.ITableRowModel[] = this.Rows;
-            if (columns[i].IsSum === true) {
+            if (isNum == true || isSum === true) {
                 data.sort(function (a, b: any) {
                     let aval: any = a[colNameSplit[0]];
                     for (let i = 1, icount = colNameSplit.length; i < icount; i++) aval = aval[colNameSplit[i]];
@@ -348,7 +350,7 @@ export namespace Control {
             if (findResult && findResult.length > 0) {
                 findResult[0].typeSort = (typeSort === 0 || typeSort === 2 ? 1 : 2);
             }
-            self.rows = data;
+            self.Rows = data;
             self.setupRows();
         }
     }

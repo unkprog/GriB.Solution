@@ -62,8 +62,8 @@ namespace GriB.Client.App.Models.Report
         public double countpercent { get; set; }
         public double countpospercent { get; set; }
         public double sumpercent   { get; set; }
-        public double avgsumpos => count == 0 ? 0 : sum / count;
-        public double avgsumcountpos => countpos == 0 ? 0 : sum / countpos;
+        //public double avgsumpos => count == 0 ? 0 : sum / count;
+        //public double avgsumcountpos => countpos == 0 ? 0 : sum / countpos;
         public double avgsum => count == 0 ? 0 : sum / count;
     }
 
@@ -81,8 +81,8 @@ namespace GriB.Client.App.Models.Report
         public double countpercent { get; set; }
         public double countpospercent { get; set; }
         public double sumpercent { get; set; }
-        public double avgsumpos => count == 0 ? 0 : sum / count;
-        public double avgsumcountpos => countpos == 0 ? 0 : sum / countpos;
+        //public double avgsumpos => count == 0 ? 0 : sum / count;
+        //public double avgsumcountpos => countpos == 0 ? 0 : sum / countpos;
         public double avgsum => count == 0 ? 0 : sum / count;
     }
 }

@@ -473,7 +473,7 @@ export namespace Controller {
             let filterControl: JQuery = (this.cardSettings && this.cardSettings.FilterSettings ? this.cardSettings.FilterSettings.InitControls() : undefined);
             if (filterControl)
                 controls.push(filterControl);
-            controls.push(this.initTableRow());
+            controls.push(this.initializeTableRow());
 
             view.append(controls);
             super.ViewInit(view);
@@ -508,7 +508,7 @@ export namespace Controller {
 
 
 
-        protected initTableRow(): JQuery {
+        protected initializeTableRow(): JQuery {
             let navbarHeader: string = '<div class="row row-table">';
             navbarHeader += '    <div class="col s12 m12 l12 xl12 col-table">';
             navbarHeader += '        <table class="highlight">';
@@ -910,8 +910,7 @@ export namespace Controller {
         }
     }
 
-
-    export class BaseReport extends BaseReportWithFilter implements Interfaces.IControllerReport {
+    export class BaseReportTable extends BaseReportWithFilter implements Interfaces.IControllerReport {
 
         constructor() {
             super();

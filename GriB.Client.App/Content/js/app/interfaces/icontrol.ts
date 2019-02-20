@@ -59,6 +59,7 @@
     export interface ITableColumn extends IBaseColumn {
         HeaderGroupName?: string;
         IsSum?: boolean;
+        IsNumber?: boolean;
         IsOrder?: boolean;
     }
 

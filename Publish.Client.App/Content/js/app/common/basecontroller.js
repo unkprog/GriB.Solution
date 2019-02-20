@@ -11,7 +11,7 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-define(["require", "exports", "app/common/utils", "app/common/variables", "./variables"], function (require, exports, utils, vars, variables_1) {
+define(["require", "exports", "app/common/utils", "app/common/variables", "app/common/basecontrol"], function (require, exports, utils, vars, ctrl) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var Controller;
@@ -191,8 +191,8 @@ define(["require", "exports", "app/common/utils", "app/common/variables", "./var
                     this._controller.ViewResize(e);
             };
             BaseContent.prototype.controllerBack = function (e) {
-                if (variables_1._app.IsModal)
-                    variables_1._app.ControllerBack(e);
+                if (vars._app.IsModal)
+                    vars._app.ControllerBack(e);
                 else {
                     this._controllersStack.Pop();
                     this.RestoreController();
@@ -203,21 +203,21 @@ define(["require", "exports", "app/common/utils", "app/common/variables", "./var
                     this.OpenView({ controller: this._controllersStack.Current, isRestore: true });
             };
             BaseContent.prototype.OpenController = function (options) {
-                variables_1._app.OpenController(options);
+                vars._app.OpenController(options);
             };
             BaseContent.prototype.OpenView = function (options) {
                 var self = this;
                 if (options.isModal && options.isModal === true) {
-                    variables_1._app.OpenView(options);
+                    vars._app.OpenView(options);
                     return;
                 }
                 if ($("#" + options.controller.Options.Id).length > 0)
                     return; //Already loaded and current
-                variables_1._app.ShowLoading();
+                vars._app.ShowLoading();
                 $.when($.ajax({ url: options.controller.Options.Url, cache: false })).done(function (template) {
                     self.OpenViewTemplate({ controller: options.controller, template: template, backController: options.backController, isRestore: options.isRestore });
                 }).fail(function (e) {
-                    variables_1._app.HideLoading();
+                    vars._app.HideLoading();
                 });
             };
             BaseContent.prototype.OpenViewTemplate = function (options) {
@@ -248,7 +248,7 @@ define(["require", "exports", "app/common/utils", "app/common/variables", "./var
                 }
                 finally {
                     if (isInit)
-                        variables_1._app.HideLoading();
+                        vars._app.HideLoading();
                 }
             };
             BaseContent.prototype.SetHeader = function (controller) {
@@ -346,7 +346,7 @@ define(["require", "exports", "app/common/utils", "app/common/variables", "./var
             };
             BaseEditor.prototype.cancelButtonClick = function (e) {
                 this.Cancel();
-                variables_1._main.ControllerBack(e);
+                vars._main.ControllerBack(e);
             };
             BaseEditor.prototype.loadData = function () {
                 var controller = this;
@@ -369,14 +369,14 @@ define(["require", "exports", "app/common/utils", "app/common/variables", "./var
             };
             BaseEditor.prototype.endLoad = function () {
                 M.updateTextFields();
-                variables_1._app.HideLoading();
+                vars._app.HideLoading();
                 this.View.show();
             };
             BaseEditor.prototype.validate = function () {
                 return true;
             };
             BaseEditor.prototype.endSave = function () {
-                variables_1._main.ControllerBack(this);
+                vars._main.ControllerBack(this);
             };
             BaseEditor.prototype.getSaveModel = function () {
                 return this.EditorModel;
@@ -397,95 +397,6 @@ define(["require", "exports", "app/common/utils", "app/common/variables", "./var
             return BaseEditor;
         }(Base));
         Controller.BaseEditor = BaseEditor;
-        var BaseCardFilterSettings = /** @class */ (function () {
-            function BaseCardFilterSettings(setupRows) {
-                this.fieldSearch = "name";
-                this.setupRows = setupRows;
-            }
-            BaseCardFilterSettings.prototype.saveFilter = function () {
-                throw new Error("Method not implemented.");
-            };
-            BaseCardFilterSettings.prototype.restoreFilter = function () {
-                throw new Error("Method not implemented.");
-            };
-            Object.defineProperty(BaseCardFilterSettings.prototype, "FieldSearch", {
-                get: function () {
-                    return this.fieldSearch;
-                },
-                set: function (val) {
-                    this.fieldSearch = val;
-                },
-                enumerable: true,
-                configurable: true
-            });
-            BaseCardFilterSettings.prototype.InitControls = function () {
-                var navbarHeader = '<nav class="card-search-nav editor-header z-depth-1">';
-                navbarHeader += '   <div class="nav-wrapper">';
-                navbarHeader += '       <form>';
-                navbarHeader += '           <div class="input-field">';
-                navbarHeader += '               <input id="card-view-search" type="search" required value="">';
-                navbarHeader += '               <label class="label-icon" for="search"><i class="material-icons editor-header">search</i></label>';
-                navbarHeader += '               <i id="card-view-search-clear" class="material-icons editor-header">close</i>';
-                navbarHeader += '           </div>';
-                navbarHeader += '       </form>';
-                navbarHeader += '   </div>';
-                navbarHeader += '</nav>';
-                this.navSearch = $(navbarHeader);
-                this.formSearch = this.navSearch.find('form');
-                this.inputSearch = this.formSearch.find('#card-view-search');
-                this.clearSearch = this.formSearch.find('#card-view-search-clear');
-                return this.navSearch;
-            };
-            BaseCardFilterSettings.prototype.ViewControls = function () {
-            };
-            BaseCardFilterSettings.prototype.ResizeControls = function () {
-            };
-            BaseCardFilterSettings.prototype.createEvents = function () {
-                if (this.clearSearch)
-                    this.ClearButtonClick = utils.createTouchClickEvent(this.clearSearch, this.clearButtonClick, this);
-                if (this.formSearch) {
-                    this.proxySearch = $.proxy(this.search, this);
-                    this.formSearch.on('submit', this.proxySearch);
-                }
-            };
-            BaseCardFilterSettings.prototype.search = function (e) {
-                e.preventDefault();
-                if (this.setupRows)
-                    this.setupRows();
-                return false;
-            };
-            BaseCardFilterSettings.prototype.destroyEvents = function () {
-                if (this.formSearch)
-                    this.formSearch.off('submit', this.proxySearch);
-                if (this.clearSearch)
-                    utils.destroyTouchClickEvent(this.clearSearch, this.ClearButtonClick);
-            };
-            BaseCardFilterSettings.prototype.clearButtonClick = function (e) {
-                if (this.inputSearch)
-                    this.inputSearch.val("");
-                if (this.setupRows)
-                    this.setupRows();
-            };
-            BaseCardFilterSettings.prototype.GetItemsForView = function (data) {
-                var result = [];
-                var strSearch = (this.inputSearch ? this.inputSearch.val() : ""); // ($("#card-view-search").val() as string);
-                var fieldSearch = this.FieldSearch;
-                var isNotSearch = (utils.isNullOrEmpty(fieldSearch) || utils.isNullOrEmpty(strSearch));
-                if (!isNotSearch)
-                    strSearch = strSearch.toLowerCase();
-                for (var i = 0, icount = (data && data.length ? data.length : 0); i < icount; i++) {
-                    if (isNotSearch) {
-                        result.push(data[i]);
-                    }
-                    else if (data[i][fieldSearch].toLowerCase().indexOf(strSearch) > -1) {
-                        result.push(data[i]);
-                    }
-                }
-                return result;
-            };
-            return BaseCardFilterSettings;
-        }());
-        Controller.BaseCardFilterSettings = BaseCardFilterSettings;
         var BaseCard = /** @class */ (function (_super) {
             __extends(BaseCard, _super);
             function BaseCard() {
@@ -519,7 +430,7 @@ define(["require", "exports", "app/common/utils", "app/common/variables", "./var
                 var filterControl = (this.cardSettings && this.cardSettings.FilterSettings ? this.cardSettings.FilterSettings.InitControls() : undefined);
                 if (filterControl)
                     controls.push(filterControl);
-                controls.push(this.initTableRow());
+                controls.push(this.initializeTableRow());
                 view.append(controls);
                 _super.prototype.ViewInit.call(this, view);
                 return this.loadData();
@@ -550,7 +461,7 @@ define(["require", "exports", "app/common/utils", "app/common/variables", "./var
                 this.tooltips = cardButtons.find(".tooltipped");
                 return this.navHeader;
             };
-            BaseCard.prototype.initTableRow = function () {
+            BaseCard.prototype.initializeTableRow = function () {
                 var navbarHeader = '<div class="row row-table">';
                 navbarHeader += '    <div class="col s12 m12 l12 xl12 col-table">';
                 navbarHeader += '        <table class="highlight">';
@@ -622,7 +533,7 @@ define(["require", "exports", "app/common/utils", "app/common/variables", "./var
                 this.destroyTouchClickEvent(this.btnClose, this.CloseButtonClick);
             };
             BaseCard.prototype.createCardFilterSettings = function () {
-                return new BaseCardFilterSettings($.proxy(this.setupRows, this));
+                return new ctrl.Control.BaseCardFilterSettings($.proxy(this.setupRows, this));
             };
             BaseCard.prototype.createCardSettings = function () {
                 return { FilterSettings: this.createCardFilterSettings(), ValueIdNew: 0, EditIdName: "", IsAdd: false, IsAddCopy: false, IsEdit: false, IsDelete: false, IsSelect: false, EditController: "", Load: undefined, Delete: undefined, Columns: [] };
@@ -761,11 +672,11 @@ define(["require", "exports", "app/common/utils", "app/common/variables", "./var
                 if (this.OnSelect)
                     this.OnSelect(self);
                 this.Close();
-                variables_1._main.ControllerBack(e);
+                vars._main.ControllerBack(e);
             };
             BaseCard.prototype.closeButtonClick = function (e) {
                 this.Close();
-                variables_1._main.ControllerBack(e);
+                vars._main.ControllerBack(e);
             };
             BaseCard.prototype.loadData = function () {
                 var controller = this;
@@ -781,7 +692,7 @@ define(["require", "exports", "app/common/utils", "app/common/variables", "./var
             };
             BaseCard.prototype.afterLoad = function () {
                 this.setupTable();
-                variables_1._app.HideLoading();
+                vars._app.HideLoading();
             };
             BaseCard.prototype.Add = function () {
                 vars._editorData[this.CardSettings.EditIdName] = this.CardSettings.ValueIdNew;
@@ -854,7 +765,6 @@ define(["require", "exports", "app/common/utils", "app/common/variables", "./var
                 return new kendo.data.ObservableObject({
                     "Header": "",
                     "filterModel": {},
-                    "reportModel": {},
                 });
             };
             Object.defineProperty(BaseReportWithFilter.prototype, "FilterName", {
@@ -897,258 +807,78 @@ define(["require", "exports", "app/common/utils", "app/common/variables", "./var
             return BaseReportWithFilter;
         }(BaseEditor));
         Controller.BaseReportWithFilter = BaseReportWithFilter;
-        var BaseReport = /** @class */ (function (_super) {
-            __extends(BaseReport, _super);
-            function BaseReport() {
-                var _this = _super.call(this) || this;
-                _this.reportSettings = _this.createReportSettings();
-                return _this;
+        var BaseReportTable = /** @class */ (function (_super) {
+            __extends(BaseReportTable, _super);
+            function BaseReportTable() {
+                return _super.call(this) || this;
             }
-            BaseReport.prototype.createReportSettings = function () {
-                return { Columns: this.Columns };
-            };
-            Object.defineProperty(BaseReport.prototype, "ReportSettings", {
+            Object.defineProperty(BaseReportTable.prototype, "Columns", {
                 get: function () {
-                    return this.reportSettings;
+                    var columns = [];
+                    return columns;
                 },
                 enumerable: true,
                 configurable: true
             });
-            Object.defineProperty(BaseReport.prototype, "Columns", {
+            Object.defineProperty(BaseReportTable.prototype, "Table", {
                 get: function () {
-                    return this.columns();
+                    return this.tableControl;
+                },
+                set: function (table) {
+                    this.tableControl = table;
                 },
                 enumerable: true,
                 configurable: true
             });
-            BaseReport.prototype.columns = function () {
-                return [];
-            };
-            BaseReport.prototype.ViewInit = function (view) {
+            BaseReportTable.prototype.ViewInit = function (view) {
                 var result = _super.prototype.ViewInit.call(this, view);
                 var controls = [];
-                controls.push(this.initTableRow());
+                controls.push(this.initializeTableRow());
                 view.append(controls);
-                this.setupTable();
+                this.SetupTable();
                 return result;
             };
-            BaseReport.prototype.initTableRow = function () {
-                var navbarHeader = '<div class="row row-table-report">';
-                navbarHeader += '    <div class="col s12 m12 l12 xl12 col-table">';
-                navbarHeader += '        <table class="highlight">';
-                navbarHeader += '            <thead></thead>';
-                navbarHeader += '            <tbody style="overflow-y: scroll;"></tbody>';
-                navbarHeader += '        </table>';
-                navbarHeader += '    </div>';
-                navbarHeader += '</div>';
-                this.tableRow = $(navbarHeader);
-                this.tableHead = this.tableRow.find('thead');
-                this.tableBody = this.tableRow.find('tbody');
-                return this.tableRow;
+            BaseReportTable.prototype.SetupTable = function (rows) {
+                this.tableControl.Rows = rows;
+                this.tableControl.Columns = this.Columns;
+                this.tableControl.Setup();
             };
-            BaseReport.prototype.ViewResize = function (e) {
+            BaseReportTable.prototype.OnDetalize = function (row) {
+            };
+            BaseReportTable.prototype.initializeTableRow = function () {
+                if (!this.tableControl)
+                    this.tableControl = new ctrl.Control.BaseTable();
+                this.tableControl.OnDetalize = $.proxy(this.OnDetalize, this);
+                var tableRow = $('<div class="row row-table-report"></div>');
+                var tableCol = $('<div class="col s12 m12 l12 xl12 col-table"></div>');
+                tableCol.append(this.tableControl.InitView());
+                tableRow.append(tableCol);
+                return tableRow;
+            };
+            BaseReportTable.prototype.ViewResize = function (e) {
                 _super.prototype.ViewResize.call(this, e);
-                var tbody = this.tableBody;
+                var tbody = (this.tableControl ? this.tableControl.TableBody : undefined);
                 if (tbody && tbody.length > 0) {
                     tbody.height($(window).height() - tbody.offset().top - (0.2 * parseFloat(getComputedStyle(tbody[0]).fontSize)) - 1);
                 }
             };
-            BaseReport.prototype.ViewShow = function (e) {
+            BaseReportTable.prototype.ViewShow = function (e) {
                 return _super.prototype.ViewShow.call(this, e);
             };
-            BaseReport.prototype.ViewHide = function (e) {
+            BaseReportTable.prototype.ViewHide = function (e) {
                 this.SaveFilter();
+                this.tableControl.DestroyView();
                 _super.prototype.ViewHide.call(this, e);
             };
-            BaseReport.prototype.destroyEvents = function () {
-                this.detachSortEvents();
-                if (this.rows)
-                    this.destroyDblTouchClickEvent(this.rows, this.rowClick);
+            BaseReportTable.prototype.destroyEvents = function () {
                 _super.prototype.destroyEvents.call(this);
             };
-            BaseReport.prototype.buildButtonClick = function (e) {
-                var self = this;
-                self.detachSortEvents();
+            BaseReportTable.prototype.buildButtonClick = function (e) {
+                this.SetupTable([]);
             };
-            BaseReport.prototype.setupTable = function () {
-                this.detachSortEvents();
-                var headerHtml = this.getTableHeaderHtml();
-                this.tableHead.html(headerHtml);
-                this.attachSortEvents();
-                this.setupRows();
-            };
-            BaseReport.prototype.setupRows = function () {
-                //this.selectedRow = null;
-                if (this.rows)
-                    this.destroyDblTouchClickEvent(this.rows, this.rowClick);
-                this.tableBody.html(this.getTableBodyHtml());
-                var valueSum;
-                for (var j = 0, jcount = (this.sumFieldsInfo.fields && this.sumFieldsInfo.fields.length ? this.sumFieldsInfo.fields.length : 0); j < jcount; j++) {
-                    valueSum = this.sumFieldsInfo.sumFied[this.sumFieldsInfo.fields[j]];
-                    this.tableHead.find('#' + this.sumFieldsInfo.fields[j] + '_sum').html(utils.numberToString(valueSum ? valueSum : 0, 2));
-                }
-                this.rows = this.tableBody.find('tr');
-                this.createDblTouchClickEvent(this.rows, this.rowClick);
-            };
-            BaseReport.prototype.getTableHeaderHtml = function () {
-                var columns = this.ReportSettings.Columns;
-                var html = '';
-                var isSum = false;
-                var isGroupHeader = false;
-                this.sumFieldsInfo = { fields: [], sumFied: {}, orderfields: [] };
-                var knSupport = kendo;
-                html += '<tr>';
-                for (var i = 0, icount = columns && columns.length ? columns.length : 0; i < icount; i++) {
-                    //if (columns[i].IsSum && columns[i].IsSum === true)
-                    //    isSum = true;
-                    html += '   <th';
-                    if (columns[i].HeaderStyle || columns[i].IsOrder === true) {
-                        if (columns[i].IsOrder === true) {
-                            html += ' id="sort_' + i + '"';
-                        }
-                        html += ' class="';
-                        if (columns[i].HeaderStyle)
-                            html += columns[i].HeaderStyle;
-                        if (columns[i].IsOrder === true) {
-                            this.sumFieldsInfo.orderfields.push({ field: columns[i].Field, typeSort: 0, index: i });
-                            html += (columns[i].HeaderStyle ? ' ' : '') + 'ccursor';
-                        }
-                        html += '"';
-                    }
-                    html += '>';
-                    html += (columns[i].HeaderTemplate ? columns[i].HeaderTemplate : columns[i].Header);
-                    if (columns[i].IsSum && columns[i].IsSum === true) {
-                        html += ('<br/><span id="' + columns[i].Field + '_sum">0.00</span>');
-                        this.sumFieldsInfo.fields.push(columns[i].Field);
-                        this.sumFieldsInfo.sumFied[columns[i].Field] = 0;
-                    }
-                    html += '</th>';
-                }
-                html += '<th style="width:' + (knSupport.support.browser.chrome === true ? "18" : "17") + 'px;"></th>';
-                html += '</tr>';
-                return html;
-            };
-            BaseReport.prototype.attachSortEvents = function () {
-                var columns = this.ReportSettings.Columns;
-                for (var i = 0, icount = columns && columns.length ? columns.length : 0; i < icount; i++) {
-                    if (columns[i].IsOrder === true) {
-                        var strId = 'sort_' + i;
-                        this.createTouchClickEvent(strId, this.sortButtonClick);
-                    }
-                }
-            };
-            BaseReport.prototype.detachSortEvents = function () {
-                var columns = this.ReportSettings.Columns;
-                for (var i = 0, icount = columns && columns.length ? columns.length : 0; i < icount; i++) {
-                    if (columns[i].IsOrder === true) {
-                        var strId = 'sort_' + i;
-                        this.destroyTouchClickEvent(strId, this.sortButtonClick);
-                    }
-                }
-            };
-            BaseReport.prototype.getTableRowTemplate = function () {
-                var setting = this.ReportSettings;
-                var columns = setting.Columns;
-                var html = '';
-                html += '<tr id="table-row-#=rowtmpitem#">';
-                for (var i = 0, icount = (columns && columns.length ? columns.length : 0); i < icount; i++) {
-                    html += '   <td';
-                    if (columns[i].FieldStyle) {
-                        html += ' class="';
-                        html += columns[i].FieldStyle;
-                        html += '"';
-                    }
-                    html += '>';
-                    if (columns[i].FieldTemplate)
-                        html += columns[i].FieldTemplate;
-                    else {
-                        html += '#=';
-                        html += columns[i].Field;
-                        html += '#';
-                    }
-                    html += '</td>';
-                }
-                html += '</tr>';
-                return html;
-            };
-            BaseReport.prototype.getTableBodyHtml = function () {
-                var html = '';
-                var data = this.Model.get("reportModel");
-                if (data && data.length > 0) {
-                    var templateRow = vars.getTemplate(this.getTableRowTemplate());
-                    if (templateRow) {
-                        for (var i = 0, icount = (data && data.length ? data.length : 0); i < icount; i++) {
-                            data[i]["rowtmpitem"] = i;
-                            html += templateRow(data[i]);
-                            for (var j = 0, jcount = (this.sumFieldsInfo.fields && this.sumFieldsInfo.fields.length ? this.sumFieldsInfo.fields.length : 0); j < jcount; j++) {
-                                if (i === 0)
-                                    this.sumFieldsInfo.sumFied[this.sumFieldsInfo.fields[j]] = data[i][this.sumFieldsInfo.fields[j]];
-                                else
-                                    this.sumFieldsInfo.sumFied[this.sumFieldsInfo.fields[j]] += data[i][this.sumFieldsInfo.fields[j]];
-                            }
-                        }
-                    }
-                }
-                return html;
-            };
-            BaseReport.prototype.rowClick = function (e) {
-                this.OnDetalize(e);
-                e.preventDefault();
-                e.stopPropagation();
-                return false;
-            };
-            BaseReport.prototype.OnDetalize = function (e) {
-            };
-            BaseReport.prototype.sortButtonClick = function (e) {
-                var self = this;
-                var strId = e.currentTarget.id;
-                strId = strId.replace('sort_', '');
-                var i = +strId;
-                var setting = self.ReportSettings;
-                var columns = setting.Columns;
-                var orderfields = [];
-                var colName = columns[i].Field;
-                orderfields = self.sumFieldsInfo.orderfields;
-                //orderfields.push({ field: columns[i].Field, typeSort: 0, index: i });
-                orderfields.filter(function (x) { return x.field == colName; });
-                var findResult = $.grep(orderfields, function (x) { return x.field == colName; });
-                var typeSort = 0;
-                if (findResult && findResult.length > 0) {
-                    typeSort = findResult[0].typeSort;
-                }
-                var colNameSplit = colName.split('.');
-                var data = this.Model.get("reportModel");
-                if (columns[i].IsSum === true) {
-                    data.sort(function (a, b) {
-                        var aval = a[colNameSplit[0]];
-                        for (var i_1 = 1, icount = colNameSplit.length; i_1 < icount; i_1++)
-                            aval = aval[colNameSplit[i_1]];
-                        var bval = b[colNameSplit[0]];
-                        for (var i_2 = 1, icount = colNameSplit.length; i_2 < icount; i_2++)
-                            bval = bval[colNameSplit[i_2]];
-                        return (typeSort === 0 || typeSort === 2 ? aval - bval : bval - aval);
-                    });
-                }
-                else {
-                    data.sort(function (a, b) {
-                        var aval = a[colNameSplit[0]];
-                        for (var i_3 = 1, icount = colNameSplit.length; i_3 < icount; i_3++)
-                            aval = aval[colNameSplit[i_3]];
-                        var bval = b[colNameSplit[0]];
-                        for (var i_4 = 1, icount = colNameSplit.length; i_4 < icount; i_4++)
-                            bval = bval[colNameSplit[i_4]];
-                        return (typeSort === 0 || typeSort === 2 ? aval.localeCompare(bval) : bval.localeCompare(aval));
-                    });
-                }
-                if (findResult && findResult.length > 0) {
-                    findResult[0].typeSort = (typeSort === 0 || typeSort === 2 ? 1 : 2);
-                }
-                self.Model.set("reportModel", data);
-                self.setupRows();
-            };
-            return BaseReport;
+            return BaseReportTable;
         }(BaseReportWithFilter));
-        Controller.BaseReport = BaseReport;
+        Controller.BaseReportTable = BaseReportTable;
     })(Controller = exports.Controller || (exports.Controller = {}));
 });
 //# sourceMappingURL=basecontroller.js.map

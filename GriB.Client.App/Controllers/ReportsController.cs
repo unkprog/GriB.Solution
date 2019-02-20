@@ -80,6 +80,7 @@ namespace GriB.Client.App.Controllers
                 double count = times.Sum(f => f.count);
                 double countpos = times.Sum(f => f.countpos);
                 double sum = times.Sum(f => f.sum);
+                double avgCheckTimeSum = Math.Round(count > 0 ? sum / count : 0);
                 foreach (ReportSaleTimeTableRow item in times)
                 {
                     item.countpercent = Math.Round(count > 0 ? 100.0f * (item.count / count) : 0, 2);
@@ -89,6 +90,7 @@ namespace GriB.Client.App.Controllers
                 count = dayweeks.Sum(f => f.count);
                 countpos = dayweeks.Sum(f => f.countpos);
                 sum = dayweeks.Sum(f => f.sum);
+                double avgCheckWeekSum = Math.Round(count > 0 ? sum / count : 0);
                 foreach (ReportSaleDayWeekTableRow item in dayweeks)
                 {
                     item.countpercent = Math.Round(count > 0 ? 100.0f * (item.count / count) : 0, 2);
@@ -96,7 +98,7 @@ namespace GriB.Client.App.Controllers
                     item.sumpercent = Math.Round(sum > 0 ? 100.0f * (item.sum / sum) : 0, 2);
                 }
 
-                return Request.CreateResponse(HttpStatusCode.OK, new { times, dayweeks });
+                return Request.CreateResponse(HttpStatusCode.OK, new { times, avgCheckTimeSum, dayweeks, avgCheckWeekSum });
             });
         }
 

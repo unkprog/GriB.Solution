@@ -115,20 +115,24 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                         enumerable: true,
                         configurable: true
                     });
-                    Index.prototype.columns = function () {
-                        var columns = [];
-                        if (this.Filter.IsShowSalepoint)
-                            columns.push({ Header: vars._statres("label$salePoint"), Field: "salepoint.name", IsOrder: true });
-                        if (this.Filter.IsShowProduct)
-                            columns.push({ Header: vars._statres("label$product"), Field: "product.name", IsOrder: true });
-                        if (this.Filter.IsShowEmployee)
-                            columns.push({ Header: vars._statres("label$employee"), Field: "employee.name", IsOrder: true });
-                        if (this.Filter.IsShowClient)
-                            columns.push({ Header: vars._statres("label$client"), Field: "client.name", IsOrder: true });
-                        columns.push({ Header: vars._statres("label$quantity"), HeaderStyle: "product-col-quantity-auto-right", Field: "quantity", FieldTemplate: '#=numberToString(quantity,2)#', FieldStyle: "product-col-quantity-auto-right", IsSum: true, IsOrder: true });
-                        columns.push({ Header: vars._statres("label$sum"), HeaderStyle: "product-col-sum-auto-rigth", Field: "sum", FieldTemplate: '#=numberToString(sum,2)#', FieldStyle: "product-col-sum-auto-rigth", IsSum: true, IsOrder: true });
-                        return columns;
-                    };
+                    Object.defineProperty(Index.prototype, "Columns", {
+                        get: function () {
+                            var columns = [];
+                            if (this.Filter.IsShowSalepoint)
+                                columns.push({ Header: vars._statres("label$salePoint"), Field: "salepoint.name", IsOrder: true });
+                            if (this.Filter.IsShowProduct)
+                                columns.push({ Header: vars._statres("label$product"), Field: "product.name", IsOrder: true });
+                            if (this.Filter.IsShowEmployee)
+                                columns.push({ Header: vars._statres("label$employee"), Field: "employee.name", IsOrder: true });
+                            if (this.Filter.IsShowClient)
+                                columns.push({ Header: vars._statres("label$client"), Field: "client.name", IsOrder: true });
+                            columns.push({ Header: vars._statres("label$quantity"), HeaderStyle: "product-col-quantity-auto-right", Field: "quantity", FieldTemplate: '#=numberToString(quantity,2)#', FieldStyle: "product-col-quantity-auto-right", IsSum: true, IsOrder: true });
+                            columns.push({ Header: vars._statres("label$sum"), HeaderStyle: "product-col-sum-auto-rigth", Field: "sum", FieldTemplate: '#=numberToString(sum,2)#', FieldStyle: "product-col-sum-auto-rigth", IsSum: true, IsOrder: true });
+                            return columns;
+                        },
+                        enumerable: true,
+                        configurable: true
+                    });
                     Index.prototype.createEvents = function () {
                         _super.prototype.createEvents.call(this);
                         if (this.buildButton)
@@ -293,16 +297,13 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                         _super.prototype.buildButtonClick.call(this, e);
                         var filter = self.Filter;
                         this.Service.GetSales(filter, function (responseData) {
-                            self.Model.set("reportModel", responseData);
-                            self.ReportSettings.Columns = self.columns();
-                            self.setupTable();
+                            self.SetupTable(responseData);
                         });
                     };
-                    Index.prototype.OnDetalize = function (e) {
+                    Index.prototype.OnDetalize = function (row) {
                         var self = this;
                         var curfilter = self.Filter;
-                        var index = +e.currentTarget.id.replace('table-row-', '');
-                        var item = this.Model.get("reportModel")[index];
+                        var item = row;
                         vars._app.OpenController({
                             urlController: 'report/sales/detalize', isModal: true, onLoadController: function (controller) {
                                 var ctrlDetalize = controller;

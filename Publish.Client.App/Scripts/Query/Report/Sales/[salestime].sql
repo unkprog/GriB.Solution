@@ -8,14 +8,14 @@
   union all select '16', '16-17' union all select '17', '17-18' union all select '18', '18-19' union all select '19', '19-20'
   union all select '20', '20-21' union all select '21', '21-22' union all select '22', '22-23' union all select '23', '23-24' 
 
-select [cutime], [doc_cnt]=avg([doc_cnt]), [pos_cnt]=avg([pos_cnt])
+select [cutime], [doc_cnt]=avg([doc_cnt]), [pos_cnt]=avg([pos_cnt]), [pos_sum]=avg([pos_sum])
 into #ttimesdoc
 from (
       select [y]=DATEPART(YEAR, [d].[cd]), [m]=DATEPART(MONTH, [d].[cd]), [d]=DATEPART(DAY, [d].[cd])
            , [cutime]=substring('00', 1, 2 - len(ltrim(str(DATEPART(HOUR, [d].[cd]))))) + ltrim(str(DATEPART(HOUR, [d].[cd])))
-	       , [doc_cnt]=cast(count([d].[id]) as float), [pos_cnt]=sum([p].[pos_cnt])
+	       , [doc_cnt]=cast(count([d].[id]) as float), [pos_cnt]=sum([p].[pos_cnt]), [pos_sum]=sum([p].[pos_sum])
 	  from (
-            select [d].[id], [pos_cnt]=cast(count([p].[id]) as float)
+            select [d].[id], [pos_cnt]=cast(count([p].[id]) as float), [pos_sum]= sum((1.0 - ([d].[discount]/100.0)) *  [p].[quantity] * [p].[price])
             from [t_check_position] [p] with(nolock)
             inner join [t_check] [d] with(nolock) on [p].[id] = [d].[id]
             where [d].[d] = 0 and ([d].[options] & 1) = 1
@@ -31,7 +31,7 @@ from (
      ) [res]
 group by [cutime]
   
-  select [t].[timelab], [doc_cnt]=isnull([tt].[doc_cnt], 0), [pos_cnt]=isnull([tt].[pos_cnt], 0)
+  select [t].[timelab], [doc_cnt]=isnull([tt].[doc_cnt], 0), [pos_cnt]=isnull([tt].[pos_cnt], 0), [pos_sum]=isnull([tt].[pos_sum], 0)
   from #ttimes [t]
   left outer join #ttimesdoc [tt] on [t].[time] = [tt].[cutime]
 

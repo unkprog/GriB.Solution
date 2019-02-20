@@ -1,4 +1,5 @@
 ﻿import base = require('app/common/basecontroller');
+import ctrl = require('app/common/basecontrol');
 import svc = require('app/services/reportsservice');
 import vars = require('app/common/variables');
 import utils = require('app/common/utils');
@@ -19,6 +20,7 @@ export namespace Controller.Report.Dashboard {
                 "Header": vars._statres("report$sales$time"),
                 "filterModel": {},
                 "selectedFields": [],
+                "reportModel": { dayweeks: [], times: [] }, 
                 "labelDateFrom": vars._statres("label$date$from"),
                 "labelDateTo": vars._statres("label$date$to"),
                 "labelShowFields": vars._statres("label$showfields"),
@@ -62,6 +64,9 @@ export namespace Controller.Report.Dashboard {
         private chartTimesControl: JQuery;
         private chartTimesContainerControl: JQuery;
 
+        private tableWeekControl: Interfaces.Control.IControlTable;
+        private tableTimeControl: Interfaces.Control.IControlTable;
+
         public ViewInit(view: JQuery): boolean {
             let controller = this;
           
@@ -92,12 +97,23 @@ export namespace Controller.Report.Dashboard {
             controller.chartWeeksControl = view.find('#report-expana-week-view-chart');
             controller.chartTimesContainerControl = view.find('#report-expana-time-view-chart-container');
             controller.chartTimesControl = view.find('#report-expana-time-view-chart');
-           
+
+            controller.tableWeekControl = new ctrl.Control.BaseTable();
+            view.find("#report-expana-week-view-table-container").append(controller.tableWeekControl.InitView());
+
+            controller.tableTimeControl = new ctrl.Control.BaseTable();
+            view.find("#report-expana-time-view-table-container").append(controller.tableTimeControl.InitView());
 
             let result: boolean = super.ViewInit(view);
             return result;
 
         }
+
+        public ViewShow(e): boolean {
+            this.buildButtonClick(e);
+            return super.ViewShow(e);
+        }
+       
 
         public ViewResize(e: any): void {
             super.ViewResize(e);
@@ -213,22 +229,22 @@ export namespace Controller.Report.Dashboard {
             let filter: Interfaces.Model.IReportSaleFilter = self.Filter as Interfaces.Model.IReportSaleFilter;
             this.Service.GetExpresAnalysisData(filter, (responseData: any) => {
                 self.Model.set("reportModel", responseData);
-                //self.ReportSettings.Columns = self.columns();
                 self.setupChart();
+                self.setupTable();
             });
         }
 
-        private weekNames = ["", vars._statres("label$dayweek$sun"), vars._statres("label$dayweek$mon"), vars._statres("label$dayweek$tue"), vars._statres("label$dayweek$wed"), vars._statres("label$dayweek$thu"), vars._statres("label$dayweek$fri"), vars._statres("label$dayweek$sat") ];
+        //private weekNames = ["", vars._statres("label$dayweek$sun"), vars._statres("label$dayweek$mon"), vars._statres("label$dayweek$tue"), vars._statres("label$dayweek$wed"), vars._statres("label$dayweek$thu"), vars._statres("label$dayweek$fri"), vars._statres("label$dayweek$sat") ];
         private getChartData(): any {
             let controller = this;
             let result = {
-                weeks: { labels: [], datasets: [{ type: 'line', label: vars._statres("label$sum"), data: [], borderColor: '#2196f3', backgroundColor: '#64b5f6', fill: false }, { label: vars._statres("label$checks"), data: [], borderColor: '#9e9e9e', backgroundColor: '#e0e0e0' }, { type: 'bar', label: vars._statres("label$positions"), data: [], borderColor: '#4caf50', backgroundColor: '#81c784' }] },
-                times: { labels: [], datasets: [{ type: 'line', label: vars._statres("label$sum"), data: [], borderColor: '#2196f3', backgroundColor: '#64b5f6', fill: false }, { label: vars._statres("label$checks"), data: [], borderColor: '#9e9e9e', backgroundColor: '#e0e0e0' }, { type: 'bar', label: vars._statres("label$positions"), data: [], borderColor: '#4caf50', backgroundColor: '#81c784' }] }
+                weeks: { labels: [], datasets: [{ type: 'line', label: vars._statres("label$sum"), data: [], borderColor: vars.sumTextColor, backgroundColor: '#64b5f6', fill: false }, { label: vars._statres("label$checks"), data: [], borderColor: vars.checkTextColor, backgroundColor: '#ffb74d' }, { type: 'bar', label: vars._statres("label$positions"), data: [], borderColor: vars.positionTextColor, backgroundColor: '#81c784' }] },
+                times: { labels: [], datasets: [{ type: 'line', label: vars._statres("label$sum"), data: [], borderColor: vars.sumTextColor, backgroundColor: '#64b5f6', fill: false }, { label: vars._statres("label$checks"), data: [], borderColor: vars.checkTextColor, backgroundColor: '#ffb74d' }, { type: 'bar', label: vars._statres("label$positions"), data: [], borderColor: vars.positionTextColor, backgroundColor: '#81c784' }] }
             };
 
             let rowsweek: Array<any> = controller.Model.get("reportModel").dayweeks;
             for (let i = 0, icount = (rowsweek ? rowsweek.length : 0); i < icount; i++) {
-                result.weeks.labels.push(this.weekNames[rowsweek[i].dayweek]);
+                result.weeks.labels.push(window.WeekNamesByValue[rowsweek[i].dayweek]);
                 result.weeks.datasets[0].data.push(rowsweek[i].sumpercent);
                 result.weeks.datasets[1].data.push(rowsweek[i].countpercent);
                 result.weeks.datasets[2].data.push(rowsweek[i].countpospercent);
@@ -322,6 +338,31 @@ export namespace Controller.Report.Dashboard {
 
 
         protected setupTable() {
+            this.tableWeekControl.Rows = this.Model.get("reportModel").dayweeks;
+            this.tableWeekControl.Columns = [
+                { Header: vars._statres("label$weekday"), Field: "dayweek", FieldTemplate: '#=window.WeekNamesByValue[dayweek]#', IsOrder: true },
+                { Header: vars._statres("label$count$cheks"), HeaderStyle: "product-col-sum-auto-rigth", Field: "count", FieldStyle: "product-col-sum-auto-rigth", IsSum: true, IsOrder: true },
+                { Header: vars._statres("label$percent$cheks"), HeaderStyle: "product-col-sum-auto-rigth", Field: "countpercent", FieldTemplate: '#=numberToString(countpercent,2)#', FieldStyle: "product-col-sum-auto-rigth check-text-color", IsNumber: true, IsOrder: true },
+                { Header: vars._statres("label$count$positions"), HeaderStyle: "product-col-sum-auto-rigth", Field: "countpos", FieldStyle: "product-col-sum-auto-rigth", IsSum: true, IsOrder: true },
+                { Header: vars._statres("label$percent$positions"), HeaderStyle: "product-col-sum-auto-rigth", Field: "countpospercent", FieldTemplate: '#=numberToString(countpospercent,2)#', FieldStyle: "product-col-sum-auto-rigth position-text-color", IsNumber: true, IsOrder: true },
+                { Header: vars._statres("label$sum"), HeaderStyle: "product-col-sum-auto-rigth", Field: "sum", FieldTemplate: '#=numberToString(sum,2)#', FieldStyle: "product-col-sum-auto-rigth", IsSum: true, IsOrder: true },
+                { Header: vars._statres("label$percent$sum"), HeaderStyle: "product-col-sum-auto-rigth", Field: "sumpercent", FieldTemplate: '#=numberToString(sumpercent,2)#', FieldStyle: "product-col-sum-auto-rigth sum-text-color", IsNumber: true, IsOrder: true },
+                { Header: vars._statres("label$avg$chek"), HeaderStyle: "product-col-sum-auto-rigth", Field: "avgsum", FieldTemplate: '#=numberToString(avgsum,2)#', FieldStyle: "product-col-sum-auto-rigth", IsNumber:true, IsOrder: true },
+            ];
+            this.tableWeekControl.Setup();
+
+            this.tableTimeControl.Rows = this.Model.get("reportModel").times;
+            this.tableTimeControl.Columns = [
+                { Header: vars._statres("label$intervaltime"), Field: "time", IsOrder: true },
+                { Header: vars._statres("label$count$cheks"), HeaderStyle: "product-col-sum-auto-rigth", Field: "count", FieldStyle: "product-col-sum-auto-rigth", IsSum: true, IsOrder: true },
+                { Header: vars._statres("label$percent$cheks"), HeaderStyle: "product-col-sum-auto-rigth", Field: "countpercent", FieldTemplate: '#=numberToString(countpercent,2)#', FieldStyle: "product-col-sum-auto-rigth check-text-color", IsNumber: true, IsOrder: true },
+                { Header: vars._statres("label$count$positions"), HeaderStyle: "product-col-sum-auto-rigth", Field: "countpos", FieldStyle: "product-col-sum-auto-rigth", IsSum: true, IsOrder: true },
+                { Header: vars._statres("label$percent$positions"), HeaderStyle: "product-col-sum-auto-rigth", Field: "countpospercent", FieldTemplate: '#=numberToString(countpospercent,2)#', FieldStyle: "product-col-sum-auto-rigth position-text-color", IsNumber: true, IsOrder: true },
+                { Header: vars._statres("label$sum"), HeaderStyle: "product-col-sum-auto-rigth", Field: "sum", FieldTemplate: '#=numberToString(sum,2)#', FieldStyle: "product-col-sum-auto-rigth", IsSum: true, IsOrder: true },
+                { Header: vars._statres("label$percent$sum"), HeaderStyle: "product-col-sum-auto-rigth", Field: "sumpercent", FieldTemplate: '#=numberToString(sumpercent,2)#', FieldStyle: "product-col-sum-auto-rigth sum-text-color", IsNumber: true, IsOrder: true },
+                { Header: vars._statres("label$avg$chek"), HeaderStyle: "product-col-sum-auto-rigth", Field: "avgsum", FieldTemplate: '#=numberToString(avgsum,2)#', FieldStyle: "product-col-sum-auto-rigth", IsNumber: true, IsOrder: true },
+            ];
+            this.tableTimeControl.Setup();
         }
     }
 }

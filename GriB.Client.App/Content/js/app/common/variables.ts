@@ -64,3 +64,17 @@ export function getTemplate(template: string): Function {
     }
     return result;
 }
+
+export declare let WeekNamesByValue: Array<string>;
+WeekNamesByValue = ["", _statres("label$dayweek$sun"), _statres("label$dayweek$mon"), _statres("label$dayweek$tue"), _statres("label$dayweek$wed"), _statres("label$dayweek$thu"), _statres("label$dayweek$fri"), _statres("label$dayweek$sat")];
+window.WeekNamesByValue = WeekNamesByValue;
+
+
+export declare let sumTextColor: string;
+export declare let checkTextColor: string;
+export declare let positionTextColor: string;
+sumTextColor = '#2196f3';
+checkTextColor = '#ff9800';
+positionTextColor = '#4caf50';
+
+

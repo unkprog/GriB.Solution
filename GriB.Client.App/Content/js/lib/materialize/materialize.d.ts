@@ -54,4 +54,5 @@ interface Window {
     date_from_ddmmyyyy(dateStr: string): Date;
     numberToString(value: number, decimal: number): string;
     strToHashCode(str: string): number;
+    WeekNamesByValue: Array<string>;
 }

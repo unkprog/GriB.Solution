@@ -34,17 +34,20 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
                         "labelReportSales": vars._statres("report$sales"),
                         "labelReportStocks": vars._statres("report$stocks"),
                         "labelReportSalesTime": vars._statres("report$sales$time"),
+                        "labelReportExpressAnalysis": vars._statres("report$expressanalysis"),
                     });
                 };
                 Index.prototype.createEvents = function () {
                     this.ReportSalesButtonClick = this.createTouchClickEvent("btn-report-sales", this.reportSalesButtonClick);
                     this.ReportStocksButtonClick = this.createTouchClickEvent("btn-report-stocks", this.reportStocksButtonClick);
                     this.ReportSalesTimeButtonClick = this.createTouchClickEvent("btn-report-salestime", this.reportSalesTimeButtonClick);
+                    this.ReportExpressAnalysisButtonClick = this.createTouchClickEvent("btn-report-expressanalysis", this.reportExpressAnalysisButtonClick);
                 };
                 Index.prototype.destroyEvents = function () {
                     this.destroyTouchClickEvent("btn-report-sales", this.ReportSalesButtonClick);
                     this.destroyTouchClickEvent("btn-report-stocks", this.ReportStocksButtonClick);
                     this.destroyTouchClickEvent("btn-report-salestime", this.ReportSalesTimeButtonClick);
+                    this.destroyTouchClickEvent("btn-report-expressanalysis", this.ReportExpressAnalysisButtonClick);
                 };
                 Index.prototype.reportSalesButtonClick = function (e) {
                     vars._main.OpenController({ urlController: "report/sales/index", backController: this });
@@ -54,6 +57,9 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
                 };
                 Index.prototype.reportSalesTimeButtonClick = function (e) {
                     vars._main.OpenController({ urlController: "report/dashboard/salestime", backController: this });
+                };
+                Index.prototype.reportExpressAnalysisButtonClick = function (e) {
+                    vars._main.OpenController({ urlController: "report/dashboard/expressanalysis", backController: this });
                 };
                 return Index;
             }(base.Controller.Base));

@@ -524,3 +524,12 @@ input[type='number']:hover::-webkit-outer-spin-button {
   margin: auto;
   height: 80vh;
   width: 80vw; }
+
+.sum-text-color {
+  color: #2196f3; }
+
+.check-text-color {
+  color: #ff9800; }
+
+.position-text-color {
+  color: #4caf50; }
