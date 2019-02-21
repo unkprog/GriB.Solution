@@ -41,7 +41,7 @@ namespace GriB.Client.App.Controllers
 
         [HttpPost]
         [ActionName("salesdetail")]
-        public async Task<HttpResponseMessage> ReportSalesDetail(ReportSaleFilter filter)
+        public async Task<HttpResponseMessage> ReportSalesDetail(ReportSaleDetailFilter filter)
         => await TryCatchResponseAsync(async () => await CheckResponseError(
               async () =>
               {
@@ -60,49 +60,20 @@ namespace GriB.Client.App.Controllers
        );
 
         [HttpPost]
-        [ActionName("salestime")]
-        public HttpResponseMessage ReportSalesTime(ReportSaleFilter filter)
-        {
-            return TryCatchResponseQuery((query) =>
-            {
-                return Request.CreateResponse(HttpStatusCode.OK, new { times = Sales.GetReportSalesTime(query, filter), dayweeks = Sales.GetReportSalesDayWeek(query, filter) } );
-            });
-        }
-
-        [HttpPost]
         [ActionName("expressanalysis")]
         public HttpResponseMessage ReportExpressAnalysis(ReportSaleFilter filter)
         {
             return TryCatchResponseQuery((query) =>
             {
-                List<ReportSaleTimeTableRow> times = Sales.GetReportSalesTimeDashboard(query, filter);
                 List<ReportSaleDayWeekTableRow> dayweeks = Sales.GetReportSalesDayWeekDashboard(query, filter);
-                double count = times.Sum(f => f.count);
-                double countpos = times.Sum(f => f.countpos);
-                double sum = times.Sum(f => f.sum);
-                double avgCheckTimeSum = Math.Round(count > 0 ? sum / count : 0);
-                foreach (ReportSaleTimeTableRow item in times)
-                {
-                    item.countpercent = Math.Round(count > 0 ? 100.0f * (item.count / count) : 0, 2);
-                    item.countpospercent = Math.Round(countpos > 0 ? 100.0f * (item.countpos / countpos) : 0, 2);
-                    item.sumpercent = Math.Round(sum > 0 ? 100.0f * (item.sum / sum) : 0, 2);
-                }
-                count = dayweeks.Sum(f => f.count);
-                countpos = dayweeks.Sum(f => f.countpos);
-                sum = dayweeks.Sum(f => f.sum);
-                double avgCheckWeekSum = Math.Round(count > 0 ? sum / count : 0);
-                foreach (ReportSaleDayWeekTableRow item in dayweeks)
-                {
-                    item.countpercent = Math.Round(count > 0 ? 100.0f * (item.count / count) : 0, 2);
-                    item.countpospercent = Math.Round(countpos > 0 ? 100.0f * (item.countpos / countpos) : 0, 2);
-                    item.sumpercent = Math.Round(sum > 0 ? 100.0f * (item.sum / sum) : 0, 2);
-                }
+                List<ReportSaleTimeTableRow> times = Sales.GetReportSalesTimeDashboard(query, filter);
+                double avgCheckWeekSum = 0, avgCheckTimeSum = 0;
+                dayweeks = Sales.CalculateDashboardParams(dayweeks, out avgCheckWeekSum);
+                times = Sales.CalculateDashboardParams(times, out avgCheckTimeSum);
 
                 return Request.CreateResponse(HttpStatusCode.OK, new { times, avgCheckTimeSum, dayweeks, avgCheckWeekSum });
             });
         }
-
-        
 
         [HttpPost]
         [ActionName("stocks")]

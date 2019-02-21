@@ -96,9 +96,11 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                     };
                     Detalize.prototype.buildButtonClick = function (e) {
                         var self = this;
+                        vars._app.ShowLoading();
                         _super.prototype.buildButtonClick.call(this, e);
                         this.Service.GetSalesDetail(this.Filter, function (responseData) {
                             self.SetupTable(responseData);
+                            vars._app.HideLoading();
                         });
                     };
                     Detalize.prototype.OnDetalize = function (row) {

@@ -804,6 +804,10 @@ define(["require", "exports", "app/common/utils", "app/common/variables", "app/c
                 enumerable: true,
                 configurable: true
             });
+            BaseReportWithFilter.prototype.ViewHide = function (e) {
+                this.SaveFilter();
+                _super.prototype.ViewHide.call(this, e);
+            };
             return BaseReportWithFilter;
         }(BaseEditor));
         Controller.BaseReportWithFilter = BaseReportWithFilter;
@@ -866,7 +870,6 @@ define(["require", "exports", "app/common/utils", "app/common/variables", "app/c
                 return _super.prototype.ViewShow.call(this, e);
             };
             BaseReportTable.prototype.ViewHide = function (e) {
-                this.SaveFilter();
                 this.tableControl.DestroyView();
                 _super.prototype.ViewHide.call(this, e);
             };

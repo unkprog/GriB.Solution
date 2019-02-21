@@ -908,6 +908,11 @@ export namespace Controller {
         public set Filter(filter: Interfaces.Model.IReportFilter) {
             this.Model.set("filterModel", filter);
         }
+
+        public ViewHide(e: any) {
+            this.SaveFilter();
+            super.ViewHide(e);
+        }
     }
 
     export class BaseReportTable extends BaseReportWithFilter implements Interfaces.IControllerReport {
@@ -976,7 +981,6 @@ export namespace Controller {
         }
 
         public ViewHide(e: any) {
-            this.SaveFilter();
             this.tableControl.DestroyView();
             super.ViewHide(e);
         }

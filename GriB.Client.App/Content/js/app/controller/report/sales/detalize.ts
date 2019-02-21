@@ -49,8 +49,8 @@ export namespace Controller.Report.Sales {
             return result;
         }
 
-        public get Filter(): Interfaces.Model.IReportSaleFilter {
-            return this.Model.get("filterModel").toJSON() as Interfaces.Model.IReportSaleFilter;
+        public get Filter(): Interfaces.Model.IReportSaleDetailFilter {
+            return this.Model.get("filterModel").toJSON() as Interfaces.Model.IReportSaleDetailFilter;
         }
 
         public get Columns(): Interfaces.Control.ITableColumn[] {
@@ -77,9 +77,11 @@ export namespace Controller.Report.Sales {
         public BuildButtonClick: { (e: any): void; };
         protected buildButtonClick(e) {
             let self = this;
+            vars._app.ShowLoading();
             super.buildButtonClick(e);
-            this.Service.GetSalesDetail(this.Filter as Interfaces.Model.IReportSaleFilter, (responseData: any) => {
+            this.Service.GetSalesDetail(this.Filter as Interfaces.Model.IReportSaleDetailFilter, (responseData: any) => {
                 self.SetupTable(responseData);
+                vars._app.HideLoading();
             });
         }
 

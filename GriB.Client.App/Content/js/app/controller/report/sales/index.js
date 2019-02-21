@@ -55,6 +55,13 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                     Index.prototype.getDefaultFilter = function () {
                         return { datefrom: utils.date_ddmmyyyy(utils.dateToday()), dateto: utils.date_ddmmyyyy(utils.dateToday()), salepoint: undefined, product: undefined, employee: undefined, client: undefined, IsShowSalepoint: true, IsShowProduct: true, IsShowEmployee: false, IsShowClient: false };
                     };
+                    Object.defineProperty(Index.prototype, "Filter", {
+                        get: function () {
+                            return this.Model.get("filterModel").toJSON();
+                        },
+                        enumerable: true,
+                        configurable: true
+                    });
                     Index.prototype.ViewInit = function (view) {
                         var controller = this;
                         controller.dateFromControl = view.find("#report-sales-view-date-start");
@@ -108,13 +115,6 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                         this.showFieldsControl.formSelect();
                         return _super.prototype.ViewShow.call(this, e);
                     };
-                    Object.defineProperty(Index.prototype, "Filter", {
-                        get: function () {
-                            return this.Model.get("filterModel").toJSON();
-                        },
-                        enumerable: true,
-                        configurable: true
-                    });
                     Object.defineProperty(Index.prototype, "Columns", {
                         get: function () {
                             var columns = [];
@@ -308,7 +308,7 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                             urlController: 'report/sales/detalize', isModal: true, onLoadController: function (controller) {
                                 var ctrlDetalize = controller;
                                 var filter = {
-                                    datefrom: curfilter.datefrom, dateto: curfilter.dateto, salepoint: curfilter.salepoint, employee: curfilter.employee, client: curfilter.client, product: curfilter.product
+                                    datefrom: curfilter.datefrom, dateto: curfilter.dateto, salepoint: curfilter.salepoint, employee: curfilter.employee, client: curfilter.client, product: curfilter.product, dayweek: 0, time: ''
                                 };
                                 if (item.salepoint && item.salepoint.id && item.salepoint.id !== 0)
                                     filter.salepoint = item.salepoint;

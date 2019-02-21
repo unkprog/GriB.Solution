@@ -8,18 +8,17 @@ export namespace Controller.Report.Dashboard {
     export class ReportExpressAnalysis extends base.Controller.BaseReportWithFilter {
         constructor() {
             super();
+            this.Model.set("Header", vars._statres("report$expressanalysis"));
         }
 
         protected createOptions(): Interfaces.IControllerOptions {
             return { Url: "/Content/view/report/dashboard/expressanalysis.html", Id: "report-expana-view" };
         }
 
-
         protected createModel(): kendo.data.ObservableObject {
             return new kendo.data.ObservableObject({
                 "Header": vars._statres("report$sales$time"),
                 "filterModel": {},
-                "selectedFields": [],
                 "reportModel": { dayweeks: [], times: [] }, 
                 "labelDateFrom": vars._statres("label$date$from"),
                 "labelDateTo": vars._statres("label$date$to"),
@@ -31,25 +30,30 @@ export namespace Controller.Report.Dashboard {
         }
 
         protected get FilterName(): string {
-            return "reportFilterSalesTime";
+            return "reportFilterSalesExpressAnalysis";
         }
 
         protected getDefaultFilter(): Interfaces.Model.IReportSaleFilter {
             return { datefrom: utils.date_ddmmyyyy(utils.dateToday()), dateto: utils.date_ddmmyyyy(utils.dateToday()), salepoint: undefined, product: undefined, employee: undefined, client: undefined, IsShowSalepoint: true, IsShowProduct: true, IsShowEmployee: false, IsShowClient: false };
         }
 
-        protected getSaveFilter(): string {
-            let controller = this;
-            let _datefrom: Date = controller.Model.get("filterModel.datefrom");
-            let _dateto: Date = controller.Model.get("filterModel.dateto");
-            let filterToSave = {
-                datefrom: utils.date_ddmmyyyy(_datefrom), dateto: utils.date_ddmmyyyy(_dateto)
-                , salepoint: this.Model.get("filterModel.salepoint"), product: this.Model.get("filterModel.product"), employee: this.Model.get("filterModel.employee"), client: this.Model.get("filterModel.client")
-                , IsShowSalepoint: this.Model.get("filterModel.IsShowSalepoint"), IsShowProduct: this.Model.get("filterModel.IsShowProduct"), IsShowEmployee: this.Model.get("filterModel.IsShowEmployee"), IsShowClient: this.Model.get("filterModel.IsShowClient")
-            };
-            return JSON.stringify(filterToSave);
 
+        public get Filter(): Interfaces.Model.IReportSaleFilter {
+            return this.Model.get("filterModel").toJSON() as Interfaces.Model.IReportSaleFilter;
         }
+
+        //protected getSaveFilter(): string {
+        //    let controller = this;
+        //    let _datefrom: Date = controller.Model.get("filterModel.datefrom");
+        //    let _dateto: Date = controller.Model.get("filterModel.dateto");
+        //    let filterToSave = {
+        //        datefrom: utils.date_ddmmyyyy(_datefrom), dateto: utils.date_ddmmyyyy(_dateto)
+        //        , salepoint: this.Model.get("filterModel.salepoint"), product: this.Model.get("filterModel.product"), employee: this.Model.get("filterModel.employee"), client: this.Model.get("filterModel.client")
+        //        , IsShowSalepoint: this.Model.get("filterModel.IsShowSalepoint"), IsShowProduct: this.Model.get("filterModel.IsShowProduct"), IsShowEmployee: this.Model.get("filterModel.IsShowEmployee"), IsShowClient: this.Model.get("filterModel.IsShowClient")
+        //    };
+        //    return JSON.stringify(filterToSave);
+
+        //}
 
         private dateFromControl: JQuery;
         private dateToControl: JQuery;
@@ -99,9 +103,11 @@ export namespace Controller.Report.Dashboard {
             controller.chartTimesControl = view.find('#report-expana-time-view-chart');
 
             controller.tableWeekControl = new ctrl.Control.BaseTable();
+            controller.tableWeekControl.OnDetalize = $.proxy(controller.OnDetalizeDayWeek, controller);
             view.find("#report-expana-week-view-table-container").append(controller.tableWeekControl.InitView());
 
             controller.tableTimeControl = new ctrl.Control.BaseTable();
+            controller.tableTimeControl.OnDetalize = $.proxy(controller.OnDetalizeTime, controller);
             view.find("#report-expana-time-view-table-container").append(controller.tableTimeControl.InitView());
 
             let result: boolean = super.ViewInit(view);
@@ -225,12 +231,14 @@ export namespace Controller.Report.Dashboard {
         public BuildButtonClick: { (e: any): void; };
         protected buildButtonClick(e) {
             let self = this;
+            vars._app.ShowLoading();
             //super.buildButtonClick(e);
             let filter: Interfaces.Model.IReportSaleFilter = self.Filter as Interfaces.Model.IReportSaleFilter;
             this.Service.GetExpresAnalysisData(filter, (responseData: any) => {
                 self.Model.set("reportModel", responseData);
                 self.setupChart();
                 self.setupTable();
+                vars._app.HideLoading();
             });
         }
 
@@ -341,28 +349,70 @@ export namespace Controller.Report.Dashboard {
             this.tableWeekControl.Rows = this.Model.get("reportModel").dayweeks;
             this.tableWeekControl.Columns = [
                 { Header: vars._statres("label$weekday"), Field: "dayweek", FieldTemplate: '#=window.WeekNamesByValue[dayweek]#', IsOrder: true },
-                { Header: vars._statres("label$count$cheks"), HeaderStyle: "product-col-sum-auto-rigth", Field: "count", FieldStyle: "product-col-sum-auto-rigth", IsSum: true, IsOrder: true },
-                { Header: vars._statres("label$percent$cheks"), HeaderStyle: "product-col-sum-auto-rigth", Field: "countpercent", FieldTemplate: '#=numberToString(countpercent,2)#', FieldStyle: "product-col-sum-auto-rigth check-text-color", IsNumber: true, IsOrder: true },
-                { Header: vars._statres("label$count$positions"), HeaderStyle: "product-col-sum-auto-rigth", Field: "countpos", FieldStyle: "product-col-sum-auto-rigth", IsSum: true, IsOrder: true },
-                { Header: vars._statres("label$percent$positions"), HeaderStyle: "product-col-sum-auto-rigth", Field: "countpospercent", FieldTemplate: '#=numberToString(countpospercent,2)#', FieldStyle: "product-col-sum-auto-rigth position-text-color", IsNumber: true, IsOrder: true },
-                { Header: vars._statres("label$sum"), HeaderStyle: "product-col-sum-auto-rigth", Field: "sum", FieldTemplate: '#=numberToString(sum,2)#', FieldStyle: "product-col-sum-auto-rigth", IsSum: true, IsOrder: true },
-                { Header: vars._statres("label$percent$sum"), HeaderStyle: "product-col-sum-auto-rigth", Field: "sumpercent", FieldTemplate: '#=numberToString(sumpercent,2)#', FieldStyle: "product-col-sum-auto-rigth sum-text-color", IsNumber: true, IsOrder: true },
-                { Header: vars._statres("label$avg$chek"), HeaderStyle: "product-col-sum-auto-rigth", Field: "avgsum", FieldTemplate: '#=numberToString(avgsum,2)#', FieldStyle: "product-col-sum-auto-rigth", IsNumber:true, IsOrder: true },
+                { Header: vars._statres("label$count$cheks"), HeaderStyle: "product-col-sum-auto-rigth", Field: "count", FieldStyle: "product-col-sum-auto-rigth #if(countzone===4){# grade-30 #} else if(countzone===3){# grade-50 #} else if(countzone===2){# grade-70 #} else if(countzone===1){# grade-85 #} else {# grade-other #}#", IsSum: true, IsOrder: true },
+                { Header: vars._statres("label$percent$cheks"), HeaderStyle: "product-col-sum-auto-rigth", Field: "countpercent", FieldTemplate: '#=numberToString(countpercent,2)#', FieldStyle: "product-col-sum-auto-rigth check-text-color #if(countzone===4){# grade-30 #} else if(countzone===3){# grade-50 #} else if(countzone===2){# grade-70 #} else if(countzone===1){# grade-85 #} else {# grade-other #}#", IsNumber: true, IsOrder: true },
+                { Header: vars._statres("label$count$positions"), HeaderStyle: "product-col-sum-auto-rigth", Field: "countpos", FieldStyle: "product-col-sum-auto-rigth #if(countposzone===4){# grade-30 #} else if(countposzone===3){# grade-50 #} else if(countposzone===2){# grade-70 #} else if(countposzone===1){# grade-85 #} else {# grade-other #}#", IsSum: true, IsOrder: true },
+                { Header: vars._statres("label$percent$positions"), HeaderStyle: "product-col-sum-auto-rigth", Field: "countpospercent", FieldTemplate: '#=numberToString(countpospercent,2)#', FieldStyle: "product-col-sum-auto-rigth position-text-color #if(countposzone===4){# grade-30 #} else if(countposzone===3){# grade-50 #} else if(countposzone===2){# grade-70 #} else if(countposzone===1){# grade-85 #} else {# grade-other #}#", IsNumber: true, IsOrder: true },
+                { Header: vars._statres("label$sum"), HeaderStyle: "product-col-sum-auto-rigth", Field: "sum", FieldTemplate: '#=numberToString(sum,2)#', FieldStyle: "product-col-sum-auto-rigth #if(sumzone===4){# grade-30 #} else if(sumzone===3){# grade-50 #} else if(sumzone===2){# grade-70 #} else if(sumzone===1){# grade-85 #} else {# grade-other #}#", IsSum: true, IsOrder: true },
+                { Header: vars._statres("label$percent$sum"), HeaderStyle: "product-col-sum-auto-rigth", Field: "sumpercent", FieldTemplate: '#=numberToString(sumpercent,2)#', FieldStyle: "product-col-sum-auto-rigth sum-text-color #if(sumzone===4){# grade-30 #} else if(sumzone===3){# grade-50 #} else if(sumzone===2){# grade-70 #} else if(sumzone===1){# grade-85 #} else {# grade-other #}#", IsNumber: true, IsOrder: true },
+                { Header: vars._statres("label$avg$chek"), HeaderStyle: "product-col-sum-auto-rigth", Field: "avgsum", FieldTemplate: '#=numberToString(avgsum,2)#', FieldStyle: "product-col-sum-auto-rigth #if(avgsumzone===4){# grade-30 #} else if(avgsumzone===3){# grade-50 #} else if(avgsumzone===2){# grade-70 #} else if(avgsumzone===1){# grade-85 #} else {# grade-other #}#", IsNumber: true, IsOrder: true },
             ];
             this.tableWeekControl.Setup();
 
             this.tableTimeControl.Rows = this.Model.get("reportModel").times;
             this.tableTimeControl.Columns = [
                 { Header: vars._statres("label$intervaltime"), Field: "time", IsOrder: true },
-                { Header: vars._statres("label$count$cheks"), HeaderStyle: "product-col-sum-auto-rigth", Field: "count", FieldStyle: "product-col-sum-auto-rigth", IsSum: true, IsOrder: true },
-                { Header: vars._statres("label$percent$cheks"), HeaderStyle: "product-col-sum-auto-rigth", Field: "countpercent", FieldTemplate: '#=numberToString(countpercent,2)#', FieldStyle: "product-col-sum-auto-rigth check-text-color", IsNumber: true, IsOrder: true },
-                { Header: vars._statres("label$count$positions"), HeaderStyle: "product-col-sum-auto-rigth", Field: "countpos", FieldStyle: "product-col-sum-auto-rigth", IsSum: true, IsOrder: true },
-                { Header: vars._statres("label$percent$positions"), HeaderStyle: "product-col-sum-auto-rigth", Field: "countpospercent", FieldTemplate: '#=numberToString(countpospercent,2)#', FieldStyle: "product-col-sum-auto-rigth position-text-color", IsNumber: true, IsOrder: true },
-                { Header: vars._statres("label$sum"), HeaderStyle: "product-col-sum-auto-rigth", Field: "sum", FieldTemplate: '#=numberToString(sum,2)#', FieldStyle: "product-col-sum-auto-rigth", IsSum: true, IsOrder: true },
-                { Header: vars._statres("label$percent$sum"), HeaderStyle: "product-col-sum-auto-rigth", Field: "sumpercent", FieldTemplate: '#=numberToString(sumpercent,2)#', FieldStyle: "product-col-sum-auto-rigth sum-text-color", IsNumber: true, IsOrder: true },
-                { Header: vars._statres("label$avg$chek"), HeaderStyle: "product-col-sum-auto-rigth", Field: "avgsum", FieldTemplate: '#=numberToString(avgsum,2)#', FieldStyle: "product-col-sum-auto-rigth", IsNumber: true, IsOrder: true },
+                { Header: vars._statres("label$count$cheks"), HeaderStyle: "product-col-sum-auto-rigth", Field: "count", FieldStyle: "product-col-sum-auto-rigth #if(countzone===4){# grade-30 #} else if(countzone===3){# grade-50 #} else if(countzone===2){# grade-70 #} else if(countzone===1){# grade-85 #} else {# grade-other #}#", IsSum: true, IsOrder: true },
+                { Header: vars._statres("label$percent$cheks"), HeaderStyle: "product-col-sum-auto-rigth", Field: "countpercent", FieldTemplate: '#=numberToString(countpercent,2)#', FieldStyle: "product-col-sum-auto-rigth check-text-color #if(countzone===4){# grade-30 #} else if(countzone===3){# grade-50 #} else if(countzone===2){# grade-70 #} else if(countzone===1){# grade-85 #} else {# grade-other #}#", IsNumber: true, IsOrder: true },
+                { Header: vars._statres("label$count$positions"), HeaderStyle: "product-col-sum-auto-rigth", Field: "countpos", FieldStyle: "product-col-sum-auto-rigth #if(countposzone===4){# grade-30 #} else if(countposzone===3){# grade-50 #} else if(countposzone===2){# grade-70 #} else if(countposzone===1){# grade-85 #} else {# grade-other #}#", IsSum: true, IsOrder: true },
+                { Header: vars._statres("label$percent$positions"), HeaderStyle: "product-col-sum-auto-rigth", Field: "countpospercent", FieldTemplate: '#=numberToString(countpospercent,2)#', FieldStyle: "product-col-sum-auto-rigth position-text-color #if(countposzone===4){# grade-30 #} else if(countposzone===3){# grade-50 #} else if(countposzone===2){# grade-70 #} else if(countposzone===1){# grade-85 #} else {# grade-other #}#", IsNumber: true, IsOrder: true },
+                { Header: vars._statres("label$sum"), HeaderStyle: "product-col-sum-auto-rigth", Field: "sum", FieldTemplate: '#=numberToString(sum,2)#', FieldStyle: "product-col-sum-auto-rigth #if(sumzone===4){# grade-30 #} else if(sumzone===3){# grade-50 #} else if(sumzone===2){# grade-70 #} else if(sumzone===1){# grade-85 #} else {# grade-other #}#", IsSum: true, IsOrder: true },
+                { Header: vars._statres("label$percent$sum"), HeaderStyle: "product-col-sum-auto-rigth", Field: "sumpercent", FieldTemplate: '#=numberToString(sumpercent,2)#', FieldStyle: "product-col-sum-auto-rigth sum-text-color #if(sumzone===4){# grade-30 #} else if(sumzone===3){# grade-50 #} else if(sumzone===2){# grade-70 #} else if(sumzone===1){# grade-85 #} else {# grade-other #}#", IsNumber: true, IsOrder: true },
+                { Header: vars._statres("label$avg$chek"), HeaderStyle: "product-col-sum-auto-rigth", Field: "avgsum", FieldTemplate: '#=numberToString(avgsum,2)#', FieldStyle: "product-col-sum-auto-rigth #if(avgsumzone===4){# grade-30 #} else if(avgsumzone===3){# grade-50 #} else if(avgsumzone===2){# grade-70 #} else if(avgsumzone===1){# grade-85 #} else {# grade-other #}#", IsNumber: true, IsOrder: true },
             ];
             this.tableTimeControl.Setup();
+        }
+
+        protected OnDetalizeDayWeek(row: Interfaces.Model.ITableRowModel) {
+            let self = this;
+            let curfilter: Interfaces.Model.IReportSaleFilter = self.Filter as Interfaces.Model.IReportSaleFilter;
+            let item: any = row;
+            vars._app.OpenController({
+                urlController: 'report/sales/detalize', isModal: true, onLoadController: (controller: Interfaces.IController) => {
+                    let ctrlDetalize: Interfaces.IControllerReport = controller as Interfaces.IControllerReport;
+                    let time: string = item.time;
+                    if (time && time.length > 1)
+                        time = time.substring(0, 2);
+                    let filter: Interfaces.Model.IReportSaleDetailFilter = {
+                        datefrom: curfilter.datefrom, dateto: curfilter.dateto, salepoint: curfilter.salepoint, employee: curfilter.employee, client: curfilter.client, product: curfilter.product, dayweek: item.dayweek, time: ''
+                    };
+                    if (item.salepoint && item.salepoint.id && item.salepoint.id !== 0) filter.salepoint = item.salepoint;
+                    if (item.product && item.product.id && item.product.id !== 0) filter.product = item.product;
+
+                    ctrlDetalize.Model.set("filterModel", filter);
+                }
+            });
+        }
+
+        protected OnDetalizeTime(row: Interfaces.Model.ITableRowModel) {
+            let self = this;
+            let curfilter: Interfaces.Model.IReportSaleFilter = self.Filter as Interfaces.Model.IReportSaleFilter;
+            let item: any = row;
+            vars._app.OpenController({
+                urlController: 'report/sales/detalize', isModal: true, onLoadController: (controller: Interfaces.IController) => {
+                    let ctrlDetalize: Interfaces.IControllerReport = controller as Interfaces.IControllerReport;
+                    let time: string = item.time;
+                    if (time && time.length > 1)
+                        time = time.substring(0, 2);
+                    let filter: Interfaces.Model.IReportSaleDetailFilter = {
+                        datefrom: curfilter.datefrom, dateto: curfilter.dateto, salepoint: curfilter.salepoint, employee: curfilter.employee, client: curfilter.client, product: curfilter.product, dayweek: 0, time: time
+                    };
+                    if (item.salepoint && item.salepoint.id && item.salepoint.id !== 0) filter.salepoint = item.salepoint;
+                    if (item.product && item.product.id && item.product.id !== 0) filter.product = item.product;
+
+                    ctrlDetalize.Model.set("filterModel", filter);
+                }
+            });
         }
     }
 }

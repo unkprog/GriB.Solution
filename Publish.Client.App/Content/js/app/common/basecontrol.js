@@ -157,7 +157,7 @@ define(["require", "exports", "app/common/utils", "app/common/variables"], funct
                     this.tableHead.find('#' + this.sumFieldsInfo.fields[j] + '_sum').html(utils.numberToString(valueSum ? valueSum : 0, 2));
                 }
                 this.tableRows = this.tableBody.find('tr');
-                utils.createDblTouchClickEvent(this.tableRows, this.RowClick, this.tableBody);
+                utils.createDblTouchClickEvent(this.tableRows, this.RowClick, this, this.tableBody);
             };
             BaseTable.prototype.getTableHeaderHtml = function () {
                 var columns = this.Columns;
@@ -198,7 +198,7 @@ define(["require", "exports", "app/common/utils", "app/common/variables"], funct
                 for (var i = 0, icount = columns && columns.length ? columns.length : 0; i < icount; i++) {
                     if (columns[i].IsOrder === true) {
                         var strId = 'sort_' + i;
-                        utils.createTouchClickEvent(strId, this.SortButtonClick, this.tableHead);
+                        utils.createTouchClickEvent(strId, this.SortButtonClick, this, this.tableHead);
                     }
                 }
             };
@@ -217,9 +217,14 @@ define(["require", "exports", "app/common/utils", "app/common/variables"], funct
                 html += '<tr id="table-row-#=rowtmpitem#">';
                 for (var i = 0, icount = (columns && columns.length ? columns.length : 0); i < icount; i++) {
                     html += '   <td';
-                    if (columns[i].FieldStyle) {
+                    if (columns[i].FieldStyle || this.OnDetalize) {
                         html += ' class="';
-                        html += columns[i].FieldStyle;
+                        if (columns[i].FieldStyle) {
+                            html += columns[i].FieldStyle;
+                        }
+                        if (this.OnDetalize) {
+                            html += ' ccursor';
+                        }
                         html += '"';
                     }
                     html += '>';

@@ -47,6 +47,17 @@ namespace GriB.Client.App.Models.Report
         public bool IsShowClient { get; set; }
     }
 
+    public class ReportSaleDetailFilter : ReportSaleFilter
+    {
+        public ReportSaleDetailFilter() : base()
+        {
+            time = string.Empty;
+        }
+
+        public int    dayweek { get; set; }
+        public string time    { get; set; }
+    }
+
     public class ReportStockFilter : ReportFilterWithProduct
     {
     }

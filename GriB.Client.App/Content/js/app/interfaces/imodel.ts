@@ -281,6 +281,11 @@
         IsShowClient?: boolean;
     }
 
+    export interface IReportSaleDetailFilter extends IReportSaleFilter {
+        dayweek?: number;
+        time?: string;
+    }
+
     export interface IReportStockFilter extends ReportFilterWithProduct {
     }
 

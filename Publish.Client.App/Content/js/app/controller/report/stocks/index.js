@@ -25,65 +25,6 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                     function StockTable() {
                         return _super !== null && _super.apply(this, arguments) || this;
                     }
-                    StockTable.prototype.getTableHeaderHtml = function () {
-                        var columns = this.Columns;
-                        var html = '';
-                        var colNum = -1;
-                        this.sumFieldsInfo = { fields: [], sumFied: {}, orderfields: [] };
-                        var knSupport = kendo;
-                        html += '<tr>';
-                        if (this.Filter.IsShowSalepoint) {
-                            colNum = colNum + 1;
-                            html += '   <th rowspan="2" id="sort_' + colNum + '" class="ccursor report-total-right-border">';
-                            html += vars._statres("label$salePoint");
-                            html += '   </th>';
-                        }
-                        if (this.Filter.IsShowProduct) {
-                            colNum = colNum + 1;
-                            html += '   <th rowspan="2" id="sort_' + colNum + '" class="ccursor report-total-right-border">';
-                            html += vars._statres("label$product");
-                            html += '   </th>';
-                        }
-                        html += '   <th colspan="3" class="product-col-quantity-auto report-total-right-border">';
-                        html += vars._statres("label$beginofperiod");
-                        html += '   </th>';
-                        html += '   <th colspan="3" class="product-col-quantity-auto report-total-right-border">';
-                        html += vars._statres("label$overperiod");
-                        html += '   </th>';
-                        html += '   <th colspan="3" class="product-col-quantity-auto report-total-right-border">';
-                        html += vars._statres("label$endofperiod");
-                        html += '   </th>';
-                        html += '<th style="width:' + (knSupport.support.browser.chrome === true ? "18" : "17") + 'px;"></th>';
-                        html += '</tr>';
-                        html += '<tr>';
-                        for (var i = colNum + 1, icount = columns && columns.length ? columns.length : 0; i < icount; i++) {
-                            html += '   <th';
-                            if (columns[i].HeaderStyle || columns[i].IsOrder === true) {
-                                if (columns[i].IsOrder === true) {
-                                    html += ' id="sort_' + i + '"';
-                                }
-                                html += ' class="';
-                                if (columns[i].HeaderStyle)
-                                    html += columns[i].HeaderStyle;
-                                if (columns[i].IsOrder === true) {
-                                    this.sumFieldsInfo.orderfields.push({ field: columns[i].Field, typeSort: 0, index: i });
-                                    html += (columns[i].HeaderStyle ? ' ' : '') + 'ccursor';
-                                }
-                                html += '"';
-                            }
-                            html += '>';
-                            html += (columns[i].HeaderTemplate ? columns[i].HeaderTemplate : columns[i].Header);
-                            if (columns[i].IsSum && columns[i].IsSum === true) {
-                                html += ('<br/><span id="' + columns[i].Field + '_sum">0.00</span>');
-                                this.sumFieldsInfo.fields.push(columns[i].Field);
-                                this.sumFieldsInfo.sumFied[columns[i].Field] = 0;
-                            }
-                            html += '</th>';
-                        }
-                        html += '<th style="width:' + (knSupport.support.browser.chrome === true ? "18" : "17") + 'px;"></th>';
-                        html += '</tr>';
-                        return html;
-                    };
                     return StockTable;
                 }(ctrl.Control.BaseTable));
                 Stocks.StockTable = StockTable;
@@ -194,15 +135,15 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                                 columns.push({ Header: vars._statres("label$salePoint"), Field: "salepoint.name", IsOrder: true });
                             if (this.Filter.IsShowProduct)
                                 columns.push({ Header: vars._statres("label$product"), Field: "product.name", IsOrder: true });
-                            columns.push({ Header: vars._statres("label$arrival"), HeaderGroupName: vars._statres("label$beginofperiod"), HeaderStyle: "product-col-quantity-auto-right", Field: "quantityDebBeg", FieldTemplate: '#=numberToString(quantityDebBeg,2)#', FieldStyle: "product-col-quantity-auto-right", IsSum: true, IsOrder: true });
-                            columns.push({ Header: vars._statres("label$expense"), HeaderGroupName: vars._statres("label$beginofperiod"), HeaderStyle: "product-col-quantity-auto-right", Field: "quantityCreBeg", FieldTemplate: '#=numberToString(quantityCreBeg,2)#', FieldStyle: "product-col-quantity-auto-right", IsSum: true, IsOrder: true });
-                            columns.push({ Header: vars._statres("label$total"), HeaderGroupName: vars._statres("label$beginofperiod"), HeaderStyle: "product-col-quantity-auto-right report-total-right-border", Field: "quantityBeg", FieldTemplate: '#=numberToString(quantityBeg,2)#', FieldStyle: "product-col-quantity-auto-right report-total report-total-right-border", IsSum: true, IsOrder: true });
+                            //columns.push({ Header: vars._statres("label$arrival"), HeaderGroupName: vars._statres("label$beginofperiod"), HeaderStyle: "product-col-quantity-auto-right", Field: "quantityDebBeg", FieldTemplate: '#=numberToString(quantityDebBeg,2)#', FieldStyle: "product-col-quantity-auto-right", IsSum: true, IsOrder: true })
+                            //columns.push({ Header: vars._statres("label$expense"), HeaderGroupName: vars._statres("label$beginofperiod"), HeaderStyle: "product-col-quantity-auto-right", Field: "quantityCreBeg", FieldTemplate: '#=numberToString(quantityCreBeg,2)#', FieldStyle: "product-col-quantity-auto-right", IsSum: true, IsOrder: true })
+                            columns.push({ Header: vars._statres("label$beginofperiod"), HeaderGroupName: vars._statres("label$beginofperiod"), HeaderStyle: "product-col-quantity-auto-right", Field: "quantityBeg", FieldTemplate: '#=numberToString(quantityBeg,2)#', FieldStyle: "product-col-quantity-auto-right", IsSum: true, IsOrder: true });
                             columns.push({ Header: vars._statres("label$arrival"), HeaderGroupName: vars._statres("label$overperiod"), HeaderStyle: "product-col-quantity-auto-right", Field: "quantityDeb", FieldTemplate: '#=numberToString(quantityDeb,2)#', FieldStyle: "product-col-quantity-auto-right", IsSum: true, IsOrder: true });
                             columns.push({ Header: vars._statres("label$expense"), HeaderGroupName: vars._statres("label$overperiod"), HeaderStyle: "product-col-quantity-auto-right", Field: "quantityCre", FieldTemplate: '#=numberToString(quantityCre,2)#', FieldStyle: "product-col-quantity-auto-right", IsSum: true, IsOrder: true });
-                            columns.push({ Header: vars._statres("label$total"), HeaderGroupName: vars._statres("label$overperiod"), HeaderStyle: "product-col-quantity-auto-right report-total-right-border", Field: "quantity", FieldTemplate: '#=numberToString(quantity,2)#', FieldStyle: "product-col-quantity-auto-right report-total report-total-right-border", IsSum: true, IsOrder: true });
-                            columns.push({ Header: vars._statres("label$arrival"), HeaderGroupName: vars._statres("label$endofperiod"), HeaderStyle: "product-col-quantity-auto-right", Field: "quantityDebEnd", FieldTemplate: '#=numberToString(quantityDebEnd,2)#', FieldStyle: "product-col-quantity-auto-right", IsSum: true, IsOrder: true });
-                            columns.push({ Header: vars._statres("label$expense"), HeaderGroupName: vars._statres("label$endofperiod"), HeaderStyle: "product-col-quantity-auto-right", Field: "quantityCreEnd", FieldTemplate: '#=numberToString(quantityCreEnd,2)#', FieldStyle: "product-col-quantity-auto-right", IsSum: true, IsOrder: true });
-                            columns.push({ Header: vars._statres("label$total"), HeaderGroupName: vars._statres("label$endofperiod"), HeaderStyle: "product-col-quantity-auto-right report-total-right-border", Field: "quantityEnd", FieldTemplate: '#=numberToString(quantityEnd,2)#', FieldStyle: "product-col-quantity-auto-right report-total report-total-right-border", IsSum: true, IsOrder: true });
+                            //columns.push({ Header: vars._statres("label$total"), HeaderGroupName: vars._statres("label$overperiod"), HeaderStyle: "product-col-quantity-auto-right report-total-right-border", Field: "quantity", FieldTemplate: '#=numberToString(quantity,2)#', FieldStyle: "product-col-quantity-auto-right report-total report-total-right-border", IsSum: true, IsOrder: true })
+                            //columns.push({ Header: vars._statres("label$arrival"), HeaderGroupName: vars._statres("label$endofperiod"), HeaderStyle: "product-col-quantity-auto-right", Field: "quantityDebEnd", FieldTemplate: '#=numberToString(quantityDebEnd,2)#', FieldStyle: "product-col-quantity-auto-right", IsSum: true, IsOrder: true })
+                            //columns.push({ Header: vars._statres("label$expense"), HeaderGroupName: vars._statres("label$endofperiod"), HeaderStyle: "product-col-quantity-auto-right", Field: "quantityCreEnd", FieldTemplate: '#=numberToString(quantityCreEnd,2)#', FieldStyle: "product-col-quantity-auto-right", IsSum: true, IsOrder: true })
+                            columns.push({ Header: vars._statres("label$endofperiod"), HeaderGroupName: vars._statres("label$endofperiod"), HeaderStyle: "product-col-quantity-auto-right", Field: "quantityEnd", FieldTemplate: '#=numberToString(quantityEnd,2)#', FieldStyle: "product-col-quantity-auto-right", IsSum: true, IsOrder: true });
                             return columns;
                         },
                         enumerable: true,

@@ -119,8 +119,10 @@ window.date_from_ddmmyyyy = date_from_ddmmyyyy;
 
 export function numberToString(value: number, decimal: number): string {
     let result: string = "";
-    if (value || value === 0)
-        result = value.toFixed(decimal);// parseFloat(value).toFixed(2);
+    if (value || value === 0) {
+        if (value === 0) result = '-';
+        else result = value.toFixed(decimal);// parseFloat(value).toFixed(2);
+    }
     return result;
 }
 window.numberToString = numberToString;

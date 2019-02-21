@@ -15,4 +15,6 @@ where [d].[d] = 0 and ([d].[options] & 1) = 1
       and (@product = 0 or (@product <> 0 and [p].[product] = @product))
       and (@employee = 0 or (@employee <> 0 and [d].[cu] = @employee))
       and (@client = 0 or (@client <> 0 and [d].[client] = @client))
+	  and (@dayweek = 0 or (@dayweek <> 0 and DATEPART(DW, [d].[cd]) = @dayweek))
+	  and (@time = '' or (@time <> '' and substring('00', 1, 2 - len(ltrim(str(DATEPART(HOUR, [d].[cd]))))) + ltrim(str(DATEPART(HOUR, [d].[cd]))) = @time))
 order by [d].[cd]

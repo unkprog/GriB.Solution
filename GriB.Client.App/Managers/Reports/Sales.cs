@@ -1,9 +1,11 @@
-﻿using GriB.Client.App.Models.Editor;
-using GriB.Client.App.Models.Report;
-using GriB.Common.Sql;
-using System;
+﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using GriB.Client.App.Models.Editor;
+using GriB.Client.App.Models.Report;
+using GriB.Common.Sql;
+
 
 namespace GriB.Client.App.Managers.Reports
 {
@@ -104,12 +106,14 @@ namespace GriB.Client.App.Managers.Reports
         }
 
         private const string cmdGetDetail = @"Report\Sales\[salesdetail]";
-        public static List<ReportSaleDetailRow> GetSalesDetail(this Query query, ReportSaleFilter filter, Dictionary<int, employeecard> employees)
+        public static List<ReportSaleDetailRow> GetSalesDetail(this Query query, ReportSaleDetailFilter filter, Dictionary<int, employeecard> employees)
         {
             List<ReportSaleDetailRow> result = new List<ReportSaleDetailRow>();
             query.Execute(cmdGetDetail, new SqlParameter[] { new SqlParameter() { ParameterName = "@datefrom", Value = Helper.Date(filter.datefrom) }, new SqlParameter() { ParameterName = "@dateto", Value = Helper.DateReportEnd(filter.dateto) }
             , new SqlParameter() { ParameterName = "@salepoint", Value = filter.salepoint == null ? 0 : filter.salepoint.id }, new SqlParameter() { ParameterName = "@product", Value = filter.product == null ? 0 : filter.product.id }
-            , new SqlParameter() { ParameterName = "@employee", Value = filter.employee == null ? 0 : filter.employee.id }, new SqlParameter() { ParameterName = "@client", Value = filter.client == null ? 0 : filter.client.id }}
+            , new SqlParameter() { ParameterName = "@employee", Value = filter.employee == null ? 0 : filter.employee.id }, new SqlParameter() { ParameterName = "@client", Value = filter.client == null ? 0 : filter.client.id }
+            , new SqlParameter() { ParameterName = "@dayweek", Value = filter.dayweek }, new SqlParameter() { ParameterName = "@time", Value = filter.time }
+            }
             , (values) =>
             {
                 ReportSaleDetailRow item = readFromValuesDetail(values);
@@ -125,42 +129,7 @@ namespace GriB.Client.App.Managers.Reports
             return result;
         }
 
-        private const string cmdGetTime = @"Report\Sales\[salestime]";
-        public static List<ReportSaleTimeRow> GetReportSalesTime(this Query query, ReportSaleFilter filter)
-        {
-            List<ReportSaleTimeRow> result = new List<ReportSaleTimeRow>();
-            query.Execute(cmdGetTime, new SqlParameter[] { new SqlParameter() { ParameterName = "@datefrom", Value = Helper.Date(filter.datefrom) }, new SqlParameter() { ParameterName = "@dateto", Value = Helper.DateReportEnd(filter.dateto) }
-            , new SqlParameter() { ParameterName = "@salepoint", Value = filter.salepoint == null ? 0 : filter.salepoint.id }, new SqlParameter() { ParameterName = "@product", Value = filter.product == null ? 0 : filter.product.id }}
-            , (values) =>
-            {
-                result.Add(new ReportSaleTimeRow() { time = (string)values[0], count = (double)values[1], countpos = (double)values[2], sum = (double)values[3] });
-            });
-
-            while (result.Count > 0 && (result[result.Count - 1].count == 0 && result[result.Count - 1].countpos == 0))
-                result.RemoveAt(result.Count - 1);
-
-            while (result.Count > 0 && (result[0].count == 0 && result[0].countpos == 0))
-                result.RemoveAt(0);
-
-            return result;
-        }
-
-
-        private const string cmdGetDayWeek = @"Report\Sales\[salesdayweek]";
-        public static List<ReportSaleDayWeekRow> GetReportSalesDayWeek(this Query query, ReportSaleFilter filter)
-        {
-            List<ReportSaleDayWeekRow> result = new List<ReportSaleDayWeekRow>();
-            query.Execute(cmdGetDayWeek, new SqlParameter[] { new SqlParameter() { ParameterName = "@datefrom", Value = Helper.Date(filter.datefrom) }, new SqlParameter() { ParameterName = "@dateto", Value = Helper.DateReportEnd(filter.dateto) }
-            , new SqlParameter() { ParameterName = "@salepoint", Value = filter.salepoint == null ? 0 : filter.salepoint.id }, new SqlParameter() { ParameterName = "@product", Value = filter.product == null ? 0 : filter.product.id }}
-            , (values) =>
-            {
-                result.Add(new ReportSaleDayWeekRow() { dayweek = (int)values[0], count = (double)values[1], countpos = (double)values[2], sum = (double)values[3] });
-            });
-
-            return result;
-        }
-
-        private const string cmdGetTimeDashboard = @"Report\Sales\[salestime_dashboard]";
+        private const string cmdGetTimeDashboard = @"Report\Sales\Dashboard\[salestime]";
         public static List<ReportSaleTimeTableRow> GetReportSalesTimeDashboard(this Query query, ReportSaleFilter filter)
         {
             List<ReportSaleTimeTableRow> result = new List<ReportSaleTimeTableRow>();
@@ -181,7 +150,7 @@ namespace GriB.Client.App.Managers.Reports
         }
 
 
-        private const string cmdGetDayWeekeDashboard = @"Report\Sales\[salesdayweek_dashboard]";
+        private const string cmdGetDayWeekeDashboard = @"Report\Sales\Dashboard\[salesdayweek]";
         public static List<ReportSaleDayWeekTableRow> GetReportSalesDayWeekDashboard(this Query query, ReportSaleFilter filter)
         {
             List<ReportSaleDayWeekTableRow> result = new List<ReportSaleDayWeekTableRow>();
@@ -193,6 +162,117 @@ namespace GriB.Client.App.Managers.Reports
             });
 
             return result;
+        }
+
+
+
+        public static List<T> CalculateDashboardParams<T>(List<T> dItems, out double avgSum) where T : ReportSaleBaseDashboardRow
+        {
+            List<T> _items = dItems;
+
+            double count = _items.Sum(f => f.count);
+            double countpos = _items.Sum(f => f.countpos);
+            double sum = _items.Sum(f => f.sum);
+            double avgsum = _items.Sum(f => f.avgsum);
+
+            avgSum = Math.Round(count > 0 ? sum / count : 0);
+
+            T item;
+            List<T> sortItems = new List<T>(_items.Count);
+            for (int i = 0, icount = _items.Count; i < icount; i++)
+            {
+                item = _items[i];
+                sortItems.Add(item);
+                item.countpercent = Math.Round(count > 0 ? 100.0f * (item.count / count) : 0, 2);
+                item.countpospercent = Math.Round(countpos > 0 ? 100.0f * (item.countpos / countpos) : 0, 2);
+                item.sumpercent = Math.Round(sum > 0 ? 100.0f * (item.sum / sum) : 0, 2);
+                item.avgsumpercent = Math.Round(avgsum > 0 ? 100.0f * (item.avgsum / avgsum) : 0, 2);
+            }
+
+            //sortItems.Sort((x, y) => y.count.CompareTo(x.count));
+            double sumZone = 0;
+            //foreach (var zoneItem in sortItems)
+            //{
+            //    if (sumZone < 30) { zoneItem.countzone = 4; }
+            //    else if (sumZone < 50) { zoneItem.countzone = 3; }
+            //    else if (sumZone < 70) { zoneItem.countzone = 2; }
+            //    else if (sumZone < 85) { zoneItem.countzone = 1; }
+            //    else { zoneItem.countzone = 0; }
+            //    sumZone += zoneItem.count;
+            //}
+
+            sortItems.Sort((x, y) => { int result = y.countpercent.CompareTo(x.countpercent); if (result == 0) result = y.sum.CompareTo(x.sum); return result; });
+            sumZone = 0;
+            foreach (var zoneItem in sortItems)
+            {
+                if (sumZone < 30) { zoneItem.countzone = 4; }
+                else if (sumZone < 40) { zoneItem.countzone = 3; }
+                else if (sumZone < 70) { zoneItem.countzone = 2; }
+                else if (sumZone < 85) { zoneItem.countzone = 1; }
+                else { zoneItem.countzone = 0; }
+                sumZone += zoneItem.countpercent;
+            }
+
+            //sortItems.Sort((x, y) => y.countpos.CompareTo(x.countpos));
+            //sumZone = 0;
+            //foreach (var zoneItem in sortItems)
+            //{
+            //    if (sumZone < 30) { zoneItem.countposzone = 4; }
+            //    else if (sumZone < 50) { zoneItem.countposzone = 3; }
+            //    else if (sumZone < 70) { zoneItem.countposzone = 2; }
+            //    else if (sumZone < 85) { zoneItem.countposzone = 1; }
+            //    else { zoneItem.countposzone = 0; }
+            //    sumZone += zoneItem.countpos;
+            //}
+
+            sortItems.Sort((x, y) => { int result = y.countpospercent.CompareTo(x.countpospercent); if (result == 0) result = y.sum.CompareTo(x.sum); return result; });
+            sumZone = 0;
+            foreach (var zoneItem in sortItems)
+            {
+                if (sumZone < 30) { zoneItem.countposzone = 4; }
+                else if (sumZone < 50) { zoneItem.countposzone = 3; }
+                else if (sumZone < 70) { zoneItem.countposzone = 2; }
+                else if (sumZone < 85) { zoneItem.countposzone = 1; }
+                else { zoneItem.countposzone = 0; }
+                sumZone += zoneItem.countpospercent;
+            }
+
+            //sortItems.Sort((x, y) => y.sum.CompareTo(x.sum));
+            //sumZone = 0;
+            //foreach (var zoneItem in sortItems)
+            //{
+            //    if (sumZone < 30) { zoneItem.sumzone = 4; }
+            //    else if (sumZone < 50) { zoneItem.sumzone = 3; }
+            //    else if (sumZone < 70) { zoneItem.sumzone = 2; }
+            //    else if (sumZone < 85) { zoneItem.sumzone = 1; }
+            //    else { zoneItem.sumzone = 0; }
+            //    sumZone += zoneItem.sum;
+            //}
+
+            sortItems.Sort((x, y) => { int result = y.sumpercent.CompareTo(x.sumpercent); if (result == 0) result = y.sum.CompareTo(x.sum); return result; });
+            sumZone = 0;
+            foreach (var zoneItem in sortItems)
+            {
+                if (sumZone < 30) { zoneItem.sumzone = 4; }
+                else if (sumZone < 50) { zoneItem.sumzone = 3; }
+                else if (sumZone < 70) { zoneItem.sumzone = 2; }
+                else if (sumZone < 85) { zoneItem.sumzone = 1; }
+                else { zoneItem.sumzone = 0; }
+                sumZone += zoneItem.sumpercent;
+            }
+
+            sortItems.Sort((x, y) => { int result = y.avgsumpercent.CompareTo(x.avgsumpercent); if (result == 0) result = y.sum.CompareTo(x.sum); return result; });
+            sumZone = 0;
+            foreach (var zoneItem in sortItems)
+            {
+                if (sumZone < 30) { zoneItem.avgsumzone = 4; }
+                else if (sumZone < 50) { zoneItem.avgsumzone = 3; }
+                else if (sumZone < 70) { zoneItem.avgsumzone = 2; }
+                else if (sumZone < 85) { zoneItem.avgsumzone = 1; }
+                else { zoneItem.avgsumzone = 0; }
+                sumZone += zoneItem.avgsumpercent;
+            }
+            return _items;
         }
     }
 }

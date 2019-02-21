@@ -307,11 +307,9 @@
     <Content Include="Scripts\Query\POSTerminal\Payment\[get].sql" />
     <Content Include="Scripts\Query\POSTerminal\Payment\[set].sql" />
     <Content Include="Scripts\Query\POSTerminal\[get].sql" />
-    <Content Include="Scripts\Query\Report\Sales\[salesdayweek_dashboard].sql" />
+    <Content Include="Scripts\Query\Report\Sales\Dashboard\[salesdayweek].sql" />
     <Content Include="Scripts\Query\Report\Sales\[salesdetail].sql" />
-    <Content Include="Scripts\Query\Report\Sales\[salesdayweek].sql" />
-    <Content Include="Scripts\Query\Report\Sales\[salestime_dashboard].sql" />
-    <Content Include="Scripts\Query\Report\Sales\[salestime].sql" />
+    <Content Include="Scripts\Query\Report\Sales\Dashboard\[salestime].sql" />
     <Content Include="Scripts\Query\Report\Stocks\[stocksdetail].sql" />
     <Content Include="Scripts\Sql\01.001.[t_orgtype].sql" />
     <Content Include="Scripts\Sql\07.001.[t_change].sql" />
@@ -507,7 +505,6 @@
     <TypeScriptCompile Include="Content\js\app\controller\main.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\report\basereport.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\report\dashboard\expressanalysis.ts" />
-    <TypeScriptCompile Include="Content\js\app\controller\report\dashboard\salestime.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\report\sales\detalize.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\report\sales\index.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\report\index.ts" />

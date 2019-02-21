@@ -175,7 +175,7 @@ export namespace Control {
                 this.tableHead.find('#' + this.sumFieldsInfo.fields[j] + '_sum').html(utils.numberToString(valueSum ? valueSum : 0, 2));
             }
             this.tableRows = this.tableBody.find('tr');
-            utils.createDblTouchClickEvent(this.tableRows, this.RowClick, this.tableBody);
+            utils.createDblTouchClickEvent(this.tableRows, this.RowClick, this, this.tableBody);
         }
 
         protected sumFieldsInfo: any;
@@ -223,7 +223,7 @@ export namespace Control {
             for (let i = 0, icount = columns && columns.length ? columns.length : 0; i < icount; i++) {
                 if (columns[i].IsOrder === true) {
                     let strId: string = 'sort_' + i;
-                    utils.createTouchClickEvent(strId, this.SortButtonClick, this.tableHead);
+                    utils.createTouchClickEvent(strId, this.SortButtonClick, this, this.tableHead);
                 }
             }
         }
@@ -247,9 +247,14 @@ export namespace Control {
 
             for (let i = 0, icount = (columns && columns.length ? columns.length : 0); i < icount; i++) {
                 html += '   <td';
-                if (columns[i].FieldStyle) {
+                if (columns[i].FieldStyle || this.OnDetalize) {
                     html += ' class="';
-                    html += columns[i].FieldStyle;
+                    if (columns[i].FieldStyle) {
+                        html += columns[i].FieldStyle;
+                    }
+                    if (this.OnDetalize) {
+                        html += ' ccursor';
+                    }
                     html += '"';
                 }
                 html += '>';

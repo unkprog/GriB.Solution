@@ -37,6 +37,10 @@ export namespace Controller.Report.Sales {
             return { datefrom: utils.date_ddmmyyyy(utils.dateToday()), dateto: utils.date_ddmmyyyy(utils.dateToday()), salepoint: undefined, product: undefined, employee: undefined, client: undefined, IsShowSalepoint:true, IsShowProduct: true, IsShowEmployee: false, IsShowClient: false };
         }
 
+        public get Filter(): Interfaces.Model.IReportSaleFilter {
+            return this.Model.get("filterModel").toJSON() as Interfaces.Model.IReportSaleFilter;
+        }
+
         //protected getSaveFilter(): string {
         //    let controller = this;
         //    super.getSaveFilter();
@@ -121,9 +125,7 @@ export namespace Controller.Report.Sales {
             return super.ViewShow(e);
         }
 
-        public get Filter(): Interfaces.Model.IReportSaleFilter {
-            return this.Model.get("filterModel").toJSON() as Interfaces.Model.IReportSaleFilter;
-        }
+        
 
         public get Columns(): Interfaces.Control.ITableColumn[] {
             let columns: Interfaces.Control.ITableColumn[] = [];
@@ -333,9 +335,9 @@ export namespace Controller.Report.Sales {
             vars._app.OpenController({
                 urlController: 'report/sales/detalize', isModal: true, onLoadController: (controller: Interfaces.IController) => {
                     let ctrlDetalize: Interfaces.IControllerReport = controller as Interfaces.IControllerReport;
-                    let filter: Interfaces.Model.IReportSaleFilter = {
-                        datefrom: curfilter.datefrom, dateto: curfilter.dateto, salepoint: curfilter.salepoint, employee: curfilter.employee, client: curfilter.client, product: curfilter.product
-                    }
+                    let filter: Interfaces.Model.IReportSaleDetailFilter = {
+                        datefrom: curfilter.datefrom, dateto: curfilter.dateto, salepoint: curfilter.salepoint, employee: curfilter.employee, client: curfilter.client, product: curfilter.product, dayweek: 0, time: ''
+                    };
                     if (item.salepoint && item.salepoint.id && item.salepoint.id !== 0) filter.salepoint = item.salepoint;
                     if (item.employee && item.employee.id && item.employee.id !== 0) filter.employee = item.employee;
                     if (item.client && item.client.id && item.client.id !== 0) filter.client = item.client;

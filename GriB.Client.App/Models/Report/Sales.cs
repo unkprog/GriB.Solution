@@ -34,9 +34,9 @@ namespace GriB.Client.App.Models.Report
         public double discount { get; set; }
     }
 
-    public class ReportSaleBaseTimeRow
+    public class ReportSaleBaseDashboardRow
     {
-        public ReportSaleBaseTimeRow()
+        public ReportSaleBaseDashboardRow()
         {
 
         }
@@ -44,11 +44,29 @@ namespace GriB.Client.App.Models.Report
         public double count    { get; set; }
         public double countpos { get; set; }
         public double sum      { get; set; }
+
+
+        public int countzone { get; set; }
+        public int countposzone { get; set; }
+        public int sumzone { get; set; }
+
+        public double countpercent { get; set; }
+        public double countpospercent { get; set; }
+        public double sumpercent { get; set; }
+
+        //public int countpercentzone { get; set; }
+        //public int countpospercentzone { get; set; }
+        //public int sumpercentzone { get; set; }
+
+        public double avgsum => count == 0 ? 0 : sum / count;
+        public double avgsumpercent { get; set; }
+        public int avgsumzone { get; set; }
     }
 
-    public class ReportSaleTimeRow : ReportSaleBaseTimeRow
+
+    public class ReportSaleTimeTableRow : ReportSaleBaseDashboardRow
     {
-        public ReportSaleTimeRow()
+        public ReportSaleTimeTableRow()
         {
             time = string.Empty;
         }
@@ -56,33 +74,13 @@ namespace GriB.Client.App.Models.Report
 
     }
 
-
-    public class ReportSaleTimeTableRow : ReportSaleTimeRow
+    public class ReportSaleDayWeekTableRow : ReportSaleBaseDashboardRow
     {
-        public double countpercent { get; set; }
-        public double countpospercent { get; set; }
-        public double sumpercent   { get; set; }
-        //public double avgsumpos => count == 0 ? 0 : sum / count;
-        //public double avgsumcountpos => countpos == 0 ? 0 : sum / countpos;
-        public double avgsum => count == 0 ? 0 : sum / count;
-    }
-
-    public class ReportSaleDayWeekRow : ReportSaleBaseTimeRow
-    {
-        public ReportSaleDayWeekRow()
+        public ReportSaleDayWeekTableRow()
         {
             dayweek = 0;
         }
         public int dayweek { get; set; }
     }
 
-    public class ReportSaleDayWeekTableRow : ReportSaleDayWeekRow
-    {
-        public double countpercent { get; set; }
-        public double countpospercent { get; set; }
-        public double sumpercent { get; set; }
-        //public double avgsumpos => count == 0 ? 0 : sum / count;
-        //public double avgsumcountpos => countpos == 0 ? 0 : sum / countpos;
-        public double avgsum => count == 0 ? 0 : sum / count;
-    }
 }
