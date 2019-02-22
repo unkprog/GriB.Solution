@@ -27,6 +27,14 @@ export module Services {
             this.PostApi({ Action: "/stocksdetail", RequestData: JSON.stringify(model), Callback: Callback });
         }
 
+        public GetCash(model: Interfaces.Model.IReportBaseFilter, Callback: (responseData: any) => void) {
+            this.PostApi({ Action: "/cash", RequestData: JSON.stringify(model), Callback: Callback });
+        }
+
+        public GetCashDetail(model: Interfaces.Model.IReportBaseFilter, Callback: (responseData: any) => void) {
+            this.PostApi({ Action: "/cashdetail", RequestData: JSON.stringify(model), Callback: Callback });
+        }
+
         public GetExpresAnalysisData(model: Interfaces.Model.IReportSaleFilter, Callback: (responseData: any) => void) {
             this.PostApi({ Action: "/expressanalysis", RequestData: JSON.stringify(model), Callback: Callback });
         }

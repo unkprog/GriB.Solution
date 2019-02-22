@@ -206,8 +206,12 @@ define(["require", "exports", "app/common/basecontroller", "app/services/documen
                     };
                     PaymentBase.prototype.ViewResize = function (e) {
                         _super.prototype.ViewResize.call(this, e);
-                        this.methodPayment.formSelect();
-                        this.optionPayment.formSelect();
+                        // TODO: Разобраться, почему падает
+                        try {
+                            this.methodPayment.formSelect();
+                            this.optionPayment.formSelect();
+                        }
+                        catch (_a) { }
                     };
                     PaymentBase.prototype.afterLoad = function (responseData) {
                         _super.prototype.afterLoad.call(this, responseData);

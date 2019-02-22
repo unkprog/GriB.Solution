@@ -40,6 +40,12 @@ define(["require", "exports", "app/common/baseservice"], function (require, expo
             ReportsService.prototype.GetStocksDetail = function (model, Callback) {
                 this.PostApi({ Action: "/stocksdetail", RequestData: JSON.stringify(model), Callback: Callback });
             };
+            ReportsService.prototype.GetCash = function (model, Callback) {
+                this.PostApi({ Action: "/cash", RequestData: JSON.stringify(model), Callback: Callback });
+            };
+            ReportsService.prototype.GetCashDetail = function (model, Callback) {
+                this.PostApi({ Action: "/cashdetail", RequestData: JSON.stringify(model), Callback: Callback });
+            };
             ReportsService.prototype.GetExpresAnalysisData = function (model, Callback) {
                 this.PostApi({ Action: "/expressanalysis", RequestData: JSON.stringify(model), Callback: Callback });
             };

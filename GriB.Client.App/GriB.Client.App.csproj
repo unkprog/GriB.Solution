@@ -174,9 +174,10 @@
     <Content Include="Content\view\document\editor\payment.html" />
     <Content Include="Content\view\document\editor\document.html" />
     <Content Include="Content\view\document\index.html" />
-    <Content Include="Content\view\index - Копировать.html" />
     <Content Include="Content\view\index.html" />
     <Content Include="Content\view\main.html" />
+    <Content Include="Content\view\report\cash\detalize.html" />
+    <Content Include="Content\view\report\cash\index.html" />
     <Content Include="Content\view\report\dashboard\expressanalysis.html" />
     <Content Include="Content\view\report\dashboard\salestime.html" />
     <Content Include="Content\view\report\sales\detalize.html" />
@@ -307,6 +308,8 @@
     <Content Include="Scripts\Query\POSTerminal\Payment\[get].sql" />
     <Content Include="Scripts\Query\POSTerminal\Payment\[set].sql" />
     <Content Include="Scripts\Query\POSTerminal\[get].sql" />
+    <Content Include="Scripts\Query\Report\Cash\[cash].sql" />
+    <Content Include="Scripts\Query\Report\Cash\[cashdetail].sql" />
     <Content Include="Scripts\Query\Report\Sales\Dashboard\[salesdayweek].sql" />
     <Content Include="Scripts\Query\Report\Sales\Dashboard\[categories].sql" />
     <Content Include="Scripts\Query\Report\Sales\[salesdetail].sql" />
@@ -365,6 +368,7 @@
     <Compile Include="Managers\POSTerminal\Check.cs" />
     <Compile Include="Managers\POSTerminal\Payment.cs" />
     <Compile Include="Managers\POSTerminal\Terminal.cs" />
+    <Compile Include="Managers\Reports\Cash.cs" />
     <Compile Include="Managers\Reports\Constants.cs" />
     <Compile Include="Managers\Reports\Helper.cs" />
     <Compile Include="Managers\Reports\Sales.cs" />
@@ -386,6 +390,7 @@
     <Compile Include="Models\POSTerminal\Check.cs" />
     <Compile Include="Models\POSTerminal\ListProduct.cs" />
     <Compile Include="Models\POSTerminal\Payment.cs" />
+    <Compile Include="Models\Report\Cash.cs" />
     <Compile Include="Models\Report\ReportFilter.cs" />
     <Compile Include="Models\Report\Stocks.cs" />
     <Compile Include="Models\Report\Sales.cs" />
@@ -505,6 +510,8 @@
     <TypeScriptCompile Include="Content\js\app\controller\document\index.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\main.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\report\basereport.ts" />
+    <TypeScriptCompile Include="Content\js\app\controller\report\cash\detalize.ts" />
+    <TypeScriptCompile Include="Content\js\app\controller\report\cash\index.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\report\dashboard\expressanalysis.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\report\sales\detalize.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\report\sales\index.ts" />

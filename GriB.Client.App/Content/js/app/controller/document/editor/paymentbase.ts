@@ -219,8 +219,12 @@ export namespace Controller.Document.Editor {
 
         public ViewResize(e: any): void {
             super.ViewResize(e);
-            this.methodPayment.formSelect();
-            this.optionPayment.formSelect();
+            // TODO: Разобраться, почему падает
+            try {
+                this.methodPayment.formSelect();
+                this.optionPayment.formSelect();
+            }
+            catch { }
         }
 
         protected afterLoad(responseData?: any): void {

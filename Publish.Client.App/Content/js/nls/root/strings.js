@@ -291,6 +291,7 @@ define({
 
     "report$sales": "Отчет по продажам",
     "report$stocks": "Отчет по складу",
+    "report$cash": "Отчет по кассе",
     "report$sales$time": "Отчет по времени продажи",
     "label$charts": "Графики",
 

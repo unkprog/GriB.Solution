@@ -106,5 +106,35 @@ namespace GriB.Client.App.Controllers
                   });
               })
        );
+
+        [HttpPost]
+        [ActionName("cash")]
+        public HttpResponseMessage ReportCash(ReportBaseFilter filter)
+        {
+            return TryCatchResponseQuery((query) =>
+            {
+                return Request.CreateResponse(HttpStatusCode.OK, Cash.GetCash(query, filter));
+            });
+        }
+
+        [HttpPost]
+        [ActionName("cashdetail")]
+        public async Task<HttpResponseMessage> ReportCashDetail(ReportBaseFilter filter)
+        => await TryCatchResponseAsync(async () => await CheckResponseError(
+              async () =>
+              {
+                  Principal principal = (Principal)HttpContext.Current.User;
+                  return await Common.Net.Json.GetAsync<JObject>(AppSettings.Server.Register, string.Concat("api/account/employees?db=", principal?.Data?.Database?.id));
+              }
+              , (response) =>
+              {
+                  HttpEmployeesMessage responseMessage = response.ToObject<HttpEmployeesMessage>();
+                  return TryCatchResponseQuery((query) =>
+                  {
+                      Dictionary<int, employeecard> employees = GetFindEmployees(query, responseMessage);
+                      return Request.CreateResponse(HttpStatusCode.OK, Cash.GetCashDetail(query, filter, employees));
+                  });
+              })
+       );
     }
 }

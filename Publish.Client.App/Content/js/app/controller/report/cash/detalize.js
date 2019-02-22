@@ -18,19 +18,19 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
     (function (Controller) {
         var Report;
         (function (Report) {
-            var Sales;
-            (function (Sales) {
+            var Cash;
+            (function (Cash) {
                 var Detalize = /** @class */ (function (_super) {
                     __extends(Detalize, _super);
                     function Detalize() {
                         var _this = _super.call(this) || this;
                         if (_this.EditorSettings && _this.EditorSettings.ButtonSetings)
                             _this.EditorSettings.ButtonSetings.IsSave = false;
-                        _this.Model.set("Header", vars._statres("report$sales"));
+                        _this.Model.set("Header", vars._statres("report$cash"));
                         return _this;
                     }
                     Detalize.prototype.createOptions = function () {
-                        return { Url: "/Content/view/report/sales/detalize.html", Id: "report-sales-detalize-view" };
+                        return { Url: "/Content/view/report/cash/detalize.html", Id: "report-cash-detalize-view" };
                     };
                     Detalize.prototype.createModel = function () {
                         return new kendo.data.ObservableObject({
@@ -40,24 +40,24 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                     };
                     Object.defineProperty(Detalize.prototype, "FilterName", {
                         get: function () {
-                            return "reportFilterSaleDetalize";
+                            return "reportFilterCashDetalize";
                         },
                         enumerable: true,
                         configurable: true
                     });
                     Detalize.prototype.getDefaultFilter = function () {
                         return {
-                            datefrom: utils.date_ddmmyyyy(utils.dateToday()), dateto: utils.date_ddmmyyyy(utils.dateToday()),
-                            salepoint: undefined, product: undefined, employee: undefined, client: undefined, category: undefined,
-                            IsShowSalepoint: true, IsShowProduct: true, IsShowEmployee: false, IsShowClient: false
+                            datefrom: utils.date_ddmmyyyy(utils.dateToday()), dateto: utils.date_ddmmyyyy(utils.dateToday()), salepoint: undefined, product: undefined, IsShowSalepoint: true, IsShowProduct: true
                         };
                     };
                     Detalize.prototype.getSaveFilter = function () {
                         var controller = this;
+                        var _datefrom = controller.Model.get("filterModel.datefrom");
+                        var _dateto = controller.Model.get("filterModel.dateto");
                         var filterToSave = {
-                            datefrom: controller.Model.get("filterModel.datefrom"), dateto: controller.Model.get("filterModel.dateto"),
-                            salepoint: this.Model.get("filterModel.salepoint"), product: this.Model.get("filterModel.product"), employee: this.Model.get("filterModel.employee"), client: this.Model.get("filterModel.client"),
-                            IsShowSalepoint: this.Model.get("filterModel.IsShowSalepoint"), IsShowProduct: this.Model.get("filterModel.IsShowProduct"), IsShowEmployee: this.Model.get("filterModel.IsShowEmployee"), IsShowClient: this.Model.get("filterModel.IsShowClient")
+                            datefrom: utils.date_ddmmyyyy(_datefrom), dateto: utils.date_ddmmyyyy(_dateto),
+                            salepoint: this.Model.get("filterModel.salepoint"), product: this.Model.get("filterModel.product"),
+                            IsShowSalepoint: this.Model.get("filterModel.IsShowSalepoint"), IsShowProduct: this.Model.get("filterModel.IsShowProduct")
                         };
                         return JSON.stringify(filterToSave);
                     };
@@ -77,14 +77,11 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                     Object.defineProperty(Detalize.prototype, "Columns", {
                         get: function () {
                             var columns = [];
-                            columns.push({ Header: vars._statres("label$date"), Field: "cd", FieldTemplate: "#=date_ddmmyyyy_withtime(new Date(cd))#", IsOrder: true });
+                            var doctypeTemplate = "#if (doctype === 10) {#" + vars._statres("label$payment") + "# } else if (doctype === 20) {#" + vars._statres("label$encashment") + "#} else if (doctype === 30) {#" + vars._statres("label$depositmoney") + "#} else if (doctype === 40) {#" + vars._statres("label$withdrawingmoney") + "#}#";
+                            columns.push({ Header: vars._statres("label$document"), Field: "doctype", FieldTemplate: doctypeTemplate, IsOrder: true });
+                            columns.push({ Header: vars._statres("label$date"), Field: "cd", FieldTemplate: "#=date_ddmmyyyy_withtime(new Date(cd))#" });
                             columns.push({ Header: vars._statres("label$salePoint"), Field: "salepoint.name", IsOrder: true });
                             columns.push({ Header: vars._statres("label$employee"), Field: "employee.name", IsOrder: true });
-                            columns.push({ Header: vars._statres("label$product"), Field: "product.name", IsOrder: true });
-                            columns.push({ Header: vars._statres("label$category"), Field: "product.category.name", IsOrder: true });
-                            columns.push({ Header: vars._statres("label$client"), Field: "client.name", IsOrder: true });
-                            columns.push({ Header: vars._statres("label$quantity"), HeaderStyle: "product-col-quantity-auto-right", Field: "quantity", FieldTemplate: '#=numberToString(quantity,2)#', FieldStyle: "product-col-quantity-auto-right", IsSum: true, IsOrder: true });
-                            columns.push({ Header: vars._statres("label$discount"), HeaderStyle: "product-col-quantity-auto-right", Field: "discount", FieldTemplate: '#=discount#', FieldStyle: "product-col-quantity-auto-right", IsSum: false, IsOrder: true });
                             columns.push({ Header: vars._statres("label$sum"), HeaderStyle: "product-col-sum-auto-rigth", Field: "sum", FieldTemplate: '#=numberToString(sum,2)#', FieldStyle: "product-col-sum-auto-rigth", IsSum: true, IsOrder: true });
                             return columns;
                         },
@@ -99,29 +96,47 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                     };
                     Detalize.prototype.buildButtonClick = function (e) {
                         var self = this;
-                        vars._app.ShowLoading();
                         _super.prototype.buildButtonClick.call(this, e);
-                        this.Service.GetSalesDetail(this.Filter, function (responseData) {
+                        this.Service.GetCashDetail(this.Filter, function (responseData) {
                             self.SetupTable(responseData);
-                            vars._app.HideLoading();
                         });
                     };
                     Detalize.prototype.OnDetalize = function (row) {
                         var item = row;
-                        vars._editorData["id_sale"] = item.id;
-                        vars._app.OpenController({
-                            urlController: 'document/editor/sale', isModal: true, onLoadController: function (controller) {
-                                var ctrlSale = controller;
-                                ctrlSale.EditorSettings.ButtonSetings.IsSave = false;
-                            }
-                        });
+                        var ctrlName = "";
+                        var ctrlId = "";
+                        if (item.doctype === 10) {
+                            ctrlName = 'document/editor/payment';
+                            ctrlId = 'id_payment';
+                        }
+                        else if (item.doctype === 20) {
+                            ctrlName = 'document/editor/paymentdeposit';
+                            ctrlId = 'id_paymentdeposit';
+                        }
+                        else if (item.doctype === 30) {
+                            ctrlName = 'document/editor/paymentwithdrawal';
+                            ctrlId = 'id_paymentwithdrawal';
+                        }
+                        else if (item.doctype === 40) {
+                            ctrlName = 'document/editor/encashment';
+                            ctrlId = 'id_encashment';
+                        }
+                        if (ctrlName !== "") {
+                            vars._editorData[ctrlId] = item.id;
+                            vars._app.OpenController({
+                                urlController: ctrlName, isModal: true, onLoadController: function (controller) {
+                                    var ctrlSale = controller;
+                                    ctrlSale.EditorSettings.ButtonSetings.IsSave = false;
+                                }
+                            });
+                        }
                     };
                     return Detalize;
                 }(base.Controller.Report.ReportWithService));
-                Sales.Detalize = Detalize;
-            })(Sales = Report.Sales || (Report.Sales = {}));
+                Cash.Detalize = Detalize;
+            })(Cash = Report.Cash || (Report.Cash = {}));
         })(Report = Controller.Report || (Controller.Report = {}));
     })(Controller = exports.Controller || (exports.Controller = {}));
-    vars.registerController("report/sales/detalize", function (module) { return new module.Controller.Report.Sales.Detalize(); });
+    vars.registerController("report/cash/detalize", function (module) { return new module.Controller.Report.Cash.Detalize(); });
 });
 //# sourceMappingURL=detalize.js.map

@@ -33,6 +33,7 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
                         "labelCharts": vars._statres("label$charts"),
                         "labelReportSales": vars._statres("report$sales"),
                         "labelReportStocks": vars._statres("report$stocks"),
+                        "labelReportCash": vars._statres("report$cash"),
                         "labelReportSalesTime": vars._statres("report$sales$time"),
                         "labelReportExpressAnalysis": vars._statres("report$expressanalysis"),
                     });
@@ -40,12 +41,14 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
                 Index.prototype.createEvents = function () {
                     this.ReportSalesButtonClick = this.createTouchClickEvent("btn-report-sales", this.reportSalesButtonClick);
                     this.ReportStocksButtonClick = this.createTouchClickEvent("btn-report-stocks", this.reportStocksButtonClick);
+                    this.ReportCashButtonClick = this.createTouchClickEvent("btn-report-cash", this.reportCashButtonClick);
                     this.ReportSalesTimeButtonClick = this.createTouchClickEvent("btn-report-salestime", this.reportSalesTimeButtonClick);
                     this.ReportExpressAnalysisButtonClick = this.createTouchClickEvent("btn-report-expressanalysis", this.reportExpressAnalysisButtonClick);
                 };
                 Index.prototype.destroyEvents = function () {
                     this.destroyTouchClickEvent("btn-report-sales", this.ReportSalesButtonClick);
                     this.destroyTouchClickEvent("btn-report-stocks", this.ReportStocksButtonClick);
+                    this.destroyTouchClickEvent("btn-report-cash", this.ReportCashButtonClick);
                     this.destroyTouchClickEvent("btn-report-salestime", this.ReportSalesTimeButtonClick);
                     this.destroyTouchClickEvent("btn-report-expressanalysis", this.ReportExpressAnalysisButtonClick);
                 };
@@ -54,6 +57,9 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
                 };
                 Index.prototype.reportStocksButtonClick = function (e) {
                     vars._main.OpenController({ urlController: "report/stocks/index", backController: this });
+                };
+                Index.prototype.reportCashButtonClick = function (e) {
+                    vars._main.OpenController({ urlController: "report/cash/index", backController: this });
                 };
                 Index.prototype.reportSalesTimeButtonClick = function (e) {
                     vars._main.OpenController({ urlController: "report/dashboard/salestime", backController: this });

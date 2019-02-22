@@ -18,6 +18,7 @@ export namespace Controller.Report {
                 "labelCharts": vars._statres("label$charts"),
                 "labelReportSales": vars._statres("report$sales"),
                 "labelReportStocks": vars._statres("report$stocks"),
+                "labelReportCash": vars._statres("report$cash"),
                 "labelReportSalesTime": vars._statres("report$sales$time"),
                 "labelReportExpressAnalysis": vars._statres("report$expressanalysis"),
             });
@@ -26,6 +27,7 @@ export namespace Controller.Report {
         protected createEvents(): void {
             this.ReportSalesButtonClick = this.createTouchClickEvent("btn-report-sales", this.reportSalesButtonClick);
             this.ReportStocksButtonClick = this.createTouchClickEvent("btn-report-stocks", this.reportStocksButtonClick);
+            this.ReportCashButtonClick = this.createTouchClickEvent("btn-report-cash", this.reportCashButtonClick);
             this.ReportSalesTimeButtonClick = this.createTouchClickEvent("btn-report-salestime", this.reportSalesTimeButtonClick);
             this.ReportExpressAnalysisButtonClick = this.createTouchClickEvent("btn-report-expressanalysis", this.reportExpressAnalysisButtonClick);
             
@@ -34,6 +36,7 @@ export namespace Controller.Report {
         protected destroyEvents(): void {
             this.destroyTouchClickEvent("btn-report-sales", this.ReportSalesButtonClick);
             this.destroyTouchClickEvent("btn-report-stocks", this.ReportStocksButtonClick);
+            this.destroyTouchClickEvent("btn-report-cash", this.ReportCashButtonClick);
             this.destroyTouchClickEvent("btn-report-salestime", this.ReportSalesTimeButtonClick);
             this.destroyTouchClickEvent("btn-report-expressanalysis", this.ReportExpressAnalysisButtonClick);
         }
@@ -46,6 +49,11 @@ export namespace Controller.Report {
         public ReportStocksButtonClick: { (e: any): void; };
         private reportStocksButtonClick(e) {
             vars._main.OpenController({ urlController: "report/stocks/index", backController: this });
+        }
+
+        public ReportCashButtonClick: { (e: any): void; };
+        private reportCashButtonClick(e) {
+            vars._main.OpenController({ urlController: "report/cash/index", backController: this });
         }
 
         public ReportSalesTimeButtonClick: { (e: any): void; };
