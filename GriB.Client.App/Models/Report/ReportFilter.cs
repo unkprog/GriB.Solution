@@ -31,6 +31,7 @@ namespace GriB.Client.App.Models.Report
         {
         }
         public product product { get; set; }
+        public category category { get; set; }
         public bool IsShowProduct { get; set; }
     }
 

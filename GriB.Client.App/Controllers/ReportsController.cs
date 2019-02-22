@@ -65,13 +65,15 @@ namespace GriB.Client.App.Controllers
         {
             return TryCatchResponseQuery((query) =>
             {
+                List<ReportSaleCategoryDashboardRow> categories = Sales.GetReportSalesCategoriesDashboard(query, filter);
                 List<ReportSaleDayWeekTableRow> dayweeks = Sales.GetReportSalesDayWeekDashboard(query, filter);
                 List<ReportSaleTimeTableRow> times = Sales.GetReportSalesTimeDashboard(query, filter);
-                double avgCheckWeekSum = 0, avgCheckTimeSum = 0;
+                double avgCheckCategorySum = 0, avgCheckWeekSum = 0, avgCheckTimeSum = 0;
+                categories = Sales.CalculateCategoriesDashboardParams(categories, out avgCheckCategorySum);
                 dayweeks = Sales.CalculateDashboardParams(dayweeks, out avgCheckWeekSum);
                 times = Sales.CalculateDashboardParams(times, out avgCheckTimeSum);
 
-                return Request.CreateResponse(HttpStatusCode.OK, new { times, avgCheckTimeSum, dayweeks, avgCheckWeekSum });
+                return Request.CreateResponse(HttpStatusCode.OK, new { categories, avgCheckCategorySum, dayweeks, avgCheckWeekSum, times, avgCheckTimeSum });
             });
         }
 

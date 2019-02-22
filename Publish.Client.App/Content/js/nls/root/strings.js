@@ -324,6 +324,9 @@ define({
     "label$dayweek$sun": "Вс",
 
     "report$expressanalysis": "Экспресс анализ",
+    "label$revenue$bycategory": "Выручка по категориям",
+    "label$revenue$daysofweek": "Выручка по дням недели",
+    "label$revenue$intime": "Выручка по времени",
     "label$weekday": "День недели",
     "label$intervaltime": "Интервал времени",
     "label$count$cheks": "Кол-во чеков",

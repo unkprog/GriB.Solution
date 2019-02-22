@@ -98,7 +98,7 @@ namespace GriB.Client.App.Managers.Reports
                 cd = (DateTime)values[cnt++],
                 cu = (int)values[cnt++],
                 salepoint = new salepoint() { id = (int)values[cnt++], name = (string)values[cnt++] },
-                product = new product() { id = (int)values[cnt++], name = (string)values[cnt++] },
+                product = new product() { id = (int)values[cnt++], name = (string)values[cnt++], category = new category() { id = (int)values[cnt++], name = (string)values[cnt++] } },
                 client = new client() { id = (int)values[cnt++], fname = (string)values[cnt++], mname = (string)values[cnt++], lname = (string)values[cnt++] },
                 quantity = (double)values[cnt++], discount= (double)values[cnt++], sum = (double)values[cnt++]
             };
@@ -110,7 +110,7 @@ namespace GriB.Client.App.Managers.Reports
         {
             List<ReportSaleDetailRow> result = new List<ReportSaleDetailRow>();
             query.Execute(cmdGetDetail, new SqlParameter[] { new SqlParameter() { ParameterName = "@datefrom", Value = Helper.Date(filter.datefrom) }, new SqlParameter() { ParameterName = "@dateto", Value = Helper.DateReportEnd(filter.dateto) }
-            , new SqlParameter() { ParameterName = "@salepoint", Value = filter.salepoint == null ? 0 : filter.salepoint.id }, new SqlParameter() { ParameterName = "@product", Value = filter.product == null ? 0 : filter.product.id }
+            , new SqlParameter() { ParameterName = "@salepoint", Value = filter.salepoint == null ? 0 : filter.salepoint.id }, new SqlParameter() { ParameterName = "@product", Value = filter.product == null ? 0 : filter.product.id }, new SqlParameter() { ParameterName = "@category", Value = filter.category == null ? 0 : filter.category.id }
             , new SqlParameter() { ParameterName = "@employee", Value = filter.employee == null ? 0 : filter.employee.id }, new SqlParameter() { ParameterName = "@client", Value = filter.client == null ? 0 : filter.client.id }
             , new SqlParameter() { ParameterName = "@dayweek", Value = filter.dayweek }, new SqlParameter() { ParameterName = "@time", Value = filter.time }
             }
@@ -164,7 +164,19 @@ namespace GriB.Client.App.Managers.Reports
             return result;
         }
 
+        private const string cmdGetCategoriesDashboard = @"Report\Sales\Dashboard\[categories]";
+        public static List<ReportSaleCategoryDashboardRow> GetReportSalesCategoriesDashboard(this Query query, ReportSaleFilter filter)
+        {
+            List<ReportSaleCategoryDashboardRow> result = new List<ReportSaleCategoryDashboardRow>();
+            query.Execute(cmdGetCategoriesDashboard, new SqlParameter[] { new SqlParameter() { ParameterName = "@datefrom", Value = Helper.Date(filter.datefrom) }, new SqlParameter() { ParameterName = "@dateto", Value = Helper.DateReportEnd(filter.dateto) }
+            , new SqlParameter() { ParameterName = "@salepoint", Value = filter.salepoint == null ? 0 : filter.salepoint.id }, new SqlParameter() { ParameterName = "@product", Value = filter.product == null ? 0 : filter.product.id }}
+            , (values) =>
+            {
+                result.Add(new ReportSaleCategoryDashboardRow() { id = (int)values[0], categoryname = (string)values[1], quantity = (double)values[2], sum = (double)values[3] });
+            });
 
+            return result;
+        }
 
         public static List<T> CalculateDashboardParams<T>(List<T> dItems, out double avgSum) where T : ReportSaleBaseDashboardRow
         {
@@ -272,6 +284,53 @@ namespace GriB.Client.App.Managers.Reports
                 else { zoneItem.avgsumzone = 0; }
                 sumZone += zoneItem.avgsumpercent;
             }
+            return _items;
+        }
+
+        public static List<T> CalculateCategoriesDashboardParams<T>(List<T> dItems, out double avgSum) where T : ReportSaleCategoryDashboardRow
+        {
+            List<T> _items = dItems;
+
+            double quantity = _items.Sum(f => f.quantity);
+            double sum = _items.Sum(f => f.sum);
+
+            avgSum = Math.Round(quantity > 0 ? sum / quantity : 0);
+
+            T item;
+            List<T> sortItems = new List<T>(_items.Count);
+            for (int i = 0, icount = _items.Count; i < icount; i++)
+            {
+                item = _items[i];
+                sortItems.Add(item);
+                item.quantitypercent = Math.Round(quantity > 0 ? 100.0f * (item.quantity / quantity) : 0, 2);
+                item.sumpercent = Math.Round(sum > 0 ? 100.0f * (item.sum / sum) : 0, 2);
+            }
+
+            double sumZone = 0;
+            sortItems.Sort((x, y) => { int result = y.quantitypercent.CompareTo(x.quantitypercent); if (result == 0) result = y.sum.CompareTo(x.sum); return result; });
+            sumZone = 0;
+            foreach (var zoneItem in sortItems)
+            {
+                if (sumZone < 30) { zoneItem.quantityzone = 4; }
+                else if (sumZone < 40) { zoneItem.quantityzone = 3; }
+                else if (sumZone < 70) { zoneItem.quantityzone = 2; }
+                else if (sumZone < 85) { zoneItem.quantityzone = 1; }
+                else { zoneItem.quantityzone = 0; }
+                sumZone += zoneItem.quantitypercent;
+            }
+
+            sortItems.Sort((x, y) => { int result = y.sumpercent.CompareTo(x.sumpercent); if (result == 0) result = y.sum.CompareTo(x.sum); return result; });
+            sumZone = 0;
+            foreach (var zoneItem in sortItems)
+            {
+                if (sumZone < 30) { zoneItem.sumzone = 4; }
+                else if (sumZone < 50) { zoneItem.sumzone = 3; }
+                else if (sumZone < 70) { zoneItem.sumzone = 2; }
+                else if (sumZone < 85) { zoneItem.sumzone = 1; }
+                else { zoneItem.sumzone = 0; }
+                sumZone += zoneItem.sumpercent;
+            }
+
             return _items;
         }
     }

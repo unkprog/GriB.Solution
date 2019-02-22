@@ -83,4 +83,25 @@ namespace GriB.Client.App.Models.Report
         public int dayweek { get; set; }
     }
 
+
+    public class ReportSaleCategoryDashboardRow
+    {
+        public ReportSaleCategoryDashboardRow()
+        {
+
+        }
+
+        public int id { get; set; }
+        public string categoryname { get; set; }
+
+        public double quantity { get; set; }
+        public double sum      { get; set; }
+
+        public int quantityzone { get; set; }
+        public int sumzone { get; set; }
+
+        public double quantitypercent { get; set; }
+        public double sumpercent { get; set; }
+
+    }
 }

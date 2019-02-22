@@ -47,7 +47,9 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                     });
                     Detalize.prototype.getDefaultFilter = function () {
                         return {
-                            datefrom: utils.date_ddmmyyyy(utils.dateToday()), dateto: utils.date_ddmmyyyy(utils.dateToday()), salepoint: undefined, product: undefined, employee: undefined, client: undefined, IsShowSalepoint: true, IsShowProduct: true, IsShowEmployee: false, IsShowClient: false
+                            datefrom: utils.date_ddmmyyyy(utils.dateToday()), dateto: utils.date_ddmmyyyy(utils.dateToday()),
+                            salepoint: undefined, product: undefined, employee: undefined, client: undefined, category: undefined,
+                            IsShowSalepoint: true, IsShowProduct: true, IsShowEmployee: false, IsShowClient: false
                         };
                     };
                     Detalize.prototype.getSaveFilter = function () {
@@ -75,10 +77,11 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                     Object.defineProperty(Detalize.prototype, "Columns", {
                         get: function () {
                             var columns = [];
-                            columns.push({ Header: vars._statres("label$date"), Field: "cd", FieldTemplate: "#=date_ddmmyyyy_withtime(new Date(cd))#" });
+                            columns.push({ Header: vars._statres("label$date"), Field: "cd", FieldTemplate: "#=date_ddmmyyyy_withtime(new Date(cd))#", IsOrder: true });
                             columns.push({ Header: vars._statres("label$salePoint"), Field: "salepoint.name", IsOrder: true });
                             columns.push({ Header: vars._statres("label$employee"), Field: "employee.name", IsOrder: true });
                             columns.push({ Header: vars._statres("label$product"), Field: "product.name", IsOrder: true });
+                            columns.push({ Header: vars._statres("label$category"), Field: "product.category.name", IsOrder: true });
                             columns.push({ Header: vars._statres("label$client"), Field: "client.name", IsOrder: true });
                             columns.push({ Header: vars._statres("label$quantity"), HeaderStyle: "product-col-quantity-auto-right", Field: "quantity", FieldTemplate: '#=numberToString(quantity,2)#', FieldStyle: "product-col-quantity-auto-right", IsSum: true, IsOrder: true });
                             columns.push({ Header: vars._statres("label$discount"), HeaderStyle: "product-col-quantity-auto-right", Field: "discount", FieldTemplate: '#=discount#', FieldStyle: "product-col-quantity-auto-right", IsSum: false, IsOrder: true });

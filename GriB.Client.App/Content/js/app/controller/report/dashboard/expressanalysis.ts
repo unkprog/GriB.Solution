@@ -26,6 +26,9 @@ export namespace Controller.Report.Dashboard {
                 "labelSalepoint": vars._statres("label$salePoint"),
                 "labelProduct": vars._statres("label$product"),
                 "labelBuild": vars._statres("label$build"),
+                "labelRevenueByCategory": vars._statres("label$revenue$bycategory"),
+                "labelDaysOfWeek": vars._statres("label$revenue$daysofweek") + ', %',
+                "labelInTime": vars._statres("label$revenue$intime") + ', %',
             });
         }
 
@@ -34,7 +37,7 @@ export namespace Controller.Report.Dashboard {
         }
 
         protected getDefaultFilter(): Interfaces.Model.IReportSaleFilter {
-            return { datefrom: utils.date_ddmmyyyy(utils.dateToday()), dateto: utils.date_ddmmyyyy(utils.dateToday()), salepoint: undefined, product: undefined, employee: undefined, client: undefined, IsShowSalepoint: true, IsShowProduct: true, IsShowEmployee: false, IsShowClient: false };
+            return { datefrom: utils.date_ddmmyyyy(utils.dateToday()), dateto: utils.date_ddmmyyyy(utils.dateToday()), salepoint: undefined, product: undefined, employee: undefined, client: undefined, category: undefined, IsShowSalepoint: true, IsShowProduct: true, IsShowEmployee: false, IsShowClient: false };
         }
 
 
@@ -68,6 +71,7 @@ export namespace Controller.Report.Dashboard {
         private chartTimesControl: JQuery;
         private chartTimesContainerControl: JQuery;
 
+        private tableCategoriesControl: Interfaces.Control.IControlTable;
         private tableWeekControl: Interfaces.Control.IControlTable;
         private tableTimeControl: Interfaces.Control.IControlTable;
 
@@ -101,6 +105,11 @@ export namespace Controller.Report.Dashboard {
             controller.chartWeeksControl = view.find('#report-expana-week-view-chart');
             controller.chartTimesContainerControl = view.find('#report-expana-time-view-chart-container');
             controller.chartTimesControl = view.find('#report-expana-time-view-chart');
+
+            
+            controller.tableCategoriesControl = new ctrl.Control.BaseTable();
+            controller.tableCategoriesControl.OnDetalize = $.proxy(controller.OnDetalizeCategories, controller);
+            view.find("#report-expana-categories-view-table-container").append(controller.tableCategoriesControl.InitView());
 
             controller.tableWeekControl = new ctrl.Control.BaseTable();
             controller.tableWeekControl.OnDetalize = $.proxy(controller.OnDetalizeDayWeek, controller);
@@ -286,10 +295,10 @@ export namespace Controller.Report.Dashboard {
                     data: chartData.weeks,
                     options: {
                         maintainAspectRatio: false,
-                        title: {
-                            display: true,
-                            text: vars._statres("label$daysofweek") + ', %'
-                        },
+                        //title: {
+                        //    display: true,
+                        //    text: vars._statres("label$daysofweek") + ', %'
+                        //},
                         scales: {
                             yAxes: [{
                                 ticks: {
@@ -320,10 +329,10 @@ export namespace Controller.Report.Dashboard {
                     data: chartData.times,
                     options: {
                         maintainAspectRatio: false,
-                        title: {
-                            display: true,
-                            text: vars._statres("label$intime") + ', %'
-                        },
+                        //title: {
+                        //    display: true,
+                        //    text: vars._statres("label$intime") + ', %'
+                        //},
                         scales: {
                             yAxes: [{
                                 ticks: {
@@ -346,6 +355,17 @@ export namespace Controller.Report.Dashboard {
 
 
         protected setupTable() {
+
+            this.tableCategoriesControl.Rows = this.Model.get("reportModel").categories;
+            this.tableCategoriesControl.Columns = [
+                { Header: vars._statres("label$category"), Field: "categoryname", IsOrder: true },
+                { Header: vars._statres("label$quantityshort"), HeaderStyle: "product-col-sum-auto-rigth", Field: "quantity", FieldTemplate: '#=numberToString(quantity, 0)#', FieldStyle: "product-col-sum-auto-rigth", IsSum: true, IsOrder: true },
+                { Header: vars._statres("label$sum"), HeaderStyle: "product-col-sum-auto-rigth", Field: "sum", FieldTemplate: '#=numberToString(sum,2)#', FieldStyle: "product-col-sum-auto-rigth #if(sumzone===4){# grade-30 #} else if(sumzone===3){# grade-50 #} else if(sumzone===2){# grade-70 #} else if(sumzone===1){# grade-85 #} else {# grade-other #}#", IsSum: true, IsOrder: true },
+                { Header: vars._statres("label$percent$sum"), HeaderStyle: "product-col-sum-auto-rigth", Field: "sumpercent", FieldTemplate: '#=numberToString(sumpercent,2)#', FieldStyle: "product-col-sum-auto-rigth #if(sumzone===4){# grade-30 #} else if(sumzone===3){# grade-50 #} else if(sumzone===2){# grade-70 #} else if(sumzone===1){# grade-85 #} else {# grade-other #}#", IsNumber: true, IsOrder: true },
+            ];
+            this.tableCategoriesControl.Setup();
+
+
             this.tableWeekControl.Rows = this.Model.get("reportModel").dayweeks;
             this.tableWeekControl.Columns = [
                 { Header: vars._statres("label$weekday"), Field: "dayweek", FieldTemplate: '#=window.WeekNamesByValue[dayweek]#', IsOrder: true },
@@ -373,6 +393,28 @@ export namespace Controller.Report.Dashboard {
             this.tableTimeControl.Setup();
         }
 
+        protected OnDetalizeCategories(row: Interfaces.Model.ITableRowModel) {
+            let self = this;
+            let curfilter: Interfaces.Model.IReportSaleFilter = self.Filter as Interfaces.Model.IReportSaleFilter;
+            let item: any = row;
+            let category: any = { id: item.id };
+            vars._app.OpenController({
+                urlController: 'report/sales/detalize', isModal: true, onLoadController: (controller: Interfaces.IController) => {
+                    let ctrlDetalize: Interfaces.IControllerReport = controller as Interfaces.IControllerReport;
+                    let time: string = item.time;
+                    if (time && time.length > 1)
+                        time = time.substring(0, 2);
+                    let filter: Interfaces.Model.IReportSaleDetailFilter = {
+                        datefrom: curfilter.datefrom, dateto: curfilter.dateto, salepoint: curfilter.salepoint, employee: curfilter.employee, client: curfilter.client, product: curfilter.product, dayweek: 0, time: time, category: category
+                    };
+                    if (item.salepoint && item.salepoint.id && item.salepoint.id !== 0) filter.salepoint = item.salepoint;
+                    if (item.product && item.product.id && item.product.id !== 0) filter.product = item.product;
+
+                    ctrlDetalize.Model.set("filterModel", filter);
+                }
+            });
+        }
+
         protected OnDetalizeDayWeek(row: Interfaces.Model.ITableRowModel) {
             let self = this;
             let curfilter: Interfaces.Model.IReportSaleFilter = self.Filter as Interfaces.Model.IReportSaleFilter;
@@ -384,7 +426,7 @@ export namespace Controller.Report.Dashboard {
                     if (time && time.length > 1)
                         time = time.substring(0, 2);
                     let filter: Interfaces.Model.IReportSaleDetailFilter = {
-                        datefrom: curfilter.datefrom, dateto: curfilter.dateto, salepoint: curfilter.salepoint, employee: curfilter.employee, client: curfilter.client, product: curfilter.product, dayweek: item.dayweek, time: ''
+                        datefrom: curfilter.datefrom, dateto: curfilter.dateto, salepoint: curfilter.salepoint, employee: curfilter.employee, client: curfilter.client, product: curfilter.product, dayweek: item.dayweek, time: '', category: undefined
                     };
                     if (item.salepoint && item.salepoint.id && item.salepoint.id !== 0) filter.salepoint = item.salepoint;
                     if (item.product && item.product.id && item.product.id !== 0) filter.product = item.product;
@@ -405,7 +447,9 @@ export namespace Controller.Report.Dashboard {
                     if (time && time.length > 1)
                         time = time.substring(0, 2);
                     let filter: Interfaces.Model.IReportSaleDetailFilter = {
-                        datefrom: curfilter.datefrom, dateto: curfilter.dateto, salepoint: curfilter.salepoint, employee: curfilter.employee, client: curfilter.client, product: curfilter.product, dayweek: 0, time: time
+                        datefrom: curfilter.datefrom, dateto: curfilter.dateto
+                        , salepoint: curfilter.salepoint, employee: curfilter.employee, client: curfilter.client, product: curfilter.product, category: undefined
+                        , dayweek: 0, time: time
                     };
                     if (item.salepoint && item.salepoint.id && item.salepoint.id !== 0) filter.salepoint = item.salepoint;
                     if (item.product && item.product.id && item.product.id !== 0) filter.product = item.product;

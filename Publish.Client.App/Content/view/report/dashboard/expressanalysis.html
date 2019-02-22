@@ -24,27 +24,34 @@
             <a id="report-expana-view-btn-build" class="btn btncol" data-bind="text:labelBuild"></a>
         </div>
     </div>
-    <div class="row row-inputs">
-        <div class="input-field col s12 m12 l12 xl12 col-input-numpad">
-            <div id="report-expana-week-view-chart-container">
-                <canvas id="report-expana-week-view-chart"></canvas>
-            </div>
+    <div class="row">
+        <div class="col s12 m12 l12 xl12 center">
+            <h4 data-bind="text:labelRevenueByCategory"></h4>
+        </div>
+        <div class="col s12 m12 l12 xl12">
+            <div id="report-expana-categories-view-table-container"></div>
+        </div>
+
+        <div class="col s12 m12 l12 xl12 center">
+            <h4 data-bind="text:labelDaysOfWeek"></h4>
+        </div>
+        <div class="col s12 m12 l12 xl12">
+            <div id="report-expana-week-view-chart-container"><canvas id="report-expana-week-view-chart"></canvas></div>
+        </div>
+        <div class="col s12 m12 l12 xl12">
+            <div id="report-expana-week-view-table-container" class="input-field col s12 m12 l12 xl12 col-input-numpad"></div>
+        </div>
+
+        <div class="col s12 m12 l12 xl12 center">
+            <h4 data-bind="text:labelInTime"></h4>
+        </div>
+        <div class="col s12 m12 l12 xl12">
+            <div id="report-expana-time-view-chart-container"><canvas id="report-expana-time-view-chart"></canvas></div>
+        </div>
+        <div class="col s12 m12 l12 xl12">
+            <div id="report-expana-time-view-table-container" class="input-field col s12 m12 l12 xl12 col-input-numpad"></div>
         </div>
     </div>
-    <div class="row row-inputs">
-        <div id="report-expana-week-view-table-container" class="input-field col s12 m12 l12 xl12 col-input-numpad">
-            
-        </div>
-    </div>
-    <div class="row row-inputs">
-        <div class="input-field col s12 m12 l12 xl12 col-input-numpad">
-            <div id="report-expana-time-view-chart-container">
-                <canvas id="report-expana-time-view-chart"></canvas>
-            </div>
-        </div>
-    </div>
-    <div class="row row-inputs">
-        <div id="report-expana-time-view-table-container" class="input-field col s12 m12 l12 xl12 col-input-numpad">
-        </div>
+    <div class="row">
     </div>
 </div>

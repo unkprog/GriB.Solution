@@ -12,13 +12,14 @@ namespace GriB.Client.App.Models.Editor
             vendorcode = string.Empty;
             barcode = string.Empty;
             unit_name = string.Empty;
+            category = new category();
             costprices = new List<price_item>();
             sellingprices = new List<price_item>();
             accesssalepoints = new List<salepointaccess>();
             composition = new List<product_composition>();
         }
         public int type { get; set; }
-        public int category { get; set; }
+        public category category { get; set; }
         public string photo { get; set; }
         public string description { get; set; }
         public string vendorcode { get; set; }

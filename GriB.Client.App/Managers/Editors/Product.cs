@@ -9,7 +9,7 @@ namespace GriB.Client.App.Managers.Editors
     public static class Product
     {
 
-        private static product readFromValues(object[] values) => new product() { id = (int)values[0], pid = (int)values[1], type = (int)values[2], category = (int)values[3], name = (string)values[4], photo = (string)values[5], putonsale = (bool)values[6] };
+        private static product readFromValues(object[] values) => new product() { id = (int)values[0], pid = (int)values[1], type = (int)values[2], category = new category() { id = (int)values[3], name = (string)values[7] }, name = (string)values[4], photo = (string)values[5], putonsale = (bool)values[6] };
 
         private const string cmdGet = @"Editor\Product\[get]";
         public static List<product> GetProducts(this Query query)
@@ -40,7 +40,7 @@ namespace GriB.Client.App.Managers.Editors
         public static product SetProduct(this Query query, product product, int user)
         {
             product result = product;
-            query.Execute(cmdSet, new SqlParameter[] { new SqlParameter("@id", product.id), new SqlParameter("@u", user), new SqlParameter("@pid", product.pid), new SqlParameter("@type", product.type), new SqlParameter("@category", product.category), new SqlParameter("@name", product.name), new SqlParameter("@photo", product.photo), new SqlParameter("@putonsale", product.putonsale) }
+            query.Execute(cmdSet, new SqlParameter[] { new SqlParameter("@id", product.id), new SqlParameter("@u", user), new SqlParameter("@pid", product.pid), new SqlParameter("@type", product.type), new SqlParameter("@category", product.category == null ? 0 : product.category.id), new SqlParameter("@name", product.name), new SqlParameter("@photo", product.photo), new SqlParameter("@putonsale", product.putonsale) }
             , (values) =>
             {
                 result.id = (int)values[0];

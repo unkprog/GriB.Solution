@@ -308,6 +308,7 @@
     <Content Include="Scripts\Query\POSTerminal\Payment\[set].sql" />
     <Content Include="Scripts\Query\POSTerminal\[get].sql" />
     <Content Include="Scripts\Query\Report\Sales\Dashboard\[salesdayweek].sql" />
+    <Content Include="Scripts\Query\Report\Sales\Dashboard\[categories].sql" />
     <Content Include="Scripts\Query\Report\Sales\[salesdetail].sql" />
     <Content Include="Scripts\Query\Report\Sales\Dashboard\[salestime].sql" />
     <Content Include="Scripts\Query\Report\Stocks\[stocksdetail].sql" />

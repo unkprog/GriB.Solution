@@ -276,6 +276,7 @@
 
         employee: IEmployeeModel;
         client: IClientModel;
+        category: ICategory;
 
         IsShowEmployee?: boolean;
         IsShowClient?: boolean;

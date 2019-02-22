@@ -21,6 +21,7 @@ export namespace Controller.Setting.Card {
                 Load: $.proxy(this.Service.GetProducts, this.Service), Delete: $.proxy(this.Service.DelProduct, this.Service),
                 Columns: [
                     { Header: vars._statres("label$name"), Field: "name" },
+                    { Header: vars._statres("label$category"), Field: "category.name" },
                     { Header: vars._statres("label$type"), Field: "typename" },
                 ]
             };

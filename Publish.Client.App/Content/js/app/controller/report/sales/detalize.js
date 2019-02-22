@@ -47,7 +47,9 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                     });
                     Detalize.prototype.getDefaultFilter = function () {
                         return {
-                            datefrom: utils.date_ddmmyyyy(utils.dateToday()), dateto: utils.date_ddmmyyyy(utils.dateToday()), salepoint: undefined, product: undefined, employee: undefined, client: undefined, IsShowSalepoint: true, IsShowProduct: true, IsShowEmployee: false, IsShowClient: false
+                            datefrom: utils.date_ddmmyyyy(utils.dateToday()), dateto: utils.date_ddmmyyyy(utils.dateToday()),
+                            salepoint: undefined, product: undefined, employee: undefined, client: undefined, category: undefined,
+                            IsShowSalepoint: true, IsShowProduct: true, IsShowEmployee: false, IsShowClient: false
                         };
                     };
                     Detalize.prototype.getSaveFilter = function () {
