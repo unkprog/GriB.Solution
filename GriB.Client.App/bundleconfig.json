@@ -1,0 +1,14 @@
+[
+  {
+    "outputFileName": "Content/js/lib/materialize/materialize.min.js",
+    "inputFiles": [
+      "Content/js/lib/materialize/materialize.js"
+    ]
+  },
+  {
+    "outputFileName": "Content/js/lib/i18n.min.js",
+    "inputFiles": [
+      "Content/js/lib/i18n.js"
+    ]
+  }
+]

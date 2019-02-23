@@ -26,7 +26,7 @@ export namespace Controller.Terminal {
         }
 
         public destroyEvents(): void {
-            utils.destroyTouchClickEvent(this.controlSalePoints.find('a'), this.SalePointButtonClick);
+            if (this.controlSalePoints) utils.destroyTouchClickEvent(this.controlSalePoints.find('a'), this.SalePointButtonClick);
         }
 
 

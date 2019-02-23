@@ -631,7 +631,10 @@ define(["require", "exports", "app/common/utils", "app/common/variables", "app/c
                 this.selectedRow = $(e.currentTarget);
                 if (this.selectedRow)
                     this.selectedRow.addClass("row-active z-depth-1 brown lighten-5");
-                this.editButtonClick(e);
+                if (this.CardSettings.IsSelect)
+                    this.selectButtonClick(e);
+                else
+                    this.editButtonClick(e);
             };
             BaseCard.prototype.editButtonClick = function (e) {
                 if (this.selectedRow) {

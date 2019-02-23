@@ -10,8 +10,8 @@
         "kendo.data.odata": "lib/kendo/kendo.data.odata.es5.min",
         "kendo.data.xml": "lib/kendo/kendo.data.xml.es5.min",
         "kendo.binder": "lib/kendo/kendo.binder.es5.min",
-        "i18n": "lib/i18n",
-        "domReady": "lib/require/domReady"
+        "i18n": "lib/i18n.es5.min",
+        "domReady": "lib/require/domReady.es5.min"
     },
     waitSeconds: 20
 });

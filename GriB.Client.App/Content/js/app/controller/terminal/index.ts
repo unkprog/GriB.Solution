@@ -86,8 +86,15 @@ export namespace Controller.Terminal {
             let controller = this;
             controller.Service.Enter((responseData) => {
                 vars._identity.employee = responseData.employee;
-                controller.navBar.Bind();
-                controller.Reset();
+                if (vars._identity.employee && vars._identity.employee.accesssalepoints && vars._identity.employee.accesssalepoints.length > 0) {
+                    controller.navBar.Bind();
+                    controller.Reset();
+                } else {
+                    vars._app.ShowMessage(vars._statres("label$settings"), vars._statres("msg$error$settings$notfill"), () => {
+                        vars._app.OpenController({ urlController: "setting/index" });
+                    });
+                    
+                }
                 controller.HideLoading();
                 vars._app.HideLoading();
             });
@@ -122,8 +129,8 @@ export namespace Controller.Terminal {
         }
 
         public Reset(): void {
-            this.navProduct.Reset();
-            this.navCheck.Reset();
+            if (this.navProduct) this.navProduct.Reset();
+            if (this.navCheck) this.navCheck.Reset();
         }
         
     }

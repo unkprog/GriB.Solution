@@ -57,7 +57,7 @@ export namespace Controller.Report.Cash {
 
         public get Columns(): Interfaces.Control.ITableColumn[] {
             let columns: Interfaces.Control.ITableColumn[] = [];
-            let doctypeTemplate: string = "#if (doctype === 10) {#" + vars._statres("label$payment") + "# } else if (doctype === 20) {#" + vars._statres("label$encashment") + "#} else if (doctype === 30) {#" + vars._statres("label$depositmoney") + "#} else if (doctype === 40) {#" + vars._statres("label$withdrawingmoney") + "#}#";
+            let doctypeTemplate: string = "#if (doctype === 10) {#" + vars._statres("label$payment") + "# } else if (doctype === 20) {#" + vars._statres("label$depositmoney") + "#} else if (doctype === 30) {#" + vars._statres("label$withdrawingmoney") + "#} else if (doctype === 40) {#" + vars._statres("label$encashment") + "#}#";
 
             columns.push({ Header: vars._statres("label$document"), Field: "doctype", FieldTemplate: doctypeTemplate, IsOrder: true });
             columns.push({ Header: vars._statres("label$date"), Field: "cd", FieldTemplate: "#=date_ddmmyyyy_withtime(new Date(cd))#" });

@@ -77,7 +77,7 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                     Object.defineProperty(Detalize.prototype, "Columns", {
                         get: function () {
                             var columns = [];
-                            var doctypeTemplate = "#if (doctype === 10) {#" + vars._statres("label$payment") + "# } else if (doctype === 20) {#" + vars._statres("label$encashment") + "#} else if (doctype === 30) {#" + vars._statres("label$depositmoney") + "#} else if (doctype === 40) {#" + vars._statres("label$withdrawingmoney") + "#}#";
+                            var doctypeTemplate = "#if (doctype === 10) {#" + vars._statres("label$payment") + "# } else if (doctype === 20) {#" + vars._statres("label$depositmoney") + "#} else if (doctype === 30) {#" + vars._statres("label$withdrawingmoney") + "#} else if (doctype === 40) {#" + vars._statres("label$encashment") + "#}#";
                             columns.push({ Header: vars._statres("label$document"), Field: "doctype", FieldTemplate: doctypeTemplate, IsOrder: true });
                             columns.push({ Header: vars._statres("label$date"), Field: "cd", FieldTemplate: "#=date_ddmmyyyy_withtime(new Date(cd))#" });
                             columns.push({ Header: vars._statres("label$salePoint"), Field: "salepoint.name", IsOrder: true });

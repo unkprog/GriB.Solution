@@ -709,7 +709,10 @@ export namespace Controller {
             this.selectedRow = $(e.currentTarget);
             if (this.selectedRow)
                 this.selectedRow.addClass("row-active z-depth-1 brown lighten-5");
-            this.editButtonClick(e);
+            if (this.CardSettings.IsSelect)
+                this.selectButtonClick(e);
+            else
+                this.editButtonClick(e);
         }
 
         public EditButtonClick: { (e: any): void; };

@@ -63,5 +63,17 @@
   {
     "outputFile": "Scss/components/_variables.css",
     "inputFile": "Scss/components/_variables.scss"
+  },
+  {
+    "outputFile": "Content/js/lib/require/domReady.es5.js",
+    "inputFile": "Content/js/lib/require/domReady.js"
+  },
+  {
+    "outputFile": "Content/js/lib/require/require.es5.js",
+    "inputFile": "Content/js/lib/require/require.js"
+  },
+  {
+    "outputFile": "Content/js/lib/i18n.es5.js",
+    "inputFile": "Content/js/lib/i18n.js"
   }
 ]

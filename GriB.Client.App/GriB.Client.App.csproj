@@ -125,6 +125,12 @@
     <Content Include="Content\img\noimage.png" />
     <Content Include="Content\index.html" />
     <Content Include="Content\js\lib\chartjs\Chart.min.js" />
+    <Content Include="Content\js\lib\i18n.es5.js">
+      <DependentUpon>i18n.js</DependentUpon>
+    </Content>
+    <Content Include="Content\js\lib\i18n.es5.min.js">
+      <DependentUpon>i18n.es5.js</DependentUpon>
+    </Content>
     <Content Include="Content\js\lib\i18n.js" />
     <Content Include="Content\js\lib\jquery-3.3.1.min.js" />
     <Content Include="Content\js\lib\kendo\kendo.binder.es5.js">
@@ -162,9 +168,26 @@
       <DependentUpon>kendo.data.xml.es5.js</DependentUpon>
     </Content>
     <Content Include="Content\js\lib\kendo\kendo.data.xml.js" />
+    <Content Include="Content\js\lib\materialize\materialize.es5.js">
+      <DependentUpon>materialize.js</DependentUpon>
+    </Content>
+    <Content Include="Content\js\lib\materialize\materialize.es5.min.js">
+      <DependentUpon>materialize.es5.js</DependentUpon>
+    </Content>
     <Content Include="Content\js\lib\materialize\materialize.js" />
-    <Content Include="Content\js\lib\materialize\materialize.min.js" />
+    <Content Include="Content\js\lib\require\domReady.es5.js">
+      <DependentUpon>domReady.js</DependentUpon>
+    </Content>
+    <Content Include="Content\js\lib\require\domReady.es5.min.js">
+      <DependentUpon>domReady.es5.js</DependentUpon>
+    </Content>
     <Content Include="Content\js\lib\require\domReady.js" />
+    <Content Include="Content\js\lib\require\require.es5.js">
+      <DependentUpon>require.js</DependentUpon>
+    </Content>
+    <Content Include="Content\js\lib\require\require.es5.min.js">
+      <DependentUpon>require.es5.js</DependentUpon>
+    </Content>
     <Content Include="Content\js\lib\require\require.js" />
     <Content Include="Content\js\nls\en\strings.js" />
     <Content Include="Content\js\nls\root\strings.js" />
@@ -334,6 +357,7 @@
     <Content Include="Scripts\Sql\05.001.[t_category].sql" />
     <Content Include="Scripts\Sql\04.001.[t_unit].sql" />
     <Content Include="Scripts\Sql\02.001.[t_org].sql" />
+    <None Include="TODO.txt" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -404,6 +428,7 @@
     <None Condition="$(Configuration) == 'Publish'" Include="appSettings.Publish.config">
       <DependentUpon>appSettings.config</DependentUpon>
     </None>
+    <None Include="bundleconfig.json" />
     <None Include="compilerconfig.json" />
     <None Include="compilerconfig.json.defaults">
       <DependentUpon>compilerconfig.json</DependentUpon>

@@ -66,7 +66,8 @@ namespace GriB.Client.App.Controllers
             employee empl = new employee(principal.Data);
             empl = Employee.GetEmployee(query, empl);
             empl = Employee.GetEmployeeSalepointAccess(query, empl);
-            return new employeecard(empl);
+            employeecard result = new employeecard(empl);
+            return result;
         }
 
         [HttpPost]

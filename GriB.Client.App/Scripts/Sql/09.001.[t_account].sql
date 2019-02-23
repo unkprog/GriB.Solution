@@ -3,7 +3,7 @@
 
 if not exists (select * from [sys].[objects] where [object_id] = object_id(N'[t_account]') and type in (N'U'))
 begin
-  create table [t_payment]
+  create table [t_account]
   (
     [id]       [int]           identity(1,1) not null,
 	[d]        [int]           not null default (0),

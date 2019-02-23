@@ -18,7 +18,8 @@ define(["require", "exports", "app/common/variables", "app/common/utils"], funct
                         this.navHeader.unbind();
                 };
                 NavigationBar.prototype.destroyEvents = function () {
-                    utils.destroyTouchClickEvent(this.controlSalePoints.find('a'), this.SalePointButtonClick);
+                    if (this.controlSalePoints)
+                        utils.destroyTouchClickEvent(this.controlSalePoints.find('a'), this.SalePointButtonClick);
                 };
                 NavigationBar.prototype.initNavbarHeader = function (view) {
                     var navbarHeader = '<div class="navbar-fixed editor-header z-depth-1">';

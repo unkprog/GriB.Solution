@@ -54,6 +54,11 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                         phone: $('#login-phone').val(),
                         pass: $('#login-pass').val()
                     };
+                    // TODO: Заглушка на демо-вход
+                    if (utils.isNullOrEmpty(model.phone) && utils.isNullOrEmpty(model.pass)) {
+                        model.phone = "9264042915";
+                        model.pass = "1";
+                    }
                     if (this.validate(model)) {
                         controller.AccountService.Login(model, function (responseData) {
                             if (responseData.result == "Ok") {

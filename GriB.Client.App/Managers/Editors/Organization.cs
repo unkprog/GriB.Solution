@@ -57,7 +57,7 @@ namespace GriB.Client.App.Managers.Editors
         public static t_org SetOrganization(this Query query, t_org org)
         {
             t_org result = org;
-            query.Execute(cmdSet, new SqlParameter[] { new SqlParameter("@id", org.id), new SqlParameter("@cu", org.cu), new SqlParameter("@uu", org.uu), new SqlParameter("@name", org.name), new SqlParameter("@type", org.type), new SqlParameter("@pid", org.pid) }
+            query.Execute(cmdSet, new SqlParameter[] { new SqlParameter("@id", org.id), new SqlParameter("@cu", org.cu), new SqlParameter("@uu", org.uu), new SqlParameter("@name", string.IsNullOrEmpty(org.name) ? "" : org.name), new SqlParameter("@type", org.type), new SqlParameter("@pid", org.pid) }
             , (values) =>
             {
                 result.id = (int)values[0];
