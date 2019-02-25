@@ -89,23 +89,62 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
                     }
                     this.ViewResize({});
                 };
+                Index.prototype.checkSettings = function () {
+                    var controller = this;
+                    var result = false;
+                    if (vars._identity.employee && vars._identity.employee.accesssalepoints && vars._identity.employee.accesssalepoints.length > 0) {
+                        if (this.existsAccessSalepoint() === false) {
+                            if (vars._identity.employee.isfullaccess === true) {
+                                vars._app.ShowMessage(vars._statres("label$settings"), vars._statres("msg$error$settings$notaccesssalepoint"), function () {
+                                    vars._app.OpenController({ urlController: "setting/index" });
+                                });
+                            }
+                            else {
+                                vars._app.ShowMessage(vars._statres("button$label$enter"), vars._statres("msg$error$notaccess"), function () {
+                                    vars._app.OpenController({ urlController: "security/login" });
+                                });
+                            }
+                        }
+                        else {
+                            result = true;
+                        }
+                    }
+                    else {
+                        if (vars._identity.employee.isfullaccess === true) {
+                            vars._app.ShowMessage(vars._statres("label$settings"), vars._statres("msg$error$settings$notfill"), function () {
+                                vars._app.OpenController({ urlController: "setting/index" });
+                            });
+                        }
+                        else {
+                            vars._app.ShowMessage(vars._statres("button$label$enter"), vars._statres("msg$error$notaccess"), function () {
+                                vars._app.OpenController({ urlController: "security/login" });
+                            });
+                        }
+                    }
+                    return result;
+                };
                 Index.prototype.loadData = function () {
                     var controller = this;
                     controller.Service.Enter(function (responseData) {
                         vars._identity.employee = responseData.employee;
-                        if (vars._identity.employee && vars._identity.employee.accesssalepoints && vars._identity.employee.accesssalepoints.length > 0) {
+                        if (controller.checkSettings() === true) {
                             controller.navBar.Bind();
                             controller.Reset();
-                        }
-                        else {
-                            vars._app.ShowMessage(vars._statres("label$settings"), vars._statres("msg$error$settings$notfill"), function () {
-                                vars._app.OpenController({ urlController: "setting/index" });
-                            });
                         }
                         controller.HideLoading();
                         vars._app.HideLoading();
                     });
                     return false;
+                };
+                Index.prototype.existsAccessSalepoint = function () {
+                    var result = false;
+                    var salePoints = vars._identity.employee.accesssalepoints;
+                    for (var i = 0, icount = salePoints.length; i < icount; i++) {
+                        if (salePoints[i].isaccess === true) {
+                            result = true;
+                        }
+                    }
+                    return result;
                 };
                 Index.prototype.ViewHide = function (e) {
                     this.navBar.Unbind();

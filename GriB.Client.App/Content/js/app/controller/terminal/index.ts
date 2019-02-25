@@ -82,23 +82,61 @@ export namespace Controller.Terminal {
             this.ViewResize({});
         }
 
+        private checkSettings(): boolean {
+            let controller = this;
+            let result: boolean = false;
+            if (vars._identity.employee && vars._identity.employee.accesssalepoints && vars._identity.employee.accesssalepoints.length > 0) {
+                if (this.existsAccessSalepoint() === false) {
+                    if (vars._identity.employee.isfullaccess === true) {
+                    vars._app.ShowMessage(vars._statres("label$settings"), vars._statres("msg$error$settings$notaccesssalepoint"), () => {
+                        vars._app.OpenController({ urlController: "setting/index" });
+                        });
+                    }
+                    else {
+                        vars._app.ShowMessage(vars._statres("button$label$enter"), vars._statres("msg$error$notaccess"), () => {
+                            vars._app.OpenController({ urlController: "security/login" });
+                        });
+                    }
+                }
+                else {
+                    result = true;
+                }
+            } else {
+                if (vars._identity.employee.isfullaccess === true) {
+                    vars._app.ShowMessage(vars._statres("label$settings"), vars._statres("msg$error$settings$notfill"), () => {
+                        vars._app.OpenController({ urlController: "setting/index" });
+                    });
+                }
+                else {
+                    vars._app.ShowMessage(vars._statres("button$label$enter"), vars._statres("msg$error$notaccess"), () => {
+                        vars._app.OpenController({ urlController: "security/login"  });
+                    });
+                }
+            }
+            return result;
+        }
+
         protected loadData(): boolean {
             let controller = this;
             controller.Service.Enter((responseData) => {
                 vars._identity.employee = responseData.employee;
-                if (vars._identity.employee && vars._identity.employee.accesssalepoints && vars._identity.employee.accesssalepoints.length > 0) {
+                if (controller.checkSettings() === true) {
                     controller.navBar.Bind();
                     controller.Reset();
-                } else {
-                    vars._app.ShowMessage(vars._statres("label$settings"), vars._statres("msg$error$settings$notfill"), () => {
-                        vars._app.OpenController({ urlController: "setting/index" });
-                    });
-                    
                 }
                 controller.HideLoading();
                 vars._app.HideLoading();
             });
             return false;
+        }
+
+        private existsAccessSalepoint(): boolean {
+            let result: boolean = false;
+            let salePoints: Interfaces.Model.ISalePointAccessModel[] = vars._identity.employee.accesssalepoints;
+            for (let i = 0, icount = salePoints.length; i < icount; i++) {
+                if (salePoints[i].isaccess === true) { result = true; }
+            }
+            return result;
         }
 
         public ViewHide(e) {

@@ -72,6 +72,7 @@
         phone: string;
         pass: string;
         isaccess: boolean;
+        isfullaccess: boolean;
         openonlogin: number;
         defaultsalepoint: number;
     }

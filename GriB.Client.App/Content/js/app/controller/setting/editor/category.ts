@@ -87,6 +87,7 @@ export namespace Controller.Setting.Editor {
 
         public ViewShow(e: any): boolean {
             $('#editor-view-category-tabs').tabs();
+            M.Tabs.getInstance($('#editor-view-category-tabs')).updateTabIndicator();
             M.textareaAutoResize($("#editor-view-category-description"));
             return super.ViewShow(e);
         }
@@ -104,6 +105,7 @@ export namespace Controller.Setting.Editor {
 
         public ViewResize(e: any): void {
             super.ViewResize(e);
+            M.Tabs.getInstance($('#editor-view-category-tabs')).updateTabIndicator();
             if (this.controlPhoto)
                 this.controlPhoto.height(this.controlPhoto.width());
         }

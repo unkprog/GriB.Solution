@@ -486,12 +486,13 @@ export namespace Controller.Terminal {
 
             vars._app.OpenController({
                 urlController: 'setting/card/client', isModal: true, onLoadController: (controller: Interfaces.IController) => {
-                    let ctrlProduct: Interfaces.IControllerCard = controller as Interfaces.IControllerCard;
-                    ctrlProduct.CardSettings.IsAdd = false;
-                    ctrlProduct.CardSettings.IsEdit = false;
-                    ctrlProduct.CardSettings.IsDelete = false;
-                    ctrlProduct.CardSettings.IsSelect = true;
-                    ctrlProduct.OnSelect = $.proxy(self.selectClient, self);
+                    let ctrClient: Interfaces.ICardClient = controller as Interfaces.ICardClient;
+                    ctrClient.IsShowPhone(vars._identity.employee.isfullaccess === true);
+                    ctrClient.CardSettings.IsAdd = false;
+                    ctrClient.CardSettings.IsEdit = false;
+                    ctrClient.CardSettings.IsDelete = false;
+                    ctrClient.CardSettings.IsSelect = true;
+                    ctrClient.OnSelect = $.proxy(self.selectClient, self);
                 }
             });
         }
@@ -500,7 +501,7 @@ export namespace Controller.Terminal {
             let record: Interfaces.Model.IClientModel = controller.getSelectedRecord() as Interfaces.Model.IClientModel;
             if (record) {
                 let controller = this;
-                controller.currentCheck.client = { id: record.id, name: record.name + (utils.isNullOrEmpty(record.phone) ? "" : " (" + record.phone + ")") };
+                controller.currentCheck.client = { id: record.id, name: record.name /*+ (utils.isNullOrEmpty(record.phone) ? "" : " (" + record.phone + ")")*/ };
                 controller.Service.CheckSetClient(controller.currentCheck.id, controller.currentCheck.client.id, (responseData) => {
                     controller.model.set("checkClient", (controller.currentCheck.client ? controller.currentCheck.client.name : ""));
                 });

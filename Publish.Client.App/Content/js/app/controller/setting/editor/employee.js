@@ -130,7 +130,12 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                     };
                     Employee.prototype.ViewShow = function (e) {
                         $('#editor-view-tabs').tabs();
+                        M.Tabs.getInstance($('#editor-view-tabs')).updateTabIndicator();
                         return _super.prototype.ViewShow.call(this, e);
+                    };
+                    Employee.prototype.ViewResize = function (e) {
+                        _super.prototype.ViewResize.call(this, e);
+                        M.Tabs.getInstance($('#editor-view-tabs')).updateTabIndicator();
                     };
                     Employee.prototype.validate = function () {
                         var result = true;

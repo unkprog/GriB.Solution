@@ -70,6 +70,10 @@
         OnSelect(controller: IControllerCard): void;
     }
 
+    export interface ICardClient extends IControllerCard {
+        IsShowPhone(isShow: boolean): void;
+    }
+
     export interface IDialog extends IController {
         Show(header: string, e: string): void;
         OnClose: () => void;

@@ -2,7 +2,7 @@
 import card = require('app/controller/setting/card/card');
 
 export namespace Controller.Setting.Card {
-    export class Client extends card.Controller.Setting.Card.Card {
+    export class Client extends card.Controller.Setting.Card.Card implements Interfaces.ICardClient {
         constructor() {
             super();
         }
@@ -14,15 +14,19 @@ export namespace Controller.Setting.Card {
             });
         }
 
+        private isShowPhone: boolean = true;
+        public IsShowPhone(isShow: boolean) {
+            this.isShowPhone = isShow;
+        }
         protected createCardSettings(): Interfaces.Control.ICardSettings {
+            let columns: Interfaces.Control.ICardColumn[] = [{ Header: vars._statres("label$name"), Field: "name" }];
+            if (this.isShowPhone)
+                columns.push({ Header: vars._statres("label$phone"), Field: "phone" });
             return {
                 FieldId: "id", FilterSettings: this.createCardFilterSettings(), ValueIdNew: 0, EditIdName: "id_client", EditController: "setting/editor/client",
                 IsAdd: true, IsAddCopy: false, IsEdit: true, IsDelete: true, IsSelect: false,
                 Load: $.proxy(this.Service.GetClients, this.Service), Delete: $.proxy(this.Service.DelClient, this.Service),
-                Columns: [
-                    { Header: vars._statres("label$name"), Field: "name" },
-                    { Header: vars._statres("label$phone"), Field: "phone" },
-                ]
+                Columns: columns
             };
         }
 

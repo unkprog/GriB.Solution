@@ -126,7 +126,14 @@ export namespace Controller.Setting.Editor {
 
         public ViewShow(e: any): boolean {
             $('#editor-view-tabs').tabs();
+            M.Tabs.getInstance($('#editor-view-tabs')).updateTabIndicator();
             return super.ViewShow(e);
+        }
+
+        public ViewResize(e: any): void {
+            super.ViewResize(e);
+            M.Tabs.getInstance($('#editor-view-tabs')).updateTabIndicator();
+         
         }
 
         protected validate(): boolean {

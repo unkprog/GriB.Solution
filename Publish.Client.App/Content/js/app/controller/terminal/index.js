@@ -90,12 +90,20 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
                     this.ViewResize({});
                 };
                 Index.prototype.loadData = function () {
+                    var _this = this;
                     var controller = this;
                     controller.Service.Enter(function (responseData) {
                         vars._identity.employee = responseData.employee;
                         if (vars._identity.employee && vars._identity.employee.accesssalepoints && vars._identity.employee.accesssalepoints.length > 0) {
-                            controller.navBar.Bind();
-                            controller.Reset();
+                            if (_this.existsAccessSalepoint() === false) {
+                                vars._app.ShowMessage(vars._statres("label$settings"), vars._statres("msg$error$settings$notaccesssalepoint"), function () {
+                                    vars._app.OpenController({ urlController: "setting/index" });
+                                });
+                            }
+                            else {
+                                controller.navBar.Bind();
+                                controller.Reset();
+                            }
                         }
                         else {
                             vars._app.ShowMessage(vars._statres("label$settings"), vars._statres("msg$error$settings$notfill"), function () {
@@ -106,6 +114,16 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
                         vars._app.HideLoading();
                     });
                     return false;
+                };
+                Index.prototype.existsAccessSalepoint = function () {
+                    var result = false;
+                    var salePoints = vars._identity.employee.accesssalepoints;
+                    for (var i = 0, icount = salePoints.length; i < icount; i++) {
+                        if (salePoints[i].isaccess === true) {
+                            result = true;
+                        }
+                    }
+                    return result;
                 };
                 Index.prototype.ViewHide = function (e) {
                     this.navBar.Unbind();

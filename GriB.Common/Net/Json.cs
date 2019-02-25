@@ -26,18 +26,27 @@ namespace GriB.Common.Net
         {
             TResult result = default(TResult);
             HttpResponseMessage response = null;
-            using (HttpClient client = new HttpClient())
+            try
             {
-                client.BaseAddress = new Uri(server);
-                client.DefaultRequestHeaders.Accept.Clear();
-                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                using (HttpClient client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(server);
+                    client.DefaultRequestHeaders.Accept.Clear();
+                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-                response = await client.PostAsJsonAsync(url, data);
-                response.EnsureSuccessStatusCode();
+                    response = await client.PostAsJsonAsync(url, data);
+                    response.EnsureSuccessStatusCode();
+
+
+                    if (response != null)
+                        result = await response.Content.ReadAsAsync<TResult>();
+                }
             }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine(ex.Message);
 
-            if (response != null)
-                result = await response.Content.ReadAsAsync<TResult>();
+            }
 
             return result;
         }

@@ -433,12 +433,13 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/s
                     var self = this;
                     vars._app.OpenController({
                         urlController: 'setting/card/client', isModal: true, onLoadController: function (controller) {
-                            var ctrlProduct = controller;
-                            ctrlProduct.CardSettings.IsAdd = false;
-                            ctrlProduct.CardSettings.IsEdit = false;
-                            ctrlProduct.CardSettings.IsDelete = false;
-                            ctrlProduct.CardSettings.IsSelect = true;
-                            ctrlProduct.OnSelect = $.proxy(self.selectClient, self);
+                            var ctrClient = controller;
+                            ctrClient.IsShowPhone(vars._identity.employee.isfullaccess === true);
+                            ctrClient.CardSettings.IsAdd = false;
+                            ctrClient.CardSettings.IsEdit = false;
+                            ctrClient.CardSettings.IsDelete = false;
+                            ctrClient.CardSettings.IsSelect = true;
+                            ctrClient.OnSelect = $.proxy(self.selectClient, self);
                         }
                     });
                 };
@@ -446,7 +447,7 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/s
                     var record = controller.getSelectedRecord();
                     if (record) {
                         var controller_1 = this;
-                        controller_1.currentCheck.client = { id: record.id, name: record.name + (utils.isNullOrEmpty(record.phone) ? "" : " (" + record.phone + ")") };
+                        controller_1.currentCheck.client = { id: record.id, name: record.name /*+ (utils.isNullOrEmpty(record.phone) ? "" : " (" + record.phone + ")")*/ };
                         controller_1.Service.CheckSetClient(controller_1.currentCheck.id, controller_1.currentCheck.client.id, function (responseData) {
                             controller_1.model.set("checkClient", (controller_1.currentCheck.client ? controller_1.currentCheck.client.name : ""));
                         });

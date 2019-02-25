@@ -90,6 +90,7 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                     };
                     Category.prototype.ViewShow = function (e) {
                         $('#editor-view-category-tabs').tabs();
+                        M.Tabs.getInstance($('#editor-view-category-tabs')).updateTabIndicator();
                         M.textareaAutoResize($("#editor-view-category-description"));
                         return _super.prototype.ViewShow.call(this, e);
                     };
@@ -104,6 +105,7 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                     };
                     Category.prototype.ViewResize = function (e) {
                         _super.prototype.ViewResize.call(this, e);
+                        M.Tabs.getInstance($('#editor-view-category-tabs')).updateTabIndicator();
                         if (this.controlPhoto)
                             this.controlPhoto.height(this.controlPhoto.width());
                     };
