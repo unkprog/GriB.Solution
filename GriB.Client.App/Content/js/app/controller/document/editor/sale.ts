@@ -24,6 +24,7 @@ export namespace Controller.Document.Editor {
 
         public ViewInit(view: JQuery): boolean {
             let result: boolean = super.ViewInit(view);
+            view.find("#document-view-discount-row").removeClass("hide");
             return result;
         }
 

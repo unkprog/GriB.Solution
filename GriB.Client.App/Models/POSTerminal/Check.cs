@@ -21,6 +21,7 @@ namespace GriB.Client.App.Models.POSTerminal
     {
         public int check { get; set; }
         public double discount { get; set; }
+        public int discountref { get; set; }
     }
 
     public class check_add_pos_params
@@ -48,6 +49,7 @@ namespace GriB.Client.App.Models.POSTerminal
         public double discount { get; set; }
         public string comment  { get; set; }
         public double sum      { get; set; }
+        public discount discountref { get; set; }
 
         public List<check_position> positions { get; set; }
     }

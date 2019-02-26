@@ -193,6 +193,8 @@ export namespace Controller.Terminal {
                 //this.model.set("checkSum", this.calcCheckSum());
                 this.model.set("checkTime", utils.date_ddmmyyyy_withtime(controller.currentCheck.cd));
                 this.model.set("visibleClient", (controller.currentCheck.client && controller.currentCheck.client.name && controller.currentCheck.client.name != ""));
+                if (controller.currentCheck.client)
+                    this.model.set("checkClient", controller.currentCheck.client.name);
             }
             else {
                 this.model.set("checkTime", "");
@@ -288,7 +290,7 @@ export namespace Controller.Terminal {
                 }
                 resultDiscount = result - ((controller.currentCheck.discount / 100) * result);
             }
-            this.model.set("checkDiscount", controller.currentCheck.discount);
+            this.model.set("checkDiscount", controller.currentCheck.discount + '%' + (controller.currentCheck.discountref && utils.isNullOrEmpty(controller.currentCheck.discountref.name) === false ? ' (' + controller.currentCheck.discountref.name + ')' : '') );
             this.model.set("checkSum", resultDiscount);
             this.model.set("checkSumNoDiscount", result);
             return result;
@@ -530,8 +532,9 @@ export namespace Controller.Terminal {
             let record: Interfaces.Model.IDiscountModel = controller.getSelectedRecord() as Interfaces.Model.IDiscountModel;
             if (record) {
                 let controller = this;
-                controller.currentCheck.discount = record.value;
-                controller.Service.CheckSetDiscount(controller.currentCheck.id, controller.currentCheck.discount, (responseData) => {
+                controller.Service.CheckSetDiscount(controller.currentCheck.id, record, (responseData) => {
+                    controller.currentCheck.discount = record.value;
+                    controller.currentCheck.discountref = record;
                     controller.drawCheckPositions();
                 });
 
@@ -543,8 +546,9 @@ export namespace Controller.Terminal {
         private noDiscountButtonClick(e) {
             let controller = this;
             if (controller.currentCheck) {
-                controller.Service.CheckSetDiscount(controller.currentCheck.id, 0, (responseData) => {
+                controller.Service.CheckSetDiscount(controller.currentCheck.id, undefined, (responseData) => {
                     controller.currentCheck.discount = 0;
+                    controller.currentCheck.discountref = undefined;
                     controller.drawCheckPositions();
                 });
             }

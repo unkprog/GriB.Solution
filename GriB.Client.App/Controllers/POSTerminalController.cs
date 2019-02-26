@@ -98,7 +98,7 @@ namespace GriB.Client.App.Controllers
             return TryCatchResponseQuery((query) =>
             {
                 Principal principal = (Principal)HttpContext.Current.User;
-                Check.SetDiscount(query, setdiscountparams.check, setdiscountparams.discount, principal.Data.User.id);
+                Check.SetDiscount(query, setdiscountparams.check, setdiscountparams.discount, setdiscountparams.discountref, principal.Data.User.id);
                 return Request.CreateResponse(HttpStatusCode.OK, "Ok");
             });
         }

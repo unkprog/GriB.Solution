@@ -169,6 +169,8 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/s
                         //this.model.set("checkSum", this.calcCheckSum());
                         this.model.set("checkTime", utils.date_ddmmyyyy_withtime(controller.currentCheck.cd));
                         this.model.set("visibleClient", (controller.currentCheck.client && controller.currentCheck.client.name && controller.currentCheck.client.name != ""));
+                        if (controller.currentCheck.client)
+                            this.model.set("checkClient", controller.currentCheck.client.name);
                     }
                     else {
                         this.model.set("checkTime", "");
@@ -251,7 +253,7 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/s
                         }
                         resultDiscount = result - ((controller.currentCheck.discount / 100) * result);
                     }
-                    this.model.set("checkDiscount", controller.currentCheck.discount);
+                    this.model.set("checkDiscount", controller.currentCheck.discount + '%' + (controller.currentCheck.discountref && utils.isNullOrEmpty(controller.currentCheck.discountref.name) === false ? ' (' + controller.currentCheck.discountref.name + ')' : ''));
                     this.model.set("checkSum", resultDiscount);
                     this.model.set("checkSumNoDiscount", result);
                     return result;
@@ -470,8 +472,9 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/s
                     var record = controller.getSelectedRecord();
                     if (record) {
                         var controller_2 = this;
-                        controller_2.currentCheck.discount = record.value;
-                        controller_2.Service.CheckSetDiscount(controller_2.currentCheck.id, controller_2.currentCheck.discount, function (responseData) {
+                        controller_2.Service.CheckSetDiscount(controller_2.currentCheck.id, record, function (responseData) {
+                            controller_2.currentCheck.discount = record.value;
+                            controller_2.currentCheck.discountref = record;
                             controller_2.drawCheckPositions();
                         });
                     }
@@ -479,8 +482,9 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/s
                 NavigationCheck.prototype.noDiscountButtonClick = function (e) {
                     var controller = this;
                     if (controller.currentCheck) {
-                        controller.Service.CheckSetDiscount(controller.currentCheck.id, 0, function (responseData) {
+                        controller.Service.CheckSetDiscount(controller.currentCheck.id, undefined, function (responseData) {
                             controller.currentCheck.discount = 0;
+                            controller.currentCheck.discountref = undefined;
                             controller.drawCheckPositions();
                         });
                     }

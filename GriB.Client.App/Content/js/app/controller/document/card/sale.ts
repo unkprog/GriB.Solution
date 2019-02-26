@@ -234,6 +234,7 @@ export namespace Controller.Document.Card {
                 { Header: "", HeaderStyle: "doc-col-conduct", Field: "options", FieldStyle: "doc-col-conduct", FieldTemplate: '#if ((options & 1) === 1) {#<label><input type="checkbox" checked="checked" disabled="disabled"/><span></span></label>#}#' },
                 { Header: vars._statres("label$date"), Field: "cd", FieldTemplate: "#=date_ddmmyyyy_withtime(new Date(cd))#" },
                 { Header: vars._statres("label$salePoint"), Field: "salepoint.name" },
+                { Header: vars._statres("label$discount"), Field: "discount", FieldTemplate: "#=discount#% #if(discountref && discountref.id !== 0){# (#=discountref.name#) #}#" },
                 { Header: vars._statres("label$sum"), HeaderStyle: "product-col-sum-auto", Field: "sum", FieldTemplate: '#=numberToString(sum,2)#', FieldStyle: "product-col-sum-auto" },
             ];
         }

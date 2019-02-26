@@ -64,9 +64,11 @@ define(["require", "exports", "app/common/basecontroller", "app/services/documen
                             "labelSum": vars._statres("label$sum"),
                             "labelAdd": vars._statres("button$label$add"),
                             "labelComment": vars._statres("label$comment"),
+                            "labelDiscount": vars._statres("label$discount"),
                             "documentConduct": true,
                             "totalSum": 0,
                             "totalSumText": "0.00",
+                            "totalDiscount": ""
                         });
                         return oo;
                     };
@@ -252,6 +254,8 @@ define(["require", "exports", "app/common/basecontroller", "app/services/documen
                         this.positionRows.html(html);
                         self.Model.set("editModel", model);
                         self.Model.set("totalSum", self.calsTotalSum());
+                        var discountref = self.Model.get("editModel").discountref;
+                        self.Model.set("totalDiscount", '' + model.discount + "%" + (discountref && discountref.id != 0 ? " (" + discountref.name + ")" : ""));
                         this.btnAddPosition = this.positionRows.find("#btn-add-position");
                         this.btnRemovePosition = this.positionRows.find(".product-col-button-delete");
                         this.AddPositionButtonClick = this.createTouchClickEvent(this.btnAddPosition, this.addPositionButtonClick);

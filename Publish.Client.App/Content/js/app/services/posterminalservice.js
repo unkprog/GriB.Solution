@@ -46,8 +46,8 @@ define(["require", "exports", "app/common/baseservice"], function (require, expo
             POSTerminalService.prototype.CheckSetClient = function (check, client, Callback) {
                 this.PostApi({ Action: "/check_setclient", RequestData: JSON.stringify({ check: check, client: client }), Callback: Callback });
             };
-            POSTerminalService.prototype.CheckSetDiscount = function (check, discount, Callback) {
-                this.PostApi({ Action: "/check_setdiscount", RequestData: JSON.stringify({ check: check, discount: discount }), Callback: Callback });
+            POSTerminalService.prototype.CheckSetDiscount = function (check, discountref, Callback) {
+                this.PostApi({ Action: "/check_setdiscount", RequestData: JSON.stringify({ check: check, discount: (discountref ? discountref.value : 0), discountref: (discountref ? discountref.id : 0) }), Callback: Callback });
             };
             POSTerminalService.prototype.CheckSetComment = function (check, comment, Callback) {
                 this.PostApi({ Action: "/check_setcomment", RequestData: JSON.stringify({ check: check, comment: comment }), Callback: Callback });

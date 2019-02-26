@@ -17,11 +17,17 @@
 });
 
 (function () {
+    // override require call
     var requirejs_load = requirejs.load;
     var v = new Date().getTime().toString();
     requirejs.load = function (context, moduleId, url) {
         url += "?v=" + v;
         requirejs_load(context, moduleId, url);
+    };
+    // disable back button
+    history.pushState(null, null, location.href);
+    window.onpopstate = function () {
+        history.go(1);
     };
 })();
 
@@ -34,9 +40,10 @@ require(["domReady", "jquery"], function (domReady, _jquery) {
                 $(window).on('resize', function (e) {
                     _app.Resize(e);
                 });
-                window.onpopstate = function (e) {
-                    _app.ControllerBack(e);
-                };
+                //window.onpopstate = function (e) {
+                //    _app.ControllerBack(e);
+                //};
+                //disableBackButton();
             });
         });
     });

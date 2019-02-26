@@ -47,6 +47,7 @@ define(["require", "exports", "app/common/variables", "app/controller/document/e
                     };
                     Sale.prototype.ViewInit = function (view) {
                         var result = _super.prototype.ViewInit.call(this, view);
+                        view.find("#document-view-discount-row").removeClass("hide");
                         return result;
                     };
                     return Sale;

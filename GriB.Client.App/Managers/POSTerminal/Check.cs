@@ -13,8 +13,10 @@ namespace GriB.Client.App.Managers.POSTerminal
         {
             int c = 0;
             return new check() { id = (int)values[c++],  d = (int)values[c++], cd = (DateTime)values[c++], cu = (int)values[c++], ud = (DateTime)values[c++], uu = (int)values[c++], salepoint = new salepoint() { id = (int)values[c++] }
-                               , options = (int)values[c++], client = new client() { id = (int)values[c++] }, number = (int)values[c++], change = new change() { id = (int)values[c++] }
-                               , discount = (double)values[c++], comment = (string)values[c++] };
+                               , options = (int)values[c++], client = new client() { id = (int)values[c++], fname = (string)values[c++], mname = (string)values[c++], lname = (string)values[c++] }, number = (int)values[c++], change = new change() { id = (int)values[c++] }
+                               , discount = (double)values[c++], comment = (string)values[c++]
+                               , discountref = new discount() { id = (int)values[c++], name = (string)values[c++] }
+                              };
         }
 
         private const string cmdNew = @"POSTerminal\Check\[new]";
@@ -34,7 +36,7 @@ namespace GriB.Client.App.Managers.POSTerminal
             , options = (int)values[6], number= (int)values[7], change= new change() { id = (int)values[8] }, discount=(double)values[9], comment=(string)values[10]
             , salepoint = new salepoint() { id = (int)values[11], name = (string)values[12] }
             , client = new client() { id = (int)values[13], fname = (string)values[14], mname = (string)values[15], lname = (string)values[16] }
-            , sum = (double)values[17]
+            , sum = (double)values[17], discountref = new discount() { id = (int)values[18], name = (string)values[19] }
         };
 
         private const string cmdGetSale = @"POSTerminal\Check\[getcard]";
@@ -187,7 +189,8 @@ namespace GriB.Client.App.Managers.POSTerminal
             check result = check;
             query.Execute(cmdClose, new SqlParameter[] { new SqlParameter() { ParameterName = "@id", Value = result.id }, new SqlParameter("@u", user), new SqlParameter() { ParameterName = "@salepoint", Value = (result.salepoint == null ? 0 : result.salepoint.id) }
             , new SqlParameter() { ParameterName = "@options", Value = result.options }, new SqlParameter() { ParameterName = "@client", Value = (result.client == null ? 0 : result.client.id)  }, new SqlParameter() { ParameterName = "@discount", Value = result.discount }
-            , new SqlParameter() { ParameterName = "@number", Value = result.number }, new SqlParameter() { ParameterName = "@change", Value = (result.change == null ? 0 : result.change.id) }, new SqlParameter() { ParameterName = "@comment", Value = result.comment } }
+            , new SqlParameter() { ParameterName = "@number", Value = result.number }, new SqlParameter() { ParameterName = "@change", Value = (result.change == null ? 0 : result.change.id) }, new SqlParameter() { ParameterName = "@comment", Value = result.comment }
+            , new SqlParameter() { ParameterName = "@discountref", Value = (result.discountref == null ? 0 : result.discountref.id) }}
             , (values) => { });
 
             return result;
@@ -201,9 +204,9 @@ namespace GriB.Client.App.Managers.POSTerminal
         }
 
         private const string cmdSetDiscount = @"POSTerminal\Check\[setdiscount]";
-        public static void SetDiscount(this Query query, int check, double discount, int user)
+        public static void SetDiscount(this Query query, int check, double discount, int discountref, int user)
         {
-            query.Execute(cmdSetDiscount, new SqlParameter[] { new SqlParameter() { ParameterName = "@id", Value = check }, new SqlParameter("@u", user), new SqlParameter() { ParameterName = "@discount", Value = discount } }
+            query.Execute(cmdSetDiscount, new SqlParameter[] { new SqlParameter() { ParameterName = "@id", Value = check }, new SqlParameter("@u", user), new SqlParameter() { ParameterName = "@discount", Value = discount }, new SqlParameter() { ParameterName = "@discountref", Value = discountref } }
             , (values) => { });
         }
 

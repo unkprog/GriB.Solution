@@ -17,5 +17,5 @@ from [t_product] [t] with(nolock)
 left outer join #categories [cat] on [t].[category] = [cat].[id]
 where [t].[d] = 0 and (@id = 0 or (@id <> 0 and [t].[id] = @id))
   and (@name = '' or (@name <> '' and  [t].[name] = @name))
-
+order by isnull([cat].[id], 100000000)
 drop table #categories

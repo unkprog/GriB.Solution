@@ -35,8 +35,8 @@ export namespace Services {
             this.PostApi({ Action: "/check_setclient", RequestData: JSON.stringify({ check: check, client: client }), Callback: Callback });
         }
 
-        public CheckSetDiscount(check: number, discount: number, Callback: (responseData: any) => void) {
-            this.PostApi({ Action: "/check_setdiscount", RequestData: JSON.stringify({ check: check, discount: discount }), Callback: Callback });
+        public CheckSetDiscount(check: number, discountref: Interfaces.Model.IDiscountModel, Callback: (responseData: any) => void) {
+            this.PostApi({ Action: "/check_setdiscount", RequestData: JSON.stringify({ check: check, discount: (discountref ? discountref.value : 0), discountref: (discountref ? discountref.id : 0) }), Callback: Callback });
         }
 
         public CheckSetComment(check: number, comment: string, Callback: (responseData: any) => void) {

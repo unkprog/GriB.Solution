@@ -157,6 +157,7 @@
         //public int change  { get; set; }
         number: number;
         discount: number;
+        discountref: IDiscountModel;
         comment: string;
         positions: IPOSCheckPosition[];
         sum: number;

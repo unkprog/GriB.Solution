@@ -23,7 +23,9 @@ define(["require", "exports", "app/common/variables", "app/controller/setting/ca
                 var Client = /** @class */ (function (_super) {
                     __extends(Client, _super);
                     function Client() {
-                        return _super.call(this) || this;
+                        var _this = _super.call(this) || this;
+                        _this.isShowPhone = true;
+                        return _this;
                     }
                     Client.prototype.createModel = function () {
                         return new kendo.data.ObservableObject({
@@ -31,15 +33,18 @@ define(["require", "exports", "app/common/variables", "app/controller/setting/ca
                             "cardModel": []
                         });
                     };
+                    Client.prototype.IsShowPhone = function (isShow) {
+                        this.isShowPhone = isShow;
+                    };
                     Client.prototype.createCardSettings = function () {
+                        var columns = [{ Header: vars._statres("label$name"), Field: "name" }];
+                        if (this.isShowPhone)
+                            columns.push({ Header: vars._statres("label$phone"), Field: "phone" });
                         return {
                             FieldId: "id", FilterSettings: this.createCardFilterSettings(), ValueIdNew: 0, EditIdName: "id_client", EditController: "setting/editor/client",
                             IsAdd: true, IsAddCopy: false, IsEdit: true, IsDelete: true, IsSelect: false,
                             Load: $.proxy(this.Service.GetClients, this.Service), Delete: $.proxy(this.Service.DelClient, this.Service),
-                            Columns: [
-                                { Header: vars._statres("label$name"), Field: "name" },
-                                { Header: vars._statres("label$phone"), Field: "phone" },
-                            ]
+                            Columns: columns
                         };
                     };
                     Object.defineProperty(Client.prototype, "CardModel", {

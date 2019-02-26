@@ -17,6 +17,7 @@ begin
 	[number]   [int]           not null default (0),
 	[change]   [int]           not null default (0),
 	[discount] [float]         not null default (0),
+	[discountref] [int]        not null default (0),
 	[comment]  [nvarchar](226) not null default (N''),
     primary key clustered ([id])
   )
