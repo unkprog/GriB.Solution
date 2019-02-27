@@ -24,14 +24,14 @@
             <div class="input-field col s12 m6 l4 xl3">
                 <select id="editor-view-product-type" class="validate" data-bind="value:editModel.type">
                     <option value="0" data-bind="text:labelProduct"></option>
-                    <option value="1" data-bind="text:labelProduction"></option>
+                    <!--<option value="1" data-bind="text:labelProduction"></option>-->
                     <option value="2" data-bind="text:labelService"></option>
                 </select>
                 <label for="editor-view-product-type" data-bind="text:labelType"></label>
             </div>
-            <div class="input-field col s12 m6 l4 xl3">
-                <select id="editor-view-category-list" data-bind="value:editModel.category.id"></select>
-                <label for="editor-view-category-list" data-bind="text:labelIncludedInCategory"></label>
+            <div id="editor-view-product-category-row" class="input-field col s12 m6 l4 xl3">
+                <!--<select id="editor-view-category-list" data-bind="value:editModel.category.id"></select>
+                <label for="editor-view-category-list" data-bind="text:labelIncludedInCategory"></label>-->
             </div>
         </div>
         <div class="row row-inputs">
@@ -85,9 +85,9 @@
         </div>
 
         <div class="row row-inputs">
-            <div class="input-field col s12 m8 l6 xl6">
-                <select id="editor-view-product-unit" class="validate" data-bind="value:editModel.unit"></select>
-                <label for="editor-view-product-unit" data-bind="text:labelUnit"></label>
+            <div  id="editor-view-product-unit-row" class="input-field col s12 m8 l6 xl6">
+                <!--<select id="editor-view-product-unit" class="validate" data-bind="value:editModel.unit"></select>
+                <label for="editor-view-product-unit" data-bind="text:labelUnit"></label>-->
             </div>
         </div>
 
@@ -99,9 +99,7 @@
         </div>
 
         <div class="row row-inputs">
-            <div class="input-field col s12 m8 l6 xl6">
-                <select id="editor-view-product-currency" class="validate" data-bind="value:editModel.currency"></select>
-                <label for="editor-view-product-currency" data-bind="text:labelCurrency"></label>
+            <div id="editor-view-product-currency-row" class="input-field col s12 m8 l6 xl6">
             </div>
         </div>
 

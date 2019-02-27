@@ -2,7 +2,7 @@
 using System;
 
 
-namespace GriB.Client.App.Managers.Reports
+namespace GriB.Client.App.Managers
 {
     public static class Helper
     {

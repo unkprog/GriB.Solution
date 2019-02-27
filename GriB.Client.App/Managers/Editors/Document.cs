@@ -19,7 +19,7 @@ namespace GriB.Client.App.Managers.Editors
             query.Execute(cmdGet, new SqlParameter[] { new SqlParameter() { ParameterName = "@id", Value = docpar.id }, new SqlParameter() { ParameterName = "@doctype", Value = docpar.doctype }
             , new SqlParameter() { ParameterName = "@salepoint", Value = docpar.salepoint }, new SqlParameter() { ParameterName = "@salepointto", Value = docpar.salepointto }
             , new SqlParameter() { ParameterName = "@contractor", Value = docpar.contractor }, new SqlParameter() { ParameterName = "@reason", Value = docpar.reason }
-            , new SqlParameter() { ParameterName = "@datefrom", Value = Reports.Helper.Date(docpar.datefrom) }, new SqlParameter() { ParameterName = "@dateto", Value = Reports.Helper.DateReportEnd(docpar.dateto) } }
+            , new SqlParameter() { ParameterName = "@datefrom", Value = Helper.Date(docpar.datefrom) }, new SqlParameter() { ParameterName = "@dateto", Value = Helper.DateReportEnd(docpar.dateto) } }
             , (values) =>
             {
                 result.Add(readFromValues(values));
@@ -151,7 +151,7 @@ namespace GriB.Client.App.Managers.Editors
             query.Execute(cmdGetCompositionNew, new SqlParameter[] { new SqlParameter("@id", id), new SqlParameter("@salepoint", salepoint) }
             , (values) =>
             {
-                result = new document_position() { index = (int)values[1], quantity = (double)values[3], product = new product() { id = (int)values[2], name = (string)values[4], sellingprice = (double)values[5], unit = (int)values[6], unit_name = (string)values[7] } };
+                result = new document_position() { index = (int)values[1], quantity = (double)values[3], product = new product() { id = (int)values[2], name = (string)values[4], sellingprice = (double)values[5], unit = new unit() { id = (int)values[6], name = (string)values[7] } } };
             });
 
             return result;

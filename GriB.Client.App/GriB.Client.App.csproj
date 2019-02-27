@@ -341,7 +341,7 @@
     <Content Include="Scripts\Sql\01.001.[t_orgtype].sql" />
     <Content Include="Scripts\Sql\07.001.[t_change].sql" />
     <Content Include="Scripts\Sql\08.001.[t_client].sql" />
-    <Content Include="Scripts\Sql\03.001.[t_employee].sql" />
+    <Content Include="Scripts\Sql\04.001.[t_employee].sql" />
     <Content Include="Scripts\Sql\09.002.[t_costincome].sql" />
     <Content Include="Scripts\Sql\09.001.[t_account].sql" />
     <Content Include="Scripts\Sql\12.001.[t_reason].sql" />
@@ -355,8 +355,8 @@
     <Content Include="Scripts\Sql\06.002.[t_product_account].sql" />
     <Content Include="Scripts\Sql\06.001.[t_product].sql" />
     <Content Include="Scripts\Sql\05.001.[t_category].sql" />
-    <Content Include="Scripts\Sql\04.001.[t_unit].sql" />
-    <Content Include="Scripts\Sql\02.001.[t_org].sql" />
+    <Content Include="Scripts\Sql\02.001.[t_unit].sql" />
+    <Content Include="Scripts\Sql\03.001.[t_org].sql" />
     <None Include="TODO.txt" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
@@ -393,8 +393,8 @@
     <Compile Include="Managers\POSTerminal\Payment.cs" />
     <Compile Include="Managers\POSTerminal\Terminal.cs" />
     <Compile Include="Managers\Reports\Cash.cs" />
-    <Compile Include="Managers\Reports\Constants.cs" />
-    <Compile Include="Managers\Reports\Helper.cs" />
+    <Compile Include="Managers\Constants.cs" />
+    <Compile Include="Managers\Helper.cs" />
     <Compile Include="Managers\Reports\Sales.cs" />
     <Compile Include="Managers\Reports\Stocks.cs" />
     <Compile Include="Models\Editor\CostIncome.cs" />

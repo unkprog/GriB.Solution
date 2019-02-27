@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 
-namespace GriB.Client.App.Managers.Reports
+namespace GriB.Client.App.Managers
 {
     public static class Constants
     {

@@ -36,5 +36,17 @@
                 </div>
             </div>
         </div>
+
+        <div class="section" style="padding-top: 0; padding-bottom: 0">
+            <h5 data-bind="text:labelSettings"></h5>
+        </div>
+
+        <div class="row row-inputs">
+            <div id="editor-view-organization-currency-row" class="input-field col s12 m6 l3 xl3">
+                <input id="editor-view-organization-currency" type="text" disabled class="truncate black-text" data-bind="value: editModel.defcurrency.name" style="cursor:pointer;font-weight:bold;">
+                <label for="editor-view-organization-currency" data-bind="text:labelDefaultUnit"></label>
+                <i id="editor-view-organization-currency-clear" class="material-icons editor-header right doc-edit-ref-del">close</i>
+            </div>
+        </div>
     </div>
 </div>

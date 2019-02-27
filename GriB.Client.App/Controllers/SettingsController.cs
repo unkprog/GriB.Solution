@@ -53,7 +53,7 @@ namespace GriB.Client.App.Controllers
             {
                 List<t_org> orgs = Organization.GetOrganizations(query, Organization.typeCompany);
                 t_org org = Organization.GetOrganizationInfo(query, (orgs != null && orgs.Count > 0 ? orgs[0] : new t_org() { type = Organization.typeCompany }));
-                return Request.CreateResponse(HttpStatusCode.OK, new { record = new company() { id = org.id, name = org.name, site = org.info?.site, email = org.info?.email, phone = org.info?.phone }});
+                return Request.CreateResponse(HttpStatusCode.OK, new { record = new company() { id = org.id, name = org.name, site = org.info?.site, email = org.info?.email, phone = org.info?.phone, defcurrency = org.defcurrency }});
             });
         }
 
@@ -64,7 +64,7 @@ namespace GriB.Client.App.Controllers
             return TryCatchResponseQuery((query) =>
             {
                 Principal principal = (Principal)HttpContext.Current.User;
-                t_org _org = new t_org() { id = company.id, type = Organization.typeCompany, cu = principal.Data.User.id, uu = principal.Data.User.id, name = company.name, info = new t_org_info() { site = company.site, email = company.email, phone = company.phone } };
+                t_org _org = new t_org() { id = company.id, type = Organization.typeCompany, cu = principal.Data.User.id, uu = principal.Data.User.id, name = company.name, defcurrency = new unit() { id = company.defcurrency == null ? 0 : company.defcurrency.id }, info = new t_org_info() { site = company.site, email = company.email, phone = company.phone } };
                 Organization.SetOrganization(query, _org);
                 Organization.SetOrganizationInfo(query, _org);
                 return Request.CreateResponse(HttpStatusCode.OK, "Ok");
@@ -503,7 +503,7 @@ namespace GriB.Client.App.Controllers
                 Product.GetProductCost(query, result);
                 Product.GetProductSale(query, result);
                 Product.GetProductComposition(query, result);
-                return Request.CreateResponse(HttpStatusCode.OK, new { record = result, categories = Category.GetCategories(query), units = Unit.GetUnits(query, Unit.typeUnit), currencies = Unit.GetUnits(query, Unit.typeCurrency) });
+                return Request.CreateResponse(HttpStatusCode.OK, new { record = result });
             });
         }
 

@@ -40,6 +40,7 @@
         site: string;
         email: string;
         phone: string;
+        defcurrency: ICurrency;
     }
 
 

@@ -11,7 +11,8 @@ namespace GriB.Client.App.Models.Editor
             description = string.Empty;
             vendorcode = string.Empty;
             barcode = string.Empty;
-            unit_name = string.Empty;
+            unit = new unit();
+            currency = new unit();
             category = new category();
             costprices = new List<price_item>();
             sellingprices = new List<price_item>();
@@ -26,10 +27,9 @@ namespace GriB.Client.App.Models.Editor
         public string barcode { get; set; }
         public bool putonsale { get; set; }
 
-        public int unit { get; set; }
-        public string unit_name { get; set; }
+        public unit unit { get; set; }
         public double quantity { get; set; }
-        public int currency { get; set; }
+        public unit currency { get; set; }
         public double costprice { get; set; }
         public double sellingprice { get; set; }
 

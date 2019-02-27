@@ -2,9 +2,15 @@
 {
     public class company : reference
     {
+        public company()
+        {
+            defcurrency = new unit();
+        }
         public string site { get; set; }
         public string email { get; set; }
         public string phone { get; set; }
+
+        public unit defcurrency { get; set; }
     }
 
     public class salepoint : reference

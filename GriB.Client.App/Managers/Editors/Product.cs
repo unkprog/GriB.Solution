@@ -1,8 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data.SqlClient;
 using GriB.Common.Sql;
 using GriB.Client.App.Models.Editor;
-using System;
+using GriB.Client.App.Models;
 
 namespace GriB.Client.App.Managers.Editors
 {
@@ -32,6 +33,13 @@ namespace GriB.Client.App.Managers.Editors
             {
                 result = readFromValues(values);
             });
+
+            if(result.id == 0)
+            {
+                List<t_org> listOrgs = Organization.GetOrganizations(query, Organization.typeCompany);
+                if (listOrgs != null && listOrgs.Count > 0)
+                    result.currency = listOrgs[0].defcurrency;
+            }
 
             return result;
         }
@@ -116,11 +124,12 @@ namespace GriB.Client.App.Managers.Editors
             query.Execute(cmdGetAccount, new SqlParameter[] { new SqlParameter("@id", product.id), new SqlParameter("@vendorcode", string.Empty), new SqlParameter("@barcode", string.Empty) }
             , (values) =>
             {
-                product.vendorcode = (string)values[1];
-                product.barcode = (string)values[2];
-                product.unit = (int)values[3];
-                product.quantity = (double)values[4];
-                product.currency = (int)values[5];
+                int cnt = 1;
+                product.vendorcode = (string)values[cnt++];
+                product.barcode = (string)values[cnt++];
+                product.unit = new unit() { id = (int)values[cnt++], name = (string)values[cnt++] };
+                product.quantity = (double)values[cnt++];
+                product.currency = new unit() { id = (int)values[cnt++], name = (string)values[cnt++] };
             });
 
             return result;
@@ -131,7 +140,7 @@ namespace GriB.Client.App.Managers.Editors
         {
             product result = product;
             query.Execute(cmdSetAccount, new SqlParameter[] { new SqlParameter("@id", product.id), new SqlParameter("@vendorcode", product.vendorcode), new SqlParameter("@barcode", product.barcode)
-            , new SqlParameter("@unit", product.unit), new SqlParameter("@quantity", product.quantity), new SqlParameter("@currency", product.currency) }
+            , new SqlParameter("@unit", Helper.GetSqlParamValue(product.unit)), new SqlParameter("@quantity", product.quantity), new SqlParameter("@currency",  Helper.GetSqlParamValue(product.currency)) }
             , (values) => { });
             return result;
         }
@@ -191,7 +200,7 @@ namespace GriB.Client.App.Managers.Editors
             query.Execute(cmdGetComposition, new SqlParameter[] { new SqlParameter("@id", product.id) }
             , (values) =>
             {
-                product.composition.Add(new product_composition() { index = (int)values[1], quantity = (double)values[3], product = new product() { id = (int)values[2], name = (string)values[4], sellingprice = (double)values[5], unit = (int)values[6], unit_name = (string)values[7] } });
+                product.composition.Add(new product_composition() { index = (int)values[1], quantity = (double)values[3], product = new product() { id = (int)values[2], name = (string)values[4], sellingprice = (double)values[5], unit = new unit() { id = (int)values[6], name = (string)values[7] } } });
             });
 
             return result;
@@ -204,7 +213,7 @@ namespace GriB.Client.App.Managers.Editors
             query.Execute(cmdGetCompositionNew, new SqlParameter[] { new SqlParameter("@id", id) }
             , (values) =>
             {
-               result = new product_composition() { index = (int)values[1], quantity = (double)values[3], product = new product() { id = (int)values[2], name = (string)values[4], sellingprice = (double)values[5], unit = (int)values[6], unit_name = (string)values[7] } };
+               result = new product_composition() { index = (int)values[1], quantity = (double)values[3], product = new product() { id = (int)values[2], name = (string)values[4], sellingprice = (double)values[5], unit = new unit() { id = (int)values[6], name = (string)values[7] } } };
             });
 
             return result;

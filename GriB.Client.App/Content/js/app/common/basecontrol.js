@@ -3,6 +3,68 @@ define(["require", "exports", "app/common/utils", "app/common/variables"], funct
     Object.defineProperty(exports, "__esModule", { value: true });
     var Control;
     (function (Control) {
+        var ReferenceFieldControl = /** @class */ (function () {
+            function ReferenceFieldControl() {
+            }
+            ReferenceFieldControl.prototype.InitControl = function (view, name, field, fieldout, header, cardcontroller, model) {
+                var controlHtml = '<input id="' + name + '" type="text" disabled class="truncate black-text" data-bind="value: ' + fieldout + '" style="cursor:pointer;font-weight:bold;">';
+                controlHtml += '<label for="' + name + '">' + header + '</label>';
+                controlHtml += '<i id="' + name + '-clear" class="material-icons editor-header right doc-edit-ref-del">close</i>';
+                var result = $(controlHtml);
+                this.cardController = cardcontroller;
+                this.field = field;
+                this.model = model;
+                this.fieldControl = view;
+                this.fieldClearControl = result.find("#" + name + "-clear");
+                view.append(result);
+                return result;
+            };
+            ReferenceFieldControl.prototype.createEvents = function () {
+                if (this.fieldControl)
+                    this.FieldButtonClick = utils.createTouchClickEvent(this.fieldControl, this.fieldButtonClick, this, this.fieldControl);
+                if (this.fieldClearControl)
+                    this.FieldClearButtonClick = utils.createTouchClickEvent(this.fieldClearControl, this.fieldClearButtonClick, this, this.fieldControl);
+            };
+            ReferenceFieldControl.prototype.destroyEvents = function () {
+                if (this.fieldClearControl)
+                    utils.destroyTouchClickEvent(this.fieldClearControl, this.FieldClearButtonClick, this.fieldControl);
+                if (this.fieldControl)
+                    utils.destroyTouchClickEvent(this.fieldControl, this.FieldButtonClick, this.fieldControl);
+            };
+            ReferenceFieldControl.prototype.fieldButtonClick = function (e) {
+                var self = this;
+                vars._app.OpenController({
+                    urlController: self.cardController, isModal: true, onLoadController: function (controller) {
+                        var ctrlUnit = controller;
+                        ctrlUnit.CardSettings.IsAdd = false;
+                        ctrlUnit.CardSettings.IsAddCopy = false;
+                        ctrlUnit.CardSettings.IsDelete = false;
+                        ctrlUnit.CardSettings.IsEdit = false;
+                        ctrlUnit.CardSettings.IsSelect = true;
+                        ctrlUnit.OnSelect = $.proxy(self.selectValue, self);
+                    }
+                });
+            };
+            ReferenceFieldControl.prototype.selectValue = function (controller) {
+                var value = controller.getSelectedRecord();
+                if (value) {
+                    if (this.SelectValue)
+                        this.SelectValue(value);
+                    else
+                        this.model.set(this.field, value);
+                }
+                M.updateTextFields();
+            };
+            ReferenceFieldControl.prototype.fieldClearButtonClick = function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                this.model.set(this.field, {});
+                M.updateTextFields();
+                return false;
+            };
+            return ReferenceFieldControl;
+        }());
+        Control.ReferenceFieldControl = ReferenceFieldControl;
         var BaseCardFilterSettings = /** @class */ (function () {
             function BaseCardFilterSettings(setupRows) {
                 this.fieldSearch = "name";

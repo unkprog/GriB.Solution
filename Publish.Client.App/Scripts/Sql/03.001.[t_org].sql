@@ -5,14 +5,15 @@ if not exists (select * from [sys].[objects] where [object_id] = object_id(N'[t_
 begin
   create table [t_org]
   (
-    [id]    [int]           identity(1,1) not null,
-	[pid]   [int]           not null default (0),
-	[d]     [int]           not null default (0),
-	[cd]    [datetime]      not null default (getdate()),
-	[cu]    [int]           not null default (0),
-	[ud]    [datetime]      not null default (getdate()),
-	[uu]    [int]           not null default (0),
-	[type]  [int]           not null default (0),
+    [id]      [int]           identity(1,1) not null,
+	[pid]     [int]           not null default (0),
+	[d]       [int]           not null default (0),
+	[cd]      [datetime]      not null default (getdate()),
+	[cu]      [int]           not null default (0),
+	[ud]      [datetime]      not null default (getdate()),
+	[uu]      [int]           not null default (0),
+	[type]    [int]           not null default (0),
+	[defunit] [int]           not null default (0),
 	[name]  [nvarchar](238) not null default (N''),
     primary key clustered ([id])
   )

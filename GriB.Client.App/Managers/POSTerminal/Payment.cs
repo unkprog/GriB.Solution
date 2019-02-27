@@ -27,7 +27,7 @@ namespace GriB.Client.App.Managers.POSTerminal
             query.Execute(cmdGet, new SqlParameter[] { new SqlParameter() { ParameterName = "@id", Value = docpar.id }
             , new SqlParameter() { ParameterName = "@type", Value = docpar.type }, new SqlParameter() { ParameterName = "@salepoint", Value = docpar.salepoint }, new SqlParameter() { ParameterName = "@employee", Value = docpar.employee }
             , new SqlParameter() { ParameterName = "@option", Value = (docpar.options != 0 ? (1 << docpar.options) : 0) }, new SqlParameter() { ParameterName = "@client", Value = docpar.client }
-            , new SqlParameter() { ParameterName = "@datefrom", Value = Reports.Helper.Date(docpar.datefrom) }, new SqlParameter() { ParameterName = "@dateto", Value = Reports.Helper.DateReportEnd(docpar.dateto) }, new SqlParameter() { ParameterName = "@doctype", Value = docpar.doctype }}
+            , new SqlParameter() { ParameterName = "@datefrom", Value = Helper.Date(docpar.datefrom) }, new SqlParameter() { ParameterName = "@dateto", Value = Helper.DateReportEnd(docpar.dateto) }, new SqlParameter() { ParameterName = "@doctype", Value = docpar.doctype }}
             , (values) =>
             {
                 payment item = readFromValues(values);

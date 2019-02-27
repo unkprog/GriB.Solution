@@ -1,5 +1,6 @@
 ﻿import vars = require('app/common/variables');
 import utils = require('app/common/utils');
+import ctrl = require('app/common/basecontrol');
 import edit = require('app/controller/setting/editor/editor');
 
 export namespace Controller.Setting.Editor {
@@ -20,6 +21,8 @@ export namespace Controller.Setting.Editor {
                 "labelWebSite": vars._statres("label$website"),
                 "labelEmail": vars._statres("label$email"),
                 "labelPhone": vars._statres("label$phone"),
+                "labelSettings": vars._statres("label$settings"),
+                "labelDefaultUnit": vars._statres("label$defaultcurrency"),
             });
         }
 
@@ -32,7 +35,14 @@ export namespace Controller.Setting.Editor {
             return { EditIdName: "id_currency", Load: undefined, Save: $.proxy(this.Service.SetOrganization, this.Service) };
         }
 
+        private defCurrencyControl: ctrl.Control.ReferenceFieldControl;
+
         public ViewInit(view: JQuery): boolean {
+            let controller = this;
+
+            controller.defCurrencyControl = new ctrl.Control.ReferenceFieldControl();
+            controller.defCurrencyControl.InitControl(view.find("#editor-view-organization-currency-row"), "editor-view-organization-currency", "editModel.defcurrency", "editModel.defcurrency.name", vars._statres("label$defaultcurrency"), 'setting/card/currency', controller.Model);
+
             view.find("#editor-view-organization-name").characterCounter();
             view.find("#editor-view-organization-website").characterCounter();
             view.find("#editor-view-organization-email").characterCounter();
@@ -48,6 +58,16 @@ export namespace Controller.Setting.Editor {
                 controller.endLoad();
             });
             return false;
+        }
+
+        public createEvents(): void {
+            super.createEvents();
+            if (this.defCurrencyControl) this.defCurrencyControl.createEvents();
+        }
+
+        public destroyEvents(): void {
+            if (this.defCurrencyControl) this.defCurrencyControl.destroyEvents();
+            super.destroyEvents();
         }
 
         protected validate(): boolean {

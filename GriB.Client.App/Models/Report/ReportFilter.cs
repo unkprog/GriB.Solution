@@ -8,8 +8,8 @@ namespace GriB.Client.App.Models.Report
     {
         public ReportFilterWithDates()
         {
-            datefrom = Helper.MinReportDate();
-            dateto = Helper.MinReportDate();
+            datefrom = Managers.Helper.MinReportDate();
+            dateto = Managers.Helper.MinReportDate();
         }
 
         public string datefrom { get; set; }

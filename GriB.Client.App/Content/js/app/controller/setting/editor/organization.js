@@ -11,7 +11,7 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-define(["require", "exports", "app/common/variables", "app/common/utils", "app/controller/setting/editor/editor"], function (require, exports, vars, utils, edit) {
+define(["require", "exports", "app/common/variables", "app/common/utils", "app/common/basecontrol", "app/controller/setting/editor/editor"], function (require, exports, vars, utils, ctrl, edit) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var Controller;
@@ -36,6 +36,8 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                             "labelWebSite": vars._statres("label$website"),
                             "labelEmail": vars._statres("label$email"),
                             "labelPhone": vars._statres("label$phone"),
+                            "labelSettings": vars._statres("label$settings"),
+                            "labelDefaultUnit": vars._statres("label$defaultcurrency"),
                         });
                     };
                     Object.defineProperty(Organization.prototype, "EditorModel", {
@@ -49,6 +51,9 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                         return { EditIdName: "id_currency", Load: undefined, Save: $.proxy(this.Service.SetOrganization, this.Service) };
                     };
                     Organization.prototype.ViewInit = function (view) {
+                        var controller = this;
+                        controller.defCurrencyControl = new ctrl.Control.ReferenceFieldControl();
+                        controller.defCurrencyControl.InitControl(view.find("#editor-view-organization-currency-row"), "editor-view-organization-currency", "editModel.defcurrency", "editModel.defcurrency.name", vars._statres("label$defaultcurrency"), 'setting/card/currency', controller.Model);
                         view.find("#editor-view-organization-name").characterCounter();
                         view.find("#editor-view-organization-website").characterCounter();
                         view.find("#editor-view-organization-email").characterCounter();
@@ -63,6 +68,16 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                             controller.endLoad();
                         });
                         return false;
+                    };
+                    Organization.prototype.createEvents = function () {
+                        _super.prototype.createEvents.call(this);
+                        if (this.defCurrencyControl)
+                            this.defCurrencyControl.createEvents();
+                    };
+                    Organization.prototype.destroyEvents = function () {
+                        if (this.defCurrencyControl)
+                            this.defCurrencyControl.destroyEvents();
+                        _super.prototype.destroyEvents.call(this);
                     };
                     Organization.prototype.validate = function () {
                         var result = true;

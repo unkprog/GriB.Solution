@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using GriB.Client.App.Managers.Reports;
+using GriB.Client.App.Managers;
 using GriB.Common.Models.pos;
 
 namespace GriB.Client.App.Models.Editor

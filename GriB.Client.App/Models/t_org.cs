@@ -1,4 +1,5 @@
-﻿using GriB.Common.Models.pos;
+﻿using GriB.Client.App.Models.Editor;
+using GriB.Common.Models.pos;
 
 namespace GriB.Client.App.Models
 {
@@ -6,10 +7,12 @@ namespace GriB.Client.App.Models
     {
         public t_org()
         {
+            defcurrency = new unit();
             info = new t_org_info();
             info1 = new t_org_info1();
         }
         public int type { get; set; }
+        public unit defcurrency { get; set; }
         public t_org_info  info  { get; set; }
         public t_org_info1 info1 { get; set; }
     }

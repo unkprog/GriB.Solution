@@ -2,6 +2,82 @@
 import vars = require('app/common/variables');
 
 export namespace Control {
+    export class ReferenceFieldControl {
+        constructor() {
+
+        }
+
+        fieldControl: JQuery;
+        fieldClearControl: JQuery;
+        cardController: string;
+        field: string;
+        model: kendo.data.ObservableObject;
+        public InitControl(view: JQuery, name: string, field: string, fieldout: string, header: string, cardcontroller: string, model: kendo.data.ObservableObject): JQuery {
+            let controlHtml: string = '<input id="' + name + '" type="text" disabled class="truncate black-text" data-bind="value: ' + fieldout + '" style="cursor:pointer;font-weight:bold;">';
+            controlHtml += '<label for="' + name + '">' + header + '</label>';
+            controlHtml += '<i id="' + name + '-clear" class="material-icons editor-header right doc-edit-ref-del">close</i>';
+
+            let result: JQuery = $(controlHtml);
+
+            this.cardController = cardcontroller;
+            this.field = field;
+            this.model = model;
+            this.fieldControl = view;
+            this.fieldClearControl = result.find("#" + name + "-clear");
+
+            view.append(result);
+            return result;
+        }
+
+        public createEvents(): void {
+            if (this.fieldControl) this.FieldButtonClick = utils.createTouchClickEvent(this.fieldControl, this.fieldButtonClick, this, this.fieldControl);
+            if (this.fieldClearControl) this.FieldClearButtonClick = utils.createTouchClickEvent(this.fieldClearControl, this.fieldClearButtonClick, this, this.fieldControl);
+
+        }
+
+        public destroyEvents(): void {
+            if (this.fieldClearControl) utils.destroyTouchClickEvent(this.fieldClearControl, this.FieldClearButtonClick, this.fieldControl);
+            if (this.fieldControl) utils.destroyTouchClickEvent(this.fieldControl, this.FieldButtonClick, this.fieldControl);
+        }
+
+        public FieldButtonClick: { (e: any): void; };
+        private fieldButtonClick(e) {
+            let self = this;
+            vars._app.OpenController({
+                urlController: self.cardController, isModal: true, onLoadController: (controller: Interfaces.IController) => {
+                    let ctrlUnit: Interfaces.IControllerCard = controller as Interfaces.IControllerCard;
+                    ctrlUnit.CardSettings.IsAdd = false;
+                    ctrlUnit.CardSettings.IsAddCopy = false;
+                    ctrlUnit.CardSettings.IsDelete = false;
+                    ctrlUnit.CardSettings.IsEdit = false;
+                    ctrlUnit.CardSettings.IsSelect = true;
+                    ctrlUnit.OnSelect = $.proxy(self.selectValue, self);
+                }
+            });
+        }
+
+        public SelectValue: { (value: Interfaces.Model.IBaseModel): void; };
+
+        private selectValue(controller: Interfaces.IControllerCard) {
+            let value: Interfaces.Model.IBaseModel = controller.getSelectedRecord();
+            if (value) {
+                if (this.SelectValue)
+                    this.SelectValue(value);
+                else
+                    this.model.set(this.field, value);
+            }
+            M.updateTextFields();
+        }
+
+        public FieldClearButtonClick: { (e: any): void; };
+        private fieldClearButtonClick(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            this.model.set(this.field, {});
+            M.updateTextFields();
+            return false;
+        }
+    }
 
     export class BaseCardFilterSettings implements Interfaces.Control.ICardFilterSettings {
         public saveFilter(): void {

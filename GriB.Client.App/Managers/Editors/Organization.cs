@@ -15,7 +15,7 @@ namespace GriB.Client.App.Managers.Editors
         public const int typeDepartment = 4;
 
         private const string cmdGet = @"Editor\Organization\[get]";
-        private static t_org readFromValues(object[] values) => new t_org() { id = (int)values[0], d = (int)values[1], cd = (DateTime)values[2], cu = (int)values[3], ud = (DateTime)values[4], uu = (int)values[5], name = (string)values[6], type = (int)values[7], pid = (int)values[8] };
+        private static t_org readFromValues(object[] values) => new t_org() { id = (int)values[0], d = (int)values[1], cd = (DateTime)values[2], cu = (int)values[3], ud = (DateTime)values[4], uu = (int)values[5], name = (string)values[6], type = (int)values[7], pid = (int)values[8], defcurrency = new unit() { id= (int)values[9], name = (string)values[10] } };
 
         public static List<t_org> GetOrganizations(this Query query, int type)
         {
@@ -57,7 +57,7 @@ namespace GriB.Client.App.Managers.Editors
         public static t_org SetOrganization(this Query query, t_org org)
         {
             t_org result = org;
-            query.Execute(cmdSet, new SqlParameter[] { new SqlParameter("@id", org.id), new SqlParameter("@cu", org.cu), new SqlParameter("@uu", org.uu), new SqlParameter("@name", string.IsNullOrEmpty(org.name) ? "" : org.name), new SqlParameter("@type", org.type), new SqlParameter("@pid", org.pid) }
+            query.Execute(cmdSet, new SqlParameter[] { new SqlParameter("@id", org.id), new SqlParameter("@cu", org.cu), new SqlParameter("@uu", org.uu), new SqlParameter("@name", string.IsNullOrEmpty(org.name) ? "" : org.name), new SqlParameter("@type", org.type), new SqlParameter("@pid", org.pid), new SqlParameter("@defcurrency", org.defcurrency == null ? 0 : org.defcurrency.id) }
             , (values) =>
             {
                 result.id = (int)values[0];
