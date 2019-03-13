@@ -23,6 +23,7 @@ export namespace Controller.Setting.Card {
                     { Header: vars._statres("label$name"), Field: "name" },
                     { Header: vars._statres("label$category"), Field: "category.name" },
                     { Header: vars._statres("label$type"), Field: "typename" },
+                    { Header: vars._statres("label$unitshort"), Field: "unit.code" },
                 ]
             };
         }

@@ -15,7 +15,7 @@ export namespace Controller.Setting.Editor {
 
         protected createModel(): kendo.data.ObservableObject {
             let model: kendo.data.ObservableObject = new kendo.data.ObservableObject({
-                "Header": vars._statres("label$product"),
+                "Header": vars._statres("label$productsgoods"),
                 "editModel": {},
                 "isNotLoadInitView": false,
                 "labelSpecifications": vars._statres("label$specifications"),
@@ -42,11 +42,7 @@ export namespace Controller.Setting.Editor {
                 "labelCurrency": vars._statres("label$currency"),
                 "labelCostPrice": vars._statres("label$costprice"),
                 "labelSellingPrice": vars._statres("label$sellingprice"),
-                "labelPrice": vars._statres("label$price"),
-                "labelSum": vars._statres("label$sum"),
-                "labelQuantityShort": vars._statres("label$quantityshort"),
-                "labelUnitShort": vars._statres("label$unitshort"),
-                "labelAdd": vars._statres("button$label$add")
+                "labelTechnologicalMap": vars._statres("label$technologicalmap"),
             });
 
             return model;
@@ -110,16 +106,15 @@ export namespace Controller.Setting.Editor {
         private categoryControl: ctrl.Control.ReferenceFieldControl;
         private unitControl: ctrl.Control.ReferenceFieldControl;
         private currencyControl: ctrl.Control.ReferenceFieldControl;
-        private compositionRows: JQuery;
         private rightRows: JQuery;
-        private btnAddComposition: JQuery;
-        private btnRemoveComposition: JQuery;
+        private techMapButton: JQuery;
         public ViewInit(view: JQuery): boolean {
             this.imgDialog = view.find("#editor-view-image-input");
             this.controlPhoto = view.find("#editor-view-product-photo");
-            this.compositionRows = view.find("#product-composition-rows");
             this.rightRows = view.find("#product-rigths-rows");
             this.controlType = view.find('#editor-view-product-type');
+
+            this.techMapButton = view.find("#btn-techmap");
 
             this.categoryControl = new ctrl.Control.ReferenceFieldControl();
             this.categoryControl.InitControl(view.find("#editor-view-product-category-row"), "editor-view-product-category", "editModel.category", "editModel.category.name", vars._statres("label$includedincategory"), 'setting/card/category', this.Model);
@@ -156,22 +151,21 @@ export namespace Controller.Setting.Editor {
             if (this.unitControl) this.unitControl.createEvents();
             if (this.currencyControl) this.currencyControl.createEvents();
 
+            this.TechMapButtonClick = this.createTouchClickEvent(this.techMapButton, this.techMapButtonClick);
             this.AddPhotoButtonClick = this.createTouchClickEvent("editor-view-product-addphoto", this.addPhotoButtonClick);
             this.Model.bind("change", $.proxy(this.changeModel, this));
         }
 
         protected destroyEvents(): void {
-            this.compositionRows.unbind();
             this.rightRows.unbind();
             this.Model.unbind("change");
             this.destroyTouchClickEvent("editor-view-product-addphoto", this.AddPhotoButtonClick);
+            this.destroyTouchClickEvent(this.techMapButton, this.TechMapButtonClick);
 
             if (this.currencyControl) this.currencyControl.destroyEvents();
             if (this.unitControl) this.unitControl.destroyEvents();
             if (this.categoryControl) this.categoryControl.destroyEvents();
 
-            if (this.btnAddComposition) this.destroyTouchClickEvent(this.btnAddComposition, this.addCompositionButtonClick);
-            if (this.btnRemoveComposition) this.destroyTouchClickEvent(this.btnRemoveComposition, this.removeCompositionButtonClick);
             this.imgDialog.unbind();
             super.destroyEvents();
 
@@ -183,23 +177,17 @@ export namespace Controller.Setting.Editor {
                 this.Model.set("editModel.category", { id: valueCategory.id, name: (utils.isNullOrEmpty(valueCategory.parentname) === true ? "" : valueCategory.parentname + '->') + valueCategory.name });
             }
         }
+
         private changeModel(e: any): void {
             if (e.field === "editModel.type") {
                 let model: Interfaces.Model.IProduct = this.EditorModel;
                 if (+model.type === 1) {
-                    $("#editor-view-product-composition").show();
+                    $("#btn-techmap-row").removeClass("hide"); //.show();
                 }
                 else {
-                    $("#editor-view-product-composition").hide();
+                    if ($("#btn-techmap-row").hasClass("hide") === false)
+                        $("#btn-techmap-row").addClass("hide");
                 }
-            }
-            else if (e.field.indexOf("editModel.composition[") > -1 && e.field.lastIndexOf("].quantity") > -1) {
-                let field: string = e.field;
-                let sindex: string = field.replace("editModel.composition[", "").replace("].quantity", "");
-                let index: number = +sindex;
-                let model: Interfaces.Model.IProduct = this.EditorModel;
-                model.composition[index].sum = Math.round((model.composition[index].quantity * model.composition[index].product.sellingprice) * 100) / 100;
-                this.Model.set("editModel", model);
             }
         }
 
@@ -220,84 +208,41 @@ export namespace Controller.Setting.Editor {
         }
 
         public ViewHide(e) {
-           // $('#editor-view-product-tabs').tabs("destroy");
+            //$('#editor-view-product-tabs').tabs("destroy");
             super.ViewHide(e);
         }
 
         protected afterLoad(responseData?: any): void {
             super.afterLoad(responseData);
-            this.controlPhoto.css("backgroundImage", "url(" + this.EditorModel.photo + ")");
+            if (this.EditorModel.photo)
+                this.controlPhoto.css("backgroundImage", "url(" + this.EditorModel.photo + ")");
             this.changeModel({ field: "editModel.type" });
-            this.setupTableComposition();
 
             let model: Interfaces.Model.IProduct = this.EditorModel;
             let data: Interfaces.Model.ISalePointAccessModel[] = model.accesssalepoints;
             this.setupTableAccess(this.rightRows, data);
         }
 
-        private setupTableComposition(): void {
+        public TechMapButtonClick: { (e: any): void; };
+        private techMapButtonClick(e) {
             let self = this;
-            let model: Interfaces.Model.IProduct = this.EditorModel;
-            let data: Interfaces.Model.IProductComposition[] = model.composition;
-            let html: string = '';
-
-            if (this.btnAddComposition)
-                this.destroyTouchClickEvent(this.btnAddComposition, this.addCompositionButtonClick);  
-
-            this.compositionRows.unbind();
-            if (data && data.length > 0) {
-                for (let i = 0, icount = (data && data.length ? data.length : 0); i < icount; i++) {
-                    data[i].sum = Math.round((data[i].quantity * data[i].product.sellingprice) * 100) / 100;
-
-                    html += '<tr data-index="' + i + '">';
-                    html += '<td class="product-col-name" data-bind="text:editModel.composition[' + i + '].product.name"></td>';
-                    html += '<td class="product-col-quantity"><input class="table-cell-input" type="number" data-bind="value:editModel.composition[' + i + '].quantity"/></td>';
-                    html += '<td class="product-col-unit" data-bind="text:editModel.composition[' + i + '].product.unit_name"></td>';
-                    html += '<td class="product-col-sum hide-on-small-only" data-bind="text:editModel.composition[' + i + '].sum"></td>';
-                    html += '<td class="product-col-btn"><a class="product-col-button-delete"><i class="material-icons editor-header">close</i></a></td>';
-                    html += '</tr>';
+            vars._app.OpenController({
+                urlController: 'setting/editor/productmapedit', isModal: true, onLoadController: (controller: Interfaces.IController) => {
+                    let ctrlMap: Interfaces.IControllerEditor = controller as Interfaces.IControllerEditor;
+                    ctrlMap.Model.set("editModel", self.EditorModel);
+                    ctrlMap.EditorSettings.Save = $.proxy(self.onEditRow, self);
                 }
-            }
-
-            html += '<tr>';
-            html += '<td><a id="btn-add-composition" class="btn btncol"><span data-bind="text:labelAdd"></span></a></td>';
-            html += '</tr>';
-            this.compositionRows.html(html);
-
-            self.Model.set("editModel", model);
-
-            this.btnAddComposition = this.compositionRows.find("#btn-add-composition");
-            this.btnRemoveComposition = this.compositionRows.find(".editor-header-button");
-            this.AddCompositionButtonClick = this.createTouchClickEvent(this.btnAddComposition, this.addCompositionButtonClick);
-            this.RemoveCompositionButtonClick = this.createTouchClickEvent(this.btnRemoveComposition, this.removeCompositionButtonClick);
-            kendo.bind(this.compositionRows, this.Model);
-
+            });
         }
 
-        //private setupTableAccess(): void {
-        //    let model: Interfaces.Model.IProduct = this.EditorModel;
-        //    let data: Interfaces.Model.ISalePointAccessModel[] = model.accesssalepoints;
-        //    let html: string = '';
+        private onEditRow(model: Interfaces.Model.IEditorModel, callback: (responseData: any) => void) {
+           this.Model.set("editModel", model);
 
-        //    if (data && data.length > 0) {
-        //        for (let i = 0, icount = (data && data.length ? data.length : 0); i < icount; i++) {
-        //            html += '<tr>';
-        //            html += '<td data-bind="text:editModel.accesssalepoints[' + i + '].salepoint.name"></td>';
+            if (callback) {
+                callback(undefined);
+            }
+        }
 
-        //            html += '<td>';
-        //            html += '<div class="switch valign-wrapper">';
-        //            html += '    <label>';
-        //            html += '        <input type="checkbox" data-bind="checked:editModel.accesssalepoints[' + i + '].isaccess">';
-        //            html += '        <span class="lever"></span>';
-        //            html += '     </label>';
-        //            html += '</div>';
-        //            html += '</td>';
-        //            html += '</tr>';
-        //        }
-        //    }
-        //    this.rightRows.html(html);
-        //    kendo.bind(this.rightRows, this.Model);
-        //}
 
         public AddPhotoButtonClick: { (e: any): void; };
         private addPhotoButtonClick(e) {
@@ -308,44 +253,7 @@ export namespace Controller.Setting.Editor {
             this.UploadImage(this.imgDialog[0].files);
         }
 
-        public AddCompositionButtonClick: { (e: any): void; };
-        private addCompositionButtonClick(e) {
-            let self = this;
-           
-            vars._app.OpenController({
-                urlController: 'setting/card/product', isModal: true, onLoadController: (controller: Interfaces.IController) => {
-                    let ctrlProduct: Interfaces.IControllerCard = controller as Interfaces.IControllerCard;
-                    ctrlProduct.CardSettings.IsAdd = false;
-                    ctrlProduct.CardSettings.IsEdit = false;
-                    ctrlProduct.CardSettings.IsDelete = false;
-                    ctrlProduct.CardSettings.IsSelect = true;
-                    ctrlProduct.OnSelect = $.proxy(self.selectComposition, self);
-                }
-            });
-        }
-
-        public RemoveCompositionButtonClick: { (e: any): void; };
-        private removeCompositionButtonClick(e) {
-            let self = this;
-            let model: Interfaces.Model.IProduct = this.EditorModel;
-            let index: number = +$(e.currentTarget).parent().parent().data("index");
-            model.composition.splice(index, 1);
-            self.Model.set("editModel", model);
-            self.setupTableComposition();
-        }
-
-        private selectComposition(controller: Interfaces.IControllerCard) {
-            let id: any = controller.getSelectedRowId();
-            let self = this;
-            let model: Interfaces.Model.IProduct = this.EditorModel;
-            this.Service.GetProductNewComposition(+id, (responseData) => {
-                model.composition.push(responseData.newcomposition);
-                self.Model.set("editModel", model);
-                self.setupTableComposition();
-            });
-        }
-
-
+        
         public UploadImage(files: any) {
             let controller = this;
             if (files.length > 0) {
@@ -357,7 +265,8 @@ export namespace Controller.Setting.Editor {
 
                 controller.Service.UploadImage(dataUpload, (responseData: any) => {
                     controller.Model.set("editModel.photo", responseData);
-                    this.controlPhoto.css("backgroundImage", "url(" + controller.EditorModel.photo + ")");
+                    if (this.EditorModel.photo)
+                        this.controlPhoto.css("backgroundImage", "url(" + controller.EditorModel.photo + ")");
                 });
             }
         }

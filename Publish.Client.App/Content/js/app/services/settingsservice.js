@@ -138,6 +138,9 @@ define(["require", "exports", "app/common/baseservice"], function (require, expo
             SettingsService.prototype.GetProducts = function (Callback) {
                 this.GetApi({ Action: "/get_products", Callback: Callback });
             };
+            SettingsService.prototype.GetProductMaps = function (Callback) {
+                this.GetApi({ Action: "/get_productmaps", Callback: Callback });
+            };
             SettingsService.prototype.GetProduct = function (id, Callback) {
                 this.GetApi({ Action: "/get_product", RequestData: { id: id }, Callback: Callback });
             };

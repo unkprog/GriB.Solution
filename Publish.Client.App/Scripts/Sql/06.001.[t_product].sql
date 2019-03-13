@@ -42,3 +42,16 @@ begin
     primary key clustered ([id])
   )
 end
+
+if not exists (select * from [sys].[objects] where [object_id] = object_id(N'[t_product_map]') and type in (N'U'))
+begin
+  create table [t_product_map]
+  (
+    [id]            [int]           not null,
+	[approver]      [nvarchar](800) not null default (N''),
+	[signer]        [nvarchar](800) not null default (N''),
+	[finishproduct] [nvarchar](200) not null default (N''),
+	[finishdish]    [nvarchar](200) not null default (N''),
+    primary key clustered ([id])
+  )
+end

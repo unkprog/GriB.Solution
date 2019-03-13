@@ -10,13 +10,26 @@ namespace GriB.Client.App.Managers.Editors
     public static class Product
     {
 
-        private static product readFromValues(object[] values) => new product() { id = (int)values[0], pid = (int)values[1], type = (int)values[2], category = new category() { id = (int)values[3], name = (string)values[7] }, name = (string)values[4], photo = (string)values[5], putonsale = (bool)values[6] };
+        private static product readFromValues(object[] values) => new product() { id = (int)values[0], pid = (int)values[1], type = (int)values[2], category = new category() { id = (int)values[3], name = (string)values[7] }, name = (string)values[4], photo = (string)values[5], putonsale = (bool)values[6], unit = new unit() { id = (int)values[8], code = (string)values[9] } };
 
         private const string cmdGet = @"Editor\Product\[get]";
         public static List<product> GetProducts(this Query query)
         {
             List<product> result = new List<product>();
             query.Execute(cmdGet, new SqlParameter[] { new SqlParameter() { ParameterName = "@id", Value = 0 }, new SqlParameter() { ParameterName = "@name", Value = string.Empty } }
+            , (values) =>
+            {
+                result.Add(readFromValues(values));
+            });
+
+            return result;
+        }
+
+        private const string cmdGetMap = @"Editor\Product\[getmap]";
+        public static List<product> GetProductMaps(this Query query)
+        {
+            List<product> result = new List<product>();
+            query.Execute(cmdGetMap, new SqlParameter[] { new SqlParameter() { ParameterName = "@id", Value = 0 }, new SqlParameter() { ParameterName = "@name", Value = string.Empty } }
             , (values) =>
             {
                 result.Add(readFromValues(values));
@@ -193,6 +206,32 @@ namespace GriB.Client.App.Managers.Editors
             return result;
         }
 
+        private const string cmdGetMapEdit = @"Editor\Product\Map\[get]";
+        public static product GetProductMap(this Query query, product product)
+        {
+            product result = product;
+            query.Execute(cmdGetMapEdit, new SqlParameter[] { new SqlParameter("@id", product.id) }
+            , (values) =>
+            {
+                int cnt = 1;
+                product.approver      = (string)values[cnt++];
+                product.signer        = (string)values[cnt++];
+                product.finishproduct = (string)values[cnt++];
+                product.finishdish    = (string)values[cnt++];
+            });
+
+            return result;
+        }
+        private const string cmdSetMapEdit = @"Editor\Product\Map\[set]";
+        public static product SetProductMap(this Query query, product product)
+        {
+            product result = product;
+            query.Execute(cmdSetMapEdit, new SqlParameter[] { new SqlParameter("@id", result.id), new SqlParameter("@approver", product.approver), new SqlParameter("@signer", product.signer)
+                   , new SqlParameter("@finishproduct", product.finishproduct), new SqlParameter("@finishdish", product.finishdish) }
+            , (values) => { });
+            return result;
+        }
+
         private const string cmdGetComposition = @"Editor\Product\Composition\[get]";
         public static product GetProductComposition(this Query query, product product)
         {
@@ -200,24 +239,28 @@ namespace GriB.Client.App.Managers.Editors
             query.Execute(cmdGetComposition, new SqlParameter[] { new SqlParameter("@id", product.id) }
             , (values) =>
             {
-                product.composition.Add(new product_composition() { index = (int)values[1], quantity = (double)values[3], product = new product() { id = (int)values[2], name = (string)values[4], sellingprice = (double)values[5], unit = new unit() { id = (int)values[6], name = (string)values[7] } } });
+                int cnt = 1;
+                product.composition.Add(new product_composition() { index = (int)values[cnt++]
+                    , product = new product() { id = (int)values[cnt++], name = (string)values[cnt++] }
+                    , unit = new unit() { id = (int)values[cnt++], code = (string)values[cnt++] }
+                    , netto = (double)values[cnt++], percentcold = (double)values[cnt++], brutto = (double)values[cnt++], percentheat = (double)values[cnt++], exitproduct = (double)values[cnt++], description=(string)values[cnt++] } );
             });
 
             return result;
         }
 
-        private const string cmdGetCompositionNew = @"Editor\Product\Composition\[get_new]";
-        public static product_composition GetProductCompositionNew(this Query query, int id)
-        {
-            product_composition result = new product_composition();
-            query.Execute(cmdGetCompositionNew, new SqlParameter[] { new SqlParameter("@id", id) }
-            , (values) =>
-            {
-               result = new product_composition() { index = (int)values[1], quantity = (double)values[3], product = new product() { id = (int)values[2], name = (string)values[4], sellingprice = (double)values[5], unit = new unit() { id = (int)values[6], name = (string)values[7] } } };
-            });
+        //private const string cmdGetCompositionNew = @"Editor\Product\Composition\[get_new]";
+        //public static product_composition GetProductCompositionNew(this Query query, int id)
+        //{
+        //    product_composition result = new product_composition();
+        //    query.Execute(cmdGetCompositionNew, new SqlParameter[] { new SqlParameter("@id", id) }
+        //    , (values) =>
+        //    {
+        //       result = new product_composition() { index = (int)values[1], quantity = (double)values[3], product = new product() { id = (int)values[2], name = (string)values[4], sellingprice = (double)values[5], unit = new unit() { id = (int)values[6], name = (string)values[7] } } };
+        //    });
 
-            return result;
-        }
+        //    return result;
+        //}
 
         private const string cmdSetConposition = @"Editor\Product\Composition\[set]";
         public static product SetProductComposition(this Query query, product product)
@@ -228,7 +271,9 @@ namespace GriB.Client.App.Managers.Editors
             {
                 index++;
                 item.index = index;
-                query.Execute(cmdSetConposition, new SqlParameter[] { new SqlParameter("@id", result.id), new SqlParameter("@index", item.index), new SqlParameter("@quantity", item.quantity), new SqlParameter("@product", item.product?.id) }
+                query.Execute(cmdSetConposition, new SqlParameter[] { new SqlParameter("@id", result.id), new SqlParameter("@index", item.index)
+                    , new SqlParameter("@product", Helper.GetSqlParamValue(item.product)), new SqlParameter("@unit", Helper.GetSqlParamValue(item.unit))
+                , new SqlParameter("@netto", item.netto), new SqlParameter("@percentcold", item.percentcold), new SqlParameter("@brutto", item.brutto), new SqlParameter("@percentheat", item.percentheat), new SqlParameter("@exitproduct", item.exitproduct), new SqlParameter("@description", item.description) }
                 , (values) => { });
             }
             DelProductComposition(query, product);

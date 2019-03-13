@@ -154,6 +154,10 @@ export module Services {
             this.GetApi({ Action: "/get_products", Callback: Callback });
         }
 
+        public GetProductMaps(Callback: (responseData: any) => void) {
+            this.GetApi({ Action: "/get_productmaps", Callback: Callback });
+        }
+
         public GetProduct(id: number, Callback: (responseData: any) => void) {
             this.GetApi({ Action: "/get_product", RequestData: { id: id }, Callback: Callback });
         }

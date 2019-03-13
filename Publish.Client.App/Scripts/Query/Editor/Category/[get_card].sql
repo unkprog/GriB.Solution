@@ -13,7 +13,7 @@ from [treecategory]
 
 
 select [t].[id], [t].[pid], [t].[name], [t].[photo]
-     , isnull([cat].[categoryname],'')
+     , [parentname]=isnull([cat].[categoryname],'')
 from [t_category] [t] with(nolock)
 left outer join #categories [cat] on [t].[pid] = [cat].[id]
 where [t].[d] = 0

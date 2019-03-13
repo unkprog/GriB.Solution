@@ -17,6 +17,14 @@ define(["require", "exports"], function (require, exports) {
         return result;
     }
     exports.createDblTouchClickEvent = createDblTouchClickEvent;
+    function createContextMenuEvent(elemName, clickFunc, thisObject, view) {
+        var result = $.proxy(clickFunc, thisObject);
+        var elem = elemName instanceof $ ? elemName : (view ? view.find("#" + elemName) : $("#" + elemName));
+        for (var i = 0, iCount = elem.length; i < iCount; i++)
+            elem[i].addEventListener("contextmenu", result, false);
+        return result;
+    }
+    exports.createContextMenuEvent = createContextMenuEvent;
     function createClickEvent(elemName, clickFunc, thisObject, view) {
         var result = $.proxy(clickFunc, thisObject);
         var elem = elemName instanceof $ ? elemName : (view ? view.find("#" + elemName) : $("#" + elemName));
@@ -43,6 +51,12 @@ define(["require", "exports"], function (require, exports) {
             elem[i].removeEventListener("click", proxyFunc);
     }
     exports.destroyClickEvent = destroyClickEvent;
+    function destroyContextMenuEvent(elemName, proxyFunc, view) {
+        var elem = elemName instanceof $ ? elemName : (view ? view.find("#" + elemName) : $("#" + elemName));
+        for (var i = 0, iCount = elem.length; i < iCount; i++)
+            elem[i].removeEventListener("contextmenu", proxyFunc);
+    }
+    exports.destroyContextMenuEvent = destroyContextMenuEvent;
     function isNullOrEmpty(value) {
         return (value === null || value === undefined || value === '');
     }

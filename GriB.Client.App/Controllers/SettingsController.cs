@@ -491,6 +491,16 @@ namespace GriB.Client.App.Controllers
         }
 
         [HttpGet]
+        [ActionName("get_productmaps")]
+        public HttpResponseMessage GetProductMaps()
+        {
+            return TryCatchResponseQuery((query) =>
+            {
+                return Request.CreateResponse(HttpStatusCode.OK, Product.GetProductMaps(query));
+            });
+        }
+
+        [HttpGet]
         [ActionName("get_product")]
         public HttpResponseMessage GetProduct(int id)
         {
@@ -502,22 +512,23 @@ namespace GriB.Client.App.Controllers
                 Product.GetProductSalepointAccess(query, result);
                 Product.GetProductCost(query, result);
                 Product.GetProductSale(query, result);
+                Product.GetProductMap(query, result);
                 Product.GetProductComposition(query, result);
                 return Request.CreateResponse(HttpStatusCode.OK, new { record = result });
             });
         }
 
 
-        [HttpGet]
-        [ActionName("get_product_newcomposition")]
-        public HttpResponseMessage GetProductNewComposition(int id)
-        {
-            return TryCatchResponseQuery((query) =>
-            {
-                product_composition result = Product.GetProductCompositionNew(query, id);
-                return Request.CreateResponse(HttpStatusCode.OK, new { newcomposition = result });
-            });
-        }
+        //[HttpGet]
+        //[ActionName("get_product_newcomposition")]
+        //public HttpResponseMessage GetProductNewComposition(int id)
+        //{
+        //    return TryCatchResponseQuery((query) =>
+        //    {
+        //        product_composition result = Product.GetProductCompositionNew(query, id);
+        //        return Request.CreateResponse(HttpStatusCode.OK, new { newcomposition = result });
+        //    });
+        //}
 
         [HttpPost]
         [ActionName("post_product")]
@@ -532,6 +543,7 @@ namespace GriB.Client.App.Controllers
                 Product.SetProductSalepointAccess(query, product);
                 Product.SetProductCost(query, product, principal.Data.User.id);
                 Product.SetProductSale(query, product, principal.Data.User.id);
+                Product.SetProductMap(query, product);
                 Product.SetProductComposition(query, product);
                 return Request.CreateResponse(HttpStatusCode.OK, "Ok");
             });

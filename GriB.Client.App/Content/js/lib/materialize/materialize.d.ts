@@ -40,6 +40,7 @@ declare namespace M {
 
     export namespace Dropdown {
         function getInstance(elems: any): any;
+        function init(elems: any, options?: any): JQuery;
     }
 
     export namespace Tooltip {

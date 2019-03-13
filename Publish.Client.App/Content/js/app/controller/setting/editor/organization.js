@@ -11,7 +11,7 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-define(["require", "exports", "app/common/variables", "app/common/utils", "app/controller/setting/editor/editor"], function (require, exports, vars, utils, edit) {
+define(["require", "exports", "app/common/variables", "app/common/utils", "app/common/basecontrol", "app/controller/setting/editor/editor"], function (require, exports, vars, utils, ctrl, edit) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var Controller;
@@ -52,8 +52,8 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                     };
                     Organization.prototype.ViewInit = function (view) {
                         var controller = this;
-                        controller.defCurrencyControl = view.find("#editor-view-organization-currency-row");
-                        controller.defCurrencyClearControl = view.find("#editor-view-organization-currency-clear");
+                        controller.defCurrencyControl = new ctrl.Control.ReferenceFieldControl();
+                        controller.defCurrencyControl.InitControl(view.find("#editor-view-organization-currency-row"), "editor-view-organization-currency", "editModel.defcurrency", "editModel.defcurrency.name", vars._statres("label$defaultcurrency"), 'setting/card/currency', controller.Model);
                         view.find("#editor-view-organization-name").characterCounter();
                         view.find("#editor-view-organization-website").characterCounter();
                         view.find("#editor-view-organization-email").characterCounter();
@@ -72,43 +72,12 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                     Organization.prototype.createEvents = function () {
                         _super.prototype.createEvents.call(this);
                         if (this.defCurrencyControl)
-                            this.DefCurrencyButtonClick = utils.createTouchClickEvent(this.defCurrencyControl, this.defCurrencyButtonClick, this);
-                        if (this.defCurrencyClearControl)
-                            this.DefCurrencylearButtonClick = utils.createTouchClickEvent(this.defCurrencyClearControl, this.defCurrencyClearButtonClick, this);
+                            this.defCurrencyControl.createEvents();
                     };
                     Organization.prototype.destroyEvents = function () {
-                        if (this.defCurrencyClearControl)
-                            utils.destroyTouchClickEvent(this.defCurrencyClearControl, this.DefCurrencylearButtonClick);
                         if (this.defCurrencyControl)
-                            this.destroyTouchClickEvent(this.defCurrencyControl, this.DefCurrencyButtonClick);
+                            this.defCurrencyControl.destroyEvents();
                         _super.prototype.destroyEvents.call(this);
-                    };
-                    Organization.prototype.defCurrencyButtonClick = function (e) {
-                        var self = this;
-                        vars._app.OpenController({
-                            urlController: 'setting/card/currency', isModal: true, onLoadController: function (controller) {
-                                var ctrlUnit = controller;
-                                ctrlUnit.CardSettings.IsAdd = false;
-                                ctrlUnit.CardSettings.IsAddCopy = false;
-                                ctrlUnit.CardSettings.IsDelete = false;
-                                ctrlUnit.CardSettings.IsEdit = false;
-                                ctrlUnit.CardSettings.IsSelect = true;
-                                ctrlUnit.OnSelect = $.proxy(self.selectUnit, self);
-                            }
-                        });
-                    };
-                    Organization.prototype.selectUnit = function (controller) {
-                        var currency = controller.getSelectedRecord();
-                        if (currency)
-                            this.Model.set("editModel.defcurrency", currency);
-                        M.updateTextFields();
-                    };
-                    Organization.prototype.defCurrencyClearButtonClick = function (e) {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        this.Model.set("editModel.defcurrency", {});
-                        M.updateTextFields();
-                        return false;
                     };
                     Organization.prototype.validate = function () {
                         var result = true;

@@ -76,6 +76,8 @@ define({
     "label$categoriesproducts": "Категории, товары",
     "label$categories": "Категории",
     "label$products": "Товары",
+    "label$productsgoods": "Товары, услуги",
+    "label$productmaps": "Технологические карты",
     "label$discounts": "Скидки",
     "label$clients": "Клиенты",
     /////////////////////////////////////////////////////////////////////////////////////////////
@@ -197,6 +199,33 @@ define({
     "label$quantityshort": "Колич.",
     "label$unitshort": "Ед.изм.",
 
+    /////////////////////////////////////////////////////////////////////////////////////////////
+    //              Редактор технологической карты                                             //
+    /////////////////////////////////////////////////////////////////////////////////////////////
+    "label$technologicalmap": "Технологическая карта",
+    "label$approve": "Утверждаю",
+    "label$headenterprise": "Руководитель предприятия",
+    "label$numorder": "№ п/п",
+    "label$namerawmaterial": "Наименование сырья",
+    "label$brutto": "Брутто",
+    "label$netto": "Нетто",
+    "label$treatment$percentcold": "% холодной обработки",
+    "label$treatment$percentheat": "% тепловой обработки",
+    "label$exitcompletedproduct": "Выход готового продукта",
+    "label$description$technologicalprocess": "Описание технологического процесса",
+    "label$output$finishedproduct": "Выход готового полуфабриката",
+    "label$output$finisheddish": "Выход готового блюда",
+    "label$technologicalmap$made": "Технологическую карту составил",
+    "label$chefcook": "Шеф-повар",
+    "label$add$row": "Добавить позицию",
+    "label$delete$row": "Удалить позицию",
+    "label$edit$row": "Редактировать позицию",
+
+    "label$approvers": "Утверждающие",
+    "label$document$approver": "Утверждающий документ",
+    "label$document$signer": "Подписывающий документ",
+
+    "msg$error$nobruttospecified": "Не задан параметр брутто",
     /////////////////////////////////////////////////////////////////////////////////////////////
     //              Редактор контрагентов                                                      //
     /////////////////////////////////////////////////////////////////////////////////////////////

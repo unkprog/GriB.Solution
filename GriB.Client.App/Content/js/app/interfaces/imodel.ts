@@ -107,11 +107,21 @@
         parentname: string;
     }
 
-    export interface IProductComposition {
+    export interface IApprovers extends IEditorModel {
+        approver: string;
+        signer: string;
+    }
+
+    export interface IProductComposition extends IEditorModel {
         index: number;
         product: IProduct;
-        quantity: number;
-        sum: number;
+        unit: IUnit;
+        netto: number;
+        percentcold: number;
+        brutto: number;
+        percentheat: number;
+        exitproduct: number;
+        description: string;
     }
 
     export interface IProduct extends IReferenceHierarhyModel, IEditorModel, IEditorSalePointAccess {
@@ -124,11 +134,15 @@
         putonsale: boolean;
 
         quantity: number;
-        unit: number;
+        unit: IUnit;
         unit_name: string;
         currency: number;
         costprice: number;
         sellingprice: number;
+        approver: string;
+        signer: string;
+        finishproduct: string;
+        finishdish: string;
         composition: IProductComposition[];
     }
 

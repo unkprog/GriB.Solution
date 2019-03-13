@@ -14,6 +14,12 @@ namespace GriB.Client.App.Models.Editor
             unit = new unit();
             currency = new unit();
             category = new category();
+
+            approver = string.Empty;
+            signer = string.Empty;
+            finishproduct = string.Empty;
+            finishdish = string.Empty;
+
             costprices = new List<price_item>();
             sellingprices = new List<price_item>();
             accesssalepoints = new List<salepointaccess>();
@@ -33,6 +39,11 @@ namespace GriB.Client.App.Models.Editor
         public double costprice { get; set; }
         public double sellingprice { get; set; }
 
+        public string approver      { get; set; }
+        public string signer        { get; set; }
+        public string finishproduct { get; set; }
+        public string finishdish    { get; set; }
+
         public List<price_item> costprices { get; set; }
         public List<price_item> sellingprices { get; set; }
         public List<salepointaccess> accesssalepoints { get; set; }
@@ -47,9 +58,15 @@ namespace GriB.Client.App.Models.Editor
 
     public class product_composition
     {
-        public int     index    { get; set; }
-        public product product  { get; set; }
-        public double  quantity { get; set; }
+        public int     index   { get; set; }
+        public product product { get; set; }
+        public unit    unit    { get; set; }
+        public double netto       { get; set; }
+        public double percentcold { get; set; }
+        public double brutto      { get; set; }
+        public double percentheat { get; set; }
+        public double exitproduct { get; set; }
+        public string description { get; set; }
     }
 
 }

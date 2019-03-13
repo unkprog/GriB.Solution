@@ -1,8 +1,83 @@
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    }
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 define(["require", "exports", "app/common/utils", "app/common/variables"], function (require, exports, utils, vars) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var Control;
     (function (Control) {
+        var ReferenceFieldControl = /** @class */ (function () {
+            function ReferenceFieldControl() {
+            }
+            ReferenceFieldControl.prototype.InitControl = function (view, name, field, fieldout, header, cardcontroller, model) {
+                var controlHtml = '<input id="' + name + '" type="text" disabled class="truncate black-text" data-bind="value: ' + fieldout + '" style="cursor:pointer;font-weight:bold;">';
+                controlHtml += '<label for="' + name + '">' + header + '</label>';
+                controlHtml += '<i id="' + name + '-clear" class="material-icons editor-header right doc-edit-ref-del">close</i>';
+                var result = $(controlHtml);
+                this.cardController = cardcontroller;
+                this.field = field;
+                this.model = model;
+                this.fieldControl = view;
+                this.fieldClearControl = result.find("#" + name + "-clear");
+                view.append(result);
+                return result;
+            };
+            ReferenceFieldControl.prototype.createEvents = function () {
+                if (this.fieldControl)
+                    this.FieldButtonClick = utils.createTouchClickEvent(this.fieldControl, this.fieldButtonClick, this, this.fieldControl);
+                if (this.fieldClearControl)
+                    this.FieldClearButtonClick = utils.createTouchClickEvent(this.fieldClearControl, this.fieldClearButtonClick, this, this.fieldControl);
+            };
+            ReferenceFieldControl.prototype.destroyEvents = function () {
+                if (this.fieldClearControl)
+                    utils.destroyTouchClickEvent(this.fieldClearControl, this.FieldClearButtonClick, this.fieldControl);
+                if (this.fieldControl)
+                    utils.destroyTouchClickEvent(this.fieldControl, this.FieldButtonClick, this.fieldControl);
+            };
+            ReferenceFieldControl.prototype.fieldButtonClick = function (e) {
+                var self = this;
+                vars._app.OpenController({
+                    urlController: self.cardController, isModal: true, onLoadController: function (controller) {
+                        var ctrlUnit = controller;
+                        ctrlUnit.CardSettings.IsAdd = false;
+                        ctrlUnit.CardSettings.IsAddCopy = false;
+                        ctrlUnit.CardSettings.IsDelete = false;
+                        ctrlUnit.CardSettings.IsEdit = false;
+                        ctrlUnit.CardSettings.IsSelect = true;
+                        ctrlUnit.OnSelect = $.proxy(self.selectValue, self);
+                    }
+                });
+            };
+            ReferenceFieldControl.prototype.selectValue = function (controller) {
+                var value = controller.getSelectedRecord();
+                if (value) {
+                    if (this.SelectValue)
+                        this.SelectValue(value);
+                    else
+                        this.model.set(this.field, value);
+                }
+                M.updateTextFields();
+            };
+            ReferenceFieldControl.prototype.fieldClearButtonClick = function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                this.model.set(this.field, {});
+                M.updateTextFields();
+                return false;
+            };
+            return ReferenceFieldControl;
+        }());
+        Control.ReferenceFieldControl = ReferenceFieldControl;
         var BaseCardFilterSettings = /** @class */ (function () {
             function BaseCardFilterSettings(setupRows) {
                 this.fieldSearch = "name";
@@ -95,6 +170,7 @@ define(["require", "exports", "app/common/utils", "app/common/variables"], funct
         var BaseTable = /** @class */ (function () {
             function BaseTable() {
                 this.columns = [];
+                this.isScroll = true;
             }
             Object.defineProperty(BaseTable.prototype, "Columns", {
                 get: function () {
@@ -116,6 +192,16 @@ define(["require", "exports", "app/common/utils", "app/common/variables"], funct
                 enumerable: true,
                 configurable: true
             });
+            Object.defineProperty(BaseTable.prototype, "IsScroll", {
+                get: function () {
+                    return this.isScroll;
+                },
+                set: function (isScroll) {
+                    this.isScroll = isScroll;
+                },
+                enumerable: true,
+                configurable: true
+            });
             Object.defineProperty(BaseTable.prototype, "TableBody", {
                 get: function () {
                     return this.tableBody;
@@ -125,10 +211,10 @@ define(["require", "exports", "app/common/utils", "app/common/variables"], funct
             });
             BaseTable.prototype.InitView = function () {
                 this.SortButtonClick = $.proxy(this.sortButtonClick, this);
-                this.RowClick = $.proxy(this.rowClick, this);
+                this.RowDoubleClick = $.proxy(this.rowDoubleClick, this);
                 var htmlTable = '<table class="highlight">';
                 htmlTable += '   <thead></thead>';
-                htmlTable += '   <tbody style="overflow-y: scroll;"></tbody>';
+                htmlTable += '   <tbody></tbody>';
                 htmlTable += '</table>';
                 this.tableControl = $(htmlTable);
                 this.tableHead = this.tableControl.find('thead');
@@ -137,19 +223,32 @@ define(["require", "exports", "app/common/utils", "app/common/variables"], funct
             };
             BaseTable.prototype.DestroyView = function () {
                 this.detachSortEvents();
-                if (this.tableRows)
-                    utils.destroyDblTouchClickEvent(this.tableRows, this.RowClick, this.tableControl);
+                this.destroyRowsEvents();
             };
             BaseTable.prototype.Setup = function () {
                 this.detachSortEvents();
                 var headerHtml = this.getTableHeaderHtml();
                 this.tableHead.html(headerHtml);
+                if (this.tableBody) {
+                    if (this.IsScroll === true) {
+                        if (this.tableBody.hasClass("scroll-y") === false)
+                            this.tableBody.addClass("scroll-y");
+                    }
+                    else
+                        this.tableBody.removeClass("scroll-y");
+                }
                 this.attachSortEvents();
                 this.setupRows();
             };
-            BaseTable.prototype.setupRows = function () {
+            BaseTable.prototype.createRowsEvents = function () {
+                utils.createDblTouchClickEvent(this.tableRows, this.RowDoubleClick, this, this.tableBody);
+            };
+            BaseTable.prototype.destroyRowsEvents = function () {
                 if (this.tableRows)
-                    utils.destroyDblTouchClickEvent(this.tableRows, this.RowClick, this.tableBody);
+                    utils.destroyDblTouchClickEvent(this.tableRows, this.RowDoubleClick, this.tableBody);
+            };
+            BaseTable.prototype.setupRows = function () {
+                this.destroyRowsEvents();
                 this.tableBody.html(this.getTableBodyHtml());
                 var valueSum;
                 for (var j = 0, jcount = (this.sumFieldsInfo.fields && this.sumFieldsInfo.fields.length ? this.sumFieldsInfo.fields.length : 0); j < jcount; j++) {
@@ -157,7 +256,7 @@ define(["require", "exports", "app/common/utils", "app/common/variables"], funct
                     this.tableHead.find('#' + this.sumFieldsInfo.fields[j] + '_sum').html(utils.numberToString(valueSum ? valueSum : 0, 2));
                 }
                 this.tableRows = this.tableBody.find('tr');
-                utils.createDblTouchClickEvent(this.tableRows, this.RowClick, this, this.tableBody);
+                this.createRowsEvents();
             };
             BaseTable.prototype.getTableHeaderHtml = function () {
                 var columns = this.Columns;
@@ -180,6 +279,9 @@ define(["require", "exports", "app/common/utils", "app/common/variables"], funct
                         }
                         html += '"';
                     }
+                    if (columns[i].HeaderColSpan) {
+                        html += ' colspan="' + columns[i].HeaderColSpan + '"';
+                    }
                     html += '>';
                     html += (columns[i].HeaderTemplate ? columns[i].HeaderTemplate : columns[i].Header);
                     if (columns[i].IsSum && columns[i].IsSum === true) {
@@ -188,8 +290,12 @@ define(["require", "exports", "app/common/utils", "app/common/variables"], funct
                         this.sumFieldsInfo.sumFied[columns[i].Field] = 0;
                     }
                     html += '</th>';
+                    //if (columns[i].HeaderColSpan) {
+                    //    i = i + (columns[i].HeaderColSpan - 1);
+                    //}
                 }
-                html += '<th style="width:' + (knSupport.support.browser.chrome === true ? "18" : "17") + 'px;"></th>';
+                if (this.IsScroll === true)
+                    html += '<th style="width:' + (knSupport.support.browser.chrome === true ? "17" : "17") + 'px;"></th>';
                 html += '</tr>';
                 return html;
             };
@@ -260,7 +366,7 @@ define(["require", "exports", "app/common/utils", "app/common/variables"], funct
                 }
                 return html;
             };
-            BaseTable.prototype.rowClick = function (e) {
+            BaseTable.prototype.rowDoubleClick = function (e) {
                 if (this.OnDetalize) {
                     var index = +e.currentTarget.id.replace('table-row-', '');
                     var row = this.Rows[index];
@@ -320,6 +426,117 @@ define(["require", "exports", "app/common/utils", "app/common/variables"], funct
             return BaseTable;
         }());
         Control.BaseTable = BaseTable;
+        var BaseEditTable = /** @class */ (function (_super) {
+            __extends(BaseEditTable, _super);
+            function BaseEditTable() {
+                return _super !== null && _super.apply(this, arguments) || this;
+            }
+            BaseEditTable.prototype.InitView = function () {
+                var result = _super.prototype.InitView.call(this);
+                this.RowHeaderContextClick = $.proxy(this.rowHeaderContextClick, this);
+                this.RowContextClick = $.proxy(this.rowContextClick, this);
+                if (this.tableHead) {
+                    this.tableHead.addClass("ccursor");
+                    utils.createContextMenuEvent(this.tableHead, this.RowHeaderContextClick, this, result);
+                }
+                return result;
+            };
+            BaseEditTable.prototype.DestroyView = function () {
+                if (this.tableHead)
+                    utils.destroyContextMenuEvent(this.tableHead, this.RowHeaderContextClick, this.tableControl);
+                if (!this.rowEditControl) {
+                    this.rowEditModel.unbind("change");
+                }
+                _super.prototype.DestroyView.call(this);
+            };
+            BaseEditTable.prototype.createRowsEvents = function () {
+                _super.prototype.createRowsEvents.call(this);
+                if (this.tableRows)
+                    utils.createContextMenuEvent(this.tableRows, this.RowContextClick, this, this.tableBody);
+            };
+            BaseEditTable.prototype.destroyRowsEvents = function () {
+                if (this.tableRows)
+                    utils.destroyContextMenuEvent(this.tableRows, this.RowContextClick, this.tableBody);
+                _super.prototype.destroyRowsEvents.call(this);
+            };
+            BaseEditTable.prototype.rowHeaderContextClick = function (e) {
+                if (this.OnHeaderContextMenu) {
+                    this.OnHeaderContextMenu(e);
+                }
+                e.preventDefault();
+                e.stopPropagation();
+                return false;
+            };
+            BaseEditTable.prototype.rowContextClick = function (e) {
+                if (this.OnContextMenu) {
+                    var index = +e.currentTarget.id.replace('table-row-', '');
+                    var row = this.Rows[index];
+                    this.OnContextMenu(e, row);
+                }
+                e.preventDefault();
+                e.stopPropagation();
+                return false;
+            };
+            BaseEditTable.prototype.getTableEditRowTemplate = function () {
+                var columns = this.Columns;
+                var html = '';
+                html += '<tr id="table-row-edit">';
+                for (var i = 0, icount = (columns && columns.length ? columns.length : 0); i < icount; i++) {
+                    html += '   <td';
+                    if (columns[i].FieldEditStyle || columns[i].FieldStyle) {
+                        html += ' class="';
+                        if (columns[i].FieldEditStyle) {
+                            html += columns[i].FieldEditStyle;
+                        }
+                        else if (columns[i].FieldStyle) {
+                            html += columns[i].FieldStyle;
+                        }
+                        html += '"';
+                    }
+                    html += '>';
+                    if (columns[i].FieldEditTemplate)
+                        html += columns[i].FieldEditTemplate;
+                    else if (columns[i].FieldTemplate)
+                        html += columns[i].FieldTemplate;
+                    else {
+                        html += '#=';
+                        html += columns[i].Field;
+                        html += '#';
+                    }
+                    html += '</td>';
+                }
+                html += '</tr>';
+                return html;
+            };
+            BaseEditTable.prototype.createEditRowModel = function () {
+                var model = new kendo.data.ObservableObject({
+                    "editRowModel": {},
+                });
+                return model;
+            };
+            BaseEditTable.prototype.EditRow = function (rowModel, rowConrol) {
+                if (!this.rowEditControl) {
+                    var templateRow = vars.getTemplate(this.getTableEditRowTemplate());
+                    if (templateRow) {
+                        var html = templateRow(rowModel);
+                        this.rowEditControl = $(html);
+                        this.rowEditModel = new kendo.data.ObservableObject({ "editRowModel": rowModel });
+                        kendo.bind(this.rowEditControl, this.rowEditModel);
+                        this.rowEditModel.bind("change", $.proxy(this.changeEditRowModel, this));
+                    }
+                }
+                else {
+                    this.rowEditModel.set("editRowModel", rowModel);
+                }
+                this.rowConrol = rowConrol;
+                rowConrol.replaceWith(this.rowEditControl);
+                //html += templateRow(data[i]);
+            };
+            BaseEditTable.prototype.changeEditRowModel = function (e) {
+            };
+            return BaseEditTable;
+        }(BaseTable));
+        Control.BaseEditTable = BaseEditTable;
     })(Control = exports.Control || (exports.Control = {}));
 });
 //# sourceMappingURL=basecontrol.js.map

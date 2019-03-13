@@ -26,7 +26,8 @@ export namespace Controller.Setting {
                 "labelUnits": vars._statres("label$units"),
                 "labelCategoriesProducts": vars._statres("label$categoriesproducts"),
                 "labelCategories": vars._statres("label$categories"),
-                "labelProducts": vars._statres("label$products"),
+                "labelProducts": vars._statres("label$productsgoods"),
+                "labelProductMaps": vars._statres("label$productmaps"),
                 "labelDiscounts": vars._statres("label$discounts"),
                 "labelReasons": vars._statres("label$reasons"),
                 "labelClients": vars._statres("label$clients"),
@@ -44,6 +45,7 @@ export namespace Controller.Setting {
             this.UnitButtonClick = this.createTouchClickEvent("btn-unit", this.unitButtonClick);
             this.CategoryButtonClick = this.createTouchClickEvent("btn-category", this.categoryButtonClick);
             this.ProductButtonClick = this.createTouchClickEvent("btn-product", this.productButtonClick);
+            this.ProductMapButtonClick = this.createTouchClickEvent("btn-productmap", this.productMapButtonClick);
             this.DiscountButtonClick = this.createTouchClickEvent("btn-discount", this.discountButtonClick);
             this.ReasonButtonClick = this.createTouchClickEvent("btn-reason", this.reasonButtonClick);
             this.ClientButtonClick = this.createTouchClickEvent("btn-client", this.clientButtonClick);
@@ -60,6 +62,7 @@ export namespace Controller.Setting {
             this.destroyTouchClickEvent("btn-unit", this.UnitButtonClick);
             this.destroyTouchClickEvent("btn-category", this.CategoryButtonClick);
             this.destroyTouchClickEvent("btn-product", this.ProductButtonClick);
+            this.destroyTouchClickEvent("btn-productmap", this.ProductMapButtonClick);
             this.destroyTouchClickEvent("btn-discount", this.DiscountButtonClick);
             this.destroyTouchClickEvent("btn-reason", this.ReasonButtonClick);
             this.destroyTouchClickEvent("btn-client", this.ClientButtonClick);
@@ -109,6 +112,11 @@ export namespace Controller.Setting {
         public ProductButtonClick: { (e: any): void; };
         private productButtonClick(e) {
             vars._main.OpenController({ urlController: "setting/card/product", backController: this });
+        }
+
+        public ProductMapButtonClick: { (e: any): void; };
+        private productMapButtonClick(e) {
+            vars._main.OpenController({ urlController: "setting/card/productmap", backController: this });
         }
 
         public DiscountButtonClick: { (e: any): void; };

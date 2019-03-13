@@ -19,19 +19,20 @@
                 <input id="editor-view-product-name" type="text" data-length="60" data-bind="value:editModel.name">
                 <label for="editor-view-product-name" data-bind="text:labelName"></label>
             </div>
+            <div id="editor-view-product-category-row" class="input-field col s12 m6 l4 xl3">
+            </div>
         </div>
         <div class="row row-inputs">
             <div class="input-field col s12 m6 l4 xl3">
                 <select id="editor-view-product-type" class="validate" data-bind="value:editModel.type">
                     <option value="0" data-bind="text:labelProduct"></option>
-                    <!--<option value="1" data-bind="text:labelProduction"></option>-->
+                    <option value="1" data-bind="text:labelProduction"></option>
                     <option value="2" data-bind="text:labelService"></option>
                 </select>
                 <label for="editor-view-product-type" data-bind="text:labelType"></label>
             </div>
-            <div id="editor-view-product-category-row" class="input-field col s12 m6 l4 xl3">
-                <!--<select id="editor-view-category-list" data-bind="value:editModel.category.id"></select>
-                <label for="editor-view-category-list" data-bind="text:labelIncludedInCategory"></label>-->
+            <div id="btn-techmap-row" class="input-field col s12 m6 l4 xl3 hide">
+                <a id="btn-techmap" class="btn btncol" data-bind="text:labelTechnologicalMap"></a>
             </div>
         </div>
         <div class="row row-inputs">
@@ -61,14 +62,9 @@
         <div class="row row-inputs">
             <div class="col s12 m4 l4 xl2">
                 <div class="row" style="margin-bottom: 0;">
-                    <div class="col s12 m12 l12 xl12 center-align">
+                    <div id="editor-view-product-addphoto" class="col s12 m12 l12 xl12 center-align ccursor">
                         <img id="editor-view-product-photo" class="card-image" />
                         <input type="file" id="editor-view-image-input" style="display:none" />
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col s12 m12 l12 xl12">
-                        <a id="editor-view-product-addphoto" class="btn btncol" data-bind="text:labelAddPhoto"></a>
                     </div>
                 </div>
             </div>
@@ -86,8 +82,6 @@
 
         <div class="row row-inputs">
             <div  id="editor-view-product-unit-row" class="input-field col s12 m8 l6 xl6">
-                <!--<select id="editor-view-product-unit" class="validate" data-bind="value:editModel.unit"></select>
-                <label for="editor-view-product-unit" data-bind="text:labelUnit"></label>-->
             </div>
         </div>
 
@@ -112,26 +106,6 @@
                 <input id="editor-view-product-sellingprice" type="number" data-bind="value:editModel.sellingprice">
                 <label for="editor-view-product-sellingprice" data-bind="text:labelSellingPrice"></label>
             </div>
-        </div>
-
-        <div id="editor-view-product-composition">
-            <div class="section editor-section">
-                <h5 data-bind="text:labelComposition"></h5>
-            </div>
-
-            <table>
-                <thead>
-                    <tr>
-                        <th class="product-col-name" data-bind="text:labelName"></th>
-                        <th class="product-col-quantity" data-bind="text:labelQuantityShort"></th>
-                        <th class="product-col-unit" data-bind="text:labelUnitShort"></th>
-                        <th class="product-col-sum hide-on-small-only" data-bind="text:labelSum"></th>
-                        <th class="product-col-btn"></th>
-                    </tr>
-                </thead>
-
-                <tbody id="product-composition-rows"></tbody>
-            </table>
         </div>
     </div>
 

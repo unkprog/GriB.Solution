@@ -30,7 +30,7 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                     };
                     Product.prototype.createModel = function () {
                         var model = new kendo.data.ObservableObject({
-                            "Header": vars._statres("label$product"),
+                            "Header": vars._statres("label$productsgoods"),
                             "editModel": {},
                             "isNotLoadInitView": false,
                             "labelSpecifications": vars._statres("label$specifications"),
@@ -57,11 +57,7 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                             "labelCurrency": vars._statres("label$currency"),
                             "labelCostPrice": vars._statres("label$costprice"),
                             "labelSellingPrice": vars._statres("label$sellingprice"),
-                            "labelPrice": vars._statres("label$price"),
-                            "labelSum": vars._statres("label$sum"),
-                            "labelQuantityShort": vars._statres("label$quantityshort"),
-                            "labelUnitShort": vars._statres("label$unitshort"),
-                            "labelAdd": vars._statres("button$label$add")
+                            "labelTechnologicalMap": vars._statres("label$technologicalmap"),
                         });
                         return model;
                     };
@@ -115,9 +111,9 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                     Product.prototype.ViewInit = function (view) {
                         this.imgDialog = view.find("#editor-view-image-input");
                         this.controlPhoto = view.find("#editor-view-product-photo");
-                        this.compositionRows = view.find("#product-composition-rows");
                         this.rightRows = view.find("#product-rigths-rows");
                         this.controlType = view.find('#editor-view-product-type');
+                        this.techMapButton = view.find("#btn-techmap");
                         this.categoryControl = new ctrl.Control.ReferenceFieldControl();
                         this.categoryControl.InitControl(view.find("#editor-view-product-category-row"), "editor-view-product-category", "editModel.category", "editModel.category.name", vars._statres("label$includedincategory"), 'setting/card/category', this.Model);
                         this.unitControl = new ctrl.Control.ReferenceFieldControl();
@@ -148,24 +144,21 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                             this.unitControl.createEvents();
                         if (this.currencyControl)
                             this.currencyControl.createEvents();
+                        this.TechMapButtonClick = this.createTouchClickEvent(this.techMapButton, this.techMapButtonClick);
                         this.AddPhotoButtonClick = this.createTouchClickEvent("editor-view-product-addphoto", this.addPhotoButtonClick);
                         this.Model.bind("change", $.proxy(this.changeModel, this));
                     };
                     Product.prototype.destroyEvents = function () {
-                        this.compositionRows.unbind();
                         this.rightRows.unbind();
                         this.Model.unbind("change");
                         this.destroyTouchClickEvent("editor-view-product-addphoto", this.AddPhotoButtonClick);
+                        this.destroyTouchClickEvent(this.techMapButton, this.TechMapButtonClick);
                         if (this.currencyControl)
                             this.currencyControl.destroyEvents();
                         if (this.unitControl)
                             this.unitControl.destroyEvents();
                         if (this.categoryControl)
                             this.categoryControl.destroyEvents();
-                        if (this.btnAddComposition)
-                            this.destroyTouchClickEvent(this.btnAddComposition, this.addCompositionButtonClick);
-                        if (this.btnRemoveComposition)
-                            this.destroyTouchClickEvent(this.btnRemoveComposition, this.removeCompositionButtonClick);
                         this.imgDialog.unbind();
                         _super.prototype.destroyEvents.call(this);
                     };
@@ -179,19 +172,12 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                         if (e.field === "editModel.type") {
                             var model = this.EditorModel;
                             if (+model.type === 1) {
-                                $("#editor-view-product-composition").show();
+                                $("#btn-techmap-row").removeClass("hide"); //.show();
                             }
                             else {
-                                $("#editor-view-product-composition").hide();
+                                if ($("#btn-techmap-row").hasClass("hide") === false)
+                                    $("#btn-techmap-row").addClass("hide");
                             }
-                        }
-                        else if (e.field.indexOf("editModel.composition[") > -1 && e.field.lastIndexOf("].quantity") > -1) {
-                            var field = e.field;
-                            var sindex = field.replace("editModel.composition[", "").replace("].quantity", "");
-                            var index = +sindex;
-                            var model = this.EditorModel;
-                            model.composition[index].sum = Math.round((model.composition[index].quantity * model.composition[index].product.sellingprice) * 100) / 100;
-                            this.Model.set("editModel", model);
                         }
                     };
                     Product.prototype.ViewResize = function (e) {
@@ -209,85 +195,39 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                         return _super.prototype.ViewShow.call(this, e);
                     };
                     Product.prototype.ViewHide = function (e) {
-                        // $('#editor-view-product-tabs').tabs("destroy");
+                        //$('#editor-view-product-tabs').tabs("destroy");
                         _super.prototype.ViewHide.call(this, e);
                     };
                     Product.prototype.afterLoad = function (responseData) {
                         _super.prototype.afterLoad.call(this, responseData);
-                        this.controlPhoto.css("backgroundImage", "url(" + this.EditorModel.photo + ")");
+                        if (this.EditorModel.photo)
+                            this.controlPhoto.css("backgroundImage", "url(" + this.EditorModel.photo + ")");
                         this.changeModel({ field: "editModel.type" });
-                        this.setupTableComposition();
                         var model = this.EditorModel;
                         var data = model.accesssalepoints;
                         this.setupTableAccess(this.rightRows, data);
                     };
-                    Product.prototype.setupTableComposition = function () {
+                    Product.prototype.techMapButtonClick = function (e) {
                         var self = this;
-                        var model = this.EditorModel;
-                        var data = model.composition;
-                        var html = '';
-                        if (this.btnAddComposition)
-                            this.destroyTouchClickEvent(this.btnAddComposition, this.addCompositionButtonClick);
-                        this.compositionRows.unbind();
-                        if (data && data.length > 0) {
-                            for (var i = 0, icount = (data && data.length ? data.length : 0); i < icount; i++) {
-                                data[i].sum = Math.round((data[i].quantity * data[i].product.sellingprice) * 100) / 100;
-                                html += '<tr data-index="' + i + '">';
-                                html += '<td class="product-col-name" data-bind="text:editModel.composition[' + i + '].product.name"></td>';
-                                html += '<td class="product-col-quantity"><input class="table-cell-input" type="number" data-bind="value:editModel.composition[' + i + '].quantity"/></td>';
-                                html += '<td class="product-col-unit" data-bind="text:editModel.composition[' + i + '].product.unit_name"></td>';
-                                html += '<td class="product-col-sum hide-on-small-only" data-bind="text:editModel.composition[' + i + '].sum"></td>';
-                                html += '<td class="product-col-btn"><a class="product-col-button-delete"><i class="material-icons editor-header">close</i></a></td>';
-                                html += '</tr>';
+                        vars._app.OpenController({
+                            urlController: 'setting/editor/productmapedit', isModal: true, onLoadController: function (controller) {
+                                var ctrlMap = controller;
+                                ctrlMap.Model.set("editModel", self.EditorModel);
+                                ctrlMap.EditorSettings.Save = $.proxy(self.onEditRow, self);
                             }
+                        });
+                    };
+                    Product.prototype.onEditRow = function (model, callback) {
+                        this.Model.set("editModel", model);
+                        if (callback) {
+                            callback(undefined);
                         }
-                        html += '<tr>';
-                        html += '<td><a id="btn-add-composition" class="btn btncol"><span data-bind="text:labelAdd"></span></a></td>';
-                        html += '</tr>';
-                        this.compositionRows.html(html);
-                        self.Model.set("editModel", model);
-                        this.btnAddComposition = this.compositionRows.find("#btn-add-composition");
-                        this.btnRemoveComposition = this.compositionRows.find(".editor-header-button");
-                        this.AddCompositionButtonClick = this.createTouchClickEvent(this.btnAddComposition, this.addCompositionButtonClick);
-                        this.RemoveCompositionButtonClick = this.createTouchClickEvent(this.btnRemoveComposition, this.removeCompositionButtonClick);
-                        kendo.bind(this.compositionRows, this.Model);
                     };
                     Product.prototype.addPhotoButtonClick = function (e) {
                         $("#editor-view-image-input").trigger("click");
                     };
                     Product.prototype.uploudImageClick = function (e) {
                         this.UploadImage(this.imgDialog[0].files);
-                    };
-                    Product.prototype.addCompositionButtonClick = function (e) {
-                        var self = this;
-                        vars._app.OpenController({
-                            urlController: 'setting/card/product', isModal: true, onLoadController: function (controller) {
-                                var ctrlProduct = controller;
-                                ctrlProduct.CardSettings.IsAdd = false;
-                                ctrlProduct.CardSettings.IsEdit = false;
-                                ctrlProduct.CardSettings.IsDelete = false;
-                                ctrlProduct.CardSettings.IsSelect = true;
-                                ctrlProduct.OnSelect = $.proxy(self.selectComposition, self);
-                            }
-                        });
-                    };
-                    Product.prototype.removeCompositionButtonClick = function (e) {
-                        var self = this;
-                        var model = this.EditorModel;
-                        var index = +$(e.currentTarget).parent().parent().data("index");
-                        model.composition.splice(index, 1);
-                        self.Model.set("editModel", model);
-                        self.setupTableComposition();
-                    };
-                    Product.prototype.selectComposition = function (controller) {
-                        var id = controller.getSelectedRowId();
-                        var self = this;
-                        var model = this.EditorModel;
-                        this.Service.GetProductNewComposition(+id, function (responseData) {
-                            model.composition.push(responseData.newcomposition);
-                            self.Model.set("editModel", model);
-                            self.setupTableComposition();
-                        });
                     };
                     Product.prototype.UploadImage = function (files) {
                         var _this = this;
@@ -299,7 +239,8 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                             dataUpload.append("file", files[0]);
                             controller.Service.UploadImage(dataUpload, function (responseData) {
                                 controller.Model.set("editModel.photo", responseData);
-                                _this.controlPhoto.css("backgroundImage", "url(" + controller.EditorModel.photo + ")");
+                                if (_this.EditorModel.photo)
+                                    _this.controlPhoto.css("backgroundImage", "url(" + controller.EditorModel.photo + ")");
                             });
                         }
                     };

@@ -14,6 +14,14 @@ export function createDblTouchClickEvent(elemName: string | JQuery, clickFunc: a
     return result;
 }
 
+export function createContextMenuEvent(elemName: string | JQuery, clickFunc: any, thisObject: any, view?: JQuery): any {
+    var result = $.proxy(clickFunc, thisObject);
+    var elem: JQuery = elemName instanceof $ ? <JQuery>elemName : (view ? view.find("#" + elemName) : $("#" + elemName));
+    for (let i = 0, iCount = elem.length; i < iCount; i++)
+        elem[i].addEventListener("contextmenu", result, false);
+    return result;
+}
+
 export function createClickEvent(elemName: string | JQuery, clickFunc: any, thisObject: any, view?: JQuery): any {
     var result = $.proxy(clickFunc, thisObject);
     var elem: JQuery = elemName instanceof $ ? <JQuery>elemName : (view ? view.find("#" + elemName) : $("#" + elemName));
@@ -38,6 +46,12 @@ export function destroyClickEvent(elemName: string | JQuery, proxyFunc: any, vie
     let elem: JQuery = elemName instanceof $ ? <JQuery>elemName : (view ? view.find("#" + elemName) : $("#" + elemName));
     for (let i = 0, iCount = elem.length; i < iCount; i++)
         elem[i].removeEventListener("click", proxyFunc);
+}
+
+export function destroyContextMenuEvent(elemName: string | JQuery, proxyFunc: any, view?: JQuery): any {
+    let elem: JQuery = elemName instanceof $ ? <JQuery>elemName : (view ? view.find("#" + elemName) : $("#" + elemName));
+    for (let i = 0, iCount = elem.length; i < iCount; i++)
+        elem[i].removeEventListener("contextmenu", proxyFunc);
 }
 
 export function isNullOrEmpty(value: string): boolean {

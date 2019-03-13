@@ -7,9 +7,13 @@
         Field?: string;
         FieldStyle?: string;
         FieldTemplate?: string;
+        FieldEditTemplate?: string;
+        FieldEditStyle?: string;
+        WidthPercent?: number;
     }
 
     export interface ICardColumn extends IBaseColumn {
+       
     }
 
     export interface ICardFilterSettings {
@@ -58,6 +62,7 @@
 
     export interface ITableColumn extends IBaseColumn {
         HeaderGroupName?: string;
+        HeaderColSpan?: number;
         IsSum?: boolean;
         IsNumber?: boolean;
         IsOrder?: boolean;
@@ -68,8 +73,15 @@
         InitView(): JQuery;
         DestroyView();
         TableBody: JQuery;
+        IsScroll: boolean;
         Setup();
         Rows: Interfaces.Model.ITableRowModel[];
         OnDetalize(row: Interfaces.Model.ITableRowModel);
+    }
+
+    export interface IControlEditTable {
+        RowHeaderContextClick: { (e: any): void; };
+        RowContextClick: { (e: any): void; };
+
     }
 }

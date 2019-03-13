@@ -202,10 +202,19 @@ export namespace Control {
             this.rows = rows;
         }
 
-        private tableControl: JQuery;
-        private tableHead: JQuery;
-        private tableBody: JQuery;
-        private tableRows: JQuery;
+        private isScroll: boolean = true;
+        public get IsScroll(): boolean {
+            return this.isScroll;
+        }
+
+        public set IsScroll(isScroll: boolean) {
+            this.isScroll = isScroll;
+        }
+
+        protected tableControl: JQuery;
+        protected tableHead: JQuery;
+        protected tableBody: JQuery;
+        protected tableRows: JQuery;
 
         public get TableBody(): JQuery {
             return this.tableBody;
@@ -213,36 +222,54 @@ export namespace Control {
 
         public InitView(): JQuery {
             this.SortButtonClick = $.proxy(this.sortButtonClick, this);
-            this.RowClick = $.proxy(this.rowClick, this);
-
+            this.RowDoubleClick = $.proxy(this.rowDoubleClick, this);
+         
             let htmlTable: string = '<table class="highlight">';
             htmlTable += '   <thead></thead>';
-            htmlTable += '   <tbody style="overflow-y: scroll;"></tbody>';
+            htmlTable += '   <tbody></tbody>';
             htmlTable += '</table>';
             this.tableControl = $(htmlTable);
             this.tableHead = this.tableControl.find('thead');
             this.tableBody = this.tableControl.find('tbody');
+
+         
             return this.tableControl;
         }
 
         public DestroyView() {
             this.detachSortEvents();
-            if (this.tableRows)
-                utils.destroyDblTouchClickEvent(this.tableRows, this.RowClick, this.tableControl);
+            this.destroyRowsEvents();
+           
         }
 
         public Setup(): void {
             this.detachSortEvents();
             let headerHtml: string = this.getTableHeaderHtml();
             this.tableHead.html(headerHtml);
+            if (this.tableBody) {
+                if (this.IsScroll === true) {
+                    if (this.tableBody.hasClass("scroll-y") === false)
+                        this.tableBody.addClass("scroll-y");
+                }
+                else
+                    this.tableBody.removeClass("scroll-y");
+            }
             this.attachSortEvents();
             this.setupRows();
 
         }
 
-        protected setupRows(): void {
+        protected createRowsEvents() {
+            utils.createDblTouchClickEvent(this.tableRows, this.RowDoubleClick, this, this.tableBody);
+        }
+
+        protected destroyRowsEvents() {
             if (this.tableRows)
-                utils.destroyDblTouchClickEvent(this.tableRows, this.RowClick, this.tableBody);
+                utils.destroyDblTouchClickEvent(this.tableRows, this.RowDoubleClick, this.tableBody);
+        }
+
+        protected setupRows(): void {
+            this.destroyRowsEvents();
 
             this.tableBody.html(this.getTableBodyHtml());
             let valueSum: number;
@@ -251,7 +278,9 @@ export namespace Control {
                 this.tableHead.find('#' + this.sumFieldsInfo.fields[j] + '_sum').html(utils.numberToString(valueSum ? valueSum : 0, 2));
             }
             this.tableRows = this.tableBody.find('tr');
-            utils.createDblTouchClickEvent(this.tableRows, this.RowClick, this, this.tableBody);
+
+            this.createRowsEvents();
+           
         }
 
         protected sumFieldsInfo: any;
@@ -279,6 +308,9 @@ export namespace Control {
                     }
                     html += '"';
                 }
+                if (columns[i].HeaderColSpan) {
+                    html += ' colspan="' + columns[i].HeaderColSpan + '"';
+                }
                 html += '>';
                 html += (columns[i].HeaderTemplate ? columns[i].HeaderTemplate : columns[i].Header);
                 if (columns[i].IsSum && columns[i].IsSum === true) {
@@ -287,12 +319,17 @@ export namespace Control {
                     this.sumFieldsInfo.sumFied[columns[i].Field] = 0;
                 }
                 html += '</th>';
+                //if (columns[i].HeaderColSpan) {
+                //    i = i + (columns[i].HeaderColSpan - 1);
+                //}
             }
-            html += '<th style="width:' + (knSupport.support.browser.chrome === true ? "18" : "17") + 'px;"></th>';
+            if (this.IsScroll === true)
+                html += '<th style="width:' + (knSupport.support.browser.chrome === true ? "17" : "17") + 'px;"></th>';
             html += '</tr>';
 
             return html;
         }
+
 
         protected attachSortEvents(): void {
             let columns: Interfaces.Control.ITableColumn[] = this.Columns;
@@ -370,8 +407,8 @@ export namespace Control {
             return html;
         }
 
-        private RowClick: { (e: any): void; };
-        private rowClick(e) {
+        private RowDoubleClick: { (e: any): void; };
+        private rowDoubleClick(e) {
             if (this.OnDetalize) {
                 let index: number = +e.currentTarget.id.replace('table-row-', '');
                 let row: Interfaces.Model.ITableRowModel = this.Rows[index];
@@ -382,7 +419,7 @@ export namespace Control {
             return false;
         }
 
-
+       
         public OnDetalize: { (row: Interfaces.Model.ITableRowModel): void; };
 
         private SortButtonClick: { (e: any): void; };
@@ -436,4 +473,137 @@ export namespace Control {
         }
     }
 
+
+    export class BaseEditTable extends BaseTable implements Interfaces.Control.IControlEditTable {
+
+        public InitView(): JQuery {
+            let result: JQuery = super.InitView();
+            this.RowHeaderContextClick = $.proxy(this.rowHeaderContextClick, this);
+            this.RowContextClick = $.proxy(this.rowContextClick, this);
+
+            if (this.tableHead) {
+                this.tableHead.addClass("ccursor");
+                utils.createContextMenuEvent(this.tableHead, this.RowHeaderContextClick, this, result);
+            }
+            return result;
+        }
+
+        public DestroyView() {
+            if (this.tableHead)
+                utils.destroyContextMenuEvent(this.tableHead, this.RowHeaderContextClick, this.tableControl);
+            if (!this.rowEditControl) {
+                this.rowEditModel.unbind("change");
+            }
+            super.DestroyView();
+        }
+
+        protected createRowsEvents() {
+            super.createRowsEvents();
+            if (this.tableRows)
+                utils.createContextMenuEvent(this.tableRows, this.RowContextClick, this, this.tableBody);
+        }
+
+        protected destroyRowsEvents() {
+            if (this.tableRows)
+                utils.destroyContextMenuEvent(this.tableRows, this.RowContextClick, this.tableBody);
+            super.destroyRowsEvents();
+        }
+
+        public RowHeaderContextClick: { (e: any): void; };
+        private rowHeaderContextClick(e) {
+            if (this.OnHeaderContextMenu) {
+                this.OnHeaderContextMenu(e);
+            }
+            e.preventDefault();
+            e.stopPropagation();
+            return false;
+        }
+
+
+        public RowContextClick: { (e: any): void; };
+        private rowContextClick(e) {
+            if (this.OnContextMenu) {
+                let index: number = +e.currentTarget.id.replace('table-row-', '');
+                let row: Interfaces.Model.ITableRowModel = this.Rows[index];
+                this.OnContextMenu(e, row);
+            }
+            e.preventDefault();
+            e.stopPropagation();
+            return false;
+        }
+
+        public OnHeaderContextMenu: { (e: any): void; };
+        public OnContextMenu: { (e: any, row: Interfaces.Model.ITableRowModel): void; };
+
+        protected getTableEditRowTemplate(): string {
+            let columns: Interfaces.Control.ITableColumn[] = this.Columns;
+            let html: string = '';
+
+            html += '<tr id="table-row-edit">';
+
+            for (let i = 0, icount = (columns && columns.length ? columns.length : 0); i < icount; i++) {
+                html += '   <td';
+                if (columns[i].FieldEditStyle || columns[i].FieldStyle) {
+                    html += ' class="';
+                    if (columns[i].FieldEditStyle) {
+                        html += columns[i].FieldEditStyle;
+                    }
+                    else if (columns[i].FieldStyle) {
+                        html += columns[i].FieldStyle;
+                    }
+                    html += '"';
+                }
+                html += '>';
+                if (columns[i].FieldEditTemplate)
+                    html += columns[i].FieldEditTemplate;
+                else if (columns[i].FieldTemplate)
+                    html += columns[i].FieldTemplate;
+                else {
+                    html += '#=';
+                    html += columns[i].Field;
+                    html += '#';
+                }
+                html += '</td>';
+            }
+            html += '</tr>';
+
+            return html;
+        }
+
+        protected createEditRowModel(): kendo.data.ObservableObject {
+            let model: kendo.data.ObservableObject = new kendo.data.ObservableObject({
+                "editRowModel": {},
+            });
+            return model;
+        }
+
+
+        private rowEditControl: JQuery;
+        private rowConrol: JQuery;
+        private rowEditModel: kendo.data.ObservableObject;
+        public EditRow(rowModel: Interfaces.Model.ITableRowModel, rowConrol: JQuery) {
+            if (!this.rowEditControl) {
+                let templateRow = vars.getTemplate(this.getTableEditRowTemplate());
+                if (templateRow) {
+                    let html = templateRow(rowModel);
+                    this.rowEditControl = $(html);
+                    this.rowEditModel = new kendo.data.ObservableObject({ "editRowModel": rowModel });
+
+                    kendo.bind(this.rowEditControl, this.rowEditModel);
+                    this.rowEditModel.bind("change", $.proxy(this.changeEditRowModel, this));
+                }
+
+            }
+            else {
+                this.rowEditModel.set("editRowModel", rowModel);
+            }
+            this.rowConrol = rowConrol;
+            rowConrol.replaceWith(this.rowEditControl);
+            //html += templateRow(data[i]);
+        }
+
+        private changeEditRowModel(e: any): void {
+        }
+
+    }
 }
