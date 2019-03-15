@@ -252,8 +252,10 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/s
                             result += positionsArray[i].sum;
                         }
                         resultDiscount = result - ((controller.currentCheck.discount / 100) * result);
+                        this.model.set("checkDiscount", controller.currentCheck.discount + '%' + (controller.currentCheck.discountref && utils.isNullOrEmpty(controller.currentCheck.discountref.name) === false ? ' (' + controller.currentCheck.discountref.name + ')' : ''));
                     }
-                    this.model.set("checkDiscount", controller.currentCheck.discount + '%' + (controller.currentCheck.discountref && utils.isNullOrEmpty(controller.currentCheck.discountref.name) === false ? ' (' + controller.currentCheck.discountref.name + ')' : ''));
+                    else
+                        this.model.set("checkDiscount", '');
                     this.model.set("checkSum", resultDiscount);
                     this.model.set("checkSumNoDiscount", result);
                     return result;
@@ -272,7 +274,7 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/s
                             }
                         }
                     }
-                    controller.Service.CheckNew(controller.terminal.CurrentSalePoint, function (responseData) {
+                    controller.Service.CheckNew(controller.terminal.CurrentSalePoint, controller.terminal.CurrentChange, function (responseData) {
                         if (!controller.openedChecks)
                             controller.openedChecks = [];
                         controller.openedChecks.push(responseData.checknew);

@@ -116,6 +116,7 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
                     if (this.IsModal === true)
                         this._controllersModalStack.Last.View.parent().show();
                     else {
+                        $("#app-btn-menu").removeClass("hide");
                         this._controllersStack.Pop();
                         this._controller = this._controllersStack.Current;
                         this.contentControl.show();
@@ -213,6 +214,8 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
                     var view = $(options.template);
                     isInit = self._controller.ViewInit(view);
                     if (isModal) {
+                        if ($("#app-btn-menu").hasClass("hide") == false)
+                            $("#app-btn-menu").addClass("hide");
                         if (this.IsModal)
                             self._controllersModalStack.Last.View.parent().hide();
                         content = $('<div class="main-view-content-modal"></div>');

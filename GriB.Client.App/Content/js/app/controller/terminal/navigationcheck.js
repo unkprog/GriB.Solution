@@ -252,8 +252,10 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/s
                             result += positionsArray[i].sum;
                         }
                         resultDiscount = result - ((controller.currentCheck.discount / 100) * result);
+                        this.model.set("checkDiscount", controller.currentCheck.discount + '%' + (controller.currentCheck.discountref && utils.isNullOrEmpty(controller.currentCheck.discountref.name) === false ? ' (' + controller.currentCheck.discountref.name + ')' : ''));
                     }
-                    this.model.set("checkDiscount", controller.currentCheck.discount + '%' + (controller.currentCheck.discountref && utils.isNullOrEmpty(controller.currentCheck.discountref.name) === false ? ' (' + controller.currentCheck.discountref.name + ')' : ''));
+                    else
+                        this.model.set("checkDiscount", '');
                     this.model.set("checkSum", resultDiscount);
                     this.model.set("checkSumNoDiscount", result);
                     return result;
@@ -272,7 +274,7 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/s
                             }
                         }
                     }
-                    controller.Service.CheckNew(controller.terminal.CurrentSalePoint, function (responseData) {
+                    controller.Service.CheckNew(controller.terminal.CurrentSalePoint, controller.terminal.CurrentChange, function (responseData) {
                         if (!controller.openedChecks)
                             controller.openedChecks = [];
                         controller.openedChecks.push(responseData.checknew);
@@ -363,22 +365,6 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/s
                     var controller = this;
                     if (controller.currentCheck) {
                         this.Service.AddToCheck(controller.currentCheck.id, product, qunatity, function (responseData) {
-                            //let positionsArray: Interfaces.Model.IPOSCheckPosition[] = (controller.currentCheck.positions ? controller.currentCheck.positions : []);
-                            //let newItem: Interfaces.Model.IPOSCheckPosition = responseData.newposition;
-                            //let isNotFound: boolean = true;
-                            //for (let i = 0, iCount = (positionsArray ? positionsArray.length : 0); i < iCount; i++) {
-                            //    if (newItem.index === positionsArray[i].index) {
-                            //        if (newItem.quantity <= 0)
-                            //            positionsArray.splice(i, 1);
-                            //        else
-                            //            positionsArray[i] = newItem;
-                            //        isNotFound = false;
-                            //        break;
-                            //    }
-                            //}
-                            //if (isNotFound === true)
-                            //    positionsArray.push(newItem);
-                            //this.drawCheckPositions();
                             controller.updateResponsePositions(responseData);
                         });
                     }
@@ -413,10 +399,6 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/s
                 NavigationCheck.prototype.applyQuantity = function (controller) {
                     var self = this;
                     if (this.currentCheck) {
-                        //this.paymentData.paymentOption = controller.TypeWithOut;
-                        //this.paymentData.paymentSum = controller.TotalSum; //(this.paymentData.paymentType === 3 ? 0 : controller.TotalSum);
-                        //this.paymentData.comment = controller.Comment;
-                        //this.closeCheck(this.paymentData);
                         var positionsArray = (self.currentCheck.positions ? self.currentCheck.positions : []);
                         if (self.editRowQuantity > -1)
                             self._EditPosition(positionsArray[self.editRowQuantity].product.id, controller.ReceivedSum);

@@ -72,7 +72,7 @@ define(["require", "exports", "app/common/utils", "app/services/posterminalservi
                         item = items[i];
                         html += '<a id="saleproduct_' + item.id + '" class="pos-item-sale ' + (item.iscategory === true ? 'category' : '') + '" data-name="' + item.name + '">';
                         html += '   <div class="col s6 m6 l4 xl3">';
-                        html += '       <div class="card pos-item-card">';
+                        html += '       <div class="card pos-item-card hoverable">';
                         html += '           <div class="pos-item-card-image" style="background-image:url(' + item.photo + ')">';
                         html += '             <div class="card-content pos-item-card-content center">';
                         html += '                   <div class="pos-item-card-description">';

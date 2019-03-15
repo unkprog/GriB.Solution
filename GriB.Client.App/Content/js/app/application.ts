@@ -127,7 +127,7 @@ export module App {
                 if (this.IsModal === true)
                     this._controllersModalStack.Last.View.parent().show();
                 else {
-
+                    $("#app-btn-menu").removeClass("hide");
                     this._controllersStack.Pop();
                     this._controller = this._controllersStack.Current;
                     this.contentControl.show();
@@ -254,6 +254,8 @@ export module App {
                
 
                 if (isModal) {
+                    if ($("#app-btn-menu").hasClass("hide") == false)
+                        $("#app-btn-menu").addClass("hide");
                     if (this.IsModal)
                         self._controllersModalStack.Last.View.parent().hide();
                     content = $('<div class="main-view-content-modal"></div>');

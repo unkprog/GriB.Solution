@@ -20,8 +20,41 @@ namespace GriB.Client.App.Controllers
             {
                 Principal principal = (Principal)HttpContext.Current.User;
 
-            // principal.Data.User.id
-            return Request.CreateResponse(HttpStatusCode.OK, new {employee = AccountController.AccountData(query, principal) });
+                // principal.Data.User.id
+                return Request.CreateResponse(HttpStatusCode.OK, new { employee = AccountController.AccountData(query, principal) });
+            });
+        }
+
+        [HttpGet]
+        [ActionName("change")]
+        public HttpResponseMessage GetChange(int salepoint)
+        {
+            return TryCatchResponseQuery((query) =>
+            {
+                return Request.CreateResponse(HttpStatusCode.OK, new { change = Change.GetOpen(query, salepoint) });
+            });
+        }
+
+        [HttpGet]
+        [ActionName("change_new")]
+        public HttpResponseMessage GetChangeNew(int salepoint)
+        {
+            return TryCatchResponseQuery((query) =>
+            {
+                Principal principal = (Principal)HttpContext.Current.User;
+                return Request.CreateResponse(HttpStatusCode.OK, new { change = Change.New(query, principal.Data.User.id, salepoint) });
+            });
+        }
+
+        [HttpGet]
+        [ActionName("change_close")]
+        public HttpResponseMessage GetChangeClose(int id)
+        {
+            return TryCatchResponseQuery((query) =>
+            {
+                Principal principal = (Principal)HttpContext.Current.User;
+                Change.Close(query, principal.Data.User.id, id);
+                return Request.CreateResponse(HttpStatusCode.OK, "Ok");
             });
         }
 
@@ -40,12 +73,12 @@ namespace GriB.Client.App.Controllers
 
         [HttpGet]
         [ActionName("check_new")]
-        public HttpResponseMessage GetCheckNew(int salepoint)
+        public HttpResponseMessage GetCheckNew(int salepoint, int change)
         {
             return TryCatchResponseQuery((query) =>
             {
                 Principal principal = (Principal)HttpContext.Current.User;
-                return Request.CreateResponse(HttpStatusCode.OK, new { checknew = Check.NewCheck(query, principal.Data.User.id, salepoint, 0) });
+                return Request.CreateResponse(HttpStatusCode.OK, new { checknew = Check.NewCheck(query, principal.Data.User.id, salepoint, change) });
             });
         }
 

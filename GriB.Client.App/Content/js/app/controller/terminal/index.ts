@@ -12,7 +12,7 @@ export namespace Controller.Terminal {
         }
 
         private service: svc.Services.POSTerminalService;
-        protected get Service(): svc.Services.POSTerminalService {
+        public get Service(): svc.Services.POSTerminalService {
             if (!this.service)
                 this.service = new svc.Services.POSTerminalService();
             return this.service;
@@ -41,9 +41,13 @@ export namespace Controller.Terminal {
 
         public get CurrentSalePoint(): number {
             let salePoint: Interfaces.Model.ISalepoint = this.Model.get("POSData.CurrentSalePoint");
-            return salePoint.id;
+            return (salePoint && salePoint.id ? salePoint.id : 0);
         }
 
+        public get CurrentChange(): number {
+            let change: Interfaces.Model.IChange = this.Model.get("POSData.CurrentChange");
+            return (change && change.id? change.id : 0);
+        }
 
         private controlProgress: JQuery;
         private controlMain: JQuery;
@@ -83,7 +87,7 @@ export namespace Controller.Terminal {
         }
 
         private checkSettings(): boolean {
-            let controller = this;
+            //let controller = this;
             let result: boolean = false;
             if (vars._identity.employee && vars._identity.employee.accesssalepoints && vars._identity.employee.accesssalepoints.length > 0) {
                 if (this.existsAccessSalepoint() === false) {

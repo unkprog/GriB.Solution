@@ -31,11 +31,20 @@ define(["require", "exports", "app/common/baseservice"], function (require, expo
             POSTerminalService.prototype.Enter = function (Callback) {
                 this.GetApi({ Action: "/enter", Callback: Callback });
             };
+            POSTerminalService.prototype.Change = function (salepoint, Callback) {
+                this.GetApi({ Action: "/change", RequestData: { salepoint: salepoint }, Callback: Callback });
+            };
+            POSTerminalService.prototype.ChangeNew = function (salepoint, Callback) {
+                this.GetApi({ Action: "/change_new", RequestData: { salepoint: salepoint }, Callback: Callback });
+            };
+            POSTerminalService.prototype.ChangeClose = function (id, Callback) {
+                this.GetApi({ Action: "/change_close", RequestData: { id: id }, Callback: Callback });
+            };
             POSTerminalService.prototype.GetSaleProducts = function (posparams, Callback) {
                 this.GetApi({ Action: "/sale_products", RequestData: posparams, Callback: Callback });
             };
-            POSTerminalService.prototype.CheckNew = function (salepoint, Callback) {
-                this.GetApi({ Action: "/check_new", RequestData: { salepoint: salepoint }, Callback: Callback });
+            POSTerminalService.prototype.CheckNew = function (salepoint, change, Callback) {
+                this.GetApi({ Action: "/check_new", RequestData: { salepoint: salepoint, change: change }, Callback: Callback });
             };
             POSTerminalService.prototype.CheckDelete = function (check, Callback) {
                 this.GetApi({ Action: "/check_delete", RequestData: { check: check }, Callback: Callback });

@@ -73,6 +73,7 @@ export namespace Controller.Terminal {
                         CurrentSalePoint = salePoints[i].salepoint;
                         vars._identity.employee.defaultsalepoint = CurrentSalePoint;
                         this.terminal.Model.set("POSData.CurrentSalePoint", CurrentSalePoint);
+                        this.checkChange();
                     }
                 }
             }
@@ -94,6 +95,7 @@ export namespace Controller.Terminal {
                     if (+id === salePoints[i].salepoint.id) {
                         this.terminal.Model.set("POSData.CurrentSalePoint", salePoints[i].salepoint);
                         this.terminal.Reset();
+                        this.checkChange();
                     }
                 }
             }
@@ -101,5 +103,40 @@ export namespace Controller.Terminal {
             e.stopPropagation();
             return false;
         }
+
+        private checkChange(): void {
+            let self = this;
+            if (self.terminal.CurrentChange == 0) {
+                self.terminal.Service.Change(self.terminal.CurrentSalePoint, (responseData) => {
+                    let change: Interfaces.Model.IChange = (responseData as Interfaces.Model.IChange);
+                    if (change && change.id && change.id !== 0)
+                        this.terminal.Model.set("POSData.CurrentChange", change);
+                    else {
+                        vars._app.OpenController({
+                            urlController: 'terminal/changedialog', isModal: true, onLoadController: (controller: Interfaces.IController) => {
+                                let ctrChangeDialog: Interfaces.IControllerChangeDialog = controller as Interfaces.IControllerChangeDialog;
+                                ctrChangeDialog.Model.set("HeaderQuery", vars._statres("label$query$opennewchange"));
+                                ctrChangeDialog.OnResult = $.proxy(self.changeDialogResult, self);
+                            }
+                        });
+                    }
+                });
+            }
+        }
+
+
+        private changeDialogResult(controller: Interfaces.IControllerChangeDialog) {
+            let self = this;
+            if (controller.Result === 0) {
+                self.terminal.Service.ChangeNew(self.terminal.CurrentSalePoint, (responseData) => {
+                    let change: Interfaces.Model.IChange = (responseData as Interfaces.Model.IChange);
+                    if (change && change.id && change.id !== 0)
+                        this.terminal.Model.set("POSData.CurrentChange", change);
+                    else
+                        vars._app.ShowMessage(vars._statres("label$openingchange"), vars._statres("msg$error$openingchange"), () => {});
+                });
+            }
+        }
+
     }
 }

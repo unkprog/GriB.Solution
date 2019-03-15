@@ -51,6 +51,9 @@
         schedule: string;
     }
 
+    export interface IChange extends IReferenceModel, IEditorModel {
+    }
+
     export interface ISalePointAccessModel {
         salepoint: ISalepoint;
         isaccess: boolean;

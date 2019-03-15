@@ -87,10 +87,12 @@
         ShowLoading(): void;
         HideLoading(): void;
 
+        Service: Interfaces.IPOSTerminalService;
         Model: kendo.data.ObservableObject;
         Cheks: ITerminalCheks;
         View: JQuery;
         CurrentSalePoint: number;
+        CurrentChange: number;
         ControlChecks: JQuery;
 
         Reset(): void;
@@ -125,6 +127,11 @@
         IsRequireComment: boolean;
         Comment: string;
         OnApply(controller: IControllerCheckComment): void;
+    }
+
+    export interface IControllerChangeDialog extends IControllerEditor {
+        Result: number;
+        OnResult(controller: IControllerChangeDialog): void;
     }
 
     export interface IControllerReportWithFilter extends IControllerEditor {

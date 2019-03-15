@@ -1,7 +1,7 @@
 ﻿import base = require("app/common/baseservice");
 
 export namespace Services {
-    export class POSTerminalService extends base.Services.BaseService {
+    export class POSTerminalService extends base.Services.BaseService implements Interfaces.IPOSTerminalService {
 
         constructor() {
             super();
@@ -15,12 +15,24 @@ export namespace Services {
             this.GetApi({ Action: "/enter", Callback: Callback });
         }
 
+        public Change(salepoint: number, Callback: (responseData: any) => void) {
+            this.GetApi({ Action: "/change", RequestData: { salepoint: salepoint }, Callback: Callback });
+        }
+
+        public ChangeNew(salepoint: number, Callback: (responseData: any) => void) {
+            this.GetApi({ Action: "/change_new", RequestData: { salepoint: salepoint }, Callback: Callback });
+        }
+
+        public ChangeClose(id: number, Callback: (responseData: any) => void) {
+            this.GetApi({ Action: "/change_close", RequestData: { id: id }, Callback: Callback });
+        }
+
         public GetSaleProducts(posparams: Interfaces.Model.IPosParamsSelect, Callback: (responseData: any) => void) {
             this.GetApi({ Action: "/sale_products", RequestData: posparams, Callback: Callback });
         }
 
-        public CheckNew(salepoint: number, Callback: (responseData: any) => void) {
-            this.GetApi({ Action: "/check_new", RequestData: { salepoint: salepoint }, Callback: Callback });
+        public CheckNew(salepoint: number, change: number, Callback: (responseData: any) => void) {
+            this.GetApi({ Action: "/check_new", RequestData: { salepoint: salepoint, change: change}, Callback: Callback });
         }
 
         public CheckDelete(check: number, Callback: (responseData: any) => void) {

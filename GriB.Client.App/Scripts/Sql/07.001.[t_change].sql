@@ -12,6 +12,7 @@ begin
 	[ud]       [datetime]      not null default (getdate()),
 	[uu]       [int]           not null default (0),
 	[salepoint][int]           not null default (0),
+	[options]  [int]           not null default (0),
 	primary key clustered ([id])
   )
 end
@@ -23,6 +24,6 @@ if exists(select * from [sys].[indexes] where [name] = 'change_idx_1')
 
 go
 
-create nonclustered index [change_idx_1] ON [t_change] ([cu], [salepoint], [id])
+create nonclustered index [change_idx_1] ON [t_change] ([salepoint], [options], [id])
 
 go

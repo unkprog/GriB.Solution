@@ -54,7 +54,15 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
                 Object.defineProperty(Index.prototype, "CurrentSalePoint", {
                     get: function () {
                         var salePoint = this.Model.get("POSData.CurrentSalePoint");
-                        return salePoint.id;
+                        return (salePoint && salePoint.id ? salePoint.id : 0);
+                    },
+                    enumerable: true,
+                    configurable: true
+                });
+                Object.defineProperty(Index.prototype, "CurrentChange", {
+                    get: function () {
+                        var change = this.Model.get("POSData.CurrentChange");
+                        return (change && change.id ? change.id : 0);
                     },
                     enumerable: true,
                     configurable: true
@@ -90,7 +98,7 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
                     this.ViewResize({});
                 };
                 Index.prototype.checkSettings = function () {
-                    var controller = this;
+                    //let controller = this;
                     var result = false;
                     if (vars._identity.employee && vars._identity.employee.accesssalepoints && vars._identity.employee.accesssalepoints.length > 0) {
                         if (this.existsAccessSalepoint() === false) {

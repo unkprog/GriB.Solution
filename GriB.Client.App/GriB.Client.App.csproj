@@ -230,6 +230,7 @@
     <Content Include="Content\view\setting\editor\salepoint.html" />
     <Content Include="Content\view\setting\editor\organization.html" />
     <Content Include="Content\view\setting\index.html" />
+    <Content Include="Content\view\terminal\changedialog.html" />
     <Content Include="Content\view\terminal\paymentwithout.html" />
     <Content Include="Content\view\terminal\checkcomment.html" />
     <Content Include="Content\view\terminal\paymentnoncash.html" />
@@ -317,6 +318,9 @@
     <Content Include="Scripts\Query\Editor\Unit\[del].sql" />
     <Content Include="Scripts\Query\Editor\Unit\[get].sql" />
     <Content Include="Scripts\Query\Editor\Unit\[set].sql" />
+    <Content Include="Scripts\Query\POSTerminal\Change\[close].sql" />
+    <Content Include="Scripts\Query\POSTerminal\Change\[getopen].sql" />
+    <Content Include="Scripts\Query\POSTerminal\Change\[new].sql" />
     <Content Include="Scripts\Query\POSTerminal\Check\Position\[set].sql" />
     <Content Include="Scripts\Query\POSTerminal\Check\Position\[del].sql" />
     <Content Include="Scripts\Query\POSTerminal\Check\Position\[add].sql" />
@@ -382,7 +386,7 @@
     <Compile Include="Handlers\AuthorizationHeaderHandler.cs" />
     <Compile Include="Managers\AppSettings.cs" />
     <Compile Include="Managers\AuthUser.cs" />
-    <Compile Include="Managers\Editors\Change.cs" />
+    <Compile Include="Managers\POSTerminal\Change.cs" />
     <Compile Include="Managers\Editors\Reason.cs" />
     <Compile Include="Managers\Editors\Document.cs" />
     <Compile Include="Managers\Editors\Client.cs" />
@@ -405,7 +409,7 @@
     <Compile Include="Managers\Reports\Stocks.cs" />
     <Compile Include="Models\Editor\CostIncome.cs" />
     <Compile Include="Models\Editor\Category.cs" />
-    <Compile Include="Models\Editor\Change.cs" />
+    <Compile Include="Models\POSTerminal\Change.cs" />
     <Compile Include="Models\Editor\Client.cs" />
     <Compile Include="Models\Editor\Reason.cs" />
     <Compile Include="Models\Editor\Contractor.cs" />
@@ -589,6 +593,7 @@
     <TypeScriptCompile Include="Content\js\app\controller\setting\editor\salepoint.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\setting\editor\organization.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\setting\index.ts" />
+    <TypeScriptCompile Include="Content\js\app\controller\terminal\changedialog.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\terminal\paymentnoncash.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\terminal\payment.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\terminal\checkcomment.ts" />

@@ -17,4 +17,10 @@
         GetApi(options: IServiceCallOptions): void;
         PostApi(options: IServiceCallOptions): void;
     }
+
+    export interface IPOSTerminalService extends IService {
+        Change: { (salepoint: number, Callback: (responseData: any) => void) };
+        ChangeNew: { (salepoint: number, Callback: (responseData: any) => void) };
+        ChangeClose: { (id: number, Callback: (responseData: any) => void) };
+    }
 }

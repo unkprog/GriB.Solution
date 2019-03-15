@@ -57,6 +57,7 @@ define(["require", "exports", "app/common/variables", "app/common/utils"], funct
                                 CurrentSalePoint = salePoints[i].salepoint;
                                 vars._identity.employee.defaultsalepoint = CurrentSalePoint;
                                 this.terminal.Model.set("POSData.CurrentSalePoint", CurrentSalePoint);
+                                this.checkChange();
                             }
                         }
                     }
@@ -73,12 +74,46 @@ define(["require", "exports", "app/common/variables", "app/common/utils"], funct
                             if (+id === salePoints[i].salepoint.id) {
                                 this.terminal.Model.set("POSData.CurrentSalePoint", salePoints[i].salepoint);
                                 this.terminal.Reset();
+                                this.checkChange();
                             }
                         }
                     }
                     e.preventDefault();
                     e.stopPropagation();
                     return false;
+                };
+                NavigationBar.prototype.checkChange = function () {
+                    var _this = this;
+                    var self = this;
+                    if (self.terminal.CurrentChange == 0) {
+                        self.terminal.Service.Change(self.terminal.CurrentSalePoint, function (responseData) {
+                            var change = responseData;
+                            if (change && change.id && change.id !== 0)
+                                _this.terminal.Model.set("POSData.CurrentChange", change);
+                            else {
+                                vars._app.OpenController({
+                                    urlController: 'terminal/changedialog', isModal: true, onLoadController: function (controller) {
+                                        var ctrChangeDialog = controller;
+                                        ctrChangeDialog.Model.set("HeaderQuery", vars._statres("label$query$opennewchange"));
+                                        ctrChangeDialog.OnResult = $.proxy(self.changeDialogResult, self);
+                                    }
+                                });
+                            }
+                        });
+                    }
+                };
+                NavigationBar.prototype.changeDialogResult = function (controller) {
+                    var _this = this;
+                    var self = this;
+                    if (controller.Result === 0) {
+                        self.terminal.Service.ChangeNew(self.terminal.CurrentSalePoint, function (responseData) {
+                            var change = responseData;
+                            if (change && change.id && change.id !== 0)
+                                _this.terminal.Model.set("POSData.CurrentChange", change);
+                            else
+                                vars._app.ShowMessage(vars._statres("label$openingchange"), vars._statres("msg$error$openingchange"), function () { });
+                        });
+                    }
                 };
                 return NavigationBar;
             }());
