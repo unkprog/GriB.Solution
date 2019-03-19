@@ -40,6 +40,9 @@ define(["require", "exports", "app/common/baseservice"], function (require, expo
             POSTerminalService.prototype.ChangeClose = function (id, Callback) {
                 this.GetApi({ Action: "/change_close", RequestData: { id: id }, Callback: Callback });
             };
+            POSTerminalService.prototype.ChangeSumInCash = function (salepoint, Callback) {
+                this.GetApi({ Action: "/change_sumincash", RequestData: { salepoint: salepoint }, Callback: Callback });
+            };
             POSTerminalService.prototype.GetSaleProducts = function (posparams, Callback) {
                 this.GetApi({ Action: "/sale_products", RequestData: posparams, Callback: Callback });
             };
@@ -49,8 +52,8 @@ define(["require", "exports", "app/common/baseservice"], function (require, expo
             POSTerminalService.prototype.CheckDelete = function (check, Callback) {
                 this.GetApi({ Action: "/check_delete", RequestData: { check: check }, Callback: Callback });
             };
-            POSTerminalService.prototype.CheckOpened = function (salepoint, Callback) {
-                this.GetApi({ Action: "/check_opened", RequestData: { salepoint: salepoint }, Callback: Callback });
+            POSTerminalService.prototype.CheckOpened = function (salepoint, chagne, Callback) {
+                this.GetApi({ Action: "/check_opened", RequestData: { salepoint: salepoint, chagne: chagne }, Callback: Callback });
             };
             POSTerminalService.prototype.CheckSetClient = function (check, client, Callback) {
                 this.PostApi({ Action: "/check_setclient", RequestData: JSON.stringify({ check: check, client: client }), Callback: Callback });

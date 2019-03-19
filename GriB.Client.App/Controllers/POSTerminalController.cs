@@ -1,7 +1,11 @@
-﻿using GriB.Client.App.Managers.POSTerminal;
+﻿using GriB.Client.App.Managers;
+using GriB.Client.App.Managers.POSTerminal;
 using GriB.Client.App.Models.Editor;
 using GriB.Client.App.Models.POSTerminal;
+using GriB.Client.App.Models.Report;
 using GriB.Common.Models.Security;
+using GriB.Common.Sql;
+using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
@@ -19,10 +23,16 @@ namespace GriB.Client.App.Controllers
             return TryCatchResponseQuery((query) =>
             {
                 Principal principal = (Principal)HttpContext.Current.User;
-
                 // principal.Data.User.id
                 return Request.CreateResponse(HttpStatusCode.OK, new { employee = AccountController.AccountData(query, principal) });
             });
+        }
+
+        private double SumInCash(Query query, int salepoint)
+        {
+            string date = DateTime.Now.ToString(Constants.dateFormatWitTime);
+            ReportCashRow cashRow = Managers.Reports.Cash.GetCashToPOS(query, new ReportBaseFilter() { datefrom = date, dateto = "30.12.1899", salepoint = new salepoint() { id = salepoint } });
+            return cashRow == null ? 0 : cashRow.sumEnd;
         }
 
         [HttpGet]
@@ -34,6 +44,7 @@ namespace GriB.Client.App.Controllers
                 return Request.CreateResponse(HttpStatusCode.OK, new { change = Change.GetOpen(query, salepoint) });
             });
         }
+
 
         [HttpGet]
         [ActionName("change_new")]
@@ -55,6 +66,17 @@ namespace GriB.Client.App.Controllers
                 Principal principal = (Principal)HttpContext.Current.User;
                 Change.Close(query, principal.Data.User.id, id);
                 return Request.CreateResponse(HttpStatusCode.OK, "Ok");
+            });
+        }
+
+        [HttpGet]
+        [ActionName("change_sumincash")]
+        public HttpResponseMessage GetChangeSumInCash(int salepoint)
+        {
+            return TryCatchResponseQuery((query) =>
+            {
+                Principal principal = (Principal)HttpContext.Current.User;
+                return Request.CreateResponse(HttpStatusCode.OK, new { cashSum = SumInCash(query, salepoint) });
             });
         }
 
@@ -97,12 +119,12 @@ namespace GriB.Client.App.Controllers
 
         [HttpGet]
         [ActionName("check_opened")]
-        public HttpResponseMessage GetCheckOpened(int salepoint)
+        public HttpResponseMessage GetCheckOpened(int salepoint, int chagne)
         {
             return TryCatchResponseQuery((query) =>
             {
                 Principal principal = (Principal)HttpContext.Current.User;
-                List<check> checks = Check.NewAll(query, principal.Data.User.id, salepoint, 0);
+                List<check> checks = Check.NewAll(query, principal.Data.User.id, salepoint, chagne);
                 foreach (var item in checks)
                 {
                     Check.GetPositions(query, item);

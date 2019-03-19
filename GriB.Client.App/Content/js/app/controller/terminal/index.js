@@ -46,8 +46,14 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
                     return new kendo.data.ObservableObject({
                         "Header": " ",
                         "POSData": {
-                            "CurrentSalePoint": { "name": "" }
+                            "CurrentSalePoint": { id: 0, "name": "" },
+                            "CurrentChange": { id: 0 },
+                            "MoneyInCash": 0,
                         },
+                        "labelInCash": vars._statres("label$incash"),
+                        "labelHistorySales": vars._statres("label$historysales"),
+                        "labelReportByChange": vars._statres("label$report$bychange"),
+                        "labelCloseChange": vars._statres("label$closechange"),
                         "labelPayment": vars._statres("label$payment"),
                     });
                 };
@@ -188,6 +194,92 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
                         this.navProduct.Reset();
                     if (this.navCheck)
                         this.navCheck.Reset();
+                };
+                Index.prototype.GetChange = function (callback) {
+                    var _this = this;
+                    var self = this;
+                    if (self.checkChangeCallBack) {
+                        if (callback)
+                            callback();
+                        return;
+                    }
+                    self.checkChangeCallBack = callback;
+                    self.Service.Change(self.CurrentSalePoint, function (responseData) {
+                        var change = responseData.change;
+                        if (change && change.id && change.id !== 0) {
+                            _this.Model.set("POSData.CurrentChange", change);
+                            self.callCheckChangeCallBack();
+                        }
+                        else {
+                            vars._app.OpenController({
+                                urlController: 'terminal/changedialog', isModal: true, onLoadController: function (controller) {
+                                    var ctrChangeDialog = controller;
+                                    ctrChangeDialog.Model.set("HeaderQuery", vars._statres("label$query$opennewchange"));
+                                    ctrChangeDialog.OnResult = $.proxy(self.changeDialogResult, self);
+                                }
+                            });
+                        }
+                    });
+                };
+                Index.prototype.changeDialogResult = function (controller) {
+                    var self = this;
+                    if (controller.Result === 0) {
+                        self.Service.ChangeNew(self.CurrentSalePoint, function (responseData) {
+                            var change = responseData.change;
+                            if (change && change.id && change.id !== 0) {
+                                self.Model.set("POSData.CurrentChange", change);
+                                self.callCheckChangeCallBack();
+                            }
+                            else
+                                vars._app.ShowMessage(vars._statres("label$openingchange"), vars._statres("msg$error$openingchange"), function () { });
+                        });
+                    }
+                    else {
+                        self.Model.set("POSData.CurrentChange", { id: 0 });
+                        self.checkChangeCallBack = undefined;
+                    }
+                };
+                Index.prototype.CheckChange = function (callback) {
+                    var self = this;
+                    if (self.CurrentChange == 0) {
+                        this.GetChange(callback);
+                    }
+                    else if (callback)
+                        callback();
+                };
+                Index.prototype.callCheckChangeCallBack = function () {
+                    if (this.checkChangeCallBack)
+                        this.checkChangeCallBack();
+                    this.checkChangeCallBack = undefined;
+                };
+                Index.prototype.CloseChange = function () {
+                    var self = this;
+                    if (self.CurrentChange == 0) {
+                        M.toast({ html: vars._statres("label$change$close") });
+                    }
+                    else {
+                        vars._app.OpenController({
+                            urlController: 'terminal/changedialog', isModal: true, onLoadController: function (controller) {
+                                var ctrChangeDialog = controller;
+                                ctrChangeDialog.Model.set("HeaderQuery", vars._statres("label$query$closechange"));
+                                ctrChangeDialog.OnResult = $.proxy(self.changeClodeDialogResult, self);
+                            }
+                        });
+                    }
+                };
+                Index.prototype.changeClodeDialogResult = function (controller) {
+                    var self = this;
+                    if (controller.Result === 0) {
+                        self.Service.ChangeClose(self.CurrentChange, function (responseData) {
+                            self.Model.set("POSData.CurrentChange", { id: 0 });
+                        });
+                    }
+                };
+                Index.prototype.UpdateSumInCash = function () {
+                    var self = this;
+                    self.Service.ChangeSumInCash(self.CurrentSalePoint, function (responseData) {
+                        self.Model.set("POSData.MoneyInCash", responseData.cashSum);
+                    });
                 };
                 return Index;
             }(base.Controller.Base));

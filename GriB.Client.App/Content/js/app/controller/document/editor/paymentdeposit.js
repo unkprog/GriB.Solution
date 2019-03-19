@@ -23,7 +23,9 @@ define(["require", "exports", "app/controller/document/editor/paymentbase", "app
                 var PaymentDeposit = /** @class */ (function (_super) {
                     __extends(PaymentDeposit, _super);
                     function PaymentDeposit() {
-                        return _super.call(this) || this;
+                        var _this = _super.call(this) || this;
+                        _this.Model.set("Header", vars._statres("label$depositmoney"));
+                        return _this;
                     }
                     Object.defineProperty(PaymentDeposit.prototype, "EditIdName", {
                         get: function () {

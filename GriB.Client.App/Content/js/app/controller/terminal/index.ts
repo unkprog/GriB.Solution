@@ -33,8 +33,14 @@ export namespace Controller.Terminal {
             return new kendo.data.ObservableObject({
                 "Header": " ",
                 "POSData": {
-                    "CurrentSalePoint": { "name" : "" }
+                    "CurrentSalePoint": { id: 0, "name": "" },
+                    "CurrentChange": { id: 0 },
+                    "MoneyInCash": 0,
                 },
+                "labelInCash": vars._statres("label$incash"),
+                "labelHistorySales": vars._statres("label$historysales"),
+                "labelReportByChange": vars._statres("label$report$bychange"),
+                "labelCloseChange": vars._statres("label$closechange"),
                 "labelPayment": vars._statres("label$payment"),
             });
         }
@@ -174,7 +180,98 @@ export namespace Controller.Terminal {
             if (this.navProduct) this.navProduct.Reset();
             if (this.navCheck) this.navCheck.Reset();
         }
-        
+
+        private checkChangeCallBack: { (): void; }
+        public GetChange(callback: () => void): void {
+            let self = this;
+            if (self.checkChangeCallBack) {
+                if (callback) callback();
+                return;
+            }
+            self.checkChangeCallBack = callback;
+            self.Service.Change(self.CurrentSalePoint, (responseData) => {
+                let change: Interfaces.Model.IChange = (responseData.change as Interfaces.Model.IChange);
+                if (change && change.id && change.id !== 0) {
+                    this.Model.set("POSData.CurrentChange", change);
+                    self.callCheckChangeCallBack();
+                }
+                else {
+                    vars._app.OpenController({
+                        urlController: 'terminal/changedialog', isModal: true, onLoadController: (controller: Interfaces.IController) => {
+                            let ctrChangeDialog: Interfaces.IControllerChangeDialog = controller as Interfaces.IControllerChangeDialog;
+                            ctrChangeDialog.Model.set("HeaderQuery", vars._statres("label$query$opennewchange"));
+                            ctrChangeDialog.OnResult = $.proxy(self.changeDialogResult, self);
+                        }
+                    });
+                }
+            });
+        }
+
+        private changeDialogResult(controller: Interfaces.IControllerChangeDialog) {
+            let self = this;
+            if (controller.Result === 0) {
+                self.Service.ChangeNew(self.CurrentSalePoint, (responseData) => {
+                    let change: Interfaces.Model.IChange = (responseData.change as Interfaces.Model.IChange);
+                    if (change && change.id && change.id !== 0) {
+                        self.Model.set("POSData.CurrentChange", change);
+                        self.callCheckChangeCallBack();
+                    }
+                    else
+                        vars._app.ShowMessage(vars._statres("label$openingchange"), vars._statres("msg$error$openingchange"), () => { });
+                });
+            }
+            else {
+                self.Model.set("POSData.CurrentChange", { id: 0 });
+                self.checkChangeCallBack = undefined;
+            }
+        }
+
+        public CheckChange(callback: () => void): void {
+            let self = this;
+            if (self.CurrentChange == 0) {
+                this.GetChange(callback);
+            }
+            else if (callback) callback();
+        }
+
+        private callCheckChangeCallBack() {
+            if (this.checkChangeCallBack)
+                this.checkChangeCallBack();
+            this.checkChangeCallBack = undefined;
+        }
+
+        public CloseChange(): void {
+            let self = this;
+            if (self.CurrentChange == 0) {
+                M.toast({ html: vars._statres("label$change$close") });
+            }
+            else {
+                vars._app.OpenController({
+                    urlController: 'terminal/changedialog', isModal: true, onLoadController: (controller: Interfaces.IController) => {
+                        let ctrChangeDialog: Interfaces.IControllerChangeDialog = controller as Interfaces.IControllerChangeDialog;
+                        ctrChangeDialog.Model.set("HeaderQuery", vars._statres("label$query$closechange"));
+                        ctrChangeDialog.OnResult = $.proxy(self.changeClodeDialogResult, self);
+                    }
+                });
+            }
+        }
+
+        private changeClodeDialogResult(controller: Interfaces.IControllerChangeDialog) {
+            let self = this;
+            if (controller.Result === 0) {
+                self.Service.ChangeClose(self.CurrentChange, (responseData) => {
+                    self.Model.set("POSData.CurrentChange", { id: 0 });
+                });
+            }
+        }
+
+        public UpdateSumInCash(): void {
+            let self = this;
+            self.Service.ChangeSumInCash(self.CurrentSalePoint, (responseData) => {
+                self.Model.set("POSData.MoneyInCash", responseData.cashSum);
+            });
+        }
+
     }
 }
 

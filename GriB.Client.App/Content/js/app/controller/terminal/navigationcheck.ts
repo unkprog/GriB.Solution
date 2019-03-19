@@ -21,6 +21,8 @@ export namespace Controller.Terminal {
             this.buttonCheckMenu = this.controlContainerChecks.find("#btn-check-menu");
             this.buttonCheckPayment = this.controlContainerChecks.find("#btn-check-payment");
             this.buttonCheckCancel = this.controlContainerChecks.find("#btn-check-cancel-item");
+            this.buttonSplitCheck = this.controlContainerChecks.find("#btn-check-split-item");
+            this.buttonPrintPreCheck = this.controlContainerChecks.find("#btn-check-printpre-item");
 
             this.model = new kendo.data.ObservableObject({
                 "visibleCheck": false,
@@ -77,6 +79,8 @@ export namespace Controller.Terminal {
         private buttonCheckPayment: JQuery;
 
         private buttonCheckCancel: JQuery;
+        private buttonSplitCheck: JQuery;
+        private buttonPrintPreCheck: JQuery;
 
         public get ControlContainerChecks() {
             return this.controlContainerChecks;
@@ -115,15 +119,16 @@ export namespace Controller.Terminal {
         }
 
         public loadData(): void {
-            let controller = this;
-          
-            controller.Service.CheckOpened(controller.terminal.CurrentSalePoint, (responseData) => {
-                controller.openedChecks = responseData.checkopened;
-                controller.drawChecks(true);
-                if (controller.openedChecks && controller.openedChecks.length > 0)
-                    controller.setCurrentCheck(controller.openedChecks[0], undefined);
-                else
-                    controller.setCurrentCheck(undefined, undefined);
+            let self = this;
+            self.terminal.CheckChange(() => {
+                self.Service.CheckOpened(self.terminal.CurrentSalePoint, self.terminal.CurrentChange, (responseData) => {
+                    self.openedChecks = responseData.checkopened;
+                    self.drawChecks(true);
+                    if (self.openedChecks && self.openedChecks.length > 0)
+                        self.setCurrentCheck(self.openedChecks[0], undefined);
+                    else
+                        self.setCurrentCheck(undefined, undefined);
+                });
             });
         }
 
@@ -135,6 +140,9 @@ export namespace Controller.Terminal {
             this.CancelCheckButtonClick = utils.createTouchClickEvent(this.buttonCheckCancel, this.cancelCheckButtonClick, this);
             this.CommentButtonClick = utils.createTouchClickEvent(this.buttonCheckComment, this.commentButtonClick, this);
             this.PaymentButtonClick = utils.createTouchClickEvent(this.buttonCheckPayment, this.paymentButtonClick, this);
+
+            this.SplitCheckClick = utils.createTouchClickEvent(this.buttonSplitCheck, this.splitCheckClick, this);
+            this.PrintPreCheckClick = utils.createTouchClickEvent(this.buttonPrintPreCheck, this.printPreCheckClick, this);
         }
 
         public destroyEvents(): void {
@@ -149,6 +157,10 @@ export namespace Controller.Terminal {
             utils.destroyTouchClickEvent(this.buttonCheckCancel, this.CancelCheckButtonClick);
             utils.destroyTouchClickEvent(this.buttonCheckComment, this.CommentButtonClick);
             utils.destroyTouchClickEvent(this.buttonCheckPayment, this.PaymentButtonClick);
+
+            utils.destroyTouchClickEvent(this.buttonSplitCheck, this.SplitCheckClick);
+            utils.destroyTouchClickEvent(this.buttonPrintPreCheck, this.PrintPreCheckClick);
+
             this.destroyEventsChecks();
         }
 
@@ -301,7 +313,10 @@ export namespace Controller.Terminal {
 
         private NewCheckButtonClick: { (e: any): void; };
         private newCheckButtonClick(e): void {
-            this.setCurrentOrNew(undefined);
+            let self = this;
+            self.terminal.CheckChange(() => {
+                self.setCurrentOrNew(undefined);
+            });
         }
 
         private setCurrentOrNew(onSetCurrent: () => void) {
@@ -673,8 +688,19 @@ export namespace Controller.Terminal {
             if (controller.currentCheck) {
                 this.Service.CheckClose(paymentData, (responseData) => {
                     controller.removeCurrentCheck(controller.currentCheck);
+                    controller.terminal.UpdateSumInCash();
                 });
             }
+        }
+
+        public SplitCheckClick: { (e: any): any }
+        private splitCheckClick(e: any): any {
+            M.toast({ html: vars._statres("label$indevelopment") });
+        }
+
+        public PrintPreCheckClick: { (e: any): any }
+        private printPreCheckClick(e: any): any {
+            M.toast({ html: vars._statres("label$indevelopment") });
         }
     }
 }

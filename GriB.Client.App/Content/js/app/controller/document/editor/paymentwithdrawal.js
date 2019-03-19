@@ -23,7 +23,9 @@ define(["require", "exports", "app/controller/document/editor/paymentbase", "app
                 var PaymentWithdrawal = /** @class */ (function (_super) {
                     __extends(PaymentWithdrawal, _super);
                     function PaymentWithdrawal() {
-                        return _super.call(this) || this;
+                        var _this = _super.call(this) || this;
+                        _this.Model.set("Header", vars._statres("label$withdrawingmoney"));
+                        return _this;
                     }
                     Object.defineProperty(PaymentWithdrawal.prototype, "EditIdName", {
                         get: function () {

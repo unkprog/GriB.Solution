@@ -14,10 +14,10 @@ namespace GriB.Client.App.Managers
             return outdate > Constants.minReportDate;
         }
 
-        public static DateTime Date(string _date)
+        public static DateTime Date(string _date, string formatDate = "")
         {
             DateTime result = Constants.minReportDate;
-            if(!DateTime.TryParseExact(_date, Constants.dateFormat, null, System.Globalization.DateTimeStyles.None, out result))
+            if(!DateTime.TryParseExact(_date, string.IsNullOrEmpty(formatDate) ? Constants.dateFormat : formatDate, null, System.Globalization.DateTimeStyles.None, out result))
                 result = Constants.minReportDate;
             return result;
         }

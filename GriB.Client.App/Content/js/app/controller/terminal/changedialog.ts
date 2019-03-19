@@ -80,7 +80,7 @@ export namespace Controller.Terminal {
         public NoButtonClick: { (e: any): void; };
         private noButtonClick(e): void {
             this.Model.set("editModel.result", 1);
-            this.CancelButtonClick(e);
+            this.SaveButtonClick(e);
         }
 
         public validate(): boolean {

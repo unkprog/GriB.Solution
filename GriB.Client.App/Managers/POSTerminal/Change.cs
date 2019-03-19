@@ -28,7 +28,6 @@ namespace GriB.Client.App.Managers.POSTerminal
         private const string cmdClose = @"POSTerminal\Change\[close]";
         public static void Close(this Query query, int u, int id)
         {
-            change result = new change();
             query.Execute(cmdClose, new SqlParameter[] { new SqlParameter("@id", id), new SqlParameter("@u", u), new SqlParameter("@options", 1) }
             , (values) =>
             {

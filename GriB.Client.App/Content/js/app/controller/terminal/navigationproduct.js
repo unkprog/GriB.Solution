@@ -88,15 +88,18 @@ define(["require", "exports", "app/common/utils", "app/services/posterminalservi
                     utils.createClickEvent(this.controlSaleProducts.find('a'), this.ItemSaleButtonClick, this);
                 };
                 NavigationProduct.prototype.ItemSaleButtonClick = function (e) {
+                    var self = this;
                     var targetid = e.currentTarget.id;
                     var id = +targetid.replace("saleproduct_", "");
                     if (e.currentTarget.classList.contains('category')) {
-                        this.addCategory(id, $(e.currentTarget).data("name"));
-                        this.currentCategory = id;
-                        this.loadData();
+                        self.addCategory(id, $(e.currentTarget).data("name"));
+                        self.currentCategory = id;
+                        self.loadData();
                     }
                     else {
-                        this.terminal.Cheks.AddPosition(id);
+                        self.terminal.CheckChange(function () {
+                            self.terminal.Cheks.AddPosition(id);
+                        });
                     }
                 };
                 NavigationProduct.prototype.addCategory = function (cat, catname) {

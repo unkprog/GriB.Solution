@@ -94,7 +94,10 @@
         CurrentSalePoint: number;
         CurrentChange: number;
         ControlChecks: JQuery;
-
+        GetChange(callback?: () => void): void;
+        CheckChange(callback?: () => void): void;
+        CloseChange(): void;
+        UpdateSumInCash(): void;
         Reset(): void;
     }
 
@@ -132,6 +135,11 @@
     export interface IControllerChangeDialog extends IControllerEditor {
         Result: number;
         OnResult(controller: IControllerChangeDialog): void;
+    }
+
+    export interface IControllerCashDialog extends IControllerEditor {
+        Result: number;
+        OnResult(controller: IControllerCashDialog): void;
     }
 
     export interface IControllerReportWithFilter extends IControllerEditor {

@@ -23,7 +23,9 @@ define(["require", "exports", "app/controller/document/editor/paymentbase", "app
                 var Encashment = /** @class */ (function (_super) {
                     __extends(Encashment, _super);
                     function Encashment() {
-                        return _super.call(this) || this;
+                        var _this = _super.call(this) || this;
+                        _this.Model.set("Header", vars._statres("label$encashment"));
+                        return _this;
                     }
                     Object.defineProperty(Encashment.prototype, "EditIdName", {
                         get: function () {

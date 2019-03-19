@@ -105,15 +105,18 @@ export namespace Controller.Terminal {
         }
 
         private ItemSaleButtonClick(e): void {
+            let self = this;
             let targetid: string = e.currentTarget.id;
             let id: number = +targetid.replace("saleproduct_", "");
             if (e.currentTarget.classList.contains('category')) {
-                this.addCategory(id, $(e.currentTarget).data("name"));
-                this.currentCategory = id;
-                this.loadData();
+                self.addCategory(id, $(e.currentTarget).data("name"));
+                self.currentCategory = id;
+                self.loadData();
             }
             else {
-                this.terminal.Cheks.AddPosition(id);
+                self.terminal.CheckChange(() => {
+                    self.terminal.Cheks.AddPosition(id);
+                });
             }
         }
 

@@ -5,6 +5,7 @@ export namespace Controller.Document.Editor {
     export class PaymentDeposit extends base.Controller.Document.Editor.PaymentBase {
         constructor() {
             super();
+            this.Model.set("Header", vars._statres("label$depositmoney"));
         }
 
         public get EditIdName(): string {

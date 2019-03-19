@@ -5,6 +5,7 @@ export namespace Controller.Document.Editor {
     export class PaymentWithdrawal extends base.Controller.Document.Editor.PaymentBase {
         constructor() {
             super();
+            this.Model.set("Header", vars._statres("label$withdrawingmoney"));
         }
 
          public get EditIdName(): string {

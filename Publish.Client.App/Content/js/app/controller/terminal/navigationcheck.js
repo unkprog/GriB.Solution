@@ -26,6 +26,8 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/s
                     this.buttonCheckMenu = this.controlContainerChecks.find("#btn-check-menu");
                     this.buttonCheckPayment = this.controlContainerChecks.find("#btn-check-payment");
                     this.buttonCheckCancel = this.controlContainerChecks.find("#btn-check-cancel-item");
+                    this.buttonSplitCheck = this.controlContainerChecks.find("#btn-check-split-item");
+                    this.buttonPrintPreCheck = this.controlContainerChecks.find("#btn-check-printpre-item");
                     this.model = new kendo.data.ObservableObject({
                         "visibleCheck": false,
                         "labelTime": vars._statres("label$time"),
@@ -98,14 +100,16 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/s
                     this.loadData();
                 };
                 NavigationCheck.prototype.loadData = function () {
-                    var controller = this;
-                    controller.Service.CheckOpened(controller.terminal.CurrentSalePoint, function (responseData) {
-                        controller.openedChecks = responseData.checkopened;
-                        controller.drawChecks(true);
-                        if (controller.openedChecks && controller.openedChecks.length > 0)
-                            controller.setCurrentCheck(controller.openedChecks[0], undefined);
-                        else
-                            controller.setCurrentCheck(undefined, undefined);
+                    var self = this;
+                    self.terminal.CheckChange(function () {
+                        self.Service.CheckOpened(self.terminal.CurrentSalePoint, self.terminal.CurrentChange, function (responseData) {
+                            self.openedChecks = responseData.checkopened;
+                            self.drawChecks(true);
+                            if (self.openedChecks && self.openedChecks.length > 0)
+                                self.setCurrentCheck(self.openedChecks[0], undefined);
+                            else
+                                self.setCurrentCheck(undefined, undefined);
+                        });
                     });
                 };
                 NavigationCheck.prototype.createEvents = function () {
@@ -116,6 +120,8 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/s
                     this.CancelCheckButtonClick = utils.createTouchClickEvent(this.buttonCheckCancel, this.cancelCheckButtonClick, this);
                     this.CommentButtonClick = utils.createTouchClickEvent(this.buttonCheckComment, this.commentButtonClick, this);
                     this.PaymentButtonClick = utils.createTouchClickEvent(this.buttonCheckPayment, this.paymentButtonClick, this);
+                    this.SplitCheckClick = utils.createTouchClickEvent(this.buttonSplitCheck, this.splitCheckClick, this);
+                    this.PrintPreCheckClick = utils.createTouchClickEvent(this.buttonPrintPreCheck, this.printPreCheckClick, this);
                 };
                 NavigationCheck.prototype.destroyEvents = function () {
                     this.controlContainerChecks.unbind();
@@ -129,6 +135,8 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/s
                     utils.destroyTouchClickEvent(this.buttonCheckCancel, this.CancelCheckButtonClick);
                     utils.destroyTouchClickEvent(this.buttonCheckComment, this.CommentButtonClick);
                     utils.destroyTouchClickEvent(this.buttonCheckPayment, this.PaymentButtonClick);
+                    utils.destroyTouchClickEvent(this.buttonSplitCheck, this.SplitCheckClick);
+                    utils.destroyTouchClickEvent(this.buttonPrintPreCheck, this.PrintPreCheckClick);
                     this.destroyEventsChecks();
                 };
                 NavigationCheck.prototype.destroyEventsChecks = function () {
@@ -261,7 +269,10 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/s
                     return result;
                 };
                 NavigationCheck.prototype.newCheckButtonClick = function (e) {
-                    this.setCurrentOrNew(undefined);
+                    var self = this;
+                    self.terminal.CheckChange(function () {
+                        self.setCurrentOrNew(undefined);
+                    });
                 };
                 NavigationCheck.prototype.setCurrentOrNew = function (onSetCurrent) {
                     var controller = this;
@@ -365,22 +376,6 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/s
                     var controller = this;
                     if (controller.currentCheck) {
                         this.Service.AddToCheck(controller.currentCheck.id, product, qunatity, function (responseData) {
-                            //let positionsArray: Interfaces.Model.IPOSCheckPosition[] = (controller.currentCheck.positions ? controller.currentCheck.positions : []);
-                            //let newItem: Interfaces.Model.IPOSCheckPosition = responseData.newposition;
-                            //let isNotFound: boolean = true;
-                            //for (let i = 0, iCount = (positionsArray ? positionsArray.length : 0); i < iCount; i++) {
-                            //    if (newItem.index === positionsArray[i].index) {
-                            //        if (newItem.quantity <= 0)
-                            //            positionsArray.splice(i, 1);
-                            //        else
-                            //            positionsArray[i] = newItem;
-                            //        isNotFound = false;
-                            //        break;
-                            //    }
-                            //}
-                            //if (isNotFound === true)
-                            //    positionsArray.push(newItem);
-                            //this.drawCheckPositions();
                             controller.updateResponsePositions(responseData);
                         });
                     }
@@ -415,10 +410,6 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/s
                 NavigationCheck.prototype.applyQuantity = function (controller) {
                     var self = this;
                     if (this.currentCheck) {
-                        //this.paymentData.paymentOption = controller.TypeWithOut;
-                        //this.paymentData.paymentSum = controller.TotalSum; //(this.paymentData.paymentType === 3 ? 0 : controller.TotalSum);
-                        //this.paymentData.comment = controller.Comment;
-                        //this.closeCheck(this.paymentData);
                         var positionsArray = (self.currentCheck.positions ? self.currentCheck.positions : []);
                         if (self.editRowQuantity > -1)
                             self._EditPosition(positionsArray[self.editRowQuantity].product.id, controller.ReceivedSum);
@@ -616,8 +607,15 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/s
                     if (controller.currentCheck) {
                         this.Service.CheckClose(paymentData, function (responseData) {
                             controller.removeCurrentCheck(controller.currentCheck);
+                            controller.terminal.UpdateSumInCash();
                         });
                     }
+                };
+                NavigationCheck.prototype.splitCheckClick = function (e) {
+                    M.toast({ html: vars._statres("label$indevelopment") });
+                };
+                NavigationCheck.prototype.printPreCheckClick = function (e) {
+                    M.toast({ html: vars._statres("label$indevelopment") });
                 };
                 return NavigationCheck;
             }());

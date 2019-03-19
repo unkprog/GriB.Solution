@@ -230,6 +230,7 @@
     <Content Include="Content\view\setting\editor\salepoint.html" />
     <Content Include="Content\view\setting\editor\organization.html" />
     <Content Include="Content\view\setting\index.html" />
+    <Content Include="Content\view\terminal\cashdialog.html" />
     <Content Include="Content\view\terminal\changedialog.html" />
     <Content Include="Content\view\terminal\paymentwithout.html" />
     <Content Include="Content\view\terminal\checkcomment.html" />
@@ -593,6 +594,7 @@
     <TypeScriptCompile Include="Content\js\app\controller\setting\editor\salepoint.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\setting\editor\organization.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\setting\index.ts" />
+    <TypeScriptCompile Include="Content\js\app\controller\terminal\cashdialog.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\terminal\changedialog.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\terminal\paymentnoncash.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\terminal\payment.ts" />
@@ -633,6 +635,25 @@
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets')" />

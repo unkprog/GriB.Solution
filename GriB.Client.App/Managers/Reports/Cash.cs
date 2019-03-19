@@ -26,8 +26,8 @@ namespace GriB.Client.App.Managers.Reports
         public static List<ReportCashRow> GetCash(this Query query, ReportBaseFilter filter)
         {
             List<ReportCashRow> result = new List<ReportCashRow>();
-            query.Execute(cmdGet, new SqlParameter[] { new SqlParameter() { ParameterName = "@datefrom", Value = Helper.Date(filter.datefrom) }, new SqlParameter() { ParameterName = "@dateto", Value = Helper.DateReportEnd(filter.dateto) }
-            , new SqlParameter() { ParameterName = "@salepoint", Value = Helper.GetSqlParamValue(filter.salepoint) }}
+            query.Execute(cmdGet, new SqlParameter[] { new SqlParameter("@datefrom", Helper.Date(filter.datefrom)), new SqlParameter("@dateto", Helper.DateReportEnd(filter.dateto))
+                , new SqlParameter("@salepoint",  Helper.GetSqlParamValue(filter.salepoint)) }
             , (values) =>
             {
                 result.Add(readFromValues(values));
@@ -36,6 +36,18 @@ namespace GriB.Client.App.Managers.Reports
             return result;
         }
 
+        public static ReportCashRow GetCashToPOS(this Query query, ReportBaseFilter filter)
+        {
+            ReportCashRow result = null;
+            query.Execute(cmdGet, new SqlParameter[] { new SqlParameter("@datefrom", Helper.Date(filter.datefrom, Constants.dateFormatWitTime)), new SqlParameter("@dateto", Helper.Date(filter.dateto, Constants.dateFormatWitTime))
+                , new SqlParameter("@salepoint",  Helper.GetSqlParamValue(filter.salepoint)) }
+            , (values) =>
+            {
+                result = readFromValues(values);
+            });
+
+            return result;
+        }
 
         private static ReportCashDetailRow readFromValuesDetail(object[] values)
         {

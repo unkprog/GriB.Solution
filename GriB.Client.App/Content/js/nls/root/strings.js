@@ -286,12 +286,21 @@ define({
     /////////////////////////////////////////////////////////////////////////////////////////////
     //              Терминал                                                                   //
     /////////////////////////////////////////////////////////////////////////////////////////////
+    "label$indevelopment": "В разработке",
+
     "label$query$opennewchange": "Открыть новую смену?",
     "label$query$closechange": "Закрыть смену?",
     "label$openingchange": "Открытие смены",
     "label$closingchange": "Закрытие смены",
+    "label$change$close": "Смена закрыта",
+    "label$historysales": "История продаж",
+    "label$report$bychange": "Отчет за смену",
+    "label$closechange": "Закрыть смену",
 
     "msg$error$openingchange": "При открытии смены на сервере произошла ошибка",
+    "msg$error$closingchange": "При закрытии смены на сервере произошла ошибка",
+  
+    "label$incash": "В кассе: ",
 
     "label$time": "Время",
     "label$client": "Клиент",

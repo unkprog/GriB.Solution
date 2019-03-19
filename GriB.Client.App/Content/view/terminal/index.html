@@ -1,4 +1,14 @@
 ﻿<div id="posterminal-view">
+    <!-- Dropdown Structure -->
+    <a id="posterminal-view-cash-trigger" class="hide" data-target='posterminal-view-cash-menu'></a>
+    <ul id="posterminal-view-cash-menu" class="dropdown-content">
+        <li><a  id="posterminal-view-cash-menu-incash"><i class="material-icons">monetization_on</i><span data-bind="text:labelInCash"></span><span data-bind="text:POSData.MoneyInCash"></span></a></li>
+        <li class="divider" tabindex="-1"></li>
+        <li><a id="posterminal-view-cash-menu-historysalses"><i class="material-icons">history</i><span data-bind="text:labelHistorySales"></span></a></li>
+        <li><a id="posterminal-view-cash-menu-reportbychange"><i class="material-icons">timeline</i><span data-bind="text:labelReportByChange"></span></a></li>
+        <li class="divider" tabindex="-1"></li>
+        <li><a id="posterminal-view-cash-menu-closechange"><i class="material-icons">timer_off</i><span data-bind="text:labelCloseChange"></span></a></li>
+    </ul>
     <ul id="posterminal-view-salepoints" class="dropdown-content"></ul>
 
     <div id="posterminal-view-main">
@@ -21,8 +31,7 @@
             </div>
 
             <table id="posterminal-view-check-positions" data-bind="visible: visibleCheck">
-                <tbody>
-                </tbody>
+                <tbody></tbody>
             </table>
 
             <div id="posterminal-view-check-total" class="row" data-bind="visible: visibleCheck">

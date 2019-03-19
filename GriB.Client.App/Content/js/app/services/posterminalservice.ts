@@ -27,6 +27,10 @@ export namespace Services {
             this.GetApi({ Action: "/change_close", RequestData: { id: id }, Callback: Callback });
         }
 
+        public ChangeSumInCash(salepoint: number, Callback: (responseData: any) => void) {
+            this.GetApi({ Action: "/change_sumincash", RequestData: { salepoint: salepoint }, Callback: Callback });
+        }
+        
         public GetSaleProducts(posparams: Interfaces.Model.IPosParamsSelect, Callback: (responseData: any) => void) {
             this.GetApi({ Action: "/sale_products", RequestData: posparams, Callback: Callback });
         }
@@ -39,8 +43,8 @@ export namespace Services {
             this.GetApi({ Action: "/check_delete", RequestData: { check: check }, Callback: Callback });
         }
 
-        public CheckOpened(salepoint: number, Callback: (responseData: any) => void) {
-            this.GetApi({ Action: "/check_opened", RequestData: { salepoint: salepoint }, Callback: Callback });
+        public CheckOpened(salepoint: number, chagne: number, Callback: (responseData: any) => void) {
+            this.GetApi({ Action: "/check_opened", RequestData: { salepoint: salepoint, chagne: chagne}, Callback: Callback });
         }
 
         public CheckSetClient(check: number, client: number, Callback: (responseData: any) => void) {
