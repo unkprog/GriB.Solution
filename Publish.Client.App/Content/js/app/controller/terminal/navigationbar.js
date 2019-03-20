@@ -118,39 +118,52 @@ define(["require", "exports", "app/common/variables", "app/common/utils"], funct
                 };
                 NavigationBar.prototype.inCashClick = function (e) {
                     var self = this;
-                    vars._app.OpenController({
-                        urlController: 'terminal/cashdialog', isModal: true, onLoadController: function (controller) {
-                            var ctrCashDialog = controller;
-                            ctrCashDialog.Model.set("HeaderCash", vars._statres("label$incash") + self.terminal.Model.get("POSData.MoneyInCash"));
-                            ctrCashDialog.OnResult = $.proxy(self.cashDialogResult, self);
-                        }
-                    });
+                    if (self.terminal.CurrentChange == 0)
+                        M.toast({ html: vars._statres("label$change$close") });
+                    else
+                        vars._app.OpenController({
+                            urlController: 'terminal/cashdialog', isModal: true, onLoadController: function (controller) {
+                                var ctrCashDialog = controller;
+                                ctrCashDialog.Model.set("HeaderCash", vars._statres("label$incash") + self.terminal.Model.get("POSData.MoneyInCash"));
+                                ctrCashDialog.OnResult = $.proxy(self.cashDialogResult, self);
+                            }
+                        });
                 };
-                NavigationBar.prototype.cashDialogResult = function (controller) {
+                NavigationBar.prototype.cashDialogResult = function (dialog) {
                     var self = this;
                     var ctrlName = "";
                     var ctrlId = "";
-                    if (controller.Result === 1) {
+                    if (dialog.Result === 1) {
                         ctrlName = 'document/editor/encashment';
                         ctrlId = 'id_encashment';
                     }
-                    else if (controller.Result === 2) {
+                    else if (dialog.Result === 2) {
                         ctrlName = 'document/editor/paymentdeposit';
                         ctrlId = 'id_paymentdeposit';
                     }
-                    else if (controller.Result === 3) {
+                    else if (dialog.Result === 3) {
                         ctrlName = 'document/editor/paymentwithdrawal';
                         ctrlId = 'id_paymentwithdrawal';
                     }
                     if (ctrlName !== "") {
-                        vars._editorData[ctrlId] = 0;
+                        vars._editorData[ctrlId] = -1;
                         vars._app.OpenController({
                             urlController: ctrlName, isModal: true, onLoadController: function (controller) {
-                                //let ctrlEditCash: Interfaces.IControllerEditor = controller as Interfaces.IControllerEditor;
-                                //ctrlEditCash.EditorSettings.ButtonSetings.IsSave = false;
+                                var ctrlEditCash = controller;
+                                ctrlEditCash.IsDisableSalepoint = true;
+                                ctrlEditCash.TypeCostIncome = (dialog.Result === 2 ? 1 : (dialog.Result === 3 ? 2 : 0));
+                                ctrlEditCash.SetupAfterLoad = $.proxy(self.setupAfterLoadDocument, self);
+                                ctrlEditCash.SetupAfterSave = $.proxy(self.setupAfterSaveDocument, self);
                             }
                         });
                     }
+                };
+                NavigationBar.prototype.setupAfterLoadDocument = function (controller) {
+                    controller.Model.set("paymentConduct", true);
+                    controller.Model.set("editModel.salepoint", this.terminal.Model.get("POSData.CurrentSalePoint").toJSON());
+                };
+                NavigationBar.prototype.setupAfterSaveDocument = function (controller) {
+                    this.terminal.UpdateSumInCash();
                 };
                 NavigationBar.prototype.historySalesClick = function (e) {
                     M.toast({ html: vars._statres("label$indevelopment") });

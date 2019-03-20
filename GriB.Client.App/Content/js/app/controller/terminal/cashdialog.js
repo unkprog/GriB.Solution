@@ -64,7 +64,7 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
                 });
                 ;
                 CashDialog.prototype.ViewInit = function (view) {
-                    this.btnEncashment = view.find("#tn-cash-encashment");
+                    this.btnEncashment = view.find("#btn-cash-encashment");
                     this.btnDeposit = view.find("#btn-cash-deposit");
                     this.btnWithDrawing = view.find("#btn-cash-withdrawing");
                     this.btnCancelButton = view.find("#btn-cash-cancel");

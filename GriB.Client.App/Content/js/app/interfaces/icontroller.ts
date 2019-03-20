@@ -57,7 +57,6 @@
         Cancel(): void;
     }
 
-
     export interface IControllerCard extends IController {
         CardModel: Model.IEditorModel[];
         CardSettings: Control.ICardSettings;
@@ -74,9 +73,20 @@
         IsShowPhone(isShow: boolean): void;
     }
 
+    export interface ICardCostIncome extends IControllerCard {
+        TypeCostIncome: number;
+    }
+
     export interface IDialog extends IController {
         Show(header: string, e: string): void;
         OnClose: () => void;
+    }
+
+    export interface IControllerEditorPayment extends IControllerEditor {
+        IsDisableSalepoint: boolean;
+        TypeCostIncome: number;
+        SetupAfterLoad(controller: IControllerEditorPayment): void;
+        SetupAfterSave(controller: IControllerEditorPayment): void;
     }
 
     export interface ITerminalCheks {

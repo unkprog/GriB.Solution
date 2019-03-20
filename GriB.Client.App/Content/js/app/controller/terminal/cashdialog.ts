@@ -52,7 +52,7 @@ export namespace Controller.Terminal {
         protected btnCancelButton: JQuery;
 
         public ViewInit(view: JQuery): boolean {
-            this.btnEncashment = view.find("#tn-cash-encashment");
+            this.btnEncashment = view.find("#btn-cash-encashment");
             this.btnDeposit = view.find("#btn-cash-deposit");
             this.btnWithDrawing = view.find("#btn-cash-withdrawing");
             this.btnCancelButton = view.find("#btn-cash-cancel");

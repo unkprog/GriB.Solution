@@ -254,13 +254,18 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
                 };
                 Index.prototype.CloseChange = function () {
                     var self = this;
-                    vars._app.OpenController({
-                        urlController: 'terminal/changedialog', isModal: true, onLoadController: function (controller) {
-                            var ctrChangeDialog = controller;
-                            ctrChangeDialog.Model.set("HeaderQuery", vars._statres("label$query$closechange"));
-                            ctrChangeDialog.OnResult = $.proxy(self.changeClodeDialogResult, self);
-                        }
-                    });
+                    if (self.CurrentChange == 0) {
+                        M.toast({ html: vars._statres("label$change$close") });
+                    }
+                    else {
+                        vars._app.OpenController({
+                            urlController: 'terminal/changedialog', isModal: true, onLoadController: function (controller) {
+                                var ctrChangeDialog = controller;
+                                ctrChangeDialog.Model.set("HeaderQuery", vars._statres("label$query$closechange"));
+                                ctrChangeDialog.OnResult = $.proxy(self.changeClodeDialogResult, self);
+                            }
+                        });
+                    }
                 };
                 Index.prototype.changeClodeDialogResult = function (controller) {
                     var self = this;

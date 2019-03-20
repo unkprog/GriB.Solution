@@ -74,16 +74,18 @@ export module Services {
         }
 
         // Статьи расходов и доходов
-        public GetCostIncomes(Callback: (responseData: any) => void) {
-            this.GetApi({ Action: "/get_costincomes", Callback: Callback });
+        public GetCostIncomes(typecostincome:number, Callback: (responseData: any) => void) {
+            this.GetApi({ Action: "/get_costincomes", RequestData: { typecostincome: typecostincome }, Callback: Callback });
         }
 
         public GetCosts(Callback: (responseData: any) => void) {
-            this.GetApi({ Action: "/get_costs", Callback: Callback });
+            this.GetCostIncomes(2, Callback);
+            //this.GetApi({ Action: "/get_costs", Callback: Callback });
         }
 
         public GetIncomes(Callback: (responseData: any) => void) {
-            this.GetApi({ Action: "/get_incomes", Callback: Callback });
+            this.GetCostIncomes(1, Callback);
+            //this.GetApi({ Action: "/get_incomes", Callback: Callback });
         }
 
         public GetCostIncome(id: number, Callback: (responseData: any) => void) {

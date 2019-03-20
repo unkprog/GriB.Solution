@@ -145,47 +145,57 @@ export namespace Controller.Terminal {
         public InCashClick: { (e: any): any }
         private inCashClick(e: any): any {
             let self = this;
-            vars._app.OpenController({
-                urlController: 'terminal/cashdialog', isModal: true, onLoadController: (controller: Interfaces.IController) => {
-                    let ctrCashDialog: Interfaces.IControllerCashDialog = controller as Interfaces.IControllerCashDialog;
-                    ctrCashDialog.Model.set("HeaderCash", vars._statres("label$incash") + self.terminal.Model.get("POSData.MoneyInCash"));
-                    ctrCashDialog.OnResult = $.proxy(self.cashDialogResult, self);
-                }
-            });
+            if (self.terminal.CurrentChange == 0)
+                M.toast({ html: vars._statres("label$change$close") });
+            else
+                vars._app.OpenController({
+                    urlController: 'terminal/cashdialog', isModal: true, onLoadController: (controller: Interfaces.IController) => {
+                        let ctrCashDialog: Interfaces.IControllerCashDialog = controller as Interfaces.IControllerCashDialog;
+                        ctrCashDialog.Model.set("HeaderCash", vars._statres("label$incash") + self.terminal.Model.get("POSData.MoneyInCash"));
+                        ctrCashDialog.OnResult = $.proxy(self.cashDialogResult, self);
+                    }
+                });
         }
 
-        private cashDialogResult(controller: Interfaces.IControllerCashDialog) {
+        private cashDialogResult(dialog: Interfaces.IControllerCashDialog) {
             let self = this;
-            if (self.terminal.CurrentChange == 0) {
-                M.toast({ html: vars._statres("label$change$close") });
-            }
-            else {
+            let ctrlName: string = "";
+            let ctrlId: string = "";
 
-                let ctrlName: string = "";
-                let ctrlId: string = "";
-                if (controller.Result === 1) {
-                    ctrlName = 'document/editor/encashment';
-                    ctrlId = 'id_encashment';
-                }
-                else if (controller.Result === 2) {
-                    ctrlName = 'document/editor/paymentdeposit';
-                    ctrlId = 'id_paymentdeposit';
-                }
-                else if (controller.Result === 3) {
-                    ctrlName = 'document/editor/paymentwithdrawal';
-                    ctrlId = 'id_paymentwithdrawal';
-                }
-
-                if (ctrlName !== "") {
-                    vars._editorData[ctrlId] = 0;
-                    vars._app.OpenController({
-                        urlController: ctrlName, isModal: true, onLoadController: (controller: Interfaces.IController) => {
-                            //let ctrlEditCash: Interfaces.IControllerEditor = controller as Interfaces.IControllerEditor;
-                            //ctrlEditCash.EditorSettings.ButtonSetings.IsSave = false;
-                        }
-                    });
-                }
+            if (dialog.Result === 1) {
+                ctrlName = 'document/editor/encashment';
+                ctrlId = 'id_encashment';
             }
+            else if (dialog.Result === 2) {
+                ctrlName = 'document/editor/paymentdeposit';
+                ctrlId = 'id_paymentdeposit';
+            }
+            else if (dialog.Result === 3) {
+                ctrlName = 'document/editor/paymentwithdrawal';
+                ctrlId = 'id_paymentwithdrawal';
+            }
+
+            if (ctrlName !== "") {
+                vars._editorData[ctrlId] = -1;
+                vars._app.OpenController({
+                    urlController: ctrlName, isModal: true, onLoadController: (controller: Interfaces.IController) => {
+                        let ctrlEditCash: Interfaces.IControllerEditorPayment = controller as Interfaces.IControllerEditorPayment;
+                        ctrlEditCash.IsDisableSalepoint = true;
+                        ctrlEditCash.TypeCostIncome = (dialog.Result === 2 ? 1 : (dialog.Result === 3 ? 2 : 0));
+                        ctrlEditCash.SetupAfterLoad = $.proxy(self.setupAfterLoadDocument, self);
+                        ctrlEditCash.SetupAfterSave = $.proxy(self.setupAfterSaveDocument, self);
+                    }
+                });
+            }
+        }
+
+        private setupAfterLoadDocument(controller: Interfaces.IControllerEditorPayment): void {
+            controller.Model.set("paymentConduct", true);
+            controller.Model.set("editModel.salepoint", this.terminal.Model.get("POSData.CurrentSalePoint").toJSON());
+        }
+
+        private setupAfterSaveDocument(controller: Interfaces.IControllerEditorPayment): void {
+            this.terminal.UpdateSumInCash();
         }
 
         public HistorySalesClick: { (e: any): any }

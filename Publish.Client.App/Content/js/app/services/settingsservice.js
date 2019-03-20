@@ -77,14 +77,16 @@ define(["require", "exports", "app/common/baseservice"], function (require, expo
                 this.GetApi({ Action: "/del_account", RequestData: { id: id }, Callback: Callback });
             };
             // Статьи расходов и доходов
-            SettingsService.prototype.GetCostIncomes = function (Callback) {
-                this.GetApi({ Action: "/get_costincomes", Callback: Callback });
+            SettingsService.prototype.GetCostIncomes = function (typecostincome, Callback) {
+                this.GetApi({ Action: "/get_costincomes", RequestData: { typecostincome: typecostincome }, Callback: Callback });
             };
             SettingsService.prototype.GetCosts = function (Callback) {
-                this.GetApi({ Action: "/get_costs", Callback: Callback });
+                this.GetCostIncomes(2, Callback);
+                //this.GetApi({ Action: "/get_costs", Callback: Callback });
             };
             SettingsService.prototype.GetIncomes = function (Callback) {
-                this.GetApi({ Action: "/get_incomes", Callback: Callback });
+                this.GetCostIncomes(1, Callback);
+                //this.GetApi({ Action: "/get_incomes", Callback: Callback });
             };
             SettingsService.prototype.GetCostIncome = function (id, Callback) {
                 this.GetApi({ Action: "/get_costincome", RequestData: { id: id }, Callback: Callback });

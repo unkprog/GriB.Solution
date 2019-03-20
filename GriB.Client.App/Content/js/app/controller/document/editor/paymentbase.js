@@ -24,6 +24,8 @@ define(["require", "exports", "app/common/basecontroller", "app/services/documen
                     __extends(PaymentBase, _super);
                     function PaymentBase() {
                         var _this = _super.call(this) || this;
+                        _this.isDisableSalepount = false;
+                        _this.typeCostIncome = 0;
                         _this.isUpdateSum = false;
                         return _this;
                     }
@@ -121,7 +123,11 @@ define(["require", "exports", "app/common/basecontroller", "app/services/documen
                                 M.toast({ html: vars._statres("msg$error$nowarehousespecified") });
                                 result = false;
                             }
-                            if (model.comment.length > 510) {
+                            if (utils.isNullOrEmpty(model.comment) === true) {
+                                M.toast({ html: vars._statres("msg$error$commentnotfilled") });
+                                result = false;
+                            }
+                            else if (model.comment.length > 510) {
                                 M.toast({ html: utils.stringFormat(vars._statres("msg$error$fieldexceedscharacters"), vars._statres("label$comment"), 510) });
                                 result = false;
                             }
@@ -213,6 +219,9 @@ define(["require", "exports", "app/common/basecontroller", "app/services/documen
                         }
                         catch (_a) { }
                     };
+                    PaymentBase.prototype.loadData = function () {
+                        return _super.prototype.loadData.call(this);
+                    };
                     PaymentBase.prototype.afterLoad = function (responseData) {
                         _super.prototype.afterLoad.call(this, responseData);
                         var dateTime = new Date(responseData.record.cd);
@@ -224,6 +233,15 @@ define(["require", "exports", "app/common/basecontroller", "app/services/documen
                         this.isUpdateSum = true;
                         this.Model.set("totalSumText", utils.numberToString(responseData.record.sum, 2));
                         this.isUpdateSum = false;
+                        if (this.SetupAfterLoad)
+                            this.SetupAfterLoad(this);
+                    };
+                    PaymentBase.prototype.afterLoad1 = function (responseData) {
+                    };
+                    PaymentBase.prototype.endSave = function () {
+                        if (this.SetupAfterSave)
+                            this.SetupAfterSave(this);
+                        _super.prototype.endSave.call(this);
                     };
                     PaymentBase.prototype.clientButtonClick = function (e) {
                         var self = this;
@@ -252,19 +270,30 @@ define(["require", "exports", "app/common/basecontroller", "app/services/documen
                         M.updateTextFields();
                         return false;
                     };
+                    Object.defineProperty(PaymentBase.prototype, "IsDisableSalepoint", {
+                        get: function () {
+                            return this.isDisableSalepount;
+                        },
+                        set: function (value) {
+                            this.isDisableSalepount = value;
+                        },
+                        enumerable: true,
+                        configurable: true
+                    });
                     PaymentBase.prototype.salePointButtonClick = function (e) {
                         var self = this;
-                        vars._app.OpenController({
-                            urlController: 'setting/card/salepoint', isModal: true, onLoadController: function (controller) {
-                                var ctrlTypePayment = controller;
-                                ctrlTypePayment.CardSettings.IsAdd = false;
-                                ctrlTypePayment.CardSettings.IsAddCopy = false;
-                                ctrlTypePayment.CardSettings.IsDelete = false;
-                                ctrlTypePayment.CardSettings.IsEdit = false;
-                                ctrlTypePayment.CardSettings.IsSelect = true;
-                                ctrlTypePayment.OnSelect = $.proxy(self.selectSalePoint, self);
-                            }
-                        });
+                        if (self.isDisableSalepount === false)
+                            vars._app.OpenController({
+                                urlController: 'setting/card/salepoint', isModal: true, onLoadController: function (controller) {
+                                    var ctrlTypePayment = controller;
+                                    ctrlTypePayment.CardSettings.IsAdd = false;
+                                    ctrlTypePayment.CardSettings.IsAddCopy = false;
+                                    ctrlTypePayment.CardSettings.IsDelete = false;
+                                    ctrlTypePayment.CardSettings.IsEdit = false;
+                                    ctrlTypePayment.CardSettings.IsSelect = true;
+                                    ctrlTypePayment.OnSelect = $.proxy(self.selectSalePoint, self);
+                                }
+                            });
                     };
                     PaymentBase.prototype.selectSalePoint = function (controller) {
                         var salepoint = controller.getSelectedRecord();
@@ -272,16 +301,27 @@ define(["require", "exports", "app/common/basecontroller", "app/services/documen
                             this.Model.set("editModel.salepoint", salepoint);
                         M.updateTextFields();
                     };
+                    Object.defineProperty(PaymentBase.prototype, "TypeCostIncome", {
+                        get: function () {
+                            return this.typeCostIncome;
+                        },
+                        set: function (value) {
+                            this.typeCostIncome = value;
+                        },
+                        enumerable: true,
+                        configurable: true
+                    });
                     PaymentBase.prototype.incomeButtonClick = function (e) {
                         var self = this;
                         vars._app.OpenController({
-                            urlController: 'setting/card/income', isModal: true, onLoadController: function (controller) {
+                            urlController: 'setting/card/costincome', isModal: true, onLoadController: function (controller) {
                                 var ctrlIncome = controller;
                                 ctrlIncome.CardSettings.IsAdd = false;
                                 ctrlIncome.CardSettings.IsAddCopy = false;
                                 ctrlIncome.CardSettings.IsDelete = false;
                                 ctrlIncome.CardSettings.IsEdit = false;
                                 ctrlIncome.CardSettings.IsSelect = true;
+                                ctrlIncome.TypeCostIncome = self.TypeCostIncome;
                                 ctrlIncome.OnSelect = $.proxy(self.selectIncome, self);
                             }
                         });

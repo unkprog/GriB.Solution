@@ -406,7 +406,7 @@ export namespace Controller {
             return true;
         }
 
-        private endSave(): void {
+        protected endSave(): void {
             vars._main.ControllerBack(this);
         }
 

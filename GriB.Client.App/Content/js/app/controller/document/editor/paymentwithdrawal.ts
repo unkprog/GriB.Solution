@@ -26,6 +26,9 @@ export namespace Controller.Document.Editor {
             if (this.methodPaymentWitOut)
                 this.methodPaymentWitOut.remove();
             this.costControl.removeClass("hide");
+            if (this.clientControl)
+                this.clientControl.addClass("hide");
+
             return result;
         }
     }

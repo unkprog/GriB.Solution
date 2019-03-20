@@ -292,6 +292,7 @@ define({
     "label$query$closechange": "Закрыть смену?",
     "label$openingchange": "Открытие смены",
     "label$closingchange": "Закрытие смены",
+    "label$change$close": "Смена закрыта",
     "label$historysales": "История продаж",
     "label$report$bychange": "Отчет за смену",
     "label$closechange": "Закрыть смену",

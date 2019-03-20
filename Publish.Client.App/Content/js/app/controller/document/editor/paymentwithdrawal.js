@@ -46,6 +46,8 @@ define(["require", "exports", "app/controller/document/editor/paymentbase", "app
                         if (this.methodPaymentWitOut)
                             this.methodPaymentWitOut.remove();
                         this.costControl.removeClass("hide");
+                        if (this.clientControl)
+                            this.clientControl.addClass("hide");
                         return result;
                     };
                     return PaymentWithdrawal;

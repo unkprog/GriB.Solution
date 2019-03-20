@@ -23,7 +23,9 @@ define(["require", "exports", "app/common/variables", "app/controller/setting/ca
                 var Cost = /** @class */ (function (_super) {
                     __extends(Cost, _super);
                     function Cost() {
-                        return _super.call(this) || this;
+                        var _this = _super.call(this) || this;
+                        _this.typeCostIncome = 2;
+                        return _this;
                     }
                     Cost.prototype.createModel = function () {
                         return new kendo.data.ObservableObject({
@@ -40,12 +42,28 @@ define(["require", "exports", "app/common/variables", "app/controller/setting/ca
                         return {
                             FieldId: "id", FilterSettings: this.createCardFilterSettings(), ValueIdNew: -1, EditIdName: "id_costincome", EditController: "setting/editor/costincome",
                             IsAdd: true, IsAddCopy: false, IsEdit: true, IsDelete: true, IsSelect: false,
-                            Load: $.proxy(this.Service.GetCostIncomes, this.Service), Delete: $.proxy(this.Service.DelCostIncome, this.Service),
+                            Load: $.proxy(this.getCardRows, this), Delete: $.proxy(this.Service.DelCostIncome, this.Service),
                             Columns: [
                                 { Header: vars._statres("label$name"), Field: "name" },
                                 { Header: vars._statres("label$articletype"), Field: "type", FieldTemplate: '#if (type === 1) {#' + vars._statres("label$income") + '#} else {#' + vars._statres("label$cost") + '#}#' },
                             ]
                         };
+                    };
+                    Object.defineProperty(Cost.prototype, "TypeCostIncome", {
+                        get: function () {
+                            return this.typeCostIncome;
+                        },
+                        set: function (value) {
+                            this.typeCostIncome = value;
+                        },
+                        enumerable: true,
+                        configurable: true
+                    });
+                    Cost.prototype.getCardRows = function (Callback) {
+                        this.Service.GetCostIncomes(this.typeCostIncome, function (responseData) {
+                            if (Callback)
+                                Callback(responseData);
+                        });
                     };
                     return Cost;
                 }(card.Controller.Setting.Card.Card));

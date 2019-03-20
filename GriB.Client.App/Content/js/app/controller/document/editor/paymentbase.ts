@@ -5,7 +5,7 @@ import vars = require('app/common/variables');
 import utils = require('app/common/utils');
 
 export namespace Controller.Document.Editor {
-    export class PaymentBase extends base.Controller.BaseEditor {
+    export class PaymentBase extends base.Controller.BaseEditor implements Interfaces.IControllerEditorPayment {
         constructor() {
             super();
         }
@@ -105,7 +105,11 @@ export namespace Controller.Document.Editor {
                     result = false;
                 }
 
-                if (model.comment.length > 510) {
+                if (utils.isNullOrEmpty(model.comment) === true) {
+                    M.toast({ html: vars._statres("msg$error$commentnotfilled") });
+                    result = false;
+                }
+                else if (model.comment.length > 510) {
                     M.toast({ html: utils.stringFormat(vars._statres("msg$error$fieldexceedscharacters"), vars._statres("label$comment"), 510) });
                     result = false;
                 }
@@ -227,6 +231,12 @@ export namespace Controller.Document.Editor {
             catch { }
         }
 
+        protected loadData(): boolean {
+            return super.loadData();
+        }
+
+        public SetupAfterLoad: { (controller: Interfaces.IControllerEditorPayment): void; }
+
         protected afterLoad(responseData?: any): void {
             super.afterLoad(responseData);
             let dateTime: Date = new Date(responseData.record.cd);
@@ -238,6 +248,19 @@ export namespace Controller.Document.Editor {
             this.isUpdateSum = true;
             this.Model.set("totalSumText", utils.numberToString(responseData.record.sum, 2));
             this.isUpdateSum = false;
+
+            if (this.SetupAfterLoad)
+                this.SetupAfterLoad(this);
+        }
+
+        protected afterLoad1(responseData?: any): void {
+        }
+
+        public SetupAfterSave: { (controller: Interfaces.IControllerEditorPayment): void; }
+        protected endSave() {
+            if (this.SetupAfterSave)
+                this.SetupAfterSave(this);
+            super.endSave();
         }
 
         public ClientButtonClick: { (e: any): void; };
@@ -272,20 +295,30 @@ export namespace Controller.Document.Editor {
             return false;
         }
 
+        private isDisableSalepount: boolean = false;
+        public get IsDisableSalepoint(): boolean {
+            return this.isDisableSalepount;
+        }
+
+        public set IsDisableSalepoint(value: boolean) {
+            this.isDisableSalepount = value;
+        }
+
         public SalePointButtonClick: { (e: any): void; };
         private salePointButtonClick(e) {
             let self = this;
-            vars._app.OpenController({
-                urlController: 'setting/card/salepoint', isModal: true, onLoadController: (controller: Interfaces.IController) => {
-                    let ctrlTypePayment: Interfaces.IControllerCard = controller as Interfaces.IControllerCard;
-                    ctrlTypePayment.CardSettings.IsAdd = false;
-                    ctrlTypePayment.CardSettings.IsAddCopy = false;
-                    ctrlTypePayment.CardSettings.IsDelete = false;
-                    ctrlTypePayment.CardSettings.IsEdit = false;
-                    ctrlTypePayment.CardSettings.IsSelect = true;
-                    ctrlTypePayment.OnSelect = $.proxy(self.selectSalePoint, self);
-                }
-            });
+            if (self.isDisableSalepount === false)
+                vars._app.OpenController({
+                    urlController: 'setting/card/salepoint', isModal: true, onLoadController: (controller: Interfaces.IController) => {
+                        let ctrlTypePayment: Interfaces.IControllerCard = controller as Interfaces.IControllerCard;
+                        ctrlTypePayment.CardSettings.IsAdd = false;
+                        ctrlTypePayment.CardSettings.IsAddCopy = false;
+                        ctrlTypePayment.CardSettings.IsDelete = false;
+                        ctrlTypePayment.CardSettings.IsEdit = false;
+                        ctrlTypePayment.CardSettings.IsSelect = true;
+                        ctrlTypePayment.OnSelect = $.proxy(self.selectSalePoint, self);
+                    }
+                });
         }
 
         private selectSalePoint(controller: Interfaces.IControllerCard) {
@@ -295,17 +328,27 @@ export namespace Controller.Document.Editor {
             M.updateTextFields();
         }
 
+        private typeCostIncome: number = 0;
+        public get TypeCostIncome(): number {
+            return this.typeCostIncome;
+        }
+
+        public set TypeCostIncome(value: number) {
+            this.typeCostIncome = value;
+        }
+
         public IncomeButtonClick: { (e: any): void; };
         private incomeButtonClick(e) {
             let self = this;
             vars._app.OpenController({
-                urlController: 'setting/card/income', isModal: true, onLoadController: (controller: Interfaces.IController) => {
-                    let ctrlIncome: Interfaces.IControllerCard = controller as Interfaces.IControllerCard;
+                urlController: 'setting/card/costincome', isModal: true, onLoadController: (controller: Interfaces.IController) => {
+                    let ctrlIncome: Interfaces.ICardCostIncome = controller as Interfaces.ICardCostIncome;
                     ctrlIncome.CardSettings.IsAdd = false;
                     ctrlIncome.CardSettings.IsAddCopy = false;
                     ctrlIncome.CardSettings.IsDelete = false;
                     ctrlIncome.CardSettings.IsEdit = false;
                     ctrlIncome.CardSettings.IsSelect = true;
+                    ctrlIncome.TypeCostIncome = self.TypeCostIncome;
                     ctrlIncome.OnSelect = $.proxy(self.selectIncome, self);
                 }
             });

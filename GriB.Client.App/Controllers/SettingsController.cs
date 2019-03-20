@@ -277,11 +277,11 @@ namespace GriB.Client.App.Controllers
         #region Статья расходов и доходов
         [HttpGet]
         [ActionName("get_costincomes")]
-        public HttpResponseMessage GetCostIncomes()
+        public HttpResponseMessage GetCostIncomes(int typecostincome)
         {
             return TryCatchResponseQuery((query) =>
             {
-                return Request.CreateResponse(HttpStatusCode.OK, CostIncome.GetCostIncomes(query, 0));
+                return Request.CreateResponse(HttpStatusCode.OK, CostIncome.GetCostIncomes(query, typecostincome));
             });
         }
 
@@ -289,20 +289,14 @@ namespace GriB.Client.App.Controllers
         [ActionName("get_costs")]
         public HttpResponseMessage GetCosts()
         {
-            return TryCatchResponseQuery((query) =>
-            {
-                return Request.CreateResponse(HttpStatusCode.OK, CostIncome.GetCostIncomes(query, 2));
-            });
+            return GetCostIncomes(2);
         }
 
         [HttpGet]
         [ActionName("get_incomes")]
         public HttpResponseMessage GetIncomes()
         {
-            return TryCatchResponseQuery((query) =>
-            {
-                return Request.CreateResponse(HttpStatusCode.OK, CostIncome.GetCostIncomes(query, 1));
-            });
+            return GetCostIncomes(1);
         }
 
         [HttpGet]
