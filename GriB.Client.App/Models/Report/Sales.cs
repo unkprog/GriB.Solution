@@ -1,4 +1,5 @@
 ﻿using GriB.Client.App.Models.Editor;
+using GriB.Client.App.Models.POSTerminal;
 using System;
 
 namespace GriB.Client.App.Models.Report
@@ -104,4 +105,16 @@ namespace GriB.Client.App.Models.Report
         public double sumpercent { get; set; }
 
     }
+
+    public class ReportHistorySaleRow
+    {
+        public ReportHistorySaleRow()
+        {
+            payment = new payment();
+        }
+
+        public int     checkid  { get; set; }
+        public payment payment { get; set; }
+    }
+
 }

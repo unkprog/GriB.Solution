@@ -38,6 +38,9 @@ export module Services {
         public GetExpresAnalysisData(model: Interfaces.Model.IReportSaleFilter, Callback: (responseData: any) => void) {
             this.PostApi({ Action: "/expressanalysis", RequestData: JSON.stringify(model), Callback: Callback });
         }
-        
+
+        public GetHistorySales(change:number, Callback: (responseData: any) => void) {
+            this.GetApi({ Action: "/historysales", RequestData: { change: change }, Callback: Callback });
+        }
     }
 }

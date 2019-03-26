@@ -55,6 +55,9 @@ define(["require", "exports", "app/common/baseservice"], function (require, expo
             POSTerminalService.prototype.CheckOpened = function (salepoint, chagne, Callback) {
                 this.GetApi({ Action: "/check_opened", RequestData: { salepoint: salepoint, chagne: chagne }, Callback: Callback });
             };
+            POSTerminalService.prototype.GetCheckHistory = function (id, Callback) {
+                this.GetApi({ Action: "/check_history", RequestData: { id: id }, Callback: Callback });
+            };
             POSTerminalService.prototype.CheckSetClient = function (check, client, Callback) {
                 this.PostApi({ Action: "/check_setclient", RequestData: JSON.stringify({ check: check, client: client }), Callback: Callback });
             };

@@ -238,6 +238,7 @@
     <Content Include="Content\view\terminal\paymenttype.html" />
     <Content Include="Content\view\terminal\paymentnumpad.html" />
     <Content Include="Content\view\terminal\index.html" />
+    <Content Include="Content\view\terminal\report\historysales.html" />
     <Content Include="Global.asax" />
     <Content Include="Scripts\Query\Editor\CostIncome\[del].sql" />
     <Content Include="Scripts\Query\Editor\CostIncome\[get].sql" />
@@ -344,6 +345,7 @@
     <Content Include="Scripts\Query\POSTerminal\[get].sql" />
     <Content Include="Scripts\Query\Report\Cash\[cash].sql" />
     <Content Include="Scripts\Query\Report\Cash\[cashdetail].sql" />
+    <Content Include="Scripts\Query\Report\POS\[historysales].sql" />
     <Content Include="Scripts\Query\Report\Sales\Dashboard\[salesdayweek].sql" />
     <Content Include="Scripts\Query\Report\Sales\Dashboard\[categories].sql" />
     <Content Include="Scripts\Query\Report\Sales\[salesdetail].sql" />
@@ -514,6 +516,7 @@
     <TypeScriptCompile Include="Content\js\app\application.ts" />
     <TypeScriptCompile Include="Content\js\app\common\basecontrol.ts" />
     <TypeScriptCompile Include="Content\js\app\common\basedialog.ts" />
+    <TypeScriptCompile Include="Content\js\app\common\poscontrol.ts" />
     <TypeScriptCompile Include="Content\js\app\common\utils.ts" />
     <TypeScriptCompile Include="Content\js\app\common\variables.ts" />
     <Content Include="Content\js\app\init.js" />
@@ -607,6 +610,7 @@
     <TypeScriptCompile Include="Content\js\app\controller\terminal\navigationbar.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\terminal\navigationproduct.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\terminal\navigationcheck.ts" />
+    <TypeScriptCompile Include="Content\js\app\controller\terminal\report\historysales.ts" />
     <TypeScriptCompile Include="Content\js\app\interfaces\iapplication.ts" />
     <TypeScriptCompile Include="Content\js\app\interfaces\icontrol.ts" />
     <TypeScriptCompile Include="Content\js\app\interfaces\icontroller.ts" />

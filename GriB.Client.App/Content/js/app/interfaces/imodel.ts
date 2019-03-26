@@ -179,6 +179,7 @@
         comment: string;
         positions: IPOSCheckPosition[];
         sum: number;
+        ptype?: number;
     }
 
     export interface IPOSCheckPosition {

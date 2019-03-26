@@ -49,6 +49,7 @@
 
 
     export interface IEditorButtonSettings {
+        IsPrint?: boolean;
         IsSave?: boolean;
         IsCancel?: boolean;
     }
@@ -68,7 +69,13 @@
         IsOrder?: boolean;
     }
 
-    export interface IControlTable {
+    export interface IControl {
+        InitView(): JQuery;
+        DestroyView();
+        View: JQuery;
+    }
+
+    export interface IControlTable extends IControl {
         Columns: ITableColumn[];
         InitView(): JQuery;
         DestroyView();
@@ -76,12 +83,17 @@
         IsScroll: boolean;
         Setup();
         Rows: Interfaces.Model.ITableRowModel[];
+        OnSelect(row: Interfaces.Model.ITableRowModel);
         OnDetalize(row: Interfaces.Model.ITableRowModel);
     }
 
-    export interface IControlEditTable {
+    export interface IControlEditTable extends IControlTable {
         RowHeaderContextClick: { (e: any): void; };
         RowContextClick: { (e: any): void; };
 
+    }
+
+    export interface ICheckViewControl extends IControl {
+        POSCheck: Interfaces.Model.IPOSCheck;
     }
 }

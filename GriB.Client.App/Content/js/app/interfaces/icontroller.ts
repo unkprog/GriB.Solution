@@ -53,6 +53,7 @@
     export interface IControllerEditor extends IController {
         EditorModel: Model.IBaseModel;
         EditorSettings: Control.IEditorSettings;
+        Print(): void;
         Save(): void;
         Cancel(): void;
     }
@@ -150,6 +151,10 @@
     export interface IControllerCashDialog extends IControllerEditor {
         Result: number;
         OnResult(controller: IControllerCashDialog): void;
+    }
+
+    export interface IControllerHistorySales extends IControllerEditor {
+        CurrentChange: number;
     }
 
     export interface IControllerReportWithFilter extends IControllerEditor {

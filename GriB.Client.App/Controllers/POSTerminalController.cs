@@ -133,6 +133,17 @@ namespace GriB.Client.App.Controllers
             });
         }
 
+        [HttpGet]
+        [ActionName("check_history")]
+        public HttpResponseMessage GetCheck(int id)
+        {
+            return TryCatchResponseQuery((query) =>
+            {
+                check check = Check.GetCheck(query, id);
+                check = Check.GetPositions(query, check);
+                return Request.CreateResponse(HttpStatusCode.OK, check);
+            });
+        }
 
         [HttpPost]
         [ActionName("check_setclient")]

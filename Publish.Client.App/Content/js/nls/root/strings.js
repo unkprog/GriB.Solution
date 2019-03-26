@@ -19,6 +19,7 @@ define({
     "button$label$delete": "Удалить",
     "button$label$select": "Выбрать",
     "button$label$find": "Поиск",
+    "button$label$print": "Печать",
 
     "button$label$demo": "Демо",
     "button$label$register": "Регистрация",
@@ -197,6 +198,9 @@ define({
     "label$sum": "Сумма",
     "label$quantity": "Количество",
     "label$quantityshort": "Колич.",
+    "label$time": "Время",
+    "label$namecheck": "Наим-е",
+    "label$quantitycheck": "Кол",
     "label$unitshort": "Ед.изм.",
 
     /////////////////////////////////////////////////////////////////////////////////////////////
@@ -302,12 +306,13 @@ define({
   
     "label$incash": "В кассе: ",
 
-    "label$time": "Время",
     "label$client": "Клиент",
 
     "label$methodpayment": "Способ оплаты",
     "label$cash": "Наличный расчет",
     "label$noncash": "Безналичный расчет",
+    "label$cash$in": "Наличными",
+    "label$cash$nonin": "Безналичными",
     "label$withoutpayment": "Без оплаты",
     "label$withoutdiscount": "Без скидки",
     "label$cancelorder": "Отменить заказ",
@@ -364,6 +369,7 @@ define({
     "label$daysofweek": "По дням недели",
     "label$intime": "По времени",
     "label$checks": "Чеки",
+    "label$check": "Чек",
     "label$positions": "Позиции",
     "label$percent": "%",
     "label$dayweek$mon": "Пн",

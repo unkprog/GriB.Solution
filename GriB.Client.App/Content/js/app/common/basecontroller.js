@@ -305,8 +305,11 @@ define(["require", "exports", "app/common/utils", "app/common/variables", "app/c
                 navbarHeader += '        </nav>';
                 navbarHeader += '    </div>';
                 this.navHeader = $(navbarHeader);
+                this.btnPrint = $('<li><a id="editor-btn-print" class="editor-header-button tooltipped" data-position="bottom" data-tooltip="' + vars._statres("button$label$print") + '"><i class="material-icons editor-header">print</i></a></li>');
                 this.btnSave = $('<li><a id="editor-btn-save" class="editor-header-button tooltipped" data-position="bottom" data-tooltip="' + vars._statres("button$label$save") + '"><i class="material-icons editor-header">done</i></a></li>');
                 this.btnCancel = $('<li><a id="editor-btn-cancel" class="editor-header-button tooltipped" data-position="bottom" data-tooltip="' + vars._statres("button$label$cancel") + '"><i class="material-icons editor-header">close</i></a></li>');
+                if (this.editorSettings.ButtonSetings.IsPrint === true)
+                    this.navHeader.find("#editButtons").append(this.btnPrint);
                 if (this.editorSettings.ButtonSetings.IsSave === true)
                     this.navHeader.find("#editButtons").append(this.btnSave);
                 if (this.editorSettings.ButtonSetings.IsCancel === true)
@@ -324,6 +327,8 @@ define(["require", "exports", "app/common/utils", "app/common/variables", "app/c
             };
             BaseEditor.prototype.ViewHide = function (e) {
                 _super.prototype.ViewHide.call(this, e);
+                if (this.btnPrint)
+                    this.btnPrint.remove();
                 if (this.btnSave)
                     this.btnSave.remove();
                 if (this.btnCancel)
@@ -332,12 +337,17 @@ define(["require", "exports", "app/common/utils", "app/common/variables", "app/c
                     this.tooltips.tooltip("destroy");
             };
             BaseEditor.prototype.createEvents = function () {
+                this.PrintButtonClick = this.createTouchClickEvent(this.btnPrint, this.printButtonClick);
                 this.SaveButtonClick = this.createTouchClickEvent(this.btnSave, this.saveButtonClick);
                 this.CancelButtonClick = this.createTouchClickEvent(this.btnCancel, this.cancelButtonClick);
             };
             BaseEditor.prototype.destroyEvents = function () {
+                this.destroyTouchClickEvent(this.btnPrint, this.PrintButtonClick);
                 this.destroyTouchClickEvent(this.btnSave, this.SaveButtonClick);
-                this.destroyTouchClickEvent(this.btnSave, this.CancelButtonClick);
+                this.destroyTouchClickEvent(this.btnCancel, this.CancelButtonClick);
+            };
+            BaseEditor.prototype.printButtonClick = function (e) {
+                this.Print();
             };
             BaseEditor.prototype.saveButtonClick = function (e) {
                 if (this.validate()) {
@@ -380,6 +390,8 @@ define(["require", "exports", "app/common/utils", "app/common/variables", "app/c
             };
             BaseEditor.prototype.getSaveModel = function () {
                 return this.EditorModel;
+            };
+            BaseEditor.prototype.Print = function () {
             };
             BaseEditor.prototype.Save = function () {
                 var controller = this;

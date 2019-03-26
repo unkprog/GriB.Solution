@@ -333,5 +333,35 @@ namespace GriB.Client.App.Managers.Reports
 
             return _items;
         }
+
+        private static ReportHistorySaleRow readFromHistorySaleRow(object[] values)
+        {
+            int cnt = 0;
+            ReportHistorySaleRow result = new ReportHistorySaleRow()
+            {
+                checkid = (int)values[cnt++],
+                payment = new Models.POSTerminal.payment()
+                {
+                    id = (int)values[cnt++],
+                    cd = (DateTime)values[cnt++],
+                    sum = (double)values[cnt++],
+                    ptype = (int)values[cnt++],
+                    options = (int)values[cnt++]
+                }
+            };
+            return result;
+        }
+        private const string cmdGetHistorySales = @"Report\POS\[historysales]";
+        public static List<ReportHistorySaleRow> GetHistorySales(this Query query, int change)
+        {
+            List<ReportHistorySaleRow> result = new List<ReportHistorySaleRow>();
+            query.Execute(cmdGetHistorySales, new SqlParameter[] { new SqlParameter("@change", change) }
+            , (values) =>
+            {
+                result.Add(readFromHistorySaleRow(values));
+            });
+
+            return result;
+        }
     }
 }

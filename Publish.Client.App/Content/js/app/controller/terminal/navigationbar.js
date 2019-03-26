@@ -166,7 +166,13 @@ define(["require", "exports", "app/common/variables", "app/common/utils"], funct
                     this.terminal.UpdateSumInCash();
                 };
                 NavigationBar.prototype.historySalesClick = function (e) {
-                    M.toast({ html: vars._statres("label$indevelopment") });
+                    var _this = this;
+                    vars._app.OpenController({
+                        urlController: 'terminal/report/historysales', isModal: true, onLoadController: function (controller) {
+                            var ctrlHistorySales = controller;
+                            ctrlHistorySales.CurrentChange = _this.terminal.CurrentChange;
+                        }
+                    });
                 };
                 NavigationBar.prototype.reportByChangeClick = function (e) {
                     M.toast({ html: vars._statres("label$indevelopment") });

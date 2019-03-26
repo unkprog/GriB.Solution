@@ -54,6 +54,8 @@ interface Window {
     date_ddmmyyyy_withtime(date: Date): string;
     date_from_ddmmyyyy(dateStr: string): Date;
     numberToString(value: number, decimal: number): string;
+    numberPadZero(value: number, length: number): string;
     strToHashCode(str: string): number;
+    printDocumentPage(documentPage: string | JQuery): void;
     WeekNamesByValue: Array<string>;
 }

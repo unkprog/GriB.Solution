@@ -135,6 +135,17 @@ namespace GriB.Client.App.Controllers
                       return Request.CreateResponse(HttpStatusCode.OK, Cash.GetCashDetail(query, filter, employees));
                   });
               })
-       );
+        );
+
+        [HttpGet]
+        [ActionName("historysales")]
+        public HttpResponseMessage HistorySales(int change)
+        {
+            return TryCatchResponseQuery((query) =>
+            {
+                return Request.CreateResponse(HttpStatusCode.OK, Sales.GetHistorySales(query, change));
+            });
+        }
+
     }
 }

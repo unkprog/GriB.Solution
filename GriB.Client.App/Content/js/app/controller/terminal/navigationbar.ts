@@ -200,7 +200,12 @@ export namespace Controller.Terminal {
 
         public HistorySalesClick: { (e: any): any }
         private historySalesClick(e: any): any {
-            M.toast({ html: vars._statres("label$indevelopment") });
+            vars._app.OpenController({
+                urlController: 'terminal/report/historysales', isModal: true, onLoadController: (controller: Interfaces.IController) => {
+                    let ctrlHistorySales: Interfaces.IControllerHistorySales = controller as Interfaces.IControllerHistorySales;
+                    ctrlHistorySales.CurrentChange = this.terminal.CurrentChange;
+                }
+            });
         }
 
         public ReportByChangeClick: { (e: any): any }

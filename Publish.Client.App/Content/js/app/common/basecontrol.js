@@ -211,6 +211,7 @@ define(["require", "exports", "app/common/utils", "app/common/variables"], funct
             });
             BaseTable.prototype.InitView = function () {
                 this.SortButtonClick = $.proxy(this.sortButtonClick, this);
+                this.RowClick = $.proxy(this.rowClick, this);
                 this.RowDoubleClick = $.proxy(this.rowDoubleClick, this);
                 var htmlTable = '<table class="highlight">';
                 htmlTable += '   <thead></thead>';
@@ -221,6 +222,13 @@ define(["require", "exports", "app/common/utils", "app/common/variables"], funct
                 this.tableBody = this.tableControl.find('tbody');
                 return this.tableControl;
             };
+            Object.defineProperty(BaseTable.prototype, "View", {
+                get: function () {
+                    return this.tableControl;
+                },
+                enumerable: true,
+                configurable: true
+            });
             BaseTable.prototype.DestroyView = function () {
                 this.detachSortEvents();
                 this.destroyRowsEvents();
@@ -241,11 +249,16 @@ define(["require", "exports", "app/common/utils", "app/common/variables"], funct
                 this.setupRows();
             };
             BaseTable.prototype.createRowsEvents = function () {
-                utils.createDblTouchClickEvent(this.tableRows, this.RowDoubleClick, this, this.tableBody);
+                if (this.tableRows) {
+                    utils.createTouchClickEvent(this.tableRows, this.RowClick, this, this.tableBody);
+                    utils.createDblTouchClickEvent(this.tableRows, this.RowDoubleClick, this, this.tableBody);
+                }
             };
             BaseTable.prototype.destroyRowsEvents = function () {
-                if (this.tableRows)
+                if (this.tableRows) {
+                    utils.destroyTouchClickEvent(this.tableRows, this.RowClick, this.tableBody);
                     utils.destroyDblTouchClickEvent(this.tableRows, this.RowDoubleClick, this.tableBody);
+                }
             };
             BaseTable.prototype.setupRows = function () {
                 this.destroyRowsEvents();
@@ -365,6 +378,21 @@ define(["require", "exports", "app/common/utils", "app/common/variables"], funct
                     }
                 }
                 return html;
+            };
+            BaseTable.prototype.rowClick = function (e) {
+                if (this.selectedRow)
+                    this.selectedRow.removeClass("row-active z-depth-1 brown lighten-5");
+                this.selectedRow = $(e.currentTarget);
+                if (this.selectedRow)
+                    this.selectedRow.addClass("row-active z-depth-1 brown lighten-5");
+                if (this.OnSelect) {
+                    var index = +e.currentTarget.id.replace('table-row-', '');
+                    var row = this.Rows[index];
+                    this.OnSelect(row);
+                }
+                e.preventDefault();
+                e.stopPropagation();
+                return false;
             };
             BaseTable.prototype.rowDoubleClick = function (e) {
                 if (this.OnDetalize) {

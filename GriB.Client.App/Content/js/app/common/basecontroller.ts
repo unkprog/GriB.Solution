@@ -303,6 +303,7 @@ export namespace Controller {
         }
 
         private navHeader: JQuery;
+        private btnPrint: JQuery;
         private btnSave: JQuery;
         private btnCancel: JQuery;
         private tooltips: JQuery;
@@ -319,9 +320,11 @@ export namespace Controller {
 
             this.navHeader = $(navbarHeader);
 
+            this.btnPrint = $('<li><a id="editor-btn-print" class="editor-header-button tooltipped" data-position="bottom" data-tooltip="' + vars._statres("button$label$print") + '"><i class="material-icons editor-header">print</i></a></li>');
             this.btnSave = $('<li><a id="editor-btn-save" class="editor-header-button tooltipped" data-position="bottom" data-tooltip="' + vars._statres("button$label$save") + '"><i class="material-icons editor-header">done</i></a></li>');
             this.btnCancel = $('<li><a id="editor-btn-cancel" class="editor-header-button tooltipped" data-position="bottom" data-tooltip="' + vars._statres("button$label$cancel") + '"><i class="material-icons editor-header">close</i></a></li>');
 
+            if (this.editorSettings.ButtonSetings.IsPrint === true) this.navHeader.find("#editButtons").append(this.btnPrint);
             if (this.editorSettings.ButtonSetings.IsSave === true) this.navHeader.find("#editButtons").append(this.btnSave);
             if (this.editorSettings.ButtonSetings.IsCancel === true) this.navHeader.find("#editButtons").append(this.btnCancel);
 
@@ -344,6 +347,8 @@ export namespace Controller {
 
         public ViewHide(e) {
             super.ViewHide(e);
+            if (this.btnPrint)
+                this.btnPrint.remove();
             if (this.btnSave)
                 this.btnSave.remove();
             if (this.btnCancel)
@@ -353,13 +358,20 @@ export namespace Controller {
         }
 
         protected createEvents(): void {
+            this.PrintButtonClick = this.createTouchClickEvent(this.btnPrint, this.printButtonClick);
             this.SaveButtonClick = this.createTouchClickEvent(this.btnSave, this.saveButtonClick);
             this.CancelButtonClick = this.createTouchClickEvent(this.btnCancel, this.cancelButtonClick);
         }
 
         protected destroyEvents(): void {
+            this.destroyTouchClickEvent(this.btnPrint, this.PrintButtonClick);
             this.destroyTouchClickEvent(this.btnSave, this.SaveButtonClick);
-            this.destroyTouchClickEvent(this.btnSave, this.CancelButtonClick);
+            this.destroyTouchClickEvent(this.btnCancel, this.CancelButtonClick);
+        }
+
+        public PrintButtonClick: { (e: any): void; };
+        private printButtonClick(e): void {
+                this.Print();
         }
 
         public SaveButtonClick: { (e: any): void; };
@@ -412,6 +424,10 @@ export namespace Controller {
 
         protected getSaveModel(): Interfaces.Model.IEditorModel {
             return this.EditorModel;
+        }
+
+        public Print() {
+
         }
 
         public Save(): void {

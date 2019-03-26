@@ -222,6 +222,7 @@ export namespace Control {
 
         public InitView(): JQuery {
             this.SortButtonClick = $.proxy(this.sortButtonClick, this);
+            this.RowClick = $.proxy(this.rowClick, this);
             this.RowDoubleClick = $.proxy(this.rowDoubleClick, this);
          
             let htmlTable: string = '<table class="highlight">';
@@ -236,10 +237,13 @@ export namespace Control {
             return this.tableControl;
         }
 
+        public get View(): JQuery {
+            return this.tableControl;
+        }
+
         public DestroyView() {
             this.detachSortEvents();
             this.destroyRowsEvents();
-           
         }
 
         public Setup(): void {
@@ -260,12 +264,17 @@ export namespace Control {
         }
 
         protected createRowsEvents() {
-            utils.createDblTouchClickEvent(this.tableRows, this.RowDoubleClick, this, this.tableBody);
+            if (this.tableRows) {
+                utils.createTouchClickEvent(this.tableRows, this.RowClick, this, this.tableBody);
+                utils.createDblTouchClickEvent(this.tableRows, this.RowDoubleClick, this, this.tableBody);
+            }
         }
 
         protected destroyRowsEvents() {
-            if (this.tableRows)
+            if (this.tableRows) {
+                utils.destroyTouchClickEvent(this.tableRows, this.RowClick, this.tableBody);
                 utils.destroyDblTouchClickEvent(this.tableRows, this.RowDoubleClick, this.tableBody);
+            }
         }
 
         protected setupRows(): void {
@@ -407,6 +416,26 @@ export namespace Control {
             return html;
         }
 
+        private selectedRow: JQuery;
+        private RowClick: { (e: any): void; };
+        private rowClick(e) {
+
+            if (this.selectedRow)
+                this.selectedRow.removeClass("row-active z-depth-1 brown lighten-5");
+            this.selectedRow = $(e.currentTarget);
+            if (this.selectedRow)
+                this.selectedRow.addClass("row-active z-depth-1 brown lighten-5");
+
+            if (this.OnSelect) {
+                let index: number = +e.currentTarget.id.replace('table-row-', '');
+                let row: Interfaces.Model.ITableRowModel = this.Rows[index];
+                this.OnSelect(row);
+            }
+            e.preventDefault();
+            e.stopPropagation();
+            return false;
+        }
+
         private RowDoubleClick: { (e: any): void; };
         private rowDoubleClick(e) {
             if (this.OnDetalize) {
@@ -419,7 +448,7 @@ export namespace Control {
             return false;
         }
 
-       
+        public OnSelect: { (row: Interfaces.Model.ITableRowModel): void; };
         public OnDetalize: { (row: Interfaces.Model.ITableRowModel): void; };
 
         private SortButtonClick: { (e: any): void; };
@@ -604,6 +633,5 @@ export namespace Control {
 
         private changeEditRowModel(e: any): void {
         }
-
     }
 }
