@@ -107,6 +107,8 @@
         View: JQuery;
         CurrentSalePoint: number;
         CurrentChange: number;
+        IsChangeOpen(): boolean;
+
         ControlChecks: JQuery;
         GetChange(callback?: () => void): void;
         CheckChange(callback?: () => void): void;

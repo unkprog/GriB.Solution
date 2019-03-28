@@ -90,7 +90,7 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
                         kendo.bind($("#app-view"), _this._model);
                         self.contentControl = $("#app-content");
                         self.navbarControl = $("#app-navbar");
-                        $('.sidenav').sidenav();
+                        //$('.sidenav').sidenav();
                         self.resize(undefined);
                         self.initAfterLoaded();
                         self.SetControlNavigation(_this);

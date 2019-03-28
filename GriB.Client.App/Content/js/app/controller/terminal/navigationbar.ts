@@ -151,12 +151,12 @@ export namespace Controller.Terminal {
             this.terminal.CloseChange()
         }
 
+
+
         public InCashClick: { (e: any): any }
         private inCashClick(e: any): any {
             let self = this;
-            if (self.terminal.CurrentChange == 0)
-                M.toast({ html: vars._statres("label$change$close") });
-            else
+            if (self.terminal.IsChangeOpen() === true) {
                 vars._app.OpenController({
                     urlController: 'terminal/cashdialog', isModal: true, onLoadController: (controller: Interfaces.IController) => {
                         let ctrCashDialog: Interfaces.IControllerCashDialog = controller as Interfaces.IControllerCashDialog;
@@ -164,6 +164,7 @@ export namespace Controller.Terminal {
                         ctrCashDialog.OnResult = $.proxy(self.cashDialogResult, self);
                     }
                 });
+            }
         }
 
         private cashDialogResult(dialog: Interfaces.IControllerCashDialog) {
@@ -209,23 +210,27 @@ export namespace Controller.Terminal {
 
         public HistorySalesClick: { (e: any): any }
         private historySalesClick(e: any): any {
-            vars._app.OpenController({
-                urlController: 'terminal/report/historysales', isModal: true, onLoadController: (controller: Interfaces.IController) => {
-                    let ctrlHistorySales: Interfaces.IControllerHistorySales = controller as Interfaces.IControllerHistorySales;
-                    ctrlHistorySales.CurrentChange = this.terminal.CurrentChange;
-                }
-            });
+            if (this.terminal.IsChangeOpen() === true) {
+                vars._app.OpenController({
+                    urlController: 'terminal/report/historysales', isModal: true, onLoadController: (controller: Interfaces.IController) => {
+                        let ctrlHistorySales: Interfaces.IControllerHistorySales = controller as Interfaces.IControllerHistorySales;
+                        ctrlHistorySales.CurrentChange = this.terminal.CurrentChange;
+                    }
+                });
+            }
         }
 
         public ReportByChangeClick: { (e: any): any }
         private reportByChangeClick(e: any): any {
-            vars._app.OpenController({
-                urlController: 'terminal/report/changesales', isModal: true, onLoadController: (controller: Interfaces.IController) => {
-                    let ctrlChangeSales: Interfaces.IControllerChangeSales = controller as Interfaces.IControllerChangeSales;
-                    ctrlChangeSales.CurrentSalePoint = this.terminal.CurrentSalePoint;
-                    ctrlChangeSales.CurrentChange = this.terminal.CurrentChange;
-                }
-            });
+            if (this.terminal.IsChangeOpen() === true) {
+                vars._app.OpenController({
+                    urlController: 'terminal/report/changesales', isModal: true, onLoadController: (controller: Interfaces.IController) => {
+                        let ctrlChangeSales: Interfaces.IControllerChangeSales = controller as Interfaces.IControllerChangeSales;
+                        ctrlChangeSales.CurrentSalePoint = this.terminal.CurrentSalePoint;
+                        ctrlChangeSales.CurrentChange = this.terminal.CurrentChange;
+                    }
+                });
+            }
         }
     }
 }

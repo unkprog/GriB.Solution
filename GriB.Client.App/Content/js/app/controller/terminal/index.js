@@ -255,12 +255,16 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                         this.checkChangeCallBack();
                     this.checkChangeCallBack = undefined;
                 };
-                Index.prototype.CloseChange = function () {
-                    var self = this;
-                    if (self.CurrentChange == 0) {
+                Index.prototype.IsChangeOpen = function () {
+                    var result = (this.CurrentChange == 0 ? false : true);
+                    if (result === false) {
                         M.toast({ html: vars._statres("label$change$close") });
                     }
-                    else {
+                    return result;
+                };
+                Index.prototype.CloseChange = function () {
+                    var self = this;
+                    if (self.IsChangeOpen() === true) {
                         vars._app.OpenController({
                             urlController: 'terminal/changedialog', isModal: true, onLoadController: function (controller) {
                                 var ctrChangeDialog = controller;

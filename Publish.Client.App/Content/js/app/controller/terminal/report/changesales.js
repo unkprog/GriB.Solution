@@ -126,7 +126,6 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                             _this.Model.set("TextRevenueTotal", utils.numberToString(responseData.sumCash + responseData.sumNonCash, 2));
                             _this.Model.set("TextCash", utils.numberToString(responseData.sumCash, 2));
                             _this.Model.set("TextNonCash", utils.numberToString(responseData.sumNonCash, 2));
-                            _this.Model.set("TextCashTotal", utils.numberToString(responseData.sumEncashment, 2));
                             _this.Model.set("TextEncashment", utils.numberToString(responseData.sumEncashment, 2));
                             _this.Model.set("TextDeposit", utils.numberToString(responseData.sumDeposit, 2));
                             _this.Model.set("TextWithDrawing", utils.numberToString(responseData.sumWithDrawal, 2));

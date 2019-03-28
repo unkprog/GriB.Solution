@@ -319,6 +319,7 @@ define({
     "label$cancelorder": "Отменить заказ",
     "label$splitcheck": "Разделить чек",
     "label$printprecheck": "Печать пречека",
+    "label$addcheck": "Добавить чек",
 
     "label$topay": "К оплате",
     "label$received": "Получено",

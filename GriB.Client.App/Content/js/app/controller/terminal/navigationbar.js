@@ -127,9 +127,7 @@ define(["require", "exports", "app/common/variables", "app/common/utils"], funct
                 };
                 NavigationBar.prototype.inCashClick = function (e) {
                     var self = this;
-                    if (self.terminal.CurrentChange == 0)
-                        M.toast({ html: vars._statres("label$change$close") });
-                    else
+                    if (self.terminal.IsChangeOpen() === true) {
                         vars._app.OpenController({
                             urlController: 'terminal/cashdialog', isModal: true, onLoadController: function (controller) {
                                 var ctrCashDialog = controller;
@@ -137,6 +135,7 @@ define(["require", "exports", "app/common/variables", "app/common/utils"], funct
                                 ctrCashDialog.OnResult = $.proxy(self.cashDialogResult, self);
                             }
                         });
+                    }
                 };
                 NavigationBar.prototype.cashDialogResult = function (dialog) {
                     var self = this;
@@ -176,22 +175,26 @@ define(["require", "exports", "app/common/variables", "app/common/utils"], funct
                 };
                 NavigationBar.prototype.historySalesClick = function (e) {
                     var _this = this;
-                    vars._app.OpenController({
-                        urlController: 'terminal/report/historysales', isModal: true, onLoadController: function (controller) {
-                            var ctrlHistorySales = controller;
-                            ctrlHistorySales.CurrentChange = _this.terminal.CurrentChange;
-                        }
-                    });
+                    if (this.terminal.IsChangeOpen() === true) {
+                        vars._app.OpenController({
+                            urlController: 'terminal/report/historysales', isModal: true, onLoadController: function (controller) {
+                                var ctrlHistorySales = controller;
+                                ctrlHistorySales.CurrentChange = _this.terminal.CurrentChange;
+                            }
+                        });
+                    }
                 };
                 NavigationBar.prototype.reportByChangeClick = function (e) {
                     var _this = this;
-                    vars._app.OpenController({
-                        urlController: 'terminal/report/changesales', isModal: true, onLoadController: function (controller) {
-                            var ctrlChangeSales = controller;
-                            ctrlChangeSales.CurrentSalePoint = _this.terminal.CurrentSalePoint;
-                            ctrlChangeSales.CurrentChange = _this.terminal.CurrentChange;
-                        }
-                    });
+                    if (this.terminal.IsChangeOpen() === true) {
+                        vars._app.OpenController({
+                            urlController: 'terminal/report/changesales', isModal: true, onLoadController: function (controller) {
+                                var ctrlChangeSales = controller;
+                                ctrlChangeSales.CurrentSalePoint = _this.terminal.CurrentSalePoint;
+                                ctrlChangeSales.CurrentChange = _this.terminal.CurrentChange;
+                            }
+                        });
+                    }
                 };
                 return NavigationBar;
             }());

@@ -141,22 +141,15 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
                         _super.prototype.ViewResize.call(this);
                         var wWidth = $(window).width();
                         var wHeight = $(window).height();
-                        var tbody = (this.tableSalesControl ? this.tableSalesControl.TableBody : undefined);
-                        if (wWidth >= 600) {
-                            if (this.checkViewContainer && this.checkViewContainer.length > 0) {
+                        if (this.checkViewContainer && this.checkViewContainer.length > 0) {
+                            if (wWidth >= 600)
                                 this.checkViewContainer.height(wHeight - this.checkViewContainer.offset().top - (0.2 * parseFloat(getComputedStyle(this.checkViewContainer[0]).fontSize)) - 1 - 27);
-                            }
-                            if (tbody && tbody.length > 0) {
-                                tbody.height(wHeight - tbody.offset().top - (0.2 * parseFloat(getComputedStyle(tbody[0]).fontSize)) - 1);
-                            }
-                        }
-                        else {
-                            if (this.checkViewContainer && this.checkViewContainer.length > 0) {
+                            else
                                 this.checkViewContainer.height((wHeight - this.checkViewContainer.offset().top - (0.2 * parseFloat(getComputedStyle(this.checkViewContainer[0]).fontSize)) - 1) / 2.5);
-                            }
-                            if (tbody && tbody.length > 0) {
-                                tbody.height((wHeight - (this.checkViewContainer && this.checkViewContainer.length > 0 ? this.checkViewContainer.offset().top : 0) - tbody.offset().top - (0.2 * parseFloat(getComputedStyle(tbody[0]).fontSize)) - 1));
-                            }
+                        }
+                        var tbody = (this.tableSalesControl ? this.tableSalesControl.TableBody : undefined);
+                        if (tbody && tbody.length > 0) {
+                            tbody.height((wHeight - tbody.offset().top - (0.2 * parseFloat(getComputedStyle(tbody[0]).fontSize)) - 1));
                         }
                     };
                     HistorySales.prototype.onSelect = function (row) {

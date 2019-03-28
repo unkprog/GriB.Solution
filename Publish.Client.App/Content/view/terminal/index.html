@@ -2,7 +2,7 @@
     <!-- Dropdown Structure -->
     <a id="posterminal-view-cash-trigger" class="hide" data-target='posterminal-view-cash-menu'></a>
     <ul id="posterminal-view-cash-menu" class="dropdown-content">
-        <li><a  id="posterminal-view-cash-menu-incash"><i class="material-icons">monetization_on</i><span data-bind="text:labelInCash"></span><span class="posterminal-cash-menu-incash" data-bind="text:POSData.MoneyInCash"></span></a></li>
+        <li><a id="posterminal-view-cash-menu-incash"><i class="material-icons">monetization_on</i><span data-bind="text:labelInCash"></span><span class="posterminal-cash-menu-incash" data-bind="text:POSData.MoneyInCash"></span></a></li>
         <li class="divider" tabindex="-1"></li>
         <li><a id="posterminal-view-cash-menu-historysalses"><i class="material-icons">history</i><span data-bind="text:labelHistorySales"></span></a></li>
         <li><a id="posterminal-view-cash-menu-reportbychange"><i class="material-icons">timeline</i><span data-bind="text:labelReportByChange"></span></a></li>
@@ -11,11 +11,16 @@
     </ul>
     <ul id="posterminal-view-salepoints" class="dropdown-content"></ul>
 
+    <ul id="posterminal-main-view-slide" class="sidenav">
+        <li id="posterminal-view-checks-slide">
+        </li>
+    </ul>
+
     <div id="posterminal-view-main">
 
         <div id="posterminal-view-checks-container">
             <div id="posterminal-view-checks">
-                <a id="btn-check-new" class="btn"><i class="material-icons">add</i></a>
+                <a id="btn-check-new" class="btn tooltipped"><i class="material-icons">add</i></a>
             </div>
 
             <div id="posterminal-view-check-info" class="row" data-bind="visible: visibleCheck">
@@ -47,10 +52,10 @@
 
             <div id="posterminal-view-check-buttons" class="row" data-bind="visible: visibleCheck">
                 <div class="col s3 m3 l3 xl3">
-                    <a id="btn-check-person" class="btn btncol check-btn"><i class="material-icons check-icon">person</i></a>
+                    <a id="btn-check-person" class="btn btncol check-btn tooltipped"><i class="material-icons check-icon">person</i></a>
                 </div>
                 <div class="col s3 m3 l3 xl3">
-                    <a id="btn-check-discount" class="btn btncol check-btn dropdown-trigger" data-target="btn-check-discount-dropdown"><i class="material-icons check-icon">mood</i></a>
+                    <a id="btn-check-discount" class="btn btncol check-btn dropdown-trigger tooltipped" data-target="btn-check-discount-dropdown"><i class="material-icons check-icon">mood</i></a>
                     <!-- Dropdown Structure -->
                     <ul id='btn-check-discount-dropdown' class='dropdown-content'>
                         <li><a id="btn-check-discount-item" data-bind="text:labelDiscount"></a></li>
@@ -58,7 +63,7 @@
                     </ul>
                 </div>
                 <div class="col s3 m3 l3 xl3">
-                    <a id="btn-check-comment" class="btn btncol check-btn"><i class="material-icons check-icon">message</i></a>
+                    <a id="btn-check-comment" class="btn btncol check-btn tooltipped"><i class="material-icons check-icon">message</i></a>
                 </div>
                 <div class="col s3 m3 l3 xl3">
                     <a id="btn-check-menu" class="btn btncol check-btn dropdown-trigger" data-target="btn-check-menu-dropdown"><i class="material-icons check-icon">menu</i></a>

@@ -246,12 +246,17 @@ export namespace Controller.Terminal {
             this.checkChangeCallBack = undefined;
         }
 
-        public CloseChange(): void {
-            let self = this;
-            if (self.CurrentChange == 0) {
+        public IsChangeOpen(): boolean {
+            let result = (this.CurrentChange == 0 ? false : true);
+            if (result === false) {
                 M.toast({ html: vars._statres("label$change$close") });
             }
-            else {
+            return result;
+        }
+
+        public CloseChange(): void {
+            let self = this;
+            if (self.IsChangeOpen() === true) {
                 vars._app.OpenController({
                     urlController: 'terminal/changedialog', isModal: true, onLoadController: (controller: Interfaces.IController) => {
                         let ctrChangeDialog: Interfaces.IControllerChangeDialog = controller as Interfaces.IControllerChangeDialog;

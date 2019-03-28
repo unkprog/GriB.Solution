@@ -12,22 +12,30 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/s
                     this.editRowQuantity = -1;
                     this.paymentData = { check: 0, paymentType: 0, paymentOption: 0, paymentSum: 0, salepoint: 0, client: 0, comment: '' };
                     this.terminal = terminal;
+                    this.thisView = view.find("#posterminal-view-main");
                     this.controlContainerChecks = view.find("#posterminal-view-checks-container");
                     this.controlChecks = this.controlContainerChecks.find("#posterminal-view-checks");
                     this.buttonNewCheck = this.ControlContainerChecks.find("#btn-check-new");
+                    this.buttonNewCheck.tooltip({ html: vars._statres("label$addcheck") });
                     this.controlButtons = this.controlContainerChecks.find("#posterminal-view-check-buttons");
                     this.controlTablePositions = this.controlContainerChecks.find("#posterminal-view-check-positions");
                     this.controlTableBodyPositions = this.controlTablePositions.find("tbody");
                     this.controlTotal = this.controlContainerChecks.find("#posterminal-view-check-total");
                     this.buttonCheckClient = this.controlContainerChecks.find("#btn-check-person");
+                    this.buttonCheckClient.tooltip({ html: vars._statres("label$client") });
+                    this.ControlContainerChecks.find('#btn-check-discount').tooltip({ html: vars._statres("label$discount") });
                     this.buttonCheckDiscount = this.controlContainerChecks.find("#btn-check-discount-item");
                     this.buttonCheckNoDiscount = this.controlContainerChecks.find("#btn-check-nodiscount-item");
                     this.buttonCheckComment = this.controlContainerChecks.find("#btn-check-comment");
+                    this.buttonCheckComment.tooltip({ html: vars._statres("label$comment") });
                     this.buttonCheckMenu = this.controlContainerChecks.find("#btn-check-menu");
                     this.buttonCheckPayment = this.controlContainerChecks.find("#btn-check-payment");
                     this.buttonCheckCancel = this.controlContainerChecks.find("#btn-check-cancel-item");
                     this.buttonSplitCheck = this.controlContainerChecks.find("#btn-check-split-item");
                     this.buttonPrintPreCheck = this.controlContainerChecks.find("#btn-check-printpre-item");
+                    this.controlMenuCheck = view.find('#posterminal-main-view-slide');
+                    this.controlMenuCheck.sidenav({ draggable: false });
+                    this.hidedMenuCheck = view.find('#posterminal-view-checks-slide');
                     this.model = new kendo.data.ObservableObject({
                         "visibleCheck": false,
                         "labelTime": vars._statres("label$time"),
@@ -66,6 +74,17 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/s
                     enumerable: true,
                     configurable: true
                 });
+                NavigationCheck.prototype.OpenSlideChecks = function () {
+                    this.ViewResize(undefined);
+                    if (this.controlMenuCheck) {
+                        this.controlMenuCheck.sidenav('open');
+                    }
+                };
+                NavigationCheck.prototype.CloseSlideChecks = function () {
+                    if (this.controlMenuCheck) {
+                        this.controlMenuCheck.sidenav('close');
+                    }
+                };
                 Object.defineProperty(NavigationCheck.prototype, "ControlContainerChecks", {
                     get: function () {
                         return this.controlContainerChecks;
@@ -83,9 +102,25 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/s
                 NavigationCheck.prototype.ViewResize = function (e) {
                     if (this.controlContainerChecks) {
                         var height = $(window).height();
+                        var width = $(window).width();
                         var totalHeight = this.controlTotal.height() + 10;
                         var btnheight = this.controlButtons.height() + 10;
                         this.controlContainerChecks.height(height - this.controlContainerChecks.offset().top);
+                        if (this.controlContainerChecks && this.controlContainerChecks.length) {
+                            var parent_1 = this.controlContainerChecks.parent();
+                            if (width >= 600) {
+                                if (this.thisView[0].id !== parent_1[0].id) {
+                                    this.controlContainerChecks.remove();
+                                    this.thisView.prepend(this.controlContainerChecks);
+                                }
+                            }
+                            else {
+                                if (this.hidedMenuCheck[0].id !== parent_1[0].id) {
+                                    this.controlContainerChecks.remove();
+                                    this.hidedMenuCheck.prepend(this.controlContainerChecks);
+                                }
+                            }
+                        }
                         if (this.controlTablePositions) {
                             this.controlTablePositions.height(height - this.controlTablePositions.offset().top - totalHeight - btnheight);
                             this.controlTablePositions.find('tbody').height(height - this.controlTablePositions.offset().top - totalHeight - btnheight);
@@ -164,7 +199,7 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/s
                         this.model.set("visibleDiscount", discount !== 0);
                     }
                     else if (e.field === "visibleClient" || e.field === "visibleDiscount" || e.field === "visibleCheck") {
-                        this.ViewResize({});
+                        //this.ViewResize({});
                     }
                 };
                 NavigationCheck.prototype.setCurrentCheck = function (currentCheck, onSetCurrent) {
@@ -194,6 +229,7 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/s
                         onSetCurrent();
                     if (controller.currentCheck)
                         this.model.set("visibleCheck", true);
+                    this.ViewResize(undefined);
                 };
                 NavigationCheck.prototype.setCurrentCheckById = function (currentCheckId) {
                     var controller = this;
@@ -426,6 +462,7 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/s
                 };
                 NavigationCheck.prototype.clientButtonClick = function (e) {
                     var self = this;
+                    self.CloseSlideChecks();
                     vars._app.OpenController({
                         urlController: 'setting/card/client', isModal: true, onLoadController: function (controller) {
                             var ctrClient = controller;
@@ -450,6 +487,7 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/s
                 };
                 NavigationCheck.prototype.discountButtonClick = function (e) {
                     var self = this;
+                    self.CloseSlideChecks();
                     vars._app.OpenController({
                         urlController: 'setting/card/discount', isModal: true, onLoadController: function (controller) {
                             var ctrlProduct = controller;
@@ -507,6 +545,7 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/s
                 };
                 NavigationCheck.prototype.commentButtonClick = function (e) {
                     var self = this;
+                    self.CloseSlideChecks();
                     if (self.currentCheck) {
                         vars._app.OpenController({
                             urlController: 'terminal/checkcomment', isModal: true, onLoadController: function (controller) {
@@ -528,6 +567,7 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/s
                 };
                 NavigationCheck.prototype.paymentButtonClick = function (e) {
                     var self = this;
+                    self.CloseSlideChecks();
                     vars._app.OpenController({
                         urlController: 'terminal/paymenttype', isModal: true, onLoadController: function (controller) {
                             var ctrlTypePayment = controller;
@@ -612,9 +652,11 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/s
                     }
                 };
                 NavigationCheck.prototype.splitCheckClick = function (e) {
+                    this.CloseSlideChecks();
                     M.toast({ html: vars._statres("label$indevelopment") });
                 };
                 NavigationCheck.prototype.printPreCheckClick = function (e) {
+                    this.CloseSlideChecks();
                     M.toast({ html: vars._statres("label$indevelopment") });
                 };
                 return NavigationCheck;
