@@ -33,6 +33,17 @@
     }
   },
   {
+    "outputFile": "Content/css/app.print.css",
+    "inputFile": "Scss/app.print.scss",
+    "minify": {
+      "termSemicolons": true
+    },
+    "options": {
+      "relativeUrls": false,
+      "lineFeed": "crlf"
+    }
+  },
+  {
     "outputFile": "Content/js/lib/materialize.es5.js",
     "inputFile": "Content/js/lib/materialize.js"
   },

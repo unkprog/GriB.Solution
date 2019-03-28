@@ -4,6 +4,8 @@
         "jquery": "lib/jquery-3.3.1.min",
         "materialize": "lib/materialize/materialize",
         "materialize.pagination": "lib/materialize/materialize.pagination",
+        "printThis": "lib/printthis/printThis",
+        "jqueryprint": "lib/jquery.print.min",
         "chartjs": "lib/chartjs/Chart.min",
         "kendo.core": "lib/kendo/kendo.core.es5.min",
         "kendo.data": "lib/kendo/kendo.data.es5.min",
@@ -33,7 +35,7 @@
 
 require(["domReady", "jquery"], function (domReady, _jquery) {
     $("#progress-container").show();
-    require(["materialize", "materialize.pagination", "kendo.binder", "chartjs"], function (_materialize, _materializePager, _kendoBinder, _chartjs) {
+    require(["materialize", "materialize.pagination", "kendo.binder", "chartjs", "printThis"], function (_materialize, _materializePager, _kendoBinder, _chartjs, _printThis) {
         domReady(function () {
             require(["app/application"], function (app) {
                 var _app = new app.App.Application();

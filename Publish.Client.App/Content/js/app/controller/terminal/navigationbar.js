@@ -175,7 +175,14 @@ define(["require", "exports", "app/common/variables", "app/common/utils"], funct
                     });
                 };
                 NavigationBar.prototype.reportByChangeClick = function (e) {
-                    M.toast({ html: vars._statres("label$indevelopment") });
+                    var _this = this;
+                    vars._app.OpenController({
+                        urlController: 'terminal/report/changesales', isModal: true, onLoadController: function (controller) {
+                            var ctrlChangeSales = controller;
+                            ctrlChangeSales.CurrentSalePoint = _this.terminal.CurrentSalePoint;
+                            ctrlChangeSales.CurrentChange = _this.terminal.CurrentChange;
+                        }
+                    });
                 };
                 return NavigationBar;
             }());

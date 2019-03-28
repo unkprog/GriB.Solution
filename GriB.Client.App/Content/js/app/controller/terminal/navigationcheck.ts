@@ -6,23 +6,31 @@ export namespace Controller.Terminal {
     export class NavigationCheck implements Interfaces.ITerminalCheks {
         constructor(view: JQuery, terminal: Interfaces.ITerminal) {
             this.terminal = terminal;
+            this.thisView = view.find("#posterminal-view-main");
             this.controlContainerChecks = view.find("#posterminal-view-checks-container");
             this.controlChecks = this.controlContainerChecks.find("#posterminal-view-checks");
-            this.buttonNewCheck = this.ControlContainerChecks.find("#btn-check-new");
+            this.buttonNewCheck = this.ControlContainerChecks.find("#btn-check-new"); this.buttonNewCheck.tooltip({ html: vars._statres("label$addcheck") });
             this.controlButtons = this.controlContainerChecks.find("#posterminal-view-check-buttons");
             this.controlTablePositions = this.controlContainerChecks.find("#posterminal-view-check-positions");
             this.controlTableBodyPositions = this.controlTablePositions.find("tbody");
             this.controlTotal = this.controlContainerChecks.find("#posterminal-view-check-total");
 
-            this.buttonCheckClient = this.controlContainerChecks.find("#btn-check-person");
-            this.buttonCheckDiscount = this.controlContainerChecks.find("#btn-check-discount-item");
+            this.buttonCheckClient = this.controlContainerChecks.find("#btn-check-person"); this.buttonCheckClient.tooltip({ html: vars._statres("label$client") });
+            this.ControlContainerChecks.find('#btn-check-discount').tooltip({ html: vars._statres("label$discount") });
+            this.buttonCheckDiscount = this.controlContainerChecks.find("#btn-check-discount-item"); 
             this.buttonCheckNoDiscount = this.controlContainerChecks.find("#btn-check-nodiscount-item");
-            this.buttonCheckComment = this.controlContainerChecks.find("#btn-check-comment");
+            this.buttonCheckComment = this.controlContainerChecks.find("#btn-check-comment"); this.buttonCheckComment.tooltip({ html: vars._statres("label$comment") });
+
             this.buttonCheckMenu = this.controlContainerChecks.find("#btn-check-menu");
             this.buttonCheckPayment = this.controlContainerChecks.find("#btn-check-payment");
             this.buttonCheckCancel = this.controlContainerChecks.find("#btn-check-cancel-item");
             this.buttonSplitCheck = this.controlContainerChecks.find("#btn-check-split-item");
             this.buttonPrintPreCheck = this.controlContainerChecks.find("#btn-check-printpre-item");
+
+            this.controlMenuCheck = view.find('#posterminal-main-view-slide');
+            this.controlMenuCheck.sidenav({ draggable: false });
+
+            this.hidedMenuCheck = view.find('#posterminal-view-checks-slide');
 
             this.model = new kendo.data.ObservableObject({
                 "visibleCheck": false,
@@ -62,8 +70,23 @@ export namespace Controller.Terminal {
             return this.model;
         }
 
+        public OpenSlideChecks(): void {
+            this.ViewResize(undefined);
+            if (this.controlMenuCheck) {
+                this.controlMenuCheck.sidenav('open'); 
+            }
+        }
+
+        public CloseSlideChecks(): void {
+            if (this.controlMenuCheck) {
+                this.controlMenuCheck.sidenav('close');
+            }
+        }
 
         private terminal: Interfaces.ITerminal;
+        private thisView: JQuery;
+        private controlMenuCheck: JQuery;
+        private hidedMenuCheck: JQuery;
         private controlChecks: JQuery;
         private controlContainerChecks: JQuery;
         private buttonNewCheck: JQuery;
@@ -98,9 +121,26 @@ export namespace Controller.Terminal {
         public ViewResize(e: any): void {
             if (this.controlContainerChecks) {
                 let height: number = $(window).height();
+                let width: number = $(window).width();
                 let totalHeight: number = this.controlTotal.height() + 10;
                 let btnheight: number = this.controlButtons.height() + 10;
                 this.controlContainerChecks.height(height - this.controlContainerChecks.offset().top);
+
+                if (this.controlContainerChecks && this.controlContainerChecks.length) {
+                    let parent: JQuery = this.controlContainerChecks.parent();
+                    if (width >= 600) {
+                        if (this.thisView[0].id !== parent[0].id) {
+                            this.controlContainerChecks.remove();
+                            this.thisView.prepend(this.controlContainerChecks);
+                        }
+                    }
+                    else {
+                        if (this.hidedMenuCheck[0].id !== parent[0].id) {
+                            this.controlContainerChecks.remove()
+                            this.hidedMenuCheck.prepend(this.controlContainerChecks);
+                        }
+                    }
+                }
 
                 if (this.controlTablePositions) {
                     this.controlTablePositions.height(height - this.controlTablePositions.offset().top - totalHeight - btnheight);
@@ -190,7 +230,7 @@ export namespace Controller.Terminal {
                 this.model.set("visibleDiscount", discount !== 0);
             }
             else if (e.field === "visibleClient" || e.field === "visibleDiscount" || e.field === "visibleCheck") {
-                this.ViewResize({});
+                //this.ViewResize({});
             }
         }
 
@@ -225,7 +265,7 @@ export namespace Controller.Terminal {
                 onSetCurrent();
             if (controller.currentCheck)
                 this.model.set("visibleCheck", true);
-
+            this.ViewResize(undefined);
         }
 
         public setCurrentCheckById(currentCheckId: number): void {
@@ -481,7 +521,7 @@ export namespace Controller.Terminal {
         public ClientButtonClick: { (e: any): void; };
         private clientButtonClick(e): void {
             let self = this;
-
+            self.CloseSlideChecks();
             vars._app.OpenController({
                 urlController: 'setting/card/client', isModal: true, onLoadController: (controller: Interfaces.IController) => {
                     let ctrClient: Interfaces.ICardClient = controller as Interfaces.ICardClient;
@@ -511,7 +551,7 @@ export namespace Controller.Terminal {
         public DiscountButtonClick: { (e: any): void; };
         private discountButtonClick(e) {
             let self = this;
-
+            self.CloseSlideChecks();
             vars._app.OpenController({
                 urlController: 'setting/card/discount', isModal: true, onLoadController: (controller: Interfaces.IController) => {
                     let ctrlProduct: Interfaces.IControllerCard = controller as Interfaces.IControllerCard;
@@ -581,6 +621,7 @@ export namespace Controller.Terminal {
         public CommentButtonClick: { (e: any): void; };
         private commentButtonClick(e) {
             let self = this;
+            self.CloseSlideChecks();
             if (self.currentCheck) {
                 vars._app.OpenController({
                     urlController: 'terminal/checkcomment', isModal: true, onLoadController: (controller: Interfaces.IController) => {
@@ -605,7 +646,7 @@ export namespace Controller.Terminal {
         public PaymentButtonClick: { (e: any): void; };
         private paymentButtonClick(e) {
             let self = this;
-
+            self.CloseSlideChecks();
             vars._app.OpenController({
                 urlController: 'terminal/paymenttype', isModal: true, onLoadController: (controller: Interfaces.IController) => {
                     let ctrlTypePayment: Interfaces.IControllerPaymentType = controller as Interfaces.IControllerPaymentType;
@@ -695,11 +736,13 @@ export namespace Controller.Terminal {
 
         public SplitCheckClick: { (e: any): any }
         private splitCheckClick(e: any): any {
+            this.CloseSlideChecks();
             M.toast({ html: vars._statres("label$indevelopment") });
         }
 
         public PrintPreCheckClick: { (e: any): any }
         private printPreCheckClick(e: any): any {
+            this.CloseSlideChecks();
             M.toast({ html: vars._statres("label$indevelopment") });
         }
     }

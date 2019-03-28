@@ -11,7 +11,7 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-define(["require", "exports", "app/common/variables", "app/common/basecontroller", "app/services/posterminalservice", "app/controller/terminal/navigationbar", "app/controller/terminal/navigationproduct", "app/controller/terminal/navigationcheck"], function (require, exports, vars, base, svc, navigationBar, navigationProduct, navigationCheck) {
+define(["require", "exports", "app/common/variables", "app/common/utils", "app/common/basecontroller", "app/services/posterminalservice", "app/controller/terminal/navigationbar", "app/controller/terminal/navigationproduct", "app/controller/terminal/navigationcheck"], function (require, exports, vars, utils, base, svc, navigationBar, navigationProduct, navigationCheck) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var Controller;
@@ -48,7 +48,7 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
                         "POSData": {
                             "CurrentSalePoint": { id: 0, "name": "" },
                             "CurrentChange": { id: 0 },
-                            "MoneyInCash": 0,
+                            "MoneyInCash": "0.00",
                         },
                         "labelInCash": vars._statres("label$incash"),
                         "labelHistorySales": vars._statres("label$historysales"),
@@ -80,6 +80,9 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
                     enumerable: true,
                     configurable: true
                 });
+                Index.prototype.OpenSlideChecks = function () {
+                    this.navCheck.OpenSlideChecks();
+                };
                 Index.prototype.ViewInit = function (view) {
                     this.navBar = new navigationBar.Controller.Terminal.NavigationBar(view, this);
                     this.navProduct = new navigationProduct.Controller.Terminal.NavigationProduct(view, this);
@@ -278,7 +281,7 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
                 Index.prototype.UpdateSumInCash = function () {
                     var self = this;
                     self.Service.ChangeSumInCash(self.CurrentSalePoint, function (responseData) {
-                        self.Model.set("POSData.MoneyInCash", responseData.cashSum);
+                        self.Model.set("POSData.MoneyInCash", utils.numberToString(responseData.cashSum, 2));
                     });
                 };
                 return Index;

@@ -51,6 +51,7 @@ export namespace Controller.Terminal.Report {
                     "historyCheck": {},
                 },
                 "currentChange": 0,
+                "currentSalePoint": 0,
             });
 
             return result;
@@ -59,6 +60,7 @@ export namespace Controller.Terminal.Report {
         public get CurrentChange(): number {
             return this.Model.get("currentChange");
         };
+
         public set CurrentChange(value: number) {
             this.Model.set("currentChange", value);
         };
@@ -134,22 +136,15 @@ export namespace Controller.Terminal.Report {
             super.ViewResize();
             let wWidth: number = $(window).width();
             let wHeight: number = $(window).height();
-            let tbody: JQuery = (this.tableSalesControl ? this.tableSalesControl.TableBody : undefined);
-            if (wWidth >= 600) {
-                if (this.checkViewContainer && this.checkViewContainer.length > 0) {
-                    this.checkViewContainer.height(wHeight - this.checkViewContainer.offset().top - (0.2 * parseFloat(getComputedStyle(this.checkViewContainer[0]).fontSize)) - 1 - 27);
-                }
-                if (tbody && tbody.length > 0) {
-                    tbody.height(wHeight - tbody.offset().top - (0.2 * parseFloat(getComputedStyle(tbody[0]).fontSize)) - 1);
-                }
+
+            if (this.checkViewContainer && this.checkViewContainer.length > 0) {
+                if (wWidth >= 600) this.checkViewContainer.height(wHeight - this.checkViewContainer.offset().top - (0.2 * parseFloat(getComputedStyle(this.checkViewContainer[0]).fontSize)) - 1 - 27);
+                else this.checkViewContainer.height((wHeight - this.checkViewContainer.offset().top - (0.2 * parseFloat(getComputedStyle(this.checkViewContainer[0]).fontSize)) - 1) / 2.5);
             }
-            else {
-                if (this.checkViewContainer && this.checkViewContainer.length > 0) {
-                    this.checkViewContainer.height((wHeight - this.checkViewContainer.offset().top - (0.2 * parseFloat(getComputedStyle(this.checkViewContainer[0]).fontSize)) - 1) / 2.5);
-                }
-                if (tbody && tbody.length > 0) {
-                    tbody.height((wHeight - (this.checkViewContainer && this.checkViewContainer.length > 0 ? this.checkViewContainer.offset().top : 0) - tbody.offset().top - (0.2 * parseFloat(getComputedStyle(tbody[0]).fontSize)) - 1));
-                }
+
+            let tbody: JQuery = (this.tableSalesControl ? this.tableSalesControl.TableBody : undefined);
+            if (tbody && tbody.length > 0) {
+                tbody.height((wHeight - tbody.offset().top - (0.2 * parseFloat(getComputedStyle(tbody[0]).fontSize)) - 1));
             }
         }
 
@@ -216,7 +211,7 @@ export namespace Controller.Terminal.Report {
         }
 
         public Print(): void {
-            utils.printDocumentPage(this.checkViewControl.View);
+            this.checkViewControl.Print();
         }
     }
 }

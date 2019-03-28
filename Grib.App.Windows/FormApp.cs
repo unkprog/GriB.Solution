@@ -49,7 +49,7 @@ namespace Grib.App.Windows
             if (e.IsBrowserInitialized)
             {
                 var b = ((ChromiumWebBrowser)sender);
-
+                
                 this.InvokeOnUiThreadIfRequired(() => b.Focus());
             }
         }

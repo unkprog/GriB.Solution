@@ -258,11 +258,9 @@ define(["require", "exports"], function (require, exports) {
     function printDocumentPage(documentPage) {
         //PrintElem(documentPage, 'PRINT', 0);
         var elem = documentPage instanceof $ ? documentPage : $("#" + documentPage);
-        var printWindow = window.open("", "new div", "height=400,width=600");
+        var printWindow = window.open("", "new div", "");
         printWindow.document.write("<html><head><title></title>");
-        printWindow.document.write("<link type=\"text/css\" rel=\"stylesheet\" href=\"/Content/css/material-icons/MaterialIcons.min.css\" />");
-        printWindow.document.write("<link type=\"text/css\" rel=\"stylesheet\" href=\"/Content/css/materialize.min.css\"  />");
-        printWindow.document.write("<link type=\"text/css\" rel=\"stylesheet\" href=\"/Content/css/app.min.css\" />");
+        printWindow.document.write("<link type=\"text/css\" rel=\"stylesheet\" href=\"/Content/css/app.print.min.css\"  media=\"screen, projection, print\"/>");
         printWindow.document.write("</head><body >");
         printWindow.document.write((elem && elem.length > 0 ? elem[0].innerHTML : ''));
         printWindow.document.write("</body></html>");
@@ -272,7 +270,7 @@ define(["require", "exports"], function (require, exports) {
         //htmlPrint += "</body>";
         //let oldHtml = document.body.innerHTML;
         //document.body.innerHTML = (elem && elem.length > 0 ? elem[0].innerHTML : ''); //htmlPrint;
-        window.print();
+        printWindow.print();
         //document.body.innerHTML = oldHtml;
         return true;
     }

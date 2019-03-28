@@ -1,10 +1,11 @@
 ﻿using GriB.Client.App.Models.Editor;
 using GriB.Client.App.Models.POSTerminal;
 using System;
+using System.Collections.Generic;
 
 namespace GriB.Client.App.Models.Report
 {
-    
+
 
     public class ReportSaleRow
     {
@@ -15,14 +16,14 @@ namespace GriB.Client.App.Models.Report
             employee = new employeecard(new Common.Models.pos.settings.employee());
             client = new client();
         }
-        public salepoint    salepoint { get; set; }
-        public product      product { get; set; }
+        public salepoint salepoint { get; set; }
+        public product product { get; set; }
         public employeecard employee { get; set; }
-        public client       client { get; set; }
+        public client client { get; set; }
 
-        public int    cu       { get; set; }
+        public int cu { get; set; }
         public double quantity { get; set; }
-        public double sum      { get; set; }
+        public double sum { get; set; }
     }
 
     public class ReportSaleDetailRow : ReportSaleRow
@@ -42,9 +43,9 @@ namespace GriB.Client.App.Models.Report
 
         }
 
-        public double count    { get; set; }
+        public double count { get; set; }
         public double countpos { get; set; }
-        public double sum      { get; set; }
+        public double sum { get; set; }
 
 
         public int countzone { get; set; }
@@ -96,7 +97,7 @@ namespace GriB.Client.App.Models.Report
         public string categoryname { get; set; }
 
         public double quantity { get; set; }
-        public double sum      { get; set; }
+        public double sum { get; set; }
 
         public int quantityzone { get; set; }
         public int sumzone { get; set; }
@@ -113,8 +114,34 @@ namespace GriB.Client.App.Models.Report
             payment = new payment();
         }
 
-        public int     checkid  { get; set; }
+        public int checkid { get; set; }
         public payment payment { get; set; }
     }
 
+    public class ReportChangeSaleRow
+    {
+        public ReportChangeSaleRow()
+        {
+            product = new product();
+        }
+
+        public product product { get; set; }
+        public double quantity { get; set; }
+        public double sum { get; set; }
+    }
+
+    public class ReportChangeMoney
+    {
+        public ReportChangeMoney()
+        {
+            rows = new List<ReportChangeSaleRow>();
+        }
+        public double sumEncashment { get; set; }
+        public double sumDeposit { get; set; }
+        public double sumWithDrawal { get; set; }
+        public double sumCash { get; set; }
+        public double sumNonCash { get; set; }
+
+        public List<ReportChangeSaleRow> rows { get; set; }
+    }
 }

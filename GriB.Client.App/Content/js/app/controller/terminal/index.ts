@@ -1,4 +1,5 @@
 ﻿import vars = require('app/common/variables');
+import utils = require('app/common/utils');
 import base = require('app/common/basecontroller');
 import svc = require('app/services/posterminalservice');
 import navigationBar = require('app/controller/terminal/navigationbar');
@@ -7,6 +8,7 @@ import navigationCheck = require('app/controller/terminal/navigationcheck');
 
 export namespace Controller.Terminal {
     export class Index extends base.Controller.Base implements Interfaces.ITerminal {
+
         constructor() {
            super();
         }
@@ -35,7 +37,7 @@ export namespace Controller.Terminal {
                 "POSData": {
                     "CurrentSalePoint": { id: 0, "name": "" },
                     "CurrentChange": { id: 0 },
-                    "MoneyInCash": 0,
+                    "MoneyInCash": "0.00",
                 },
                 "labelInCash": vars._statres("label$incash"),
                 "labelHistorySales": vars._statres("label$historysales"),
@@ -60,6 +62,10 @@ export namespace Controller.Terminal {
        
         public get ControlChecks() {
             return this.navCheck.ControlContainerChecks;
+        }
+
+        public OpenSlideChecks(): void {
+            this.navCheck.OpenSlideChecks();
         }
 
         public ViewInit(view:JQuery): boolean {
@@ -268,7 +274,7 @@ export namespace Controller.Terminal {
         public UpdateSumInCash(): void {
             let self = this;
             self.Service.ChangeSumInCash(self.CurrentSalePoint, (responseData) => {
-                self.Model.set("POSData.MoneyInCash", responseData.cashSum);
+                self.Model.set("POSData.MoneyInCash", utils.numberToString(responseData.cashSum, 2));
             });
         }
 

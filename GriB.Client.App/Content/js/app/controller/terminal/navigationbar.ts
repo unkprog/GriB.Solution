@@ -23,6 +23,7 @@ export namespace Controller.Terminal {
             this.initNavbarHeader(this.terminal.View);
             this.initControlSalePoints(this.terminal.View);
 
+            this.OpenMenuChecksClick = utils.createTouchClickEvent(this.btnCheks, this.openMenuChecksClick, this, this.terminal.View);
             this.OpenMenuCashClick = utils.createTouchClickEvent(this.btnCash, this.openMenuCashClick, this, this.terminal.View);
             this.InCashClick = utils.createTouchClickEvent(this.btnInCash, this.inCashClick, this, this.terminal.View);
             this.HistorySalesClick = utils.createTouchClickEvent(this.btnHistorySales, this.historySalesClick, this, this.terminal.View);
@@ -37,6 +38,7 @@ export namespace Controller.Terminal {
 
         public destroyEvents(): void {
             if (this.controlSalePoints) utils.destroyTouchClickEvent(this.controlSalePoints.find('a'), this.SalePointButtonClick);
+            if (this.btnCash) utils.destroyTouchClickEvent(this.btnCheks, this.OpenMenuChecksClick);
             if (this.btnCash) utils.destroyTouchClickEvent(this.btnCash, this.OpenMenuCashClick);
             if (this.btnInCash) utils.destroyTouchClickEvent(this.btnInCash, this.InCashClick);
             if (this.btnHistorySales) utils.destroyTouchClickEvent(this.btnHistorySales, this.HistorySalesClick);
@@ -102,6 +104,13 @@ export namespace Controller.Terminal {
             utils.createTouchClickEvent(this.controlSalePoints.find('a'), this.SalePointButtonClick, this, this.controlSalePoints);
         }
 
+        public OpenMenuChecksClick: { (e: any): any }
+        private openMenuChecksClick(e: any): any {
+            this.terminal.OpenSlideChecks();
+            e.preventDefault();
+            e.stopPropagation();
+            return false;
+        }
 
         private SalePointButtonClick(e): any {
             let self = this;
@@ -210,7 +219,13 @@ export namespace Controller.Terminal {
 
         public ReportByChangeClick: { (e: any): any }
         private reportByChangeClick(e: any): any {
-            M.toast({ html: vars._statres("label$indevelopment") });
+            vars._app.OpenController({
+                urlController: 'terminal/report/changesales', isModal: true, onLoadController: (controller: Interfaces.IController) => {
+                    let ctrlChangeSales: Interfaces.IControllerChangeSales = controller as Interfaces.IControllerChangeSales;
+                    ctrlChangeSales.CurrentSalePoint = this.terminal.CurrentSalePoint;
+                    ctrlChangeSales.CurrentChange = this.terminal.CurrentChange;
+                }
+            });
         }
     }
 }

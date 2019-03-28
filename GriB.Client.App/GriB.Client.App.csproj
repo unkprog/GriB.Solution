@@ -108,17 +108,21 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\css\app.css" />
-    <Content Include="Content\css\app.min.css">
+    <None Condition="$(Configuration) == 'Debug'" Include="Content\css\app.css" />
+    <Content Condition="$(Configuration) == 'Debug'" Include="Content\css\app.min.css">
       <DependentUpon>app.css</DependentUpon>
     </Content>
+    <None Condition="$(Configuration) == 'Debug'" Include="Content\css\app.print.css" />
+    <Content Condition="$(Configuration) == 'Debug'" Include="Content\css\app.print.min.css">
+      <DependentUpon>app.print.css</DependentUpon>
+    </Content>
     <Content Include="Content\css\material-icons\MaterialIcons-Regular.svg" />
-    <Content Include="Content\css\material-icons\MaterialIcons.css" />
-    <Content Include="Content\css\material-icons\MaterialIcons.min.css">
+    <None Condition="$(Configuration) == 'Debug'" Include="Content\css\material-icons\MaterialIcons.css" />
+    <Content Condition="$(Configuration) == 'Debug'" Include="Content\css\material-icons\MaterialIcons.min.css">
       <DependentUpon>MaterialIcons.css</DependentUpon>
     </Content>
-    <Content Include="Content\css\materialize.css" />
-    <Content Include="Content\css\materialize.min.css">
+    <None Condition="$(Configuration) == 'Debug'" Include="Content\css\materialize.css" />
+    <Content Condition="$(Configuration) == 'Debug'" Include="Content\css\materialize.min.css">
       <DependentUpon>materialize.css</DependentUpon>
     </Content>
     <Content Include="Content\img\menu-background.png" />
@@ -175,6 +179,7 @@
       <DependentUpon>materialize.es5.js</DependentUpon>
     </Content>
     <Content Include="Content\js\lib\materialize\materialize.js" />
+    <Content Include="Content\js\lib\printthis\printThis.js" />
     <Content Include="Content\js\lib\require\domReady.es5.js">
       <DependentUpon>domReady.js</DependentUpon>
     </Content>
@@ -238,6 +243,7 @@
     <Content Include="Content\view\terminal\paymenttype.html" />
     <Content Include="Content\view\terminal\paymentnumpad.html" />
     <Content Include="Content\view\terminal\index.html" />
+    <Content Include="Content\view\terminal\report\changesales.html" />
     <Content Include="Content\view\terminal\report\historysales.html" />
     <Content Include="Global.asax" />
     <Content Include="Scripts\Query\Editor\CostIncome\[del].sql" />
@@ -345,6 +351,9 @@
     <Content Include="Scripts\Query\POSTerminal\[get].sql" />
     <Content Include="Scripts\Query\Report\Cash\[cash].sql" />
     <Content Include="Scripts\Query\Report\Cash\[cashdetail].sql" />
+    <Content Include="Scripts\Query\Report\POS\[changecash].sql" />
+    <Content Include="Scripts\Query\Report\POS\[changerevenue].sql" />
+    <Content Include="Scripts\Query\Report\POS\[changesales].sql" />
     <Content Include="Scripts\Query\Report\POS\[historysales].sql" />
     <Content Include="Scripts\Query\Report\Sales\Dashboard\[salesdayweek].sql" />
     <Content Include="Scripts\Query\Report\Sales\Dashboard\[categories].sql" />
@@ -496,6 +505,7 @@
     <None Include="Scss\materialize.scss" />
     <None Include="Scss\_style.scss" />
     <None Include="Scss\app.scss" />
+    <None Include="Scss\app.print.scss" />
     <None Include="Scss\MaterialIcons.scss" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Web.Debug.config">
@@ -610,6 +620,7 @@
     <TypeScriptCompile Include="Content\js\app\controller\terminal\navigationbar.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\terminal\navigationproduct.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\terminal\navigationcheck.ts" />
+    <TypeScriptCompile Include="Content\js\app\controller\terminal\report\changesales.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\terminal\report\historysales.ts" />
     <TypeScriptCompile Include="Content\js\app\interfaces\iapplication.ts" />
     <TypeScriptCompile Include="Content\js\app\interfaces\icontrol.ts" />
@@ -625,6 +636,7 @@
     <TypeScriptCompile Include="Content\js\lib\jquery.d.ts" />
     <TypeScriptCompile Include="Content\js\lib\kendo\kendo.d.ts" />
     <TypeScriptCompile Include="Content\js\lib\materialize\materialize.d.ts" />
+    <TypeScriptCompile Include="Content\js\lib\printthis\printThis.d.ts" />
     <TypeScriptCompile Include="Content\js\lib\require\require.d.ts" />
   </ItemGroup>
   <ItemGroup>

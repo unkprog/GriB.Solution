@@ -350,11 +350,43 @@ input[type='number']:hover::-webkit-outer-spin-button {
 
 @media only screen and (max-width: 600px) {
   #posterminal-view-checks-container {
-    display: none; }
+    width: 100%;
+    line-height: initial; }
+  .check-chip {
+    height: 30px;
+    line-height: 30px;
+    border-radius: 15px; }
+  .chip {
+    font-size: 10px; }
+  .check-chip .close {
+    font-size: 15px;
+    line-height: 30px; }
+  .total-text {
+    font-size: 1.3em; }
+  #btn-check-new {
+    height: 30px;
+    line-height: 30px;
+    width: 30px;
+    border-radius: 15px; }
   #check-items {
     display: block; }
   #posterminal-view-items {
-    left: 0; } }
+    left: 0; }
+  .info-label {
+    font-size: 1em; }
+  .info-value {
+    font-size: 1em; }
+  #posterminal-view-check-positions {
+    font-size: .7em; }
+  .editor-header {
+    height: 30px !important;
+    line-height: 30px !important; }
+  .check-btn-typepayment {
+    font-size: 1.2em;
+    height: 45px;
+    line-height: 45px; }
+  #changesales-view-table {
+    font-size: 10px; } }
 
 .pos-items-container {
   margin-top: 0.5%;
@@ -598,30 +630,5 @@ input[type='number']:hover::-webkit-outer-spin-button {
   overflow: auto;
   padding: 1em; }
 
-.check-view {
-  font-family: Arial;
-  font-size: 10pt;
-  padding: 1em;
-  width: 327px;
-  margin-left: auto;
-  margin-right: auto; }
-
-.check-view-row-delimiter {
-  border-bottom-color: black;
-  border-bottom-width: 1px;
-  border-bottom-style: solid; }
-
-.check-view-name, .check-view-total {
-  width: 200px;
-  float: left; }
-
-.check-view-price, .check-view-total-price {
-  width: 100px;
-  float: right; }
-
-.check-view-total {
-  text-transform: uppercase;
-  font-weight: bold; }
-
-.check-view-total-price {
+.text-bold {
   font-weight: bold; }

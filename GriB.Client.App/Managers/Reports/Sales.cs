@@ -363,5 +363,50 @@ namespace GriB.Client.App.Managers.Reports
 
             return result;
         }
+
+        private static ReportChangeSaleRow readFromChangeSaleRow(object[] values)
+        {
+            int cnt = 0;
+            ReportChangeSaleRow result = new ReportChangeSaleRow()
+            {
+                product = new product()
+                {
+                    id = (int)values[cnt++],
+                    name = (string)values[cnt++],
+                },
+                quantity = (double)values[cnt++],
+                sum = (double)values[cnt++],
+            };
+            return result;
+        }
+
+        private const string cmdGetChangeCash = @"Report\POS\[changecash]";
+        private const string cmdGetChangeRevenue = @"Report\POS\[changerevenue]";
+        private const string cmdGetChangeSales = @"Report\POS\[changesales]";
+        public static ReportChangeMoney GetChangeSales(this Query query, int change)
+        {
+            ReportChangeMoney result = new ReportChangeMoney();
+            query.Execute(cmdGetChangeCash, new SqlParameter[] { new SqlParameter("@change", change) }
+            , (values) =>
+            {
+                result.sumEncashment = (double)values[0];
+                result.sumDeposit = (double)values[1];
+                result.sumWithDrawal = (double)values[2];
+            });
+            query.Execute(cmdGetChangeRevenue, new SqlParameter[] { new SqlParameter("@change", change) }
+           , (values) =>
+           {
+               result.sumCash = (double)values[0];
+               result.sumNonCash = (double)values[1];
+           });
+
+            query.Execute(cmdGetChangeSales, new SqlParameter[] { new SqlParameter("@change", change) }
+            , (values) =>
+            {
+                result.rows.Add(readFromChangeSaleRow(values));
+            });
+
+            return result;
+        }
     }
 }

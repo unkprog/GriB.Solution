@@ -98,7 +98,7 @@ export module App {
 
                     self.contentControl = $("#app-content");
                     self.navbarControl = $("#app-navbar");
-                    $('.sidenav').sidenav();
+                    //$('.sidenav').sidenav();
                     self.resize(undefined);
                     self.initAfterLoaded();
                     self.SetControlNavigation(this);

@@ -42,5 +42,9 @@ export module Services {
         public GetHistorySales(change:number, Callback: (responseData: any) => void) {
             this.GetApi({ Action: "/historysales", RequestData: { change: change }, Callback: Callback });
         }
+
+        public GetChangeSales(change: number, Callback: (responseData: any) => void) {
+            this.GetApi({ Action: "/changesales", RequestData: { change: change }, Callback: Callback });
+        }
     }
 }

@@ -52,6 +52,9 @@ define(["require", "exports", "app/common/baseservice"], function (require, expo
             ReportsService.prototype.GetHistorySales = function (change, Callback) {
                 this.GetApi({ Action: "/historysales", RequestData: { change: change }, Callback: Callback });
             };
+            ReportsService.prototype.GetChangeSales = function (change, Callback) {
+                this.GetApi({ Action: "/changesales", RequestData: { change: change }, Callback: Callback });
+            };
             return ReportsService;
         }(base.Services.BaseService));
         Services.ReportsService = ReportsService;

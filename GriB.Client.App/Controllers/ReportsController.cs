@@ -147,5 +147,14 @@ namespace GriB.Client.App.Controllers
             });
         }
 
+        [HttpGet]
+        [ActionName("changesales")]
+        public HttpResponseMessage ChangeySales(int change)
+        {
+            return TryCatchResponseQuery((query) =>
+            {
+                return Request.CreateResponse(HttpStatusCode.OK, Sales.GetChangeSales(query, change));
+            });
+        }
     }
 }

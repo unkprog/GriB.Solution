@@ -92,12 +92,15 @@
 
     export interface ITerminalCheks {
         AddPosition(product: number): void;
+        OpenSlideChecks(): void;
+        CloseSlideChecks(): void;
     }
 
     export interface ITerminal {
         ShowLoading(): void;
         HideLoading(): void;
 
+        OpenSlideChecks(): void;
         Service: Interfaces.IPOSTerminalService;
         Model: kendo.data.ObservableObject;
         Cheks: ITerminalCheks;
@@ -153,8 +156,15 @@
         OnResult(controller: IControllerCashDialog): void;
     }
 
-    export interface IControllerHistorySales extends IControllerEditor {
+    export interface IControllerChange extends IControllerEditor {
         CurrentChange: number;
+    }
+
+    export interface IControllerHistorySales extends IControllerChange {
+    }
+
+    export interface IControllerChangeSales extends IControllerChange {
+        CurrentSalePoint: number;
     }
 
     export interface IControllerReportWithFilter extends IControllerEditor {

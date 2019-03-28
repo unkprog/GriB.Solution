@@ -11,7 +11,7 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-define(["require", "exports", "app/common/variables", "app/common/utils", "app/common/basecontroller", "app/common/basecontrol", "app/common/poscontrol", "app/services/reportsservice", "app/services/posterminalservice"], function (require, exports, vars, utils, base, ctrl, posctrl, svcReport, svcTerminal) {
+define(["require", "exports", "app/common/variables", "app/common/basecontroller", "app/common/basecontrol", "app/common/poscontrol", "app/services/reportsservice", "app/services/posterminalservice"], function (require, exports, vars, base, ctrl, posctrl, svcReport, svcTerminal) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var Controller;
@@ -70,6 +70,7 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                                 "historyCheck": {},
                             },
                             "currentChange": 0,
+                            "currentSalePoint": 0,
                         });
                         return result;
                     };
@@ -209,7 +210,7 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                         //this.checkViewControl.Setup();
                     };
                     HistorySales.prototype.Print = function () {
-                        utils.printDocumentPage(this.checkViewControl.View);
+                        this.checkViewControl.Print();
                     };
                     return HistorySales;
                 }(base.Controller.BaseEditor));

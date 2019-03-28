@@ -12,6 +12,7 @@ define(["require", "exports", "app/common/variables", "app/common/utils"], funct
                 NavigationBar.prototype.Bind = function () {
                     this.initNavbarHeader(this.terminal.View);
                     this.initControlSalePoints(this.terminal.View);
+                    this.OpenMenuChecksClick = utils.createTouchClickEvent(this.btnCheks, this.openMenuChecksClick, this, this.terminal.View);
                     this.OpenMenuCashClick = utils.createTouchClickEvent(this.btnCash, this.openMenuCashClick, this, this.terminal.View);
                     this.InCashClick = utils.createTouchClickEvent(this.btnInCash, this.inCashClick, this, this.terminal.View);
                     this.HistorySalesClick = utils.createTouchClickEvent(this.btnHistorySales, this.historySalesClick, this, this.terminal.View);
@@ -25,6 +26,8 @@ define(["require", "exports", "app/common/variables", "app/common/utils"], funct
                 NavigationBar.prototype.destroyEvents = function () {
                     if (this.controlSalePoints)
                         utils.destroyTouchClickEvent(this.controlSalePoints.find('a'), this.SalePointButtonClick);
+                    if (this.btnCash)
+                        utils.destroyTouchClickEvent(this.btnCheks, this.OpenMenuChecksClick);
                     if (this.btnCash)
                         utils.destroyTouchClickEvent(this.btnCash, this.OpenMenuCashClick);
                     if (this.btnInCash)
@@ -84,6 +87,12 @@ define(["require", "exports", "app/common/variables", "app/common/utils"], funct
                     this.controlSalePoints.html(html);
                     $("#pos-btn-salepoint").dropdown({ constrainWidth: false });
                     utils.createTouchClickEvent(this.controlSalePoints.find('a'), this.SalePointButtonClick, this, this.controlSalePoints);
+                };
+                NavigationBar.prototype.openMenuChecksClick = function (e) {
+                    this.terminal.OpenSlideChecks();
+                    e.preventDefault();
+                    e.stopPropagation();
+                    return false;
                 };
                 NavigationBar.prototype.SalePointButtonClick = function (e) {
                     var self = this;
@@ -175,7 +184,14 @@ define(["require", "exports", "app/common/variables", "app/common/utils"], funct
                     });
                 };
                 NavigationBar.prototype.reportByChangeClick = function (e) {
-                    M.toast({ html: vars._statres("label$indevelopment") });
+                    var _this = this;
+                    vars._app.OpenController({
+                        urlController: 'terminal/report/changesales', isModal: true, onLoadController: function (controller) {
+                            var ctrlChangeSales = controller;
+                            ctrlChangeSales.CurrentSalePoint = _this.terminal.CurrentSalePoint;
+                            ctrlChangeSales.CurrentChange = _this.terminal.CurrentChange;
+                        }
+                    });
                 };
                 return NavigationBar;
             }());

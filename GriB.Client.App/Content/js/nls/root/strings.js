@@ -265,6 +265,7 @@ define({
     "label$consumption": "Расход",
     "label$productionmake": "Производство",
     "label$payment": "Оплата",
+    "label$cashname": "Касса",
     "label$encashment": "Инкассация",
     "label$depositmoney": "Внесение",
     "label$withdrawingmoney": "Снятие",
@@ -318,6 +319,7 @@ define({
     "label$cancelorder": "Отменить заказ",
     "label$splitcheck": "Разделить чек",
     "label$printprecheck": "Печать пречека",
+    "label$addcheck": "Добавить чек",
 
     "label$topay": "К оплате",
     "label$received": "Получено",
@@ -384,6 +386,7 @@ define({
     "label$revenue$bycategory": "Выручка по категориям",
     "label$revenue$daysofweek": "Выручка по дням недели",
     "label$revenue$intime": "Выручка по времени",
+    "label$revenue": "Выручка",
     "label$weekday": "День недели",
     "label$intervaltime": "Интервал времени",
     "label$count$cheks": "Кол-во чеков",
