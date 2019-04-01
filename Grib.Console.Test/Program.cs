@@ -9,7 +9,7 @@ using System.Net.Mail;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Grib.Console.Test
+namespace GriB.Console.Test
 {
     class Program
     {

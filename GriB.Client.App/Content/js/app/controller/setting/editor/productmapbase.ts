@@ -7,6 +7,7 @@ export namespace Controller.Setting.Editor {
     export class ProductMapBase extends edit.Controller.Setting.Editor.Editor {
         constructor() {
             super();
+            this.EditorSettings.ButtonSetings.IsPrint = true;
         }
         protected createOptions(): Interfaces.IControllerOptions {
             return { Url: "/Content/view/setting/editor/productmap.html", Id: "editor-view-productmap" };
@@ -43,6 +44,7 @@ export namespace Controller.Setting.Editor {
         private delRowControl: JQuery;
         private editApproveControl: JQuery;
         private editSignControl: JQuery;
+       
 
         public ViewInit(view: JQuery): boolean {
             let controller = this;
@@ -56,7 +58,7 @@ export namespace Controller.Setting.Editor {
             controller.tableMapControl = new ctrl.Control.BaseEditTable();
             controller.tableMapControl.IsScroll = false;
             controller.tableMapControl.OnContextMenu = controller.OnContextMenu;
-            controller.tableMapControl.OnHeaderContextMenu = controller.OnHeaderContextMenu;
+            //controller.tableMapControl.OnHeaderContextMenu = controller.OnHeaderContextMenu;
             view.find("#editor-view-productmap-table-container").append(controller.tableMapControl.InitView());
 
             controller.addRowControl = view.find("#editor-view-productmap-menu-add");        
@@ -96,10 +98,10 @@ export namespace Controller.Setting.Editor {
             for (let i = 0, icount = (rows ? rows.length : 0); i < icount; i++) {
                 rows[i].numorder = i + 1;
             }
-            this.tableMapControl.Rows = rows;
+            
             this.tableMapControl.Columns = [
                 { Header: vars._statres("label$numorder"), HeaderStyle: "product-map-col-order", Field: "index", FieldTemplate: '#=(index)#', FieldStyle: "product-map-col-order" },
-                { Header: vars._statres("label$namerawmaterial"), HeaderStyle: "product-map-col-rawmaterial border-left center-align", Field: "product.name", FieldStyle: "product-map-col-rawmaterial border-left" },
+                { Header: '', HeaderTemplate: '<a id="btn-add-map" class="btn tooltipped left"><i class="material-icons">add</i></a><span>' + vars._statres("label$namerawmaterial") + '</span>' , HeaderStyle: "product-map-col-rawmaterial border-left center-align", Field: "product.name", FieldStyle: "product-map-col-rawmaterial border-left" },
                 { Header: vars._statres("label$unitshort"), HeaderStyle: "product-map-col-unit border-left", Field: "unit.code", FieldStyle: "product-map-col-unit border-left" },
                 { Header: vars._statres("label$brutto"), HeaderStyle: "product-col-sum-auto border-left product-map-col-value", Field: "brutto", FieldTemplate: '#=brutto#', FieldStyle: "product-col-sum-auto-rigth border-left product-map-col-value", FieldEditTemplate: '<input data-bind="value:brutto" />' },
                 { Header: vars._statres("label$treatment$percentcold"), HeaderStyle: "product-col-sum-auto border-left product-map-col-value", FieldTemplate: '#=numberToString(percentcold, 2)#', Field: "percentcold", FieldStyle: "product-col-sum-auto-rigth border-left product-map-col-value", FieldEditTemplate: '<input data-bind="value:percentcold" />'},
@@ -108,7 +110,8 @@ export namespace Controller.Setting.Editor {
                 { Header: vars._statres("label$exitcompletedproduct"), HeaderStyle: "product-col-sum-auto border-left product-map-col-value", Field: "exitproduct", FieldStyle: "product-col-sum-auto-rigth border-left product-map-col-value", FieldEditTemplate: '<input data-bind="value:exitproduct" />' },
                 { Header: vars._statres("label$description$technologicalprocess"), HeaderStyle: "product-map-col-description border-left center-align", Field: "description", FieldStyle: "product-map-col-description border-left", FieldEditTemplate: '<input data-bind="value:description" />'},
             ];
-            this.tableMapControl.Setup();
+            this.tableMapControlSetup(rows);
+            this.AddHeaderButtonClick = this.createTouchClickEvent('btn-add-map', this.addHeaderButtonClick);
         }
 
         protected createEvents(): void {
@@ -134,6 +137,8 @@ export namespace Controller.Setting.Editor {
             //this.compositionRows.unbind();
             //this.rightRows.unbind();
             //this.Model.unbind("change");
+            this.destroyTouchClickEvent('btn-add-map', this.AddHeaderButtonClick);
+
             this.destroyTouchClickEvent(this.addRowControl, this.AddRowButtonClick);
             this.destroyTouchClickEvent(this.editRowControl, this.EditRowButtonClick);
             this.destroyTouchClickEvent(this.delRowControl, this.DelRowButtonClick);
@@ -153,14 +158,14 @@ export namespace Controller.Setting.Editor {
 
         public OnHeaderContextMenu: { (e: any) };
         public onHeaderContextMenu(e: any) {
-            this.compositionRow = (undefined as Interfaces.Model.IProductComposition);
-            if (!this.menuHRowsControl) {
-                this.menuHRowsControl = this.View.find("#editor-view-productmap-menuh-trigger");
-                this.menuHRowsControl.dropdown();
-            }
-            let instance: any = this.menuHRowsControl[0];
-            instance.M_Dropdown.el = e.currentTarget;
-            instance.M_Dropdown.open();
+            //this.compositionRow = (undefined as Interfaces.Model.IProductComposition);
+            //if (!this.menuHRowsControl) {
+            //    this.menuHRowsControl = this.View.find("#editor-view-productmap-menuh-trigger");
+            //    this.menuHRowsControl.dropdown();
+            //}
+            //let instance: any = this.menuHRowsControl[0];
+            //instance.M_Dropdown.el = e.currentTarget;
+            //instance.M_Dropdown.open();
         }
 
         public OnContextMenu: { (e: any, row: Interfaces.Model.ITableRowModel) };
@@ -178,8 +183,32 @@ export namespace Controller.Setting.Editor {
 
         private setRowsTable(rows: Interfaces.Model.IProductComposition[]) {
             this.Model.set("editModel.composition", rows);
+            this.tableMapControlSetup(rows);
+        }
+
+        private tableMapControlSetup(rows: Interfaces.Model.IProductComposition[]) {
+            this.destroyEditEvents();
             this.tableMapControl.Rows = rows;
             this.tableMapControl.Setup();
+            this.attachEditEvents();
+        }
+
+        private attachEditEvents() {
+            this.EditCellClick = this.createTouchClickEvent($('.product-col-sum-auto-rigth'), this.editCellClick);
+        }
+
+        private destroyEditEvents() {
+            this.destroyTouchClickEvent($('.product-col-sum-auto-rigth'), this.EditCellClick);
+        }
+
+        private EditCellClick: { (e: any): void; };
+        private editCellClick(e) {
+            alert('Edit');
+        }
+
+        public AddHeaderButtonClick: { (e: any): void; };
+        private addHeaderButtonClick(e) {
+            this.addRowButtonClick(e);
         }
 
         public AddRowButtonClick: { (e: any): void; };
@@ -187,16 +216,39 @@ export namespace Controller.Setting.Editor {
             let self = this;
             let refNil: any = { id: 0, code: "", name: "" };
             let editRow: Interfaces.Model.IProductComposition = { id: 0, index: -1, product: refNil, unit: refNil, netto: 0, percentcold: 0, brutto: 0, percentheat: 0, exitproduct: 0, description: "" };
+            //vars._app.OpenController({
+            //    urlController: 'setting/editor/productmaprow', isModal: true, onLoadController: (controller: Interfaces.IController) => {
+            //        let ctrlRow: Interfaces.IControllerEditor = controller as Interfaces.IControllerEditor;
+            //        ctrlRow.Model.set("Header", vars._statres("label$edit$row"));
+            //        ctrlRow.Model.set("editModel", editRow);
+            //        ctrlRow.EditorSettings.Save = $.proxy(self.onAddRow, self);
+            //    }
+            //});
             vars._app.OpenController({
-                urlController: 'setting/editor/productmaprow', isModal: true, onLoadController: (controller: Interfaces.IController) => {
-                    let ctrlRow: Interfaces.IControllerEditor = controller as Interfaces.IControllerEditor;
-                    ctrlRow.Model.set("Header", vars._statres("label$edit$row"));
-                    ctrlRow.Model.set("editModel", editRow);
-                    ctrlRow.EditorSettings.Save = $.proxy(self.onAddRow, self);
+                urlController: 'setting/card/product', isModal: true, onLoadController: (controller: Interfaces.IController) => {
+                    let ctrlProduct: Interfaces.IControllerCard = controller as Interfaces.IControllerCard;
+                    ctrlProduct.CardSettings.IsAdd = false;
+                    ctrlProduct.CardSettings.IsAddCopy = false;
+                    ctrlProduct.CardSettings.IsDelete = false;
+                    ctrlProduct.CardSettings.IsEdit = false;
+                    ctrlProduct.CardSettings.IsSelect = true;
+                    //ctrlRow.Model.set("Header", vars._statres("label$edit$row"));
+                    //ctrlRow.Model.set("editModel", editRow);
+                    ctrlProduct.OnSelect = $.proxy(self.selectProductValue, self);
                 }
             });
-
         }
+
+        private selectProductValue(controller: Interfaces.IControllerCard) {
+            let self = this;
+            let valueProduct: Interfaces.Model.IProduct = controller.getSelectedRecord() as Interfaces.Model.IProduct;
+            if (valueProduct) {
+                let editRow: Interfaces.Model.IProductComposition = { id: 0, index: -1, product: valueProduct, unit: valueProduct.unit, netto: 0, percentcold: 0, brutto: 0, percentheat: 0, exitproduct: 0, description: "" };
+                self.onAddRow(editRow, undefined);
+            }
+        }
+
+
         private onAddRow(model: Interfaces.Model.IEditorModel, callback: (responseData: any) => void) {
             let addRow: Interfaces.Model.IProductComposition = (model as Interfaces.Model.IProductComposition);
             if (addRow) {
@@ -316,6 +368,14 @@ export namespace Controller.Setting.Editor {
             if (callback) {
                 callback(undefined);
             }
+        }
+
+        public Print() {
+            this.View.find("#editor-view-productmap-print").printThis({
+                pageTitle: "PRINT DOCUMENT",
+                importCSS: true,
+                printContainer: true 
+            });
         }
     }
 }

@@ -1,5 +1,5 @@
 ﻿@page {
-     margin: 15mm;
+     margin: 5mm;
 }
 
 .truncate-print {
@@ -58,4 +58,31 @@
 
 .check-view-total-price {
     font-weight: bold;
+}
+
+@media print {
+    #editor-view-productmap{
+        font-size: 12px;
+    }
+    #btn-add-map {
+        display: none;
+    }
+    
+    tr{
+        page
+    }
+
+    #editor-view-productmap-colphoto {
+        width: 30%;
+        margin-left: auto;
+        left: auto;
+        right: auto;
+    }
+
+    #editor-view-productmap-colapprove {
+        width: 60%;
+        margin-left: auto;
+        left: auto;
+        right: auto;
+    }
 }

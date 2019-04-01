@@ -7,19 +7,22 @@ namespace GriB.Common.Net
 {
     public static partial class Json
     {
-        public static object Parse(string json)
-        {
-            return new Parser(json).Decode();
-        }
+        //public static object Parse(string json)
+        //{
+        //    return new Parser(json).Decode();
+        //}
 
-        public static string Serialize(object obj, SerializeOptions options = null)
-        {
-            return new Serializer(options).ToJson(obj);
-        }
+        //public static string Serialize(object obj, SerializeOptions options = null)
+        //{
+        //    return new Serializer(options).ToJson(obj);
+        //}
 
-        public static async Task<TResult> Post<TResult, TParam>(string server, string url, TParam data)
+
+        public static TResult Post<TResult, TParam>(string server, string url, TParam data)
         {
-            return await PostAsync<TResult, TParam>(server, url, data);
+            Task<TResult> getResult = PostAsync<TResult, TParam>(server, url, data);
+            getResult.Wait();
+            return getResult.Result;
         }
 
         public static async Task<TResult> PostAsync<TResult, TParam>(string server, string url, TParam data)
@@ -54,7 +57,7 @@ namespace GriB.Common.Net
         public static TResult Get<TResult>(string server, string url)
         {
             Task<TResult> getResult = GetAsync<TResult>(server, url);
-            getResult.Start();
+            getResult.Wait();
             return getResult.Result;
         }
 

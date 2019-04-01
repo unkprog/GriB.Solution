@@ -643,6 +643,10 @@
     <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\GriB.Common.Net\GriB.Common.Net.csproj">
+      <Project>{1b0dd097-7819-4dd1-8390-d5e2e4065576}</Project>
+      <Name>GriB.Common.Net</Name>
+    </ProjectReference>
     <ProjectReference Include="..\GriB.Common\GriB.Common.csproj">
       <Project>{d1ec7a16-5393-4584-b7ed-eddbaed18d59}</Project>
       <Name>GriB.Common</Name>

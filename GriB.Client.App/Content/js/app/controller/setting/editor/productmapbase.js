@@ -23,7 +23,9 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                 var ProductMapBase = /** @class */ (function (_super) {
                     __extends(ProductMapBase, _super);
                     function ProductMapBase() {
-                        return _super.call(this) || this;
+                        var _this = _super.call(this) || this;
+                        _this.EditorSettings.ButtonSetings.IsPrint = true;
+                        return _this;
                     }
                     ProductMapBase.prototype.createOptions = function () {
                         return { Url: "/Content/view/setting/editor/productmap.html", Id: "editor-view-productmap" };
@@ -59,7 +61,7 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                         controller.tableMapControl = new ctrl.Control.BaseEditTable();
                         controller.tableMapControl.IsScroll = false;
                         controller.tableMapControl.OnContextMenu = controller.OnContextMenu;
-                        controller.tableMapControl.OnHeaderContextMenu = controller.OnHeaderContextMenu;
+                        //controller.tableMapControl.OnHeaderContextMenu = controller.OnHeaderContextMenu;
                         view.find("#editor-view-productmap-table-container").append(controller.tableMapControl.InitView());
                         controller.addRowControl = view.find("#editor-view-productmap-menu-add");
                         controller.addRowHControl = view.find("#editor-view-productmap-menuh-add");
@@ -90,10 +92,9 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                         for (var i = 0, icount = (rows ? rows.length : 0); i < icount; i++) {
                             rows[i].numorder = i + 1;
                         }
-                        this.tableMapControl.Rows = rows;
                         this.tableMapControl.Columns = [
                             { Header: vars._statres("label$numorder"), HeaderStyle: "product-map-col-order", Field: "index", FieldTemplate: '#=(index)#', FieldStyle: "product-map-col-order" },
-                            { Header: vars._statres("label$namerawmaterial"), HeaderStyle: "product-map-col-rawmaterial border-left center-align", Field: "product.name", FieldStyle: "product-map-col-rawmaterial border-left" },
+                            { Header: '', HeaderTemplate: '<a id="btn-add-map" class="btn tooltipped left"><i class="material-icons">add</i></a><span>' + vars._statres("label$namerawmaterial") + '</span>', HeaderStyle: "product-map-col-rawmaterial border-left center-align", Field: "product.name", FieldStyle: "product-map-col-rawmaterial border-left" },
                             { Header: vars._statres("label$unitshort"), HeaderStyle: "product-map-col-unit border-left", Field: "unit.code", FieldStyle: "product-map-col-unit border-left" },
                             { Header: vars._statres("label$brutto"), HeaderStyle: "product-col-sum-auto border-left product-map-col-value", Field: "brutto", FieldTemplate: '#=brutto#', FieldStyle: "product-col-sum-auto-rigth border-left product-map-col-value", FieldEditTemplate: '<input data-bind="value:brutto" />' },
                             { Header: vars._statres("label$treatment$percentcold"), HeaderStyle: "product-col-sum-auto border-left product-map-col-value", FieldTemplate: '#=numberToString(percentcold, 2)#', Field: "percentcold", FieldStyle: "product-col-sum-auto-rigth border-left product-map-col-value", FieldEditTemplate: '<input data-bind="value:percentcold" />' },
@@ -102,7 +103,8 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                             { Header: vars._statres("label$exitcompletedproduct"), HeaderStyle: "product-col-sum-auto border-left product-map-col-value", Field: "exitproduct", FieldStyle: "product-col-sum-auto-rigth border-left product-map-col-value", FieldEditTemplate: '<input data-bind="value:exitproduct" />' },
                             { Header: vars._statres("label$description$technologicalprocess"), HeaderStyle: "product-map-col-description border-left center-align", Field: "description", FieldStyle: "product-map-col-description border-left", FieldEditTemplate: '<input data-bind="value:description" />' },
                         ];
-                        this.tableMapControl.Setup();
+                        this.tableMapControlSetup(rows);
+                        this.AddHeaderButtonClick = this.createTouchClickEvent('btn-add-map', this.addHeaderButtonClick);
                     };
                     ProductMapBase.prototype.createEvents = function () {
                         _super.prototype.createEvents.call(this);
@@ -121,6 +123,7 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                         //this.compositionRows.unbind();
                         //this.rightRows.unbind();
                         //this.Model.unbind("change");
+                        this.destroyTouchClickEvent('btn-add-map', this.AddHeaderButtonClick);
                         this.destroyTouchClickEvent(this.addRowControl, this.AddRowButtonClick);
                         this.destroyTouchClickEvent(this.editRowControl, this.EditRowButtonClick);
                         this.destroyTouchClickEvent(this.delRowControl, this.DelRowButtonClick);
@@ -131,14 +134,14 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                         _super.prototype.destroyEvents.call(this);
                     };
                     ProductMapBase.prototype.onHeaderContextMenu = function (e) {
-                        this.compositionRow = undefined;
-                        if (!this.menuHRowsControl) {
-                            this.menuHRowsControl = this.View.find("#editor-view-productmap-menuh-trigger");
-                            this.menuHRowsControl.dropdown();
-                        }
-                        var instance = this.menuHRowsControl[0];
-                        instance.M_Dropdown.el = e.currentTarget;
-                        instance.M_Dropdown.open();
+                        //this.compositionRow = (undefined as Interfaces.Model.IProductComposition);
+                        //if (!this.menuHRowsControl) {
+                        //    this.menuHRowsControl = this.View.find("#editor-view-productmap-menuh-trigger");
+                        //    this.menuHRowsControl.dropdown();
+                        //}
+                        //let instance: any = this.menuHRowsControl[0];
+                        //instance.M_Dropdown.el = e.currentTarget;
+                        //instance.M_Dropdown.open();
                     };
                     ProductMapBase.prototype.onContextMenu = function (e, row) {
                         this.compositionRow = row;
@@ -153,21 +156,59 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                     };
                     ProductMapBase.prototype.setRowsTable = function (rows) {
                         this.Model.set("editModel.composition", rows);
+                        this.tableMapControlSetup(rows);
+                    };
+                    ProductMapBase.prototype.tableMapControlSetup = function (rows) {
+                        this.destroyEditEvents();
                         this.tableMapControl.Rows = rows;
                         this.tableMapControl.Setup();
+                        this.attachEditEvents();
+                    };
+                    ProductMapBase.prototype.attachEditEvents = function () {
+                        this.EditCellClick = this.createTouchClickEvent($('.product-col-sum-auto-rigth'), this.editCellClick);
+                    };
+                    ProductMapBase.prototype.destroyEditEvents = function () {
+                        this.destroyTouchClickEvent($('.product-col-sum-auto-rigth'), this.EditCellClick);
+                    };
+                    ProductMapBase.prototype.editCellClick = function (e) {
+                        alert('Edit');
+                    };
+                    ProductMapBase.prototype.addHeaderButtonClick = function (e) {
+                        this.addRowButtonClick(e);
                     };
                     ProductMapBase.prototype.addRowButtonClick = function (e) {
                         var self = this;
                         var refNil = { id: 0, code: "", name: "" };
                         var editRow = { id: 0, index: -1, product: refNil, unit: refNil, netto: 0, percentcold: 0, brutto: 0, percentheat: 0, exitproduct: 0, description: "" };
+                        //vars._app.OpenController({
+                        //    urlController: 'setting/editor/productmaprow', isModal: true, onLoadController: (controller: Interfaces.IController) => {
+                        //        let ctrlRow: Interfaces.IControllerEditor = controller as Interfaces.IControllerEditor;
+                        //        ctrlRow.Model.set("Header", vars._statres("label$edit$row"));
+                        //        ctrlRow.Model.set("editModel", editRow);
+                        //        ctrlRow.EditorSettings.Save = $.proxy(self.onAddRow, self);
+                        //    }
+                        //});
                         vars._app.OpenController({
-                            urlController: 'setting/editor/productmaprow', isModal: true, onLoadController: function (controller) {
-                                var ctrlRow = controller;
-                                ctrlRow.Model.set("Header", vars._statres("label$edit$row"));
-                                ctrlRow.Model.set("editModel", editRow);
-                                ctrlRow.EditorSettings.Save = $.proxy(self.onAddRow, self);
+                            urlController: 'setting/card/product', isModal: true, onLoadController: function (controller) {
+                                var ctrlProduct = controller;
+                                ctrlProduct.CardSettings.IsAdd = false;
+                                ctrlProduct.CardSettings.IsAddCopy = false;
+                                ctrlProduct.CardSettings.IsDelete = false;
+                                ctrlProduct.CardSettings.IsEdit = false;
+                                ctrlProduct.CardSettings.IsSelect = true;
+                                //ctrlRow.Model.set("Header", vars._statres("label$edit$row"));
+                                //ctrlRow.Model.set("editModel", editRow);
+                                ctrlProduct.OnSelect = $.proxy(self.selectProductValue, self);
                             }
                         });
+                    };
+                    ProductMapBase.prototype.selectProductValue = function (controller) {
+                        var self = this;
+                        var valueProduct = controller.getSelectedRecord();
+                        if (valueProduct) {
+                            var editRow = { id: 0, index: -1, product: valueProduct, unit: valueProduct.unit, netto: 0, percentcold: 0, brutto: 0, percentheat: 0, exitproduct: 0, description: "" };
+                            self.onAddRow(editRow, undefined);
+                        }
                     };
                     ProductMapBase.prototype.onAddRow = function (model, callback) {
                         var addRow = model;
@@ -270,6 +311,13 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                         if (callback) {
                             callback(undefined);
                         }
+                    };
+                    ProductMapBase.prototype.Print = function () {
+                        this.View.find("#editor-view-productmap-print").printThis({
+                            pageTitle: "PRINT DOCUMENT",
+                            importCSS: true,
+                            printContainer: true
+                        });
                     };
                     return ProductMapBase;
                 }(edit.Controller.Setting.Editor.Editor));
