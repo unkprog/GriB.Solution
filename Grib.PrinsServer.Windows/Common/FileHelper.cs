@@ -33,6 +33,12 @@ namespace GriB.PrintServer.Windows.Common
             return GetFolder(Constants.folderDocuments);
         }
 
+        public static string GetFolderDocumentsPrintError()
+        {
+            string path = GetFolderDocuments();
+            return GetFolder(string.Concat(path, "\\", "Error"));
+        }
+
         public static bool CheckFolderDocuments()
         {
             return CheckFolder(Constants.folderDocuments);
@@ -41,6 +47,12 @@ namespace GriB.PrintServer.Windows.Common
         public static string GetFolderChecks()
         {
             return GetFolder(Constants.folderChecks);
+        }
+
+        public static string GetFolderChecksPrintError()
+        {
+            string path = GetFolderChecks();
+            return GetFolder(string.Concat(path, "\\", "Error"));
         }
 
         public static bool CheckFolderChecks()

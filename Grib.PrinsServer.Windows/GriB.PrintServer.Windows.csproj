@@ -88,6 +88,7 @@
     <Compile Include="Controllers\StartController.cs" />
     <Compile Include="Controllers\TestController.cs" />
     <Compile Include="Models\PrintCheckModel.cs" />
+    <Compile Include="Printer.cs" />
     <Compile Include="Properties\Constants.cs" />
     <Compile Include="PrintServerContext.cs" />
     <Compile Include="Program.cs" />

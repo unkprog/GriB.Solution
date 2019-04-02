@@ -6,6 +6,8 @@ using System.Windows.Forms;
 using System.Threading;
 using System.Runtime.InteropServices;
 using System.ComponentModel;
+using GriB.PrintServer.Windows.Common;
+using GriB.PrintServer.Windows.Properties;
 
 namespace GriB.PrintServer.Windows
 {
@@ -26,8 +28,9 @@ namespace GriB.PrintServer.Windows
         Bitmap printActiveBitmap = GetAppImage("print_active") as Bitmap;
         Bitmap printDisableBitmap = GetAppImage("print_disabled") as Bitmap;
         Server _server;
-        Thread threadPrinServerChecher;
-        BackgroundWorker _backgroundWorker;
+        Printer _printer;
+        BackgroundWorker _bwPrintServiceCheck;
+        BackgroundWorker _bwPrintFilesCheck;
 
         public PrintServerContext()
         {
@@ -42,22 +45,25 @@ namespace GriB.PrintServer.Windows
             notifyContextMenu.Items.Add(new ToolStripSeparator());
             notifyContextMenu.Items.Add("Выход", GetAppImage("exit"), new EventHandler(Exit));
 
-
             notifyIcon.Icon = Icon.FromHandle(printDisableBitmap.GetHicon());
             notifyIcon.DoubleClick += showConfigHandler;
             notifyIcon.ContextMenuStrip = notifyContextMenu;
             notifyIcon.Visible = true;
 
-            //this.threadPrinServerChecher = new Thread(new ThreadStart(this.PrintServiceCheckProc));
-            //this.threadPrinServerChecher.Start();
-            
+            _bwPrintServiceCheck = new BackgroundWorker();
+            _bwPrintServiceCheck.WorkerReportsProgress = true;
+            _bwPrintServiceCheck.ProgressChanged += _bwPrintServiceCheck_ProgressChanged;
+            _bwPrintServiceCheck.DoWork += _bwPrintServiceCheck_DoWork;
+            _bwPrintServiceCheck.RunWorkerAsync();
 
-            _backgroundWorker = new BackgroundWorker();
-            _backgroundWorker.WorkerReportsProgress = true;
-            _backgroundWorker.ProgressChanged += _backgroundWorker_ProgressChanged;
-            _backgroundWorker.DoWork += PrintServiceCheckProc;
+            _bwPrintFilesCheck = new BackgroundWorker();
+            _bwPrintFilesCheck.WorkerReportsProgress = true;
+            _bwPrintFilesCheck.DoWork += _bwPrintFilesCheck_DoWork;
+            _bwPrintFilesCheck.RunWorkerAsync();
 
-            _backgroundWorker.RunWorkerAsync();
+            _printer = new Printer();
+            _printer.OnEndPrint += _printer_OnEndPrint;
+            _printer.OnErrorPrint += _printer_OnErrorPrint;
             StartService();
         }
 
@@ -100,9 +106,15 @@ namespace GriB.PrintServer.Windows
             }
             toolStripItemStartStop.Enabled = true;
         }
+
         void Exit(object sender, EventArgs e)
         {
             StopService();
+            if (_printer != null)
+            {
+                _printer.OnErrorPrint -= _printer_OnErrorPrint;
+                _printer.OnEndPrint -= _printer_OnEndPrint;
+            }
             notifyIcon.Visible = false;
             Application.Exit();
         }
@@ -117,30 +129,62 @@ namespace GriB.PrintServer.Windows
         private void StopService()
         {
             if (_server != null)
+            {
                 _server.Stop();
+                _server = null;
+            }
         }
 
-        private void PrintServiceCheckProc(object sender, DoWorkEventArgs e)
+        private void _bwPrintServiceCheck_DoWork(object sender, DoWorkEventArgs e)
         {
-            bool result = false;
             int progress = 0;
             while (true)
             {
-                if (_server != null)
+                progress++;
+                _bwPrintServiceCheck.ReportProgress(progress);
+                if (progress > 3)
+                    progress = 0;
+                Thread.Sleep(2000);
+            }
+        }
+
+        private void _bwPrintServiceCheck_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            if (_server != null)
+                SetStateUi(_server.IsServerRuning());
+            else
+                SetStateUi(false);
+        }
+
+        
+        private void _bwPrintFilesCheck_DoWork(object sender, DoWorkEventArgs e)
+        {
+            while (true)
+            {
+                if (_printer != null && !_printer.IsPrinting)
                 {
-                    //result = _server.IsServerRuning();
-                    progress++;
-                    _backgroundWorker.ReportProgress(progress);
-                    //configWindow.Invoke((ThreadStart)delegate { SetStateUi(result); }, null);
+                    //_printer.PrintDocument((string)queueToPrint.Dequeue());
                 }
                 Thread.Sleep(2000);
             }
         }
 
-        private void _backgroundWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        private void _printer_OnEndPrint(object sender, string fileName)
         {
-            SetStateUi(_server.IsServerRuning());
+            if (File.Exists(fileName))
+                File.Delete(fileName);
         }
+
+        private void _printer_OnErrorPrint(object sender, string fileName)
+        {
+            if (File.Exists(fileName))
+            {
+                FileInfo fi = new FileInfo(fileName);
+                string fileTo = string.Concat(fi.Directory.Name == Constants.folderChecks ? FileHelper.GetFolderChecksPrintError() : FileHelper.GetFolderDocumentsPrintError(), "\\", fi.Name);
+                File.Move(fileName, fileTo);
+            }
+        }
+
         //StartService()
 
 

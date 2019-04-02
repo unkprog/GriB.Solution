@@ -1,9 +1,7 @@
-﻿using Microsoft.Win32;
-using System;
+﻿using System;
 using System.IO;
 using System.Net;
 using System.Web.Http;
-using System.Web.Http.Dispatcher;
 using System.Web.Http.SelfHost;
 
 namespace GriB.PrintServer.Windows
@@ -38,7 +36,7 @@ namespace GriB.PrintServer.Windows
         public bool IsServerRuning()
         {
             string response = HttpRequestCheckPrintServer();
-            return response == "PSIS";
+            return (response == "PSIS");
         }
 
         private string HttpRequestCheckPrintServer()
@@ -64,26 +62,12 @@ namespace GriB.PrintServer.Windows
                         }
                     }
                 }
-                catch(Exception ex)
+                catch (Exception)
                 {
                     result = string.Empty;
                 }
             }
             return result;
-        }
-
-        private void SetupIE_PrintSettings()
-        {
-            RegistryKey registryKey = Registry.CurrentUser.CreateSubKey("Software\\Microsoft\\Internet Explorer\\PageSetup");
-            registryKey.SetValue("footer", "");
-            registryKey.SetValue("header", "");
-            registryKey.SetValue("margin_bottom", "0.0");
-            registryKey.SetValue("margin_left", "0.0");
-            registryKey.SetValue("margin_right", "0.0");
-            registryKey.SetValue("margin_top", "0.0");
-            registryKey.SetValue("Print_Background", "yes");
-            registryKey.SetValue("Shrink_To_Fit", "no");
-            registryKey.SetValue("font", "");
         }
     }
 }
