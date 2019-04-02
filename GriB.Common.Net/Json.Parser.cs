@@ -34,7 +34,7 @@ namespace GriB.Common.Net
             Token lookAheadToken = Token.None;
             int index;
 
-            internal Parser(string json)
+            public Parser(string json)
             {
                 this.json = json;
             }

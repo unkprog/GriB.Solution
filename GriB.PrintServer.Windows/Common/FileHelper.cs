@@ -30,6 +30,7 @@ namespace GriB.PrintServer.Windows.Common
 
         public static string GetFolderDocuments()
         {
+            CheckFolder(Constants.folderDocuments);
             return GetFolder(Constants.folderDocuments);
         }
 
@@ -46,6 +47,7 @@ namespace GriB.PrintServer.Windows.Common
 
         public static string GetFolderChecks()
         {
+            CheckFolder(Constants.folderChecks);
             return GetFolder(Constants.folderChecks);
         }
 

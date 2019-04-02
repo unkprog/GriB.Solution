@@ -1,13 +1,14 @@
 ﻿using System;
+using System.Linq;
 using System.Drawing;
 using System.IO;
 using System.Reflection;
 using System.Windows.Forms;
 using System.Threading;
-using System.Runtime.InteropServices;
 using System.ComponentModel;
 using GriB.PrintServer.Windows.Common;
 using GriB.PrintServer.Windows.Properties;
+using System.Collections.Generic;
 
 namespace GriB.PrintServer.Windows
 {
@@ -27,6 +28,8 @@ namespace GriB.PrintServer.Windows
         ToolStripItem toolStripItemStartStop = null;
         Bitmap printActiveBitmap = GetAppImage("print_active") as Bitmap;
         Bitmap printDisableBitmap = GetAppImage("print_disabled") as Bitmap;
+        Bitmap printActiveWBitmap = GetAppImage("print_active_w") as Bitmap;
+        Bitmap printDisableWBitmap = GetAppImage("print_disabled_w") as Bitmap;
         Server _server;
         Printer _printer;
         BackgroundWorker _bwPrintServiceCheck;
@@ -45,7 +48,7 @@ namespace GriB.PrintServer.Windows
             notifyContextMenu.Items.Add(new ToolStripSeparator());
             notifyContextMenu.Items.Add("Выход", GetAppImage("exit"), new EventHandler(Exit));
 
-            notifyIcon.Icon = Icon.FromHandle(printDisableBitmap.GetHicon());
+            notifyIcon.Icon = Icon.FromHandle(printDisableWBitmap.GetHicon());
             notifyIcon.DoubleClick += showConfigHandler;
             notifyIcon.ContextMenuStrip = notifyContextMenu;
             notifyIcon.Visible = true;
@@ -92,7 +95,7 @@ namespace GriB.PrintServer.Windows
                 {
                     toolStripItemStartStop.Text = "Стоп";
                     toolStripItemStartStop.Image = printDisableBitmap;
-                    notifyIcon.Icon = Icon.FromHandle(printActiveBitmap.GetHicon());
+                    notifyIcon.Icon = Icon.FromHandle(printActiveWBitmap.GetHicon());
                 }
             }
             else
@@ -101,7 +104,7 @@ namespace GriB.PrintServer.Windows
                 {
                     toolStripItemStartStop.Text = "Старт";
                     toolStripItemStartStop.Image = printActiveBitmap;
-                    notifyIcon.Icon = Icon.FromHandle(printDisableBitmap.GetHicon());
+                    notifyIcon.Icon = Icon.FromHandle(printDisableWBitmap.GetHicon());
                 }
             }
             toolStripItemStartStop.Enabled = true;
@@ -156,16 +159,54 @@ namespace GriB.PrintServer.Windows
                 SetStateUi(false);
         }
 
-        
+        private Dictionary<string, string> listChecks = new Dictionary<string, string>();
+        private Dictionary<string, string> listDocuments = new Dictionary<string, string>();
+
         private void _bwPrintFilesCheck_DoWork(object sender, DoWorkEventArgs e)
         {
             while (true)
             {
-                if (_printer != null && !_printer.IsPrinting)
+                if (_printer != null && !_printer.IsPrinting && listChecks.Count == 0 && listDocuments.Count == 0)
                 {
-                    //_printer.PrintDocument((string)queueToPrint.Dequeue());
+                    string[] filesCheck = Directory.GetFiles(FileHelper.GetFolderChecks());
+                    if (filesCheck != null && filesCheck.Length > 0)
+                    {
+                        foreach (var fileName in filesCheck)
+                            listChecks.Add(fileName, fileName);
+                    }
+
+                    string[] filesDocuments = Directory.GetFiles(FileHelper.GetFolderDocuments());
+                    if (filesDocuments != null && filesDocuments.Length > 0)
+                    {
+                        foreach (var fileName in filesDocuments)
+                            listDocuments.Add(fileName, fileName);
+                    }
                 }
                 Thread.Sleep(2000);
+            }
+        }
+
+        private void NextPrint()
+        {
+            if (listChecks.Count > 0)
+                _printer.PrintDocument(listChecks.Values.First());
+            else if (listDocuments.Count > 0)
+                _printer.PrintDocument(listDocuments.Values.First());
+
+        }
+
+        private void RemovePrint(string fileName)
+        {
+            FileInfo fi = new FileInfo(fileName);
+            if (fi.Directory.Name == Constants.folderChecks)
+            {
+                if (listChecks.ContainsKey(fileName))
+                    listChecks.Remove(fileName);
+            }
+            else
+            {
+                if (listDocuments.ContainsKey(fileName))
+                    listDocuments.Remove(fileName);
             }
         }
 
@@ -173,6 +214,8 @@ namespace GriB.PrintServer.Windows
         {
             if (File.Exists(fileName))
                 File.Delete(fileName);
+            RemovePrint(fileName);
+            NextPrint();
         }
 
         private void _printer_OnErrorPrint(object sender, string fileName)
@@ -182,6 +225,8 @@ namespace GriB.PrintServer.Windows
                 FileInfo fi = new FileInfo(fileName);
                 string fileTo = string.Concat(fi.Directory.Name == Constants.folderChecks ? FileHelper.GetFolderChecksPrintError() : FileHelper.GetFolderDocumentsPrintError(), "\\", fi.Name);
                 File.Move(fileName, fileTo);
+                RemovePrint(fileName);
+                NextPrint();
             }
         }
 

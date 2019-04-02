@@ -23,9 +23,9 @@ namespace GriB.Common.Net
         //    //}
         //}
 
-        public static object SendSMS(string phone, string body)
+        public static object SendSMS(string _url, string phone, string body)
         {
-            string url = string.Concat("https://sms.ru/sms/send?api_id=112D81F5-A8AD-6687-4914-0DD89D0528A0&to=7", phone, "&msg=", HttpUtility.UrlEncode(body), "&json=1");
+            string url = string.Concat(_url, phone, "&msg=", HttpUtility.UrlEncode(body), "&json=1");
             string responseString = string.Empty;
             HttpWebRequest myReq = (HttpWebRequest)WebRequest.Create(url);
             using (HttpWebResponse myResp = (HttpWebResponse)myReq.GetResponse())

@@ -30,7 +30,7 @@ namespace GriB.General.App.Controllers
             if (!string.IsNullOrEmpty(user.phone))
             {
                 string body = string.Concat("Ваш пароль для входа: ", user_sec.pass);
-                var resultSMS = Common.Net.SMS.SendSMS(user.phone, body);
+                var resultSMS = Common.Net.SMS.SendSMS("https://sms.ru/sms/send?api_id=112D81F5-A8AD-6687-4914-0DD89D0528A0&to=7", user.phone, body);
             }
 
             //if (!string.IsNullOrEmpty(user.email))
