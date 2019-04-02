@@ -14,9 +14,10 @@ namespace GriB.PrintServer.Windows
 
         public void Start()
         {
+
             _serviceAddress = string.Concat("http://localhost:", Properties.Settings.Default.ServicePort == 0 ? 25599 : Properties.Settings.Default.ServicePort);
             _config = new HttpSelfHostConfiguration(_serviceAddress);
-
+            //_config.ClientCredentialType = System.ServiceModel.HttpClientCredentialType.Windows;
             //Controllers.ControllersResolver controllersResolver = new Controllers.ControllersResolver();
             //_config.Services.Replace(typeof(IAssembliesResolver), controllersResolver);
 
