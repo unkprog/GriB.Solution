@@ -1,16 +1,13 @@
 ﻿using GriB.Common.Net;
 using GriB.PrintServer.Windows.Models;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
-using System.Threading.Tasks;
 using System.Web.Http;
+using Newtonsoft.Json.Linq;
 
 namespace GriB.PrintServer.Windows.Controllers
 {
@@ -49,7 +46,12 @@ namespace GriB.PrintServer.Windows.Controllers
             string result = string.Empty;
             try
             {
-                PrintCheckModel printCheck = new PrintCheckModel() { dataPrint = "test print data" };
+                string dataPrint = string.Empty;
+                for(int i = 0 ; i < 10; i++)
+                {
+                    dataPrint = string.Concat(dataPrint, i, ". test print data ", i, " <br>");
+                }
+                PrintCheckModel printCheck = new PrintCheckModel() { dataPrint = dataPrint };
                 JObject data = Json.Post<JObject, PrintCheckModel>(_serviceAddress, "/print/printCheck", printCheck);
                 result = data.ToString();
             }

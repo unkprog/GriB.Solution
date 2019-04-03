@@ -181,6 +181,7 @@ namespace GriB.PrintServer.Windows
                         foreach (var fileName in filesDocuments)
                             listDocuments.Add(fileName, fileName);
                     }
+                    NextPrint();
                 }
                 Thread.Sleep(2000);
             }

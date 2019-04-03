@@ -37,6 +37,7 @@ namespace GriB.PrintServer.Windows.Common
         public static string GetFolderDocumentsPrintError()
         {
             string path = GetFolderDocuments();
+            CheckFolder(string.Concat(Constants.folderDocuments, "\\", "Error"));
             return GetFolder(string.Concat(path, "\\", "Error"));
         }
 
