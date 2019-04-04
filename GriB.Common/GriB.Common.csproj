@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>GriB.Common</RootNamespace>
     <AssemblyName>GriB.Common</AssemblyName>
-    <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -94,23 +94,7 @@
     <Compile Include="Diagnostics\ILogger.cs" />
     <Compile Include="Disposable.cs" />
     <Compile Include="IO\Helper.cs" />
-    <Compile Include="Models\pos\constants.cs" />
-    <Compile Include="Models\pos\settings\employee.cs" />
-    <Compile Include="Models\pos\sqldb.cs" />
-    <Compile Include="Models\pos\sqlsrv.cs" />
-    <Compile Include="Models\Security\Identity.cs" />
-    <Compile Include="Models\pos\model_base.cs" />
-    <Compile Include="Models\pos\role.cs" />
-    <Compile Include="Models\pos\user.cs" />
-    <Compile Include="Models\Security\Principal.cs" />
-    <Compile Include="Net\EMail.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Sql\Database.cs" />
-    <Compile Include="Sql\Helper.cs" />
-    <Compile Include="Sql\Query.cs" />
-    <Compile Include="Web\Http\ApiController.cs" />
-    <Compile Include="Web\Http\Exception.cs" />
-    <Compile Include="Web\Http\ResponseMessage.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
@@ -118,11 +102,13 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\" />
+    <Folder Include="Sql\" />
+    <Folder Include="Web\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\GriB.Common.Net\GriB.Common.Net.csproj">
-      <Project>{1b0dd097-7819-4dd1-8390-d5e2e4065576}</Project>
-      <Name>GriB.Common.Net</Name>
+    <ProjectReference Include="..\GriB.Common.Models\GriB.Common.Models.csproj">
+      <Project>{2de5309f-fea6-4fbf-9ce4-fbc20a5d5f03}</Project>
+      <Name>GriB.Common.Models</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

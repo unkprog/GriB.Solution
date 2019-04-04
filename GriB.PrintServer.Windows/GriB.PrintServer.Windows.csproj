@@ -170,8 +170,12 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\GriB.Common.Models\GriB.Common.Models.csproj">
+      <Project>{2de5309f-fea6-4fbf-9ce4-fbc20a5d5f03}</Project>
+      <Name>GriB.Common.Models</Name>
+    </ProjectReference>
     <ProjectReference Include="..\GriB.Common.Net\GriB.Common.Net.csproj">
-      <Project>{1b0dd097-7819-4dd1-8390-d5e2e4065576}</Project>
+      <Project>{e451b9bb-687d-4147-875a-4b44590df871}</Project>
       <Name>GriB.Common.Net</Name>
     </ProjectReference>
   </ItemGroup>

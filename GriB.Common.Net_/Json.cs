@@ -1,5 +1,4 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
@@ -8,15 +7,15 @@ namespace GriB.Common.Net
 {
     public static partial class Json
     {
-        public static T Parse<T>(string json)
-        {
-            return (T)new Parser(json).Decode();
-        }
+        //public static object Parse(string json)
+        //{
+        //    return new Parser(json).Decode();
+        //}
 
-        public static string Serialize(object obj, SerializeOptions options = null)
-        {
-            return new Serializer(options).ToJson(obj);
-        }
+        //public static string Serialize(object obj, SerializeOptions options = null)
+        //{
+        //    return new Serializer(options).ToJson(obj);
+        //}
 
 
         public static TResult Post<TResult, TParam>(string server, string url, TParam data)
@@ -43,7 +42,7 @@ namespace GriB.Common.Net
 
 
                     if (response != null)
-                        result = await response.Content.ReadAsJsonAsync<TResult>();
+                        result = await response.Content.ReadAsAsync<TResult>();
                 }
             }
             catch (Exception ex)
@@ -77,38 +76,9 @@ namespace GriB.Common.Net
             }
 
             if (response != null)
-                result = await response.Content.ReadAsJsonAsync<TResult>();
+                result = await response.Content.ReadAsAsync<TResult>();
 
             return result;
-        }
-    }
-
-    //public static class HttpContentExt
-    //{
-
-    //    public static async Task<T> ReadAsAsync<T>(this HttpContent content)
-    //    {
-    //        return Json.Parse<T>(await content.ReadAsStringAsync());
-    //        //return Newtonsoft.Json.JsonConvert.DeserializeObject<T>(await content.ReadAsStringAsync());
-    //    }
-    //}
-
-    public static class HttpClientExtensions
-    {
-        public static Task<HttpResponseMessage> PostAsJsonAsync<T>(
-            this HttpClient httpClient, string url, T data)
-        {
-            var dataAsString = JsonConvert.SerializeObject(data);//  Json.Serialize(data);
-            var content = new StringContent(dataAsString);
-            content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
-            return httpClient.PostAsync(url, content);
-        }
-
-        public static async Task<T> ReadAsJsonAsync<T>(this HttpContent content)
-        {
-            var dataAsString = await content.ReadAsStringAsync();
-            //return Json.Parse<T>(dataAsString);
-            return JsonConvert.DeserializeObject<T>(dataAsString);
         }
     }
 }

@@ -38,7 +38,7 @@ namespace GriB.Common.Net
                 myResp.Close();
             }
 
-            return new Json.Parser(responseString).Decode(); // Common.Net.Json.Parse(responseString);
+            return new GriB.Common.Net.Json.Parser(responseString).Decode(); // Common.Net.Json.Parse(responseString);
         }
     }
 }

@@ -4,7 +4,7 @@ using GriB.Client.App.Managers.POSTerminal;
 using GriB.Client.App.Models.Editor;
 using GriB.Client.App.Models.POSTerminal;
 using GriB.Common.Models.Security;
-using GriB.Common.Web.Http;
+using GriB.Web.Http;
 using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 using System.Net;

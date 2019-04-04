@@ -5,11 +5,12 @@ using System.Net.Http;
 using System.Web;
 using System.Web.Http;
 using GriB.Common.Sql;
-using GriB.Common.Web.Http;
+using GriB.Web.Http;
 using GriB.General.App.Managers;
 using GriB.Common.Models.pos;
 using GriB.Common.Models.Security;
 using GriB.Common.Models.pos.settings;
+using GriB.Common.Net;
 
 namespace GriB.General.App.Controllers
 {
@@ -30,7 +31,7 @@ namespace GriB.General.App.Controllers
             if (!string.IsNullOrEmpty(user.phone))
             {
                 string body = string.Concat("Ваш пароль для входа: ", user_sec.pass);
-                var resultSMS = Common.Net.SMS.SendSMS("https://sms.ru/sms/send?api_id=112D81F5-A8AD-6687-4914-0DD89D0528A0&to=7", user.phone, body);
+                var resultSMS = SMS.SendSMS("https://sms.ru/sms/send?api_id=112D81F5-A8AD-6687-4914-0DD89D0528A0&to=7", user.phone, body);
             }
 
             //if (!string.IsNullOrEmpty(user.email))

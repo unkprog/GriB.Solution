@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using GriB.Client.App.Managers;
 using GriB.Common.Models.pos;
-using GriB.Common.Web.Http;
+using GriB.Web.Http;
 using GriB.Common.Models.Security;
 using GriB.Common.Sql;
 using System.Web.Hosting;

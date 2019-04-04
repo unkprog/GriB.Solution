@@ -2,6 +2,9 @@
 using System;
 using System.Drawing;
 using System.Drawing.Printing;
+using System.Management;
+using System.Runtime.InteropServices;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -37,6 +40,36 @@ namespace GriB.PrintServer.Windows
         {
             return value.ToString("F2").Replace(',', '.');
         }
+
+        // Установка принтера по умолчанию
+        ////Вариант #1
+        //public static bool SetDefaultPrinter1(string defaultPrinter)
+        //{
+        //    using (ManagementObjectSearcher objectSearcher = new ManagementObjectSearcher("SELECT * FROM Win32_Printer"))
+        //    {
+        //        using (ManagementObjectCollection objectCollection = objectSearcher.Get())
+        //        {
+        //            foreach (ManagementObject mo in objectCollection)
+        //            {
+        //                if (string.Compare(mo["Name"].ToString(), defaultPrinter, true) == 0)
+        //                {
+        //                    mo.InvokeMethod("SetDefaultPrinter", null, null);
+        //                    return true;
+        //                }
+        //            }
+        //        }
+        //    }
+        //    return false;
+        //}
+
+        ////Вариант #2
+        //[DllImport("winspool.drv", CharSet = CharSet.Unicode, SetLastError = true)]
+        //[return: MarshalAs(UnmanagedType.Bool)]
+        //public static extern bool GetDefaultPrinter(StringBuilder pszBuffer, ref int size);
+        //[DllImport("winspool.drv", CharSet = CharSet.Unicode, SetLastError = true)]
+        //[return: MarshalAs(UnmanagedType.Bool)]
+        //public static extern bool SetDefaultPrinter(string Name);
+
 
         object footer, header, margin_left, margin_right, margin_top, margin_bottom, Print_Background, Shrink_To_Fit, font;
         private void SaveDefaultPrintSettings()

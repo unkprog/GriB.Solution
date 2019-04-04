@@ -8,7 +8,7 @@ using GriB.Common.Diagnostics;
 using GriB.Common.Sql;
 using Newtonsoft.Json.Linq;
 
-namespace GriB.Common.Web.Http
+namespace GriB.Web.Http
 {
     public class BaseApiController : System.Web.Http.ApiController
     {

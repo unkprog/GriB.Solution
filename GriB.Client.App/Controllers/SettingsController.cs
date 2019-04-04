@@ -12,7 +12,7 @@ using GriB.Client.App.Models;
 using GriB.Client.App.Models.Editor;
 using GriB.Common.Models.pos.settings;
 using GriB.Common.Models.Security;
-using GriB.Common.Web.Http;
+using GriB.Web.Http;
 using Newtonsoft.Json.Linq;
 using System.Web.Hosting;
 using System.IO;
