@@ -96,11 +96,5 @@
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\GriB.Common\GriB.Common.csproj">
-      <Project>{D1EC7A16-5393-4584-B7ED-EDDBAED18D59}</Project>
-      <Name>GriB.Common</Name>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

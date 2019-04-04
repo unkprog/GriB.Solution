@@ -185,7 +185,7 @@
       <Name>GriB.Common.Sql</Name>
     </ProjectReference>
     <ProjectReference Include="..\GriB.Common\GriB.Common.csproj">
-      <Project>{d1ec7a16-5393-4584-b7ed-eddbaed18d59}</Project>
+      <Project>{2d9cba7e-88aa-441f-8f6f-0356ae1dea4c}</Project>
       <Name>GriB.Common</Name>
     </ProjectReference>
     <ProjectReference Include="..\GriB.Web\GriB.Web.csproj">

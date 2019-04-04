@@ -1,10 +1,8 @@
-﻿using Microsoft.Win32;
+﻿using GriB.Common.Diagnostics;
+using Microsoft.Win32;
 using System;
 using System.Drawing;
 using System.Drawing.Printing;
-using System.Management;
-using System.Runtime.InteropServices;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -13,6 +11,13 @@ namespace GriB.PrintServer.Windows
 {
     public class Printer
     {
+        protected ILogger logger;
+
+        public Printer()
+        {
+
+        }
+
         const float DPI = 96.0f;
 
         private static float PixelsToInches(float pixels, int digits = 2)

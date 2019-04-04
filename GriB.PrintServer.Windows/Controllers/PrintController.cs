@@ -8,12 +8,11 @@ using System.Web.Http;
 using GriB.Web.Http;
 using GriB.PrintServer.Windows.Common;
 using GriB.PrintServer.Windows.Models;
-using Newtonsoft.Json.Linq;
 
 namespace GriB.PrintServer.Windows.Controllers
 {
     //[RoutePrefix("api")]
-    public class PrintController : ApiController
+    public class PrintController : BaseApiController
     {
         [ActionName("printers")]
         public HttpResponseMessage GetPrinters()
@@ -24,7 +23,7 @@ namespace GriB.PrintServer.Windows.Controllers
                 printers.Add(printer);
             }
 
-            return this.CreateResponse(HttpStatusCode.OK, new { printers });
+            return CreateResponse(HttpStatusCode.OK, new { printers });
         }
 
         [HttpPost]
@@ -45,14 +44,15 @@ namespace GriB.PrintServer.Windows.Controllers
                             writer.Write(printCheck.dataPrint);
                         }
                     }
-                    response = this.CreateResponse(HttpStatusCode.OK, new { printFile = FileHelper.RelativeFileName(printFile) });
+                    response = CreateResponse(HttpStatusCode.OK, new { printFile = FileHelper.RelativeFileName(printFile) });
                 }
                 else
-                    response = Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Не удалось поставить чек в очередь на печать.");
+                    response = CreateErrorResponse(HttpStatusCode.BadRequest, "Не удалось поставить чек в очередь на печать.");
             }
             catch (Exception ex)
             {
-                response = Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message);
+                WriteError(ex);
+                response = CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message);
             }
             return response;
         }
@@ -75,11 +75,12 @@ namespace GriB.PrintServer.Windows.Controllers
                     }
                 }
                 else
-                    response = Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Не удалось поставить документ в очередь на печать.");
+                    response = CreateErrorResponse(HttpStatusCode.BadRequest, "Не удалось поставить документ в очередь на печать.");
             }
             catch (Exception ex)
             {
-                response = Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message);
+                WriteError(ex);
+                response = CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message);
             }
             return response;
         }

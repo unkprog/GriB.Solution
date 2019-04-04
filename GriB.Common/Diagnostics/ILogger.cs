@@ -81,23 +81,11 @@ namespace GriB.Common.Diagnostics
         {
             if (IsLogging)
             {
-                //                string eventMessage = message;
-                //                if (!string.IsNullOrEmpty(trace))
-                //                    eventMessage = string.Concat(eventMessage, Environment.NewLine, Environment.NewLine, "Stack trace:", Environment.NewLine, trace);
-                //#if DEBUG
-                //                Debug.WriteLine(eventMessage, eventType.ToString());
-                //#endif
-                //                string source = GetSource();
-                //                using (EventLog eventLog = new EventLog("Application"))
-                //                {
-                //                    eventLog.Source = source; // "Application";
-                //                    eventLog.WriteEntry(eventMessage, eventType, eventId, category);
-                //                }
-
                 //Write to a file
                 string newFileName = Guid.NewGuid().ToString().Replace("-", string.Empty);
                 using (StreamWriter writer = new StreamWriter(string.IsNullOrEmpty(path) ? newFileName : string.Concat(path, "\\", newFileName)))
                 {
+                    writer.WriteLine(eventType == EventLogEntryType.Information ? "INFO:" : eventType == EventLogEntryType.Error ? "ERROR:" : "");
                     writer.WriteLine(message);
                     if (!string.IsNullOrEmpty(trace))
                     {
@@ -140,6 +128,17 @@ namespace GriB.Common.Diagnostics
             {
                 return "Application";
             }
+        }
+    }
+
+    public static class LoggerExt 
+    {
+        public static ILogger CreateFileLogger(string logPath)
+        {
+            if (!Directory.Exists(logPath))
+                Directory.CreateDirectory(logPath);
+
+            return new Logger(logPath) { IsLogging = true };
         }
     }
 }

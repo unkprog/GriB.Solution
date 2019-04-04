@@ -17,11 +17,8 @@ namespace GriB.Web.Http
 
         public BaseApiController()
         {
-            string logPath = string.Concat(PhysicalApplicationPath, "Logs");
-            if (!Directory.Exists(logPath))
-                Directory.CreateDirectory(logPath);
-
-            logger = new Logger(logPath) { IsLogging = true };
+            logger = LoggerExt.CreateFileLogger(string.Concat(PhysicalApplicationPath, "Logs"));
+            logger.IsLogging = true;
         }
 
         public string PhysicalApplicationPath => HttpContext.Current.Request.PhysicalApplicationPath;
@@ -39,8 +36,8 @@ namespace GriB.Web.Http
             }
             catch (ApiException ex)
             {
-                logger.WriteError(ex);
-                return this.CreateResponse(HttpStatusCode.OK, new
+                WriteError(ex);
+                return CreateResponse(HttpStatusCode.OK, new
                 {
                     error = ex.Message,
                     trace = ex.StackTrace
@@ -58,8 +55,8 @@ namespace GriB.Web.Http
             }
             catch (ApiException ex)
             {
-                logger.WriteError(ex);
-                return this.CreateResponse(HttpStatusCode.InternalServerError, new HttpResponseException(ex));
+                WriteError(ex);
+                return CreateResponse(HttpStatusCode.InternalServerError, new HttpResponseException(ex));
             }
         }
 
@@ -72,15 +69,20 @@ namespace GriB.Web.Http
 
                 HttpResponseException ex = response.ToObject<HttpResponseException>();
                 if (ex != null && !string.IsNullOrEmpty(ex.error))
-                    return this.CreateResponse(HttpStatusCode.OK, ex);
+                    return CreateResponse(HttpStatusCode.OK, ex);
 
                 return func.Invoke(response);
             }
             catch (Exception ex)
             {
-                logger.WriteError(ex);
-                return this.CreateResponse(HttpStatusCode.InternalServerError, new HttpResponseException(ex));
+                WriteError(ex);
+                return CreateResponse(HttpStatusCode.InternalServerError, new HttpResponseException(ex));
             }
+        }
+
+        protected void WriteError(Exception ex)
+        {
+            logger?.WriteError(ex);
         }
 
         public HttpResponseMessage CreateResponse(HttpStatusCode statusCode)
@@ -91,6 +93,11 @@ namespace GriB.Web.Http
         public HttpResponseMessage CreateResponse(HttpStatusCode statusCode, object value)
         {
             return Request.CreateResponse(statusCode, value);
+        }
+
+        public HttpResponseMessage CreateErrorResponse(HttpStatusCode statusCode, string message)
+        {
+            return Request.CreateErrorResponse(statusCode, message);
         }
     }
 }

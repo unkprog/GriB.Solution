@@ -186,6 +186,10 @@
       <Project>{e451b9bb-687d-4147-875a-4b44590df871}</Project>
       <Name>GriB.Common.Net</Name>
     </ProjectReference>
+    <ProjectReference Include="..\GriB.Common\GriB.Common.csproj">
+      <Project>{2d9cba7e-88aa-441f-8f6f-0356ae1dea4c}</Project>
+      <Name>GriB.Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\GriB.Web\GriB.Web.csproj">
       <Project>{3e00a39a-bbc4-4b43-8a5d-d2583f974ff4}</Project>
       <Name>GriB.Web</Name>
