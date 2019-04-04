@@ -4,29 +4,31 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web;
+using System.Web.Http;
 using GriB.Common.Diagnostics;
 using GriB.Common.Sql;
 using Newtonsoft.Json.Linq;
 
 namespace GriB.Web.Http
 {
-    public class BaseApiController : System.Web.Http.ApiController
+    public class BaseApiController : ApiController
     {
         protected ILogger logger;
 
         public BaseApiController()
         {
-            string logPath = string.Concat(HttpContext.Current.Request.PhysicalApplicationPath, "Logs");
+            string logPath = string.Concat(PhysicalApplicationPath, "Logs");
             if (!Directory.Exists(logPath))
                 Directory.CreateDirectory(logPath);
 
             logger = new Logger(logPath) { IsLogging = true };
         }
 
+        public string PhysicalApplicationPath => HttpContext.Current.Request.PhysicalApplicationPath;
 
         protected Query CreateQuery(string connectionString, string path)
         {
-            return new Query(connectionString, string.Concat(HttpContext.Current.Request.PhysicalApplicationPath, path), logger);
+            return new Query(connectionString, string.Concat(PhysicalApplicationPath, path), logger);
         }
 
         public HttpResponseMessage TryCatchResponse(Func<HttpResponseMessage> func)
@@ -38,7 +40,7 @@ namespace GriB.Web.Http
             catch (ApiException ex)
             {
                 logger.WriteError(ex);
-                return Request.CreateResponse(HttpStatusCode.OK, new
+                return this.CreateResponse(HttpStatusCode.OK, new
                 {
                     error = ex.Message,
                     trace = ex.StackTrace
@@ -57,7 +59,7 @@ namespace GriB.Web.Http
             catch (ApiException ex)
             {
                 logger.WriteError(ex);
-                return Request.CreateResponse(HttpStatusCode.InternalServerError, new HttpResponseException(ex));
+                return this.CreateResponse(HttpStatusCode.InternalServerError, new HttpResponseException(ex));
             }
         }
 
@@ -70,15 +72,25 @@ namespace GriB.Web.Http
 
                 HttpResponseException ex = response.ToObject<HttpResponseException>();
                 if (ex != null && !string.IsNullOrEmpty(ex.error))
-                    return Request.CreateResponse(HttpStatusCode.OK, ex);
+                    return this.CreateResponse(HttpStatusCode.OK, ex);
 
                 return func.Invoke(response);
             }
             catch (Exception ex)
             {
                 logger.WriteError(ex);
-                return Request.CreateResponse(HttpStatusCode.InternalServerError, new HttpResponseException(ex));
+                return this.CreateResponse(HttpStatusCode.InternalServerError, new HttpResponseException(ex));
             }
+        }
+
+        public HttpResponseMessage CreateResponse(HttpStatusCode statusCode)
+        {
+            return Request.CreateResponse(statusCode);
+        }
+
+        public HttpResponseMessage CreateResponse(HttpStatusCode statusCode, object value)
+        {
+            return Request.CreateResponse(statusCode, value);
         }
     }
 }

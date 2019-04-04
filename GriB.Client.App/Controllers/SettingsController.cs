@@ -31,7 +31,7 @@ namespace GriB.Client.App.Controllers
             System.Reflection.AssemblyName assemblyName = assembly.GetName();
             Version version = assemblyName.Version;
 
-            return Request.CreateResponse(HttpStatusCode.OK, new
+            return this.CreateResponse(HttpStatusCode.OK, new
             {
                 IsDebug =
 #if DEBUG
@@ -53,7 +53,7 @@ namespace GriB.Client.App.Controllers
             {
                 List<t_org> orgs = Organization.GetOrganizations(query, Organization.typeCompany);
                 t_org org = Organization.GetOrganizationInfo(query, (orgs != null && orgs.Count > 0 ? orgs[0] : new t_org() { type = Organization.typeCompany }));
-                return Request.CreateResponse(HttpStatusCode.OK, new { record = new company() { id = org.id, name = org.name, site = org.info?.site, email = org.info?.email, phone = org.info?.phone, defcurrency = org.defcurrency }});
+                return this.CreateResponse(HttpStatusCode.OK, new { record = new company() { id = org.id, name = org.name, site = org.info?.site, email = org.info?.email, phone = org.info?.phone, defcurrency = org.defcurrency }});
             });
         }
 
@@ -67,7 +67,7 @@ namespace GriB.Client.App.Controllers
                 t_org _org = new t_org() { id = company.id, type = Organization.typeCompany, cu = principal.Data.User.id, uu = principal.Data.User.id, name = company.name, defcurrency = new unit() { id = company.defcurrency == null ? 0 : company.defcurrency.id }, info = new t_org_info() { site = company.site, email = company.email, phone = company.phone } };
                 Organization.SetOrganization(query, _org);
                 Organization.SetOrganizationInfo(query, _org);
-                return Request.CreateResponse(HttpStatusCode.OK, "Ok");
+                return this.CreateResponse(HttpStatusCode.OK, "Ok");
             });
         }
         #endregion
@@ -79,7 +79,7 @@ namespace GriB.Client.App.Controllers
         {
             return TryCatchResponseQuery((query) =>
             {
-                return Request.CreateResponse(HttpStatusCode.OK, Organization.GetSalepoints(query));
+                return this.CreateResponse(HttpStatusCode.OK, Organization.GetSalepoints(query));
 
             });
         }
@@ -98,7 +98,7 @@ namespace GriB.Client.App.Controllers
                 org.parent = Organization.GetOrganization(query, org.pid);
 
                 salepoint result = new salepoint() { id = org.id, name = org.name, company_id = (int)org.parent?.pid, city = org.parent?.name, address = org.info1?.address, schedule = org.info1?.schedule };
-                return Request.CreateResponse(HttpStatusCode.OK, new { companies = orgs, record = result });
+                return this.CreateResponse(HttpStatusCode.OK, new { companies = orgs, record = result });
 
             });
         }
@@ -120,7 +120,7 @@ namespace GriB.Client.App.Controllers
                 org.pid = _city.id;
                 Organization.SetOrganization(query, org);
                 Organization.SetOrganizationInfo1(query, org);
-                return Request.CreateResponse(HttpStatusCode.OK, "Ok");
+                return this.CreateResponse(HttpStatusCode.OK, "Ok");
             });
         }
 
@@ -131,7 +131,7 @@ namespace GriB.Client.App.Controllers
             return TryCatchResponseQuery((query) =>
             {
                 Organization.DelOrganization(query, id, ((Principal)HttpContext.Current.User).Data.User.id);
-                return Request.CreateResponse(HttpStatusCode.OK, "Ok");
+                return this.CreateResponse(HttpStatusCode.OK, "Ok");
             });
         }
         #endregion
@@ -158,7 +158,7 @@ namespace GriB.Client.App.Controllers
                            employee = (employeecard)Managers.Editors.Employee.GetEmployee(query, new Models.Editor.employeecard(emp));
                            employees.Add(employee);
                        }
-                       return Request.CreateResponse(HttpStatusCode.OK, employees);
+                       return this.CreateResponse(HttpStatusCode.OK, employees);
                    });
                })
         );
@@ -180,7 +180,7 @@ namespace GriB.Client.App.Controllers
                        Managers.Editors.Employee.GetEmployee(query, result);
                        Managers.Editors.Employee.GetEmployeeSalepointAccess(query, result);
 
-                       return Request.CreateResponse(HttpStatusCode.OK, new { record = result });
+                       return this.CreateResponse(HttpStatusCode.OK, new { record = result });
                    });
                })
         );
@@ -202,7 +202,7 @@ namespace GriB.Client.App.Controllers
                       empl.id = responseMessage.Employee.id;
                       Managers.Editors.Employee.SetEmployee(query, empl);
                       Managers.Editors.Employee.SetEmployeeSalepointAccess(query, empl);
-                      return Request.CreateResponse(HttpStatusCode.OK, "Ok");
+                      return this.CreateResponse(HttpStatusCode.OK, "Ok");
                   });
               })
         );
@@ -223,7 +223,7 @@ namespace GriB.Client.App.Controllers
                       Models.Editor.employee result = new Models.Editor.employee(responseMessage.Employee);
                       Managers.Editors.Employee.GetEmployeeSalepointAccess(query, result);
 
-                      return Request.CreateResponse(HttpStatusCode.OK, "Ok");
+                      return this.CreateResponse(HttpStatusCode.OK, "Ok");
                   });
               })
         );
@@ -236,7 +236,7 @@ namespace GriB.Client.App.Controllers
         {
             return TryCatchResponseQuery((query) =>
             {
-                return Request.CreateResponse(HttpStatusCode.OK, Account.GetAccounts(query));
+                return this.CreateResponse(HttpStatusCode.OK, Account.GetAccounts(query));
             });
         }
 
@@ -246,7 +246,7 @@ namespace GriB.Client.App.Controllers
         {
             return TryCatchResponseQuery((query) =>
             {
-                return Request.CreateResponse(HttpStatusCode.OK, new { record = Account.GetAccount(query, id) });
+                return this.CreateResponse(HttpStatusCode.OK, new { record = Account.GetAccount(query, id) });
             });
         }
 
@@ -258,7 +258,7 @@ namespace GriB.Client.App.Controllers
             {
                 Principal principal = (Principal)HttpContext.Current.User;
                 Account.SetAccount(query, account, principal.Data.User.id);
-                return Request.CreateResponse(HttpStatusCode.OK, "Ok");
+                return this.CreateResponse(HttpStatusCode.OK, "Ok");
             });
         }
 
@@ -269,7 +269,7 @@ namespace GriB.Client.App.Controllers
             return TryCatchResponseQuery((query) =>
             {
                 Account.DelAccount(query, id, ((Principal)HttpContext.Current.User).Data.User.id);
-                return Request.CreateResponse(HttpStatusCode.OK, "Ok");
+                return this.CreateResponse(HttpStatusCode.OK, "Ok");
             });
         }
         #endregion
@@ -281,7 +281,7 @@ namespace GriB.Client.App.Controllers
         {
             return TryCatchResponseQuery((query) =>
             {
-                return Request.CreateResponse(HttpStatusCode.OK, CostIncome.GetCostIncomes(query, typecostincome));
+                return this.CreateResponse(HttpStatusCode.OK, CostIncome.GetCostIncomes(query, typecostincome));
             });
         }
 
@@ -305,7 +305,7 @@ namespace GriB.Client.App.Controllers
         {
             return TryCatchResponseQuery((query) =>
             {
-                return Request.CreateResponse(HttpStatusCode.OK, new { record = CostIncome.GetCostIncome(query, id) });
+                return this.CreateResponse(HttpStatusCode.OK, new { record = CostIncome.GetCostIncome(query, id) });
             });
         }
 
@@ -317,7 +317,7 @@ namespace GriB.Client.App.Controllers
             {
                 Principal principal = (Principal)HttpContext.Current.User;
                 CostIncome.SetCostIncome(query, costincome, principal.Data.User.id);
-                return Request.CreateResponse(HttpStatusCode.OK, "Ok");
+                return this.CreateResponse(HttpStatusCode.OK, "Ok");
             });
         }
 
@@ -328,7 +328,7 @@ namespace GriB.Client.App.Controllers
             return TryCatchResponseQuery((query) =>
             {
                 CostIncome.DelCostIncome(query, id, ((Principal)HttpContext.Current.User).Data.User.id);
-                return Request.CreateResponse(HttpStatusCode.OK, "Ok");
+                return this.CreateResponse(HttpStatusCode.OK, "Ok");
             });
         }
         #endregion
@@ -340,7 +340,7 @@ namespace GriB.Client.App.Controllers
         {
             return TryCatchResponseQuery((query) =>
             {
-                return Request.CreateResponse(HttpStatusCode.OK, Unit.GetUnits(query, Unit.typeCurrency));
+                return this.CreateResponse(HttpStatusCode.OK, Unit.GetUnits(query, Unit.typeCurrency));
             });
         }
 
@@ -350,7 +350,7 @@ namespace GriB.Client.App.Controllers
         {
             return TryCatchResponseQuery((query) =>
             {
-                return Request.CreateResponse(HttpStatusCode.OK, new { record = Unit.GetUnit(query, id) });
+                return this.CreateResponse(HttpStatusCode.OK, new { record = Unit.GetUnit(query, id) });
             });
         }
 
@@ -362,7 +362,7 @@ namespace GriB.Client.App.Controllers
             {
                 Principal principal = (Principal)HttpContext.Current.User;
                 Unit.SetUnit(query, unit, Unit.typeCurrency, principal.Data.User.id);
-                return Request.CreateResponse(HttpStatusCode.OK, "Ok");
+                return this.CreateResponse(HttpStatusCode.OK, "Ok");
             });
         }
 
@@ -373,7 +373,7 @@ namespace GriB.Client.App.Controllers
             return TryCatchResponseQuery((query) =>
             {
                 Unit.DelUnit(query, id, ((Principal)HttpContext.Current.User).Data.User.id);
-                return Request.CreateResponse(HttpStatusCode.OK, "Ok");
+                return this.CreateResponse(HttpStatusCode.OK, "Ok");
             });
         }
         #endregion
@@ -385,7 +385,7 @@ namespace GriB.Client.App.Controllers
         {
             return TryCatchResponseQuery((query) =>
             {
-                return Request.CreateResponse(HttpStatusCode.OK, Unit.GetUnits(query, Unit.typeUnit));
+                return this.CreateResponse(HttpStatusCode.OK, Unit.GetUnits(query, Unit.typeUnit));
             });
         }
 
@@ -395,7 +395,7 @@ namespace GriB.Client.App.Controllers
         {
             return TryCatchResponseQuery((query) =>
             {
-                return Request.CreateResponse(HttpStatusCode.OK, new { record = Unit.GetUnit(query, id) });
+                return this.CreateResponse(HttpStatusCode.OK, new { record = Unit.GetUnit(query, id) });
             });
         }
 
@@ -407,7 +407,7 @@ namespace GriB.Client.App.Controllers
             {
                 Principal principal = (Principal)HttpContext.Current.User;
                 Unit.SetUnit(query, unit, Unit.typeUnit, principal.Data.User.id);
-                return Request.CreateResponse(HttpStatusCode.OK, "Ok");
+                return this.CreateResponse(HttpStatusCode.OK, "Ok");
             });
         }
 
@@ -418,7 +418,7 @@ namespace GriB.Client.App.Controllers
             return TryCatchResponseQuery((query) =>
             {
                 Unit.DelUnit(query, id, ((Principal)HttpContext.Current.User).Data.User.id);
-                return Request.CreateResponse(HttpStatusCode.OK, "Ok");
+                return this.CreateResponse(HttpStatusCode.OK, "Ok");
             });
         }
         #endregion
@@ -430,7 +430,7 @@ namespace GriB.Client.App.Controllers
         {
             return TryCatchResponseQuery((query) =>
             {
-                return Request.CreateResponse(HttpStatusCode.OK, Category.GetCategoriesCard(query));
+                return this.CreateResponse(HttpStatusCode.OK, Category.GetCategoriesCard(query));
             });
         }
 
@@ -443,7 +443,7 @@ namespace GriB.Client.App.Controllers
                 category result = Category.GetCategory(query, id);
                 Category.GetCategoryDescription(query, result);
                 Category.GetCategorySalepointAccess(query, result);
-                return Request.CreateResponse(HttpStatusCode.OK, new { record = result, categories = Category.GetCategoriesNotThis(query, id) });
+                return this.CreateResponse(HttpStatusCode.OK, new { record = result, categories = Category.GetCategoriesNotThis(query, id) });
             });
         }
 
@@ -457,7 +457,7 @@ namespace GriB.Client.App.Controllers
                 category result = Category.SetCategory(query, category, principal.Data.User.id);
                 Category.SetCategoryDescription(query, category);
                 Category.SetCategorySalepointAccess(query, category);
-                return Request.CreateResponse(HttpStatusCode.OK, "Ok");
+                return this.CreateResponse(HttpStatusCode.OK, "Ok");
             });
         }
 
@@ -468,7 +468,7 @@ namespace GriB.Client.App.Controllers
             return TryCatchResponseQuery((query) =>
             {
                 Category.DelCategory(query, id, ((Principal)HttpContext.Current.User).Data.User.id);
-                return Request.CreateResponse(HttpStatusCode.OK, "Ok");
+                return this.CreateResponse(HttpStatusCode.OK, "Ok");
             });
         }
         #endregion
@@ -480,7 +480,7 @@ namespace GriB.Client.App.Controllers
         {
             return TryCatchResponseQuery((query) =>
             {
-                return Request.CreateResponse(HttpStatusCode.OK, Product.GetProducts(query));
+                return this.CreateResponse(HttpStatusCode.OK, Product.GetProducts(query));
             });
         }
 
@@ -490,7 +490,7 @@ namespace GriB.Client.App.Controllers
         {
             return TryCatchResponseQuery((query) =>
             {
-                return Request.CreateResponse(HttpStatusCode.OK, Product.GetProductMaps(query));
+                return this.CreateResponse(HttpStatusCode.OK, Product.GetProductMaps(query));
             });
         }
 
@@ -508,7 +508,7 @@ namespace GriB.Client.App.Controllers
                 Product.GetProductSale(query, result);
                 Product.GetProductMap(query, result);
                 Product.GetProductComposition(query, result);
-                return Request.CreateResponse(HttpStatusCode.OK, new { record = result });
+                return this.CreateResponse(HttpStatusCode.OK, new { record = result });
             });
         }
 
@@ -520,7 +520,7 @@ namespace GriB.Client.App.Controllers
         //    return TryCatchResponseQuery((query) =>
         //    {
         //        product_composition result = Product.GetProductCompositionNew(query, id);
-        //        return Request.CreateResponse(HttpStatusCode.OK, new { newcomposition = result });
+        //        return this.CreateResponse(HttpStatusCode.OK, new { newcomposition = result });
         //    });
         //}
 
@@ -539,7 +539,7 @@ namespace GriB.Client.App.Controllers
                 Product.SetProductSale(query, product, principal.Data.User.id);
                 Product.SetProductMap(query, product);
                 Product.SetProductComposition(query, product);
-                return Request.CreateResponse(HttpStatusCode.OK, "Ok");
+                return this.CreateResponse(HttpStatusCode.OK, "Ok");
             });
         }
 
@@ -550,7 +550,7 @@ namespace GriB.Client.App.Controllers
             return TryCatchResponseQuery((query) =>
             {
                 Product.DelProduct(query, id, ((Principal)HttpContext.Current.User).Data.User.id);
-                return Request.CreateResponse(HttpStatusCode.OK, "Ok");
+                return this.CreateResponse(HttpStatusCode.OK, "Ok");
             });
         }
         #endregion
@@ -617,7 +617,7 @@ namespace GriB.Client.App.Controllers
                 File.WriteAllBytes(path, image);
 
                 string result = string.Concat("/", path.Replace(HostingEnvironment.ApplicationPhysicalPath, "").Replace("\\", "/"));
-                return Request.CreateResponse(HttpStatusCode.OK, result);
+                return this.CreateResponse(HttpStatusCode.OK, result);
             });
         }
 
@@ -629,7 +629,7 @@ namespace GriB.Client.App.Controllers
         {
             return TryCatchResponseQuery((query) =>
             {
-                return Request.CreateResponse(HttpStatusCode.OK, Managers.Editors.Client.GetClients(query));
+                return this.CreateResponse(HttpStatusCode.OK, Managers.Editors.Client.GetClients(query));
             });
         }
 
@@ -640,7 +640,7 @@ namespace GriB.Client.App.Controllers
             return TryCatchResponseQuery((query) =>
             {
                 client result = Managers.Editors.Client.GetClientPerson(query, id);
-                return Request.CreateResponse(HttpStatusCode.OK, new { record = result });
+                return this.CreateResponse(HttpStatusCode.OK, new { record = result });
             });
         }
 
@@ -653,7 +653,7 @@ namespace GriB.Client.App.Controllers
                 Principal principal = (Principal)HttpContext.Current.User;
                 client result = Managers.Editors.Client.SetClientPerson(query, client, principal.Data.User.id);
                
-                return Request.CreateResponse(HttpStatusCode.OK, "Ok");
+                return this.CreateResponse(HttpStatusCode.OK, "Ok");
             });
         }
 
@@ -664,7 +664,7 @@ namespace GriB.Client.App.Controllers
             return TryCatchResponseQuery((query) =>
             {
                 Managers.Editors.Client.DelClient(query, id, ((Principal)HttpContext.Current.User).Data.User.id);
-                return Request.CreateResponse(HttpStatusCode.OK, "Ok");
+                return this.CreateResponse(HttpStatusCode.OK, "Ok");
             });
         }
         #endregion
@@ -676,7 +676,7 @@ namespace GriB.Client.App.Controllers
         {
             return TryCatchResponseQuery((query) =>
             {
-                return Request.CreateResponse(HttpStatusCode.OK, Discount.GetDiscounts(query));
+                return this.CreateResponse(HttpStatusCode.OK, Discount.GetDiscounts(query));
 
             });
         }
@@ -696,7 +696,7 @@ namespace GriB.Client.App.Controllers
 
                 discount result = Discount.GetDiscount(query, id);
                 result = Discount.GetDiscountSalepointAccess(query, result);
-                return Request.CreateResponse(HttpStatusCode.OK, new { record = result });
+                return this.CreateResponse(HttpStatusCode.OK, new { record = result });
 
             });
         }
@@ -710,7 +710,7 @@ namespace GriB.Client.App.Controllers
                 Principal principal = (Principal)HttpContext.Current.User;
                 Discount.SetDiscount(query, discount, principal.Data.User.id);
                 Discount.SetDiscountSalepointAccess(query, discount);
-                return Request.CreateResponse(HttpStatusCode.OK, "Ok");
+                return this.CreateResponse(HttpStatusCode.OK, "Ok");
             });
         }
 
@@ -721,7 +721,7 @@ namespace GriB.Client.App.Controllers
             return TryCatchResponseQuery((query) =>
             {
                 Discount.DelDiscount(query, id, ((Principal)HttpContext.Current.User).Data.User.id);
-                return Request.CreateResponse(HttpStatusCode.OK, "Ok");
+                return this.CreateResponse(HttpStatusCode.OK, "Ok");
             });
         }
         #endregion
@@ -733,7 +733,7 @@ namespace GriB.Client.App.Controllers
         {
             return TryCatchResponseQuery((query) =>
             {
-                return Request.CreateResponse(HttpStatusCode.OK, Contractor.GetContractors(query));
+                return this.CreateResponse(HttpStatusCode.OK, Contractor.GetContractors(query));
             });
         }
 
@@ -743,7 +743,7 @@ namespace GriB.Client.App.Controllers
         {
             return TryCatchResponseQuery((query) =>
             {
-                return Request.CreateResponse(HttpStatusCode.OK, new { record = Contractor.GetContractor(query, id) });
+                return this.CreateResponse(HttpStatusCode.OK, new { record = Contractor.GetContractor(query, id) });
             });
         }
 
@@ -755,7 +755,7 @@ namespace GriB.Client.App.Controllers
             {
                 Principal principal = (Principal)HttpContext.Current.User;
                 Contractor.SetContractor(query, contractor, principal.Data.User.id);
-                return Request.CreateResponse(HttpStatusCode.OK, "Ok");
+                return this.CreateResponse(HttpStatusCode.OK, "Ok");
             });
         }
 
@@ -766,7 +766,7 @@ namespace GriB.Client.App.Controllers
             return TryCatchResponseQuery((query) =>
             {
                 Contractor.DelContractor(query, id, ((Principal)HttpContext.Current.User).Data.User.id);
-                return Request.CreateResponse(HttpStatusCode.OK, "Ok");
+                return this.CreateResponse(HttpStatusCode.OK, "Ok");
             });
         }
         #endregion
@@ -778,7 +778,7 @@ namespace GriB.Client.App.Controllers
         {
             return TryCatchResponseQuery((query) =>
             {
-                return Request.CreateResponse(HttpStatusCode.OK, Reason.GetReasons(query));
+                return this.CreateResponse(HttpStatusCode.OK, Reason.GetReasons(query));
             });
         }
 
@@ -788,7 +788,7 @@ namespace GriB.Client.App.Controllers
         {
             return TryCatchResponseQuery((query) =>
             {
-                return Request.CreateResponse(HttpStatusCode.OK, new { record = Reason.GetReason(query, id) });
+                return this.CreateResponse(HttpStatusCode.OK, new { record = Reason.GetReason(query, id) });
             });
         }
 
@@ -800,7 +800,7 @@ namespace GriB.Client.App.Controllers
             {
                 Principal principal = (Principal)HttpContext.Current.User;
                 Reason.SetReason(query, reason, principal.Data.User.id);
-                return Request.CreateResponse(HttpStatusCode.OK, "Ok");
+                return this.CreateResponse(HttpStatusCode.OK, "Ok");
             });
         }
 
@@ -811,7 +811,7 @@ namespace GriB.Client.App.Controllers
             return TryCatchResponseQuery((query) =>
             {
                 Reason.DelReason(query, id, ((Principal)HttpContext.Current.User).Data.User.id);
-                return Request.CreateResponse(HttpStatusCode.OK, "Ok");
+                return this.CreateResponse(HttpStatusCode.OK, "Ok");
             });
         }
         #endregion

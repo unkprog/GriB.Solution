@@ -1,13 +1,14 @@
-﻿using GriB.PrintServer.Windows.Common;
-using GriB.PrintServer.Windows.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Text;
 using System.Web.Http;
+using GriB.Web.Http;
+using GriB.PrintServer.Windows.Common;
+using GriB.PrintServer.Windows.Models;
+using Newtonsoft.Json.Linq;
 
 namespace GriB.PrintServer.Windows.Controllers
 {
@@ -23,14 +24,14 @@ namespace GriB.PrintServer.Windows.Controllers
                 printers.Add(printer);
             }
 
-            return Request.CreateResponse(HttpStatusCode.OK, new { printers });
+            return this.CreateResponse(HttpStatusCode.OK, new { printers });
         }
 
         [HttpPost]
         [ActionName("PrintCheck")]
         public HttpResponseMessage PrintCheck(PrintCheckModel printCheck)
         {
-            HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.OK);
+            HttpResponseMessage response = this.CreateResponse(HttpStatusCode.OK);
             string printFile = string.Empty;
             try
             {
@@ -44,7 +45,7 @@ namespace GriB.PrintServer.Windows.Controllers
                             writer.Write(printCheck.dataPrint);
                         }
                     }
-                    response = Request.CreateResponse(HttpStatusCode.OK, new { printFile = FileHelper.RelativeFileName(printFile) });
+                    response = this.CreateResponse(HttpStatusCode.OK, new { printFile = FileHelper.RelativeFileName(printFile) });
                 }
                 else
                     response = Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Не удалось поставить чек в очередь на печать.");

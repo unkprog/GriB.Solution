@@ -24,7 +24,7 @@ namespace GriB.Client.App.Controllers
             {
                 Principal principal = (Principal)HttpContext.Current.User;
                 // principal.Data.User.id
-                return Request.CreateResponse(HttpStatusCode.OK, new { employee = AccountController.AccountData(query, principal) });
+                return CreateResponse(HttpStatusCode.OK, new { employee = AccountController.AccountData(query, principal) });
             });
         }
 
@@ -41,7 +41,7 @@ namespace GriB.Client.App.Controllers
         {
             return TryCatchResponseQuery((query) =>
             {
-                return Request.CreateResponse(HttpStatusCode.OK, new { change = Change.GetOpen(query, salepoint) });
+                return CreateResponse(HttpStatusCode.OK, new { change = Change.GetOpen(query, salepoint) });
             });
         }
 
@@ -53,7 +53,7 @@ namespace GriB.Client.App.Controllers
             return TryCatchResponseQuery((query) =>
             {
                 Principal principal = (Principal)HttpContext.Current.User;
-                return Request.CreateResponse(HttpStatusCode.OK, new { change = Change.New(query, principal.Data.User.id, salepoint) });
+                return CreateResponse(HttpStatusCode.OK, new { change = Change.New(query, principal.Data.User.id, salepoint) });
             });
         }
 
@@ -65,7 +65,7 @@ namespace GriB.Client.App.Controllers
             {
                 Principal principal = (Principal)HttpContext.Current.User;
                 Change.Close(query, principal.Data.User.id, id);
-                return Request.CreateResponse(HttpStatusCode.OK, "Ok");
+                return CreateResponse(HttpStatusCode.OK, "Ok");
             });
         }
 
@@ -76,7 +76,7 @@ namespace GriB.Client.App.Controllers
             return TryCatchResponseQuery((query) =>
             {
                 Principal principal = (Principal)HttpContext.Current.User;
-                return Request.CreateResponse(HttpStatusCode.OK, new { cashSum = SumInCash(query, salepoint) });
+                return CreateResponse(HttpStatusCode.OK, new { cashSum = SumInCash(query, salepoint) });
             });
         }
 
@@ -89,7 +89,7 @@ namespace GriB.Client.App.Controllers
                 Principal principal = (Principal)HttpContext.Current.User;
 
                 // principal.Data.User.id
-                return Request.CreateResponse(HttpStatusCode.OK, new { items = Terminal.GetSaleProducts(query, new posparamsselect() { category = category, salepoint = salepoint }) });
+                return CreateResponse(HttpStatusCode.OK, new { items = Terminal.GetSaleProducts(query, new posparamsselect() { category = category, salepoint = salepoint }) });
             });
         }
 
@@ -100,7 +100,7 @@ namespace GriB.Client.App.Controllers
             return TryCatchResponseQuery((query) =>
             {
                 Principal principal = (Principal)HttpContext.Current.User;
-                return Request.CreateResponse(HttpStatusCode.OK, new { checknew = Check.NewCheck(query, principal.Data.User.id, salepoint, change) });
+                return CreateResponse(HttpStatusCode.OK, new { checknew = Check.NewCheck(query, principal.Data.User.id, salepoint, change) });
             });
         }
 
@@ -111,7 +111,7 @@ namespace GriB.Client.App.Controllers
             return TryCatchResponseQuery((query) =>
             {
                 Principal principal = (Principal)HttpContext.Current.User;
-                return Request.CreateResponse(HttpStatusCode.OK, new { checkdelete = Check.DeleteCheck(query, principal.Data.User.id, check) });
+                return CreateResponse(HttpStatusCode.OK, new { checkdelete = Check.DeleteCheck(query, principal.Data.User.id, check) });
             });
         }
 
@@ -129,7 +129,7 @@ namespace GriB.Client.App.Controllers
                 {
                     Check.GetPositions(query, item);
                 }
-                return Request.CreateResponse(HttpStatusCode.OK, new { checkopened = checks });
+                return CreateResponse(HttpStatusCode.OK, new { checkopened = checks });
             });
         }
 
@@ -141,7 +141,7 @@ namespace GriB.Client.App.Controllers
             {
                 check check = Check.GetCheck(query, id);
                 check = Check.GetPositions(query, check);
-                return Request.CreateResponse(HttpStatusCode.OK, check);
+                return CreateResponse(HttpStatusCode.OK, check);
             });
         }
 
@@ -153,7 +153,7 @@ namespace GriB.Client.App.Controllers
             {
                 Principal principal = (Principal)HttpContext.Current.User;
                 Check.SetClient(query, setclientparams.check, setclientparams.client, principal.Data.User.id);
-                return Request.CreateResponse(HttpStatusCode.OK, "Ok");
+                return CreateResponse(HttpStatusCode.OK, "Ok");
             });
         }
 
@@ -165,7 +165,7 @@ namespace GriB.Client.App.Controllers
             {
                 Principal principal = (Principal)HttpContext.Current.User;
                 Check.SetDiscount(query, setdiscountparams.check, setdiscountparams.discount, setdiscountparams.discountref, principal.Data.User.id);
-                return Request.CreateResponse(HttpStatusCode.OK, "Ok");
+                return CreateResponse(HttpStatusCode.OK, "Ok");
             });
         }
 
@@ -177,7 +177,7 @@ namespace GriB.Client.App.Controllers
             {
                 Principal principal = (Principal)HttpContext.Current.User;
                 Check.SetComment(query, setcommentparams.check, setcommentparams.comment, principal.Data.User.id);
-                return Request.CreateResponse(HttpStatusCode.OK, "Ok");
+                return CreateResponse(HttpStatusCode.OK, "Ok");
             });
         }
 
@@ -193,7 +193,7 @@ namespace GriB.Client.App.Controllers
                     check.options = check.options + check.ciCancel;
                 check.comment = cancelparams.comment;
                 Check.Cancel(query, check, principal.Data.User.id);
-                return Request.CreateResponse(HttpStatusCode.OK, "Ok");
+                return CreateResponse(HttpStatusCode.OK, "Ok");
             });
         }
 
@@ -205,7 +205,7 @@ namespace GriB.Client.App.Controllers
             {
                 Principal principal = (Principal)HttpContext.Current.User;
                 check_position position = Check.AddPosition(query, new check_position() { id = addposparams.check, product = new Models.Editor.product() { id = addposparams.product }, quantity = addposparams.quantity });
-                return Request.CreateResponse(HttpStatusCode.OK, new { newposition = position });
+                return CreateResponse(HttpStatusCode.OK, new { newposition = position });
             });
         }
 
@@ -217,7 +217,7 @@ namespace GriB.Client.App.Controllers
             {
                 Principal principal = (Principal)HttpContext.Current.User;
                 check_position position = Check.SetPosition(query, new check_position() { id = addposparams.check, product = new Models.Editor.product() { id = addposparams.product }, quantity = addposparams.quantity });
-                return Request.CreateResponse(HttpStatusCode.OK, new { newposition = position });
+                return CreateResponse(HttpStatusCode.OK, new { newposition = position });
             });
         }
 
@@ -238,7 +238,7 @@ namespace GriB.Client.App.Controllers
                 payment = Payment.SetPayment(query, payment, principal.Data.User.id);
                 Payment.SetComment(query, payment);
 
-                return Request.CreateResponse(HttpStatusCode.OK, "Ok");
+                return CreateResponse(HttpStatusCode.OK, "Ok");
             });
         }
 

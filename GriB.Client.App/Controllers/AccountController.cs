@@ -33,7 +33,7 @@ namespace GriB.Client.App.Controllers
                                                        Database.CreateDatabaseUser(registerMessage.server.ConnectionString(), registerMessage.database.catalog, registerMessage.database.user, registerMessage.database.pass);
                                                        string path = string.Concat(HostingEnvironment.ApplicationPhysicalPath, AppSettings.Database.Path.Sql);
                                                        Database.CreateTables(path, registerMessage.database.ConnectionString(registerMessage.server));
-                                                       return Request.CreateResponse(HttpStatusCode.OK, new { result = "Ok", response });
+                                                       return this.CreateResponse(HttpStatusCode.OK, new { result = "Ok", response });
                                                    });
                                         });
 
@@ -55,7 +55,7 @@ namespace GriB.Client.App.Controllers
                         AuthorizationHeaderHandler.SetPrincipal(principal);
                         return TryCatchResponseQuery((query) =>
                         {
-                            return Request.CreateResponse(HttpStatusCode.OK, new { result = "Ok", indetity = new { auth = true, token = principal.GetKey(), employee = AccountData(query, principal) } });
+                            return this.CreateResponse(HttpStatusCode.OK, new { result = "Ok", indetity = new { auth = true, token = principal.GetKey(), employee = AccountData(query, principal) } });
                         });
                     });
         });
@@ -76,7 +76,7 @@ namespace GriB.Client.App.Controllers
         => await TryCatchResponseAsync(async () =>
                                         {
                                             var resultPost = await Common.Net.Json.PostAsync<object, register_user>(AppSettings.Server.Register, "api/account/recovery", register_user);
-                                            return Request.CreateResponse(HttpStatusCode.OK, resultPost);
+                                            return this.CreateResponse(HttpStatusCode.OK, resultPost);
                                         });
 
     }

@@ -34,7 +34,7 @@ namespace GriB.Client.App.Controllers
                    return TryCatchResponseQuery((query) =>
                    {
                        Dictionary<int, employeecard> employees = GetFindEmployees(query, responseMessage);
-                       return Request.CreateResponse(HttpStatusCode.OK, Sales.GetSales(query, filter, employees));
+                       return this.CreateResponse(HttpStatusCode.OK, Sales.GetSales(query, filter, employees));
                    });
                })
         );
@@ -54,7 +54,7 @@ namespace GriB.Client.App.Controllers
                   return TryCatchResponseQuery((query) =>
                   {
                       Dictionary<int, employeecard> employees = GetFindEmployees(query, responseMessage);
-                      return Request.CreateResponse(HttpStatusCode.OK, Sales.GetSalesDetail(query, filter, employees));
+                      return this.CreateResponse(HttpStatusCode.OK, Sales.GetSalesDetail(query, filter, employees));
                   });
               })
        );
@@ -73,7 +73,7 @@ namespace GriB.Client.App.Controllers
                 dayweeks = Sales.CalculateDashboardParams(dayweeks, out avgCheckWeekSum);
                 times = Sales.CalculateDashboardParams(times, out avgCheckTimeSum);
 
-                return Request.CreateResponse(HttpStatusCode.OK, new { categories, avgCheckCategorySum, dayweeks, avgCheckWeekSum, times, avgCheckTimeSum });
+                return this.CreateResponse(HttpStatusCode.OK, new { categories, avgCheckCategorySum, dayweeks, avgCheckWeekSum, times, avgCheckTimeSum });
             });
         }
 
@@ -83,7 +83,7 @@ namespace GriB.Client.App.Controllers
         {
             return TryCatchResponseQuery((query) =>
             {
-                return Request.CreateResponse(HttpStatusCode.OK, Stocks.GetStocks(query, filter));
+                return this.CreateResponse(HttpStatusCode.OK, Stocks.GetStocks(query, filter));
             });
         }
 
@@ -102,7 +102,7 @@ namespace GriB.Client.App.Controllers
                   return TryCatchResponseQuery((query) =>
                   {
                       Dictionary<int, employeecard> employees = GetFindEmployees(query, responseMessage);
-                      return Request.CreateResponse(HttpStatusCode.OK, Stocks.GetStocksDetail(query, filter, employees));
+                      return this.CreateResponse(HttpStatusCode.OK, Stocks.GetStocksDetail(query, filter, employees));
                   });
               })
        );
@@ -113,7 +113,7 @@ namespace GriB.Client.App.Controllers
         {
             return TryCatchResponseQuery((query) =>
             {
-                return Request.CreateResponse(HttpStatusCode.OK, Cash.GetCash(query, filter));
+                return this.CreateResponse(HttpStatusCode.OK, Cash.GetCash(query, filter));
             });
         }
 
@@ -132,7 +132,7 @@ namespace GriB.Client.App.Controllers
                   return TryCatchResponseQuery((query) =>
                   {
                       Dictionary<int, employeecard> employees = GetFindEmployees(query, responseMessage);
-                      return Request.CreateResponse(HttpStatusCode.OK, Cash.GetCashDetail(query, filter, employees));
+                      return this.CreateResponse(HttpStatusCode.OK, Cash.GetCashDetail(query, filter, employees));
                   });
               })
         );
@@ -143,7 +143,7 @@ namespace GriB.Client.App.Controllers
         {
             return TryCatchResponseQuery((query) =>
             {
-                return Request.CreateResponse(HttpStatusCode.OK, Sales.GetHistorySales(query, change));
+                return this.CreateResponse(HttpStatusCode.OK, Sales.GetHistorySales(query, change));
             });
         }
 
@@ -153,7 +153,7 @@ namespace GriB.Client.App.Controllers
         {
             return TryCatchResponseQuery((query) =>
             {
-                return Request.CreateResponse(HttpStatusCode.OK, Sales.GetChangeSales(query, change));
+                return this.CreateResponse(HttpStatusCode.OK, Sales.GetChangeSales(query, change));
             });
         }
     }

@@ -67,7 +67,7 @@ namespace GriB.Client.App.Managers.POSTerminal
         private const string cmdGet = @"POSTerminal\Check\[get]";
         public static check GetCheck(this Query query, int check)
         {
-            check result = null;
+            check result = new check() { id = check };
             query.Execute(cmdGet, new SqlParameter[] { new SqlParameter() { ParameterName = "@id", Value = check } }
             , (values) =>
             {

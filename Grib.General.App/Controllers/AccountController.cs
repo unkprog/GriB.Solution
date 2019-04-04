@@ -68,7 +68,7 @@ namespace GriB.General.App.Controllers
 
                 Managers.pos.Users.DatabaseIns(_query, new user_db() { id = user.id, db = newdb.id });
 
-                return Request.CreateResponse(HttpStatusCode.OK, new HttpRegisterMessage() { server = servers[0], database = newdb });
+                return this.CreateResponse(HttpStatusCode.OK, new HttpRegisterMessage() { server = servers[0], database = newdb });
             });
         }
 
@@ -89,7 +89,7 @@ namespace GriB.General.App.Controllers
 
                 setPassword(users[0], "Восстановление пароля в POS Cloud");
 
-                return Request.CreateResponse(HttpStatusCode.OK, new { result = "Ok" });
+                return this.CreateResponse(HttpStatusCode.OK, new { result = "Ok" });
             });
         }
 
@@ -123,7 +123,7 @@ namespace GriB.General.App.Controllers
                 sqldb database = Managers.pos.Server.GetServerDatabase(_query, user_db.id);
                 sqlsrv server = Managers.pos.Server.GetServer(_query, database.server);
 
-                return Request.CreateResponse(HttpStatusCode.OK, new PrincipalData() { User = user, Person = user_person, Server = server, Database = database });
+                return this.CreateResponse(HttpStatusCode.OK, new PrincipalData() { User = user, Person = user_person, Server = server, Database = database });
             });
         }
 
@@ -135,7 +135,7 @@ namespace GriB.General.App.Controllers
             return TryCatchResponse(() =>
             {
                 List<employee> result = Managers.pos.Settings.Employee.GetEmployees(_query, db);
-                return Request.CreateResponse(HttpStatusCode.OK, new HttpEmployeesMessage() { Employees = result });
+                return this.CreateResponse(HttpStatusCode.OK, new HttpEmployeesMessage() { Employees = result });
             });
         }
 
@@ -146,7 +146,7 @@ namespace GriB.General.App.Controllers
             return TryCatchResponse(() =>
             {
                 employee result = Managers.pos.Settings.Employee.GetEmployee(_query, id);
-                return Request.CreateResponse(HttpStatusCode.OK, new HttpEmployeeMessage() { Employee = result });
+                return this.CreateResponse(HttpStatusCode.OK, new HttpEmployeeMessage() { Employee = result });
             });
         }
 
@@ -159,7 +159,7 @@ namespace GriB.General.App.Controllers
                 employee empl = new employee(empldb.empl);
                 Managers.pos.Settings.Employee.SetEmployee(_query, empldb.db, empl);
                 employee result = Managers.pos.Settings.Employee.GetEmployee(_query, empl.id);
-                return Request.CreateResponse(HttpStatusCode.OK, new HttpEmployeeMessage() { Employee = result });
+                return this.CreateResponse(HttpStatusCode.OK, new HttpEmployeeMessage() { Employee = result });
             });
         }
 
@@ -171,7 +171,7 @@ namespace GriB.General.App.Controllers
             return TryCatchResponse(() =>
             {
                 Managers.pos.Settings.Employee.DelEmployee(_query, id);
-                return Request.CreateResponse(HttpStatusCode.OK, new HttpEmployeeMessage() { Employee = Managers.pos.Settings.Employee.GetEmployee(_query, id) });
+                return this.CreateResponse(HttpStatusCode.OK, new HttpEmployeeMessage() { Employee = Managers.pos.Settings.Employee.GetEmployee(_query, id) });
             });
         }
         #endregion

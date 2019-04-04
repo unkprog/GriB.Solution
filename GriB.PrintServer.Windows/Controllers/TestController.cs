@@ -1,6 +1,4 @@
-﻿using GriB.Common.Net;
-using GriB.PrintServer.Windows.Models;
-using Newtonsoft.Json;
+﻿using GriB.PrintServer.Windows.Models;
 using System;
 using System.Net;
 using System.Net.Http;
@@ -22,7 +20,7 @@ namespace GriB.PrintServer.Windows.Controllers
             string result = string.Empty;
             try
             {
-                JObject data = Json.Get<JObject>(_serviceAddress, "/print/printers");
+                JObject data = GriB.Common.Net.Json.Get<JObject>(_serviceAddress, "/print/printers");
                 result = data.ToString();
             }
             catch (Exception ex)
@@ -52,7 +50,7 @@ namespace GriB.PrintServer.Windows.Controllers
                     dataPrint = string.Concat(dataPrint, i, ". test print data ", i, " <br>");
                 }
                 PrintCheckModel printCheck = new PrintCheckModel() { dataPrint = dataPrint };
-                JObject data = Json.Post<JObject, PrintCheckModel>(_serviceAddress, "/print/printCheck", printCheck);
+                JObject data = GriB.Common.Net.Json.Post<JObject, PrintCheckModel>(_serviceAddress, "/print/printCheck", printCheck);
                 result = data.ToString();
             }
             catch (Exception ex)

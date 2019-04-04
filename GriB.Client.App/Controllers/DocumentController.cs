@@ -25,7 +25,7 @@ namespace GriB.Client.App.Controllers
         {
             return TryCatchResponseQuery((query) =>
             {
-                return Request.CreateResponse(HttpStatusCode.OK, Document.GetDocuments(query, docpar));
+                return this.CreateResponse(HttpStatusCode.OK, Document.GetDocuments(query, docpar));
             });
         }
 
@@ -36,7 +36,7 @@ namespace GriB.Client.App.Controllers
             return TryCatchResponseQuery((query) =>
             {
                 document result = Document.GetDocument(query, id);
-                return Request.CreateResponse(HttpStatusCode.OK, new { record = result });
+                return this.CreateResponse(HttpStatusCode.OK, new { record = result });
             });
         }
 
@@ -48,7 +48,7 @@ namespace GriB.Client.App.Controllers
             return TryCatchResponseQuery((query) =>
             {
                 document_position result = Document.GetDocumentPositionNew(query, id, salepoint);
-                return Request.CreateResponse(HttpStatusCode.OK, new { newposition = result });
+                return this.CreateResponse(HttpStatusCode.OK, new { newposition = result });
             });
         }
 
@@ -60,7 +60,7 @@ namespace GriB.Client.App.Controllers
             {
                 Principal principal = (Principal)HttpContext.Current.User;
                 Document.SetDocument(query, document, principal.Data.User.id);
-                return Request.CreateResponse(HttpStatusCode.OK, "Ok");
+                return this.CreateResponse(HttpStatusCode.OK, "Ok");
             });
         }
 
@@ -71,7 +71,7 @@ namespace GriB.Client.App.Controllers
             return TryCatchResponseQuery((query) =>
             {
                 Document.DelDocument(query, id, ((Principal)HttpContext.Current.User).Data.User.id);
-                return Request.CreateResponse(HttpStatusCode.OK, "Ok");
+                return this.CreateResponse(HttpStatusCode.OK, "Ok");
             });
         }
 
@@ -81,7 +81,7 @@ namespace GriB.Client.App.Controllers
         {
             return TryCatchResponseQuery((query) =>
             {
-                return Request.CreateResponse(HttpStatusCode.OK, Check.GetSales(query, docpar));
+                return this.CreateResponse(HttpStatusCode.OK, Check.GetSales(query, docpar));
             });
         }
 
@@ -92,7 +92,7 @@ namespace GriB.Client.App.Controllers
             return TryCatchResponseQuery((query) =>
             {
                 check result = Check.GetSale(query, id);
-                return Request.CreateResponse(HttpStatusCode.OK, new { record = result });
+                return this.CreateResponse(HttpStatusCode.OK, new { record = result });
             });
         }
         #endregion
@@ -104,7 +104,7 @@ namespace GriB.Client.App.Controllers
         //{
         //    return TryCatchResponseQuery((query) =>
         //    {
-        //        return Request.CreateResponse(HttpStatusCode.OK, Payment.GetPayments(query, docpar));
+        //        return this.CreateResponse(HttpStatusCode.OK, Payment.GetPayments(query, docpar));
         //    });
         //}
 
@@ -126,7 +126,7 @@ namespace GriB.Client.App.Controllers
                    return TryCatchResponseQuery((query) =>
                    {
                        Dictionary<int, employeecard> employees = GetFindEmployees(query, responseMessage);
-                       return Request.CreateResponse(HttpStatusCode.OK, Payment.GetPayments(query, docpar, employees));
+                       return this.CreateResponse(HttpStatusCode.OK, Payment.GetPayments(query, docpar, employees));
                    });
                })
         );
@@ -139,7 +139,7 @@ namespace GriB.Client.App.Controllers
             {
                 payment result = Payment.GetPayment(query, id);
                 Payment.GetComment(query, result);
-                return Request.CreateResponse(HttpStatusCode.OK, new { record = result });
+                return this.CreateResponse(HttpStatusCode.OK, new { record = result });
             });
         }
 
@@ -152,7 +152,7 @@ namespace GriB.Client.App.Controllers
                 Principal principal = (Principal)HttpContext.Current.User;
                 Payment.SetPayment(query, payment, principal.Data.User.id);
                 Payment.SetComment(query, payment);
-                return Request.CreateResponse(HttpStatusCode.OK, "Ok");
+                return this.CreateResponse(HttpStatusCode.OK, "Ok");
             });
         }
 
