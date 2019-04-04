@@ -479,12 +479,12 @@ define(["require", "exports", "app/common/utils", "app/common/variables"], funct
             };
             BaseEditTable.prototype.createRowsEvents = function () {
                 _super.prototype.createRowsEvents.call(this);
-                if (this.tableRows)
-                    utils.createContextMenuEvent(this.tableRows, this.RowContextClick, this, this.tableBody);
+                //if (this.tableRows)
+                //    utils.createContextMenuEvent(this.tableRows, this.RowContextClick, this, this.tableBody);
             };
             BaseEditTable.prototype.destroyRowsEvents = function () {
-                if (this.tableRows)
-                    utils.destroyContextMenuEvent(this.tableRows, this.RowContextClick, this.tableBody);
+                //if (this.tableRows)
+                //    utils.destroyContextMenuEvent(this.tableRows, this.RowContextClick, this.tableBody);
                 _super.prototype.destroyRowsEvents.call(this);
             };
             BaseEditTable.prototype.rowHeaderContextClick = function (e) {

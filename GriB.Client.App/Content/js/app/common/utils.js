@@ -25,6 +25,14 @@ define(["require", "exports"], function (require, exports) {
         return result;
     }
     exports.createContextMenuEvent = createContextMenuEvent;
+    function createBlurEvent(elemName, clickFunc, thisObject, view) {
+        var result = $.proxy(clickFunc, thisObject);
+        var elem = elemName instanceof $ ? elemName : (view ? view.find("#" + elemName) : $("#" + elemName));
+        for (var i = 0, iCount = elem.length; i < iCount; i++)
+            elem[i].addEventListener("blur", result, false);
+        return result;
+    }
+    exports.createBlurEvent = createBlurEvent;
     function createClickEvent(elemName, clickFunc, thisObject, view) {
         var result = $.proxy(clickFunc, thisObject);
         var elem = elemName instanceof $ ? elemName : (view ? view.find("#" + elemName) : $("#" + elemName));
@@ -57,6 +65,12 @@ define(["require", "exports"], function (require, exports) {
             elem[i].removeEventListener("contextmenu", proxyFunc);
     }
     exports.destroyContextMenuEvent = destroyContextMenuEvent;
+    function destroyBlurEvent(elemName, proxyFunc, view) {
+        var elem = elemName instanceof $ ? elemName : (view ? view.find("#" + elemName) : $("#" + elemName));
+        for (var i = 0, iCount = elem.length; i < iCount; i++)
+            elem[i].removeEventListener("blur", proxyFunc);
+    }
+    exports.destroyBlurEvent = destroyBlurEvent;
     function isNullOrEmpty(value) {
         return (value === null || value === undefined || value === '');
     }

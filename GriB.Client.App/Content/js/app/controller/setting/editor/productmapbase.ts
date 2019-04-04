@@ -137,6 +137,7 @@ export namespace Controller.Setting.Editor {
             //this.compositionRows.unbind();
             //this.rightRows.unbind();
             //this.Model.unbind("change");
+            this.destroyCellEdit();
             this.destroyTouchClickEvent('btn-add-map', this.AddHeaderButtonClick);
 
             this.destroyTouchClickEvent(this.addRowControl, this.AddRowButtonClick);
@@ -201,9 +202,40 @@ export namespace Controller.Setting.Editor {
             this.destroyTouchClickEvent($('.product-col-sum-auto-rigth'), this.EditCellClick);
         }
 
+        private inpurNumber: JQuery;
+        private currentCell: JQuery;
         private EditCellClick: { (e: any): void; };
         private editCellClick(e) {
-            alert('Edit');
+
+            if (this.inpurNumber)
+                this.inpurNumber.remove();
+            else {
+                this.inpurNumber = $('<input class="edit-number">');
+                this.EditCellBlur = utils.createBlurEvent(this.inpurNumber, this.editCellBlur, this);
+            }
+
+            if (this.currentCell)
+                this.currentCell.removeClass('td-edit-number');
+
+            this.currentCell = $(e.currentTarget);
+
+            this.currentCell.empty().addClass('td-edit-number').append(this.inpurNumber);
+            this.inpurNumber.focus();
+        }
+
+        private EditCellBlur: { (e: any): void; };
+        private editCellBlur(e) {
+            //if (this.inpurNumber)
+            //    this.inpurNumber.remove();
+            if (this.currentCell)
+                this.currentCell.removeClass('td-edit-number');
+        }
+
+        private destroyCellEdit() {
+            if (this.inpurNumber) {
+                utils.destroyBlurEvent(this.inpurNumber, this.EditCellBlur);
+                this.inpurNumber = undefined;
+            }
         }
 
         public AddHeaderButtonClick: { (e: any): void; };

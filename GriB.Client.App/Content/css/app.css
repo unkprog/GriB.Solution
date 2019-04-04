@@ -632,3 +632,13 @@ input[type='number']:hover::-webkit-outer-spin-button {
 
 .text-bold {
   font-weight: bold; }
+
+.edit-number {
+  margin: 0 !important;
+  height: auto !important;
+  font-size: inherit !important;
+  text-align: right;
+  color: blue; }
+
+.td-edit-number {
+  padding: 0 0.4em; }

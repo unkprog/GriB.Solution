@@ -123,6 +123,7 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                         //this.compositionRows.unbind();
                         //this.rightRows.unbind();
                         //this.Model.unbind("change");
+                        this.destroyCellEdit();
                         this.destroyTouchClickEvent('btn-add-map', this.AddHeaderButtonClick);
                         this.destroyTouchClickEvent(this.addRowControl, this.AddRowButtonClick);
                         this.destroyTouchClickEvent(this.editRowControl, this.EditRowButtonClick);
@@ -171,7 +172,29 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                         this.destroyTouchClickEvent($('.product-col-sum-auto-rigth'), this.EditCellClick);
                     };
                     ProductMapBase.prototype.editCellClick = function (e) {
-                        alert('Edit');
+                        if (this.inpurNumber)
+                            this.inpurNumber.remove();
+                        else {
+                            this.inpurNumber = $('<input class="edit-number">');
+                            this.EditCellBlur = utils.createBlurEvent(this.inpurNumber, this.editCellBlur, this);
+                        }
+                        if (this.currentCell)
+                            this.currentCell.removeClass('td-edit-number');
+                        this.currentCell = $(e.currentTarget);
+                        this.currentCell.empty().addClass('td-edit-number').append(this.inpurNumber);
+                        this.inpurNumber.focus();
+                    };
+                    ProductMapBase.prototype.editCellBlur = function (e) {
+                        //if (this.inpurNumber)
+                        //    this.inpurNumber.remove();
+                        if (this.currentCell)
+                            this.currentCell.removeClass('td-edit-number');
+                    };
+                    ProductMapBase.prototype.destroyCellEdit = function () {
+                        if (this.inpurNumber) {
+                            utils.destroyBlurEvent(this.inpurNumber, this.EditCellBlur);
+                            this.inpurNumber = undefined;
+                        }
                     };
                     ProductMapBase.prototype.addHeaderButtonClick = function (e) {
                         this.addRowButtonClick(e);

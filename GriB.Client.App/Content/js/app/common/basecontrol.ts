@@ -528,13 +528,13 @@ export namespace Control {
 
         protected createRowsEvents() {
             super.createRowsEvents();
-            if (this.tableRows)
-                utils.createContextMenuEvent(this.tableRows, this.RowContextClick, this, this.tableBody);
+            //if (this.tableRows)
+            //    utils.createContextMenuEvent(this.tableRows, this.RowContextClick, this, this.tableBody);
         }
 
         protected destroyRowsEvents() {
-            if (this.tableRows)
-                utils.destroyContextMenuEvent(this.tableRows, this.RowContextClick, this.tableBody);
+            //if (this.tableRows)
+            //    utils.destroyContextMenuEvent(this.tableRows, this.RowContextClick, this.tableBody);
             super.destroyRowsEvents();
         }
 
