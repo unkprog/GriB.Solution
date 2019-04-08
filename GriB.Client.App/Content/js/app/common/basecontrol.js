@@ -262,6 +262,8 @@ define(["require", "exports", "app/common/utils", "app/common/variables"], funct
             };
             BaseTable.prototype.setupRows = function () {
                 this.destroyRowsEvents();
+                this.selectedRow = undefined;
+                this.selectedDataRow = undefined;
                 this.tableBody.html(this.getTableBodyHtml());
                 var valueSum;
                 for (var j = 0, jcount = (this.sumFieldsInfo.fields && this.sumFieldsInfo.fields.length ? this.sumFieldsInfo.fields.length : 0); j < jcount; j++) {
@@ -335,7 +337,7 @@ define(["require", "exports", "app/common/utils", "app/common/variables"], funct
                 var html = '';
                 html += '<tr id="table-row-#=rowtmpitem#">';
                 for (var i = 0, icount = (columns && columns.length ? columns.length : 0); i < icount; i++) {
-                    html += '   <td';
+                    html += '   <td data-field="' + columns[i].Field + '"';
                     if (columns[i].FieldStyle || this.OnDetalize) {
                         html += ' class="';
                         if (columns[i].FieldStyle) {
@@ -379,16 +381,40 @@ define(["require", "exports", "app/common/utils", "app/common/variables"], funct
                 }
                 return html;
             };
-            BaseTable.prototype.rowClick = function (e) {
-                if (this.selectedRow)
+            Object.defineProperty(BaseTable.prototype, "SelectedDataRow", {
+                get: function () {
+                    return this.selectedDataRow;
+                },
+                enumerable: true,
+                configurable: true
+            });
+            BaseTable.prototype.UpdateRow = function () {
+                if (this.selectedRow && this.selectedDataRow) {
+                    var templateRow = vars.getTemplate(this.getTableRowTemplate());
+                    var html = templateRow(this.selectedDataRow);
+                    this.selectedRow.html($(html).html());
+                }
+            };
+            BaseTable.prototype.SetSetelecDataRow = function (e) {
+                if (this.selectedRow) {
                     this.selectedRow.removeClass("row-active z-depth-1 brown lighten-5");
-                this.selectedRow = $(e.currentTarget);
-                if (this.selectedRow)
-                    this.selectedRow.addClass("row-active z-depth-1 brown lighten-5");
+                }
+                var currentTarget = e;
+                while (currentTarget && currentTarget.nodeName != "TR") {
+                    currentTarget = currentTarget.parentElement;
+                }
+                if (currentTarget) {
+                    this.selectedRow = $(currentTarget);
+                    if (this.selectedRow)
+                        this.selectedRow.addClass("row-active z-depth-1 brown lighten-5");
+                    var index = +currentTarget.id.replace('table-row-', '');
+                    this.selectedDataRow = this.Rows[index];
+                }
+            };
+            BaseTable.prototype.rowClick = function (e) {
+                this.SetSetelecDataRow(e.currentTarget);
                 if (this.OnSelect) {
-                    var index = +e.currentTarget.id.replace('table-row-', '');
-                    var row = this.Rows[index];
-                    this.OnSelect(row);
+                    this.OnSelect(this.selectedDataRow);
                 }
                 e.preventDefault();
                 e.stopPropagation();

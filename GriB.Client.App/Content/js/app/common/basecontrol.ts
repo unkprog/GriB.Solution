@@ -279,6 +279,8 @@ export namespace Control {
 
         protected setupRows(): void {
             this.destroyRowsEvents();
+            this.selectedRow = undefined;
+            this.selectedDataRow = undefined;
 
             this.tableBody.html(this.getTableBodyHtml());
             let valueSum: number;
@@ -368,7 +370,7 @@ export namespace Control {
             html += '<tr id="table-row-#=rowtmpitem#">';
 
             for (let i = 0, icount = (columns && columns.length ? columns.length : 0); i < icount; i++) {
-                html += '   <td';
+                html += '   <td data-field="' + columns[i].Field + '"';
                 if (columns[i].FieldStyle || this.OnDetalize) {
                     html += ' class="';
                     if (columns[i].FieldStyle) {
@@ -417,24 +419,51 @@ export namespace Control {
         }
 
         private selectedRow: JQuery;
+        private selectedDataRow: Interfaces.Model.ITableRowModel;
+        public get SelectedDataRow(): Interfaces.Model.ITableRowModel {
+            return this.selectedDataRow;
+        }
+
+        public UpdateRow() {
+            if (this.selectedRow && this.selectedDataRow) {
+                let templateRow = vars.getTemplate(this.getTableRowTemplate());
+                let html: string = templateRow(this.selectedDataRow);
+                this.selectedRow.html($(html).html());
+            }
+        }
+
+        public SetSetelecDataRow(e: any) {
+            if (this.selectedRow) {
+                this.selectedRow.removeClass("row-active z-depth-1 brown lighten-5");
+            }
+
+            let currentTarget = e;
+            while (currentTarget && currentTarget.nodeName != "TR") {
+                currentTarget = currentTarget.parentElement;
+            }
+
+            if (currentTarget) {
+                this.selectedRow = $(currentTarget);
+                if (this.selectedRow)
+                    this.selectedRow.addClass("row-active z-depth-1 brown lighten-5");
+
+                let index: number = +currentTarget.id.replace('table-row-', '');
+                this.selectedDataRow = this.Rows[index];
+            }
+        }
+
         private RowClick: { (e: any): void; };
         private rowClick(e) {
-
-            if (this.selectedRow)
-                this.selectedRow.removeClass("row-active z-depth-1 brown lighten-5");
-            this.selectedRow = $(e.currentTarget);
-            if (this.selectedRow)
-                this.selectedRow.addClass("row-active z-depth-1 brown lighten-5");
-
+            this.SetSetelecDataRow(e.currentTarget);
             if (this.OnSelect) {
-                let index: number = +e.currentTarget.id.replace('table-row-', '');
-                let row: Interfaces.Model.ITableRowModel = this.Rows[index];
-                this.OnSelect(row);
+                this.OnSelect(this.selectedDataRow);
             }
             e.preventDefault();
             e.stopPropagation();
             return false;
         }
+
+        
 
         private RowDoubleClick: { (e: any): void; };
         private rowDoubleClick(e) {

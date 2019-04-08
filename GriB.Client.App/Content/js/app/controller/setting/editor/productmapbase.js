@@ -183,12 +183,21 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                         this.currentCell = $(e.currentTarget);
                         this.currentCell.empty().addClass('td-edit-number').append(this.inpurNumber);
                         this.inpurNumber.focus();
+                        this.tableMapControl.SetSetelecDataRow(e.currentTarget);
+                        var field = this.currentCell.data("field");
+                        if (field && this.tableMapControl.SelectedDataRow) {
+                            this.inpurNumber.val(this.tableMapControl.SelectedDataRow[field]);
+                            console.log(this.tableMapControl.SelectedDataRow[field]);
+                        }
                     };
                     ProductMapBase.prototype.editCellBlur = function (e) {
                         //if (this.inpurNumber)
                         //    this.inpurNumber.remove();
                         if (this.currentCell)
                             this.currentCell.removeClass('td-edit-number');
+                        this.destroyEditEvents();
+                        this.tableMapControl.UpdateRow();
+                        this.attachEditEvents();
                     };
                     ProductMapBase.prototype.destroyCellEdit = function () {
                         if (this.inpurNumber) {

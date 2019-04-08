@@ -218,9 +218,15 @@ export namespace Controller.Setting.Editor {
                 this.currentCell.removeClass('td-edit-number');
 
             this.currentCell = $(e.currentTarget);
-
             this.currentCell.empty().addClass('td-edit-number').append(this.inpurNumber);
             this.inpurNumber.focus();
+
+            this.tableMapControl.SetSetelecDataRow(e.currentTarget);
+            let field = this.currentCell.data("field");
+            if (field && this.tableMapControl.SelectedDataRow) {
+                this.inpurNumber.val(this.tableMapControl.SelectedDataRow[field]);
+                console.log(this.tableMapControl.SelectedDataRow[field]);
+            }
         }
 
         private EditCellBlur: { (e: any): void; };
@@ -229,6 +235,9 @@ export namespace Controller.Setting.Editor {
             //    this.inpurNumber.remove();
             if (this.currentCell)
                 this.currentCell.removeClass('td-edit-number');
+            this.destroyEditEvents();
+            this.tableMapControl.UpdateRow();
+            this.attachEditEvents();
         }
 
         private destroyCellEdit() {
