@@ -395,7 +395,8 @@ define(["require", "exports", "app/common/utils", "app/common/variables"], funct
                     this.selectedRow.html($(html).html());
                 }
             };
-            BaseTable.prototype.SetSetelecDataRow = function (e) {
+            BaseTable.prototype.SetSelectedDataRow = function (e) {
+                var result = -1;
                 if (this.selectedRow) {
                     this.selectedRow.removeClass("row-active z-depth-1 brown lighten-5");
                 }
@@ -407,12 +408,13 @@ define(["require", "exports", "app/common/utils", "app/common/variables"], funct
                     this.selectedRow = $(currentTarget);
                     if (this.selectedRow)
                         this.selectedRow.addClass("row-active z-depth-1 brown lighten-5");
-                    var index = +currentTarget.id.replace('table-row-', '');
-                    this.selectedDataRow = this.Rows[index];
+                    result = +currentTarget.id.replace('table-row-', '');
+                    this.selectedDataRow = this.Rows[result];
                 }
+                return result;
             };
             BaseTable.prototype.rowClick = function (e) {
-                this.SetSetelecDataRow(e.currentTarget);
+                this.SetSelectedDataRow(e.currentTarget);
                 if (this.OnSelect) {
                     this.OnSelect(this.selectedDataRow);
                 }
@@ -483,7 +485,12 @@ define(["require", "exports", "app/common/utils", "app/common/variables"], funct
         var BaseEditTable = /** @class */ (function (_super) {
             __extends(BaseEditTable, _super);
             function BaseEditTable() {
-                return _super !== null && _super.apply(this, arguments) || this;
+                var _this = _super !== null && _super.apply(this, arguments) || this;
+                //private currentInputControl: JQuery;
+                //private currentCell: JQuery;
+                //private oldValue: any;
+                _this.editData = { currentInputControl: undefined, currentCell: undefined, oldValue: undefined, field: "", index: -1 };
+                return _this;
             }
             BaseEditTable.prototype.InitView = function () {
                 var result = _super.prototype.InitView.call(this);
@@ -496,11 +503,9 @@ define(["require", "exports", "app/common/utils", "app/common/variables"], funct
                 return result;
             };
             BaseEditTable.prototype.DestroyView = function () {
+                this.destroyCurrentInputControl();
                 if (this.tableHead)
                     utils.destroyContextMenuEvent(this.tableHead, this.RowHeaderContextClick, this.tableControl);
-                if (!this.rowEditControl) {
-                    this.rowEditModel.unbind("change");
-                }
                 _super.prototype.DestroyView.call(this);
             };
             BaseEditTable.prototype.createRowsEvents = function () {
@@ -531,62 +536,58 @@ define(["require", "exports", "app/common/utils", "app/common/variables"], funct
                 e.stopPropagation();
                 return false;
             };
-            BaseEditTable.prototype.getTableEditRowTemplate = function () {
-                var columns = this.Columns;
-                var html = '';
-                html += '<tr id="table-row-edit">';
-                for (var i = 0, icount = (columns && columns.length ? columns.length : 0); i < icount; i++) {
-                    html += '   <td';
-                    if (columns[i].FieldEditStyle || columns[i].FieldStyle) {
-                        html += ' class="';
-                        if (columns[i].FieldEditStyle) {
-                            html += columns[i].FieldEditStyle;
-                        }
-                        else if (columns[i].FieldStyle) {
-                            html += columns[i].FieldStyle;
-                        }
-                        html += '"';
-                    }
-                    html += '>';
-                    if (columns[i].FieldEditTemplate)
-                        html += columns[i].FieldEditTemplate;
-                    else if (columns[i].FieldTemplate)
-                        html += columns[i].FieldTemplate;
-                    else {
-                        html += '#=';
-                        html += columns[i].Field;
-                        html += '#';
-                    }
-                    html += '</td>';
-                }
-                html += '</tr>';
-                return html;
+            BaseEditTable.prototype.attachEditEvents = function () {
+                this.EditCellClick = utils.createTouchClickEvent(this.View.find('td'), this.editCellClick, this);
             };
-            BaseEditTable.prototype.createEditRowModel = function () {
-                var model = new kendo.data.ObservableObject({
-                    "editRowModel": {},
-                });
-                return model;
+            BaseEditTable.prototype.destroyEditEvents = function () {
+                utils.destroyTouchClickEvent(this.View.find('td'), this.EditCellClick, this.View);
             };
-            BaseEditTable.prototype.EditRow = function (rowModel, rowConrol) {
-                if (!this.rowEditControl) {
-                    var templateRow = vars.getTemplate(this.getTableEditRowTemplate());
-                    if (templateRow) {
-                        var html = templateRow(rowModel);
-                        this.rowEditControl = $(html);
-                        this.rowEditModel = new kendo.data.ObservableObject({ "editRowModel": rowModel });
-                        kendo.bind(this.rowEditControl, this.rowEditModel);
-                        this.rowEditModel.bind("change", $.proxy(this.changeEditRowModel, this));
+            BaseEditTable.prototype.setupRows = function () {
+                this.destroyEditEvents();
+                _super.prototype.setupRows.call(this);
+                this.attachEditEvents();
+            };
+            BaseEditTable.prototype.editCellClick = function (e) {
+                this.destroyCurrentInputControl();
+                this.editData.currentCell = $(e.currentTarget);
+                this.editData.field = this.editData.currentCell.data("field");
+                if (this.editData.field) {
+                    if (this.GetEditControl)
+                        this.editData.currentInputControl = this.GetEditControl(this.editData.field);
+                    if (this.editData.currentInputControl) {
+                        this.EditCellBlur = utils.createBlurEvent(this.editData.currentInputControl, this.editCellBlur, this);
+                        this.editData.currentCell.empty().addClass('td-edit-cell').append(this.editData.currentInputControl);
+                        this.editData.currentInputControl.focus();
+                    }
+                    this.editData.index = this.SetSelectedDataRow(e.currentTarget);
+                    if (this.SelectedDataRow) {
+                        this.editData.oldValue = this.SelectedDataRow[this.editData.field];
+                        this.editData.currentInputControl.val(this.editData.oldValue);
+                        //console.log(this.SelectedDataRow[this.editData.field]);
                     }
                 }
-                else {
-                    this.rowEditModel.set("editRowModel", rowModel);
-                }
-                this.rowConrol = rowConrol;
-                rowConrol.replaceWith(this.rowEditControl);
-                //html += templateRow(data[i]);
             };
-            BaseEditTable.prototype.changeEditRowModel = function (e) {
+            BaseEditTable.prototype.editCellBlur = function (e) {
+                this.destroyCurrentInputControl();
+                this.destroyEditEvents();
+                this.UpdateRow();
+                this.attachEditEvents();
+            };
+            BaseEditTable.prototype.editKeyEvent = function (e) {
+                var key = e.which || e.keyCode;
+                if (key === 13) {
+                    // 13 is enter
+                    // code for enter
+                }
+            };
+            BaseEditTable.prototype.destroyCurrentInputControl = function () {
+                if (this.editData.currentInputControl) {
+                    this.editData.currentInputControl.remove();
+                    utils.destroyBlurEvent(this.editData.currentInputControl, this.EditCellBlur);
+                    this.editData.currentInputControl = undefined;
+                }
+                if (this.editData.currentCell)
+                    this.editData.currentCell.removeClass('td-edit-cell');
             };
             return BaseEditTable;
         }(BaseTable));

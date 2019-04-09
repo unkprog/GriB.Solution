@@ -1,72 +1,55 @@
-﻿export function createTouchClickEvent(elemName: string | JQuery, clickFunc: any, thisObject: any, view?: JQuery): any {
+﻿export function createEventListener(elemName: string | JQuery, eventName: string, clickFunc: any, thisObject: any, view?: JQuery): any {
     var result = $.proxy(clickFunc, thisObject);
     var elem: JQuery = elemName instanceof $ ? <JQuery>elemName : (view ? view.find("#" + elemName) : $("#" + elemName));
     for (let i = 0, iCount = elem.length; i < iCount; i++)
-        elem[i].addEventListener(("ontouchstart" in window) ? "touchend" : "click", result, false);
+        elem[i].addEventListener(eventName, result, false);
     return result;
 }
 
-export function createDblTouchClickEvent(elemName: string | JQuery, clickFunc: any, thisObject: any, view?: JQuery): any {
-    var result = $.proxy(clickFunc, thisObject);
-    var elem: JQuery = elemName instanceof $ ? <JQuery>elemName : (view ? view.find("#" + elemName) : $("#" + elemName));
+export function destroyEventListener(elemName: string | JQuery, eventName: string, proxyFunc: any, view?: JQuery): any {
+    let elem: JQuery = elemName instanceof $ ? <JQuery>elemName : (view ? view.find("#" + elemName) : $("#" + elemName));
     for (let i = 0, iCount = elem.length; i < iCount; i++)
-        elem[i].addEventListener(("ontouchstart" in window) ? "touchend" : "dblclick", result, false);
-    return result;
+        elem[i].removeEventListener(eventName, proxyFunc);
 }
-
-export function createContextMenuEvent(elemName: string | JQuery, clickFunc: any, thisObject: any, view?: JQuery): any {
-    var result = $.proxy(clickFunc, thisObject);
-    var elem: JQuery = elemName instanceof $ ? <JQuery>elemName : (view ? view.find("#" + elemName) : $("#" + elemName));
-    for (let i = 0, iCount = elem.length; i < iCount; i++)
-        elem[i].addEventListener("contextmenu", result, false);
-    return result;
-}
-
-export function createBlurEvent(elemName: string | JQuery, clickFunc: any, thisObject: any, view?: JQuery): any {
-    var result = $.proxy(clickFunc, thisObject);
-    var elem: JQuery = elemName instanceof $ ? <JQuery>elemName : (view ? view.find("#" + elemName) : $("#" + elemName));
-    for (let i = 0, iCount = elem.length; i < iCount; i++)
-        elem[i].addEventListener("blur", result, false);
-    return result;
-}
-
 
 export function createClickEvent(elemName: string | JQuery, clickFunc: any, thisObject: any, view?: JQuery): any {
-    var result = $.proxy(clickFunc, thisObject);
-    var elem: JQuery = elemName instanceof $ ? <JQuery>elemName : (view ? view.find("#" + elemName) : $("#" + elemName));
-    for (let i = 0, iCount = elem.length; i < iCount; i++)
-        elem[i].addEventListener("click", result, false);
-    return result;
-}
-
-export function destroyTouchClickEvent(elemName: string | JQuery, proxyFunc: any, view?: JQuery): any {
-    let elem: JQuery = elemName instanceof $ ? <JQuery>elemName : (view ? view.find("#" + elemName) : $("#" + elemName));
-    for (let i = 0, iCount = elem.length; i < iCount; i++)
-        elem[i].removeEventListener(("ontouchstart" in window) ? "touchend" : "click", proxyFunc);
-}
-
-export function destroyDblTouchClickEvent(elemName: string | JQuery, proxyFunc: any, view?: JQuery): any {
-    let elem: JQuery = elemName instanceof $ ? <JQuery>elemName : (view ? view.find("#" + elemName) : $("#" + elemName));
-    for (let i = 0, iCount = elem.length; i < iCount; i++)
-        elem[i].removeEventListener(("ontouchstart" in window) ? "touchend" : "dblclick", proxyFunc);
+    return createEventListener(elemName, "click", clickFunc, thisObject, view);
 }
 
 export function destroyClickEvent(elemName: string | JQuery, proxyFunc: any, view?: JQuery): any {
-    let elem: JQuery = elemName instanceof $ ? <JQuery>elemName : (view ? view.find("#" + elemName) : $("#" + elemName));
-    for (let i = 0, iCount = elem.length; i < iCount; i++)
-        elem[i].removeEventListener("click", proxyFunc);
+    return destroyEventListener(elemName, "click", proxyFunc, view);
+}
+
+export function createTouchClickEvent(elemName: string | JQuery, clickFunc: any, thisObject: any, view?: JQuery): any {
+    return createEventListener(elemName, ("ontouchstart" in window) ? "touchend" : "click", clickFunc, thisObject, view);
+}
+
+export function destroyTouchClickEvent(elemName: string | JQuery, proxyFunc: any, view?: JQuery): any {
+    return destroyEventListener(elemName, ("ontouchstart" in window) ? "touchend" : "click", proxyFunc, view);
+}
+
+export function createDblTouchClickEvent(elemName: string | JQuery, clickFunc: any, thisObject: any, view?: JQuery): any {
+    return createEventListener(elemName, ("ontouchstart" in window) ? "touchend" : "dblclick", clickFunc, thisObject, view);
+}
+
+export function destroyDblTouchClickEvent(elemName: string | JQuery, proxyFunc: any, view?: JQuery): any {
+    return destroyEventListener(elemName, ("ontouchstart" in window) ? "touchend" : "dblclick", proxyFunc, view);
+}
+
+export function createContextMenuEvent(elemName: string | JQuery, clickFunc: any, thisObject: any, view?: JQuery): any {
+    return createEventListener(elemName, "contextmenu", clickFunc, thisObject, view);
 }
 
 export function destroyContextMenuEvent(elemName: string | JQuery, proxyFunc: any, view?: JQuery): any {
-    let elem: JQuery = elemName instanceof $ ? <JQuery>elemName : (view ? view.find("#" + elemName) : $("#" + elemName));
-    for (let i = 0, iCount = elem.length; i < iCount; i++)
-        elem[i].removeEventListener("contextmenu", proxyFunc);
+    return destroyEventListener(elemName, "contextmenu", proxyFunc, view);
+}
+
+export function createBlurEvent(elemName: string | JQuery, clickFunc: any, thisObject: any, view?: JQuery): any {
+    return createEventListener(elemName, "blur", clickFunc, thisObject, view);
 }
 
 export function destroyBlurEvent(elemName: string | JQuery, proxyFunc: any, view?: JQuery): any {
-    let elem: JQuery = elemName instanceof $ ? <JQuery>elemName : (view ? view.find("#" + elemName) : $("#" + elemName));
-    for (let i = 0, iCount = elem.length; i < iCount; i++)
-        elem[i].removeEventListener("blur", proxyFunc);
+    return destroyEventListener(elemName, "blur", proxyFunc, view);
 }
 
 export function isNullOrEmpty(value: string): boolean {
@@ -108,7 +91,6 @@ export function date_parse(date: string): Date {
     let split1: Array<string> = date.split(' ');
     let splitDate: Array<string> = (split1.length > 0 ? split1[0].split('.') : []);
     let splitTime: Array<string> = (split1.length > 1 ? split1[1].split(':') : []);
-
 
     result = new Date(parseInt(splitDate[2], 10), parseInt(splitDate[1], 10) - 1, parseInt(splitDate[0], 10)
         , splitTime.length > 0 ? parseInt(splitTime[0], 10) : 0, splitTime.length > 1 ? parseInt(splitTime[1], 10) : 0, splitTime.length > 2 ? parseInt(splitTime[2], 10) : 0);

@@ -59,6 +59,7 @@ export namespace Controller.Setting.Editor {
             controller.tableMapControl.IsScroll = false;
             controller.tableMapControl.OnContextMenu = controller.OnContextMenu;
             //controller.tableMapControl.OnHeaderContextMenu = controller.OnHeaderContextMenu;
+            controller.tableMapControl.GetEditControl = controller.GetEditControl;
             view.find("#editor-view-productmap-table-container").append(controller.tableMapControl.InitView());
 
             controller.addRowControl = view.find("#editor-view-productmap-menu-add");        
@@ -77,6 +78,7 @@ export namespace Controller.Setting.Editor {
         }
 
         public ViewHide(e) {
+
             super.ViewHide(e);
         }
 
@@ -137,7 +139,9 @@ export namespace Controller.Setting.Editor {
             //this.compositionRows.unbind();
             //this.rightRows.unbind();
             //this.Model.unbind("change");
-            this.destroyCellEdit();
+            if (this.tableMapControl)
+                this.tableMapControl.DestroyView();
+
             this.destroyTouchClickEvent('btn-add-map', this.AddHeaderButtonClick);
 
             this.destroyTouchClickEvent(this.addRowControl, this.AddRowButtonClick);
@@ -188,63 +192,16 @@ export namespace Controller.Setting.Editor {
         }
 
         private tableMapControlSetup(rows: Interfaces.Model.IProductComposition[]) {
-            this.destroyEditEvents();
             this.tableMapControl.Rows = rows;
             this.tableMapControl.Setup();
-            this.attachEditEvents();
         }
 
-        private attachEditEvents() {
-            this.EditCellClick = this.createTouchClickEvent($('.product-col-sum-auto-rigth'), this.editCellClick);
-        }
-
-        private destroyEditEvents() {
-            this.destroyTouchClickEvent($('.product-col-sum-auto-rigth'), this.EditCellClick);
-        }
-
-        private inpurNumber: JQuery;
-        private currentCell: JQuery;
-        private EditCellClick: { (e: any): void; };
-        private editCellClick(e) {
-
-            if (this.inpurNumber)
-                this.inpurNumber.remove();
-            else {
-                this.inpurNumber = $('<input class="edit-number">');
-                this.EditCellBlur = utils.createBlurEvent(this.inpurNumber, this.editCellBlur, this);
+        private GetEditControl(field: string): JQuery {
+            let result: JQuery = undefined;
+            if (field === "brutto" || field === "percentcold" || field === "netto" || field === "percentheat" || field === "exitproduct" || field === "description") {
+                result = $('<input class="edit-number">');
             }
-
-            if (this.currentCell)
-                this.currentCell.removeClass('td-edit-number');
-
-            this.currentCell = $(e.currentTarget);
-            this.currentCell.empty().addClass('td-edit-number').append(this.inpurNumber);
-            this.inpurNumber.focus();
-
-            this.tableMapControl.SetSetelecDataRow(e.currentTarget);
-            let field = this.currentCell.data("field");
-            if (field && this.tableMapControl.SelectedDataRow) {
-                this.inpurNumber.val(this.tableMapControl.SelectedDataRow[field]);
-                console.log(this.tableMapControl.SelectedDataRow[field]);
-            }
-        }
-
-        private EditCellBlur: { (e: any): void; };
-        private editCellBlur(e) {
-            //if (this.inpurNumber)
-            //    this.inpurNumber.remove();
-            if (this.currentCell)
-                this.currentCell.removeClass('td-edit-number');
-            this.destroyEditEvents();
-            this.tableMapControl.UpdateRow();
-            this.attachEditEvents();
-        }
-
-        private destroyCellEdit() {
-            if (this.inpurNumber) {
-                utils.destroyBlurEvent(this.inpurNumber, this.EditCellBlur);
-                this.inpurNumber = undefined;
-            }
+            return result;
         }
 
         public AddHeaderButtonClick: { (e: any): void; };

@@ -62,6 +62,7 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                         controller.tableMapControl.IsScroll = false;
                         controller.tableMapControl.OnContextMenu = controller.OnContextMenu;
                         //controller.tableMapControl.OnHeaderContextMenu = controller.OnHeaderContextMenu;
+                        controller.tableMapControl.GetEditControl = controller.GetEditControl;
                         view.find("#editor-view-productmap-table-container").append(controller.tableMapControl.InitView());
                         controller.addRowControl = view.find("#editor-view-productmap-menu-add");
                         controller.addRowHControl = view.find("#editor-view-productmap-menuh-add");
@@ -123,7 +124,8 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                         //this.compositionRows.unbind();
                         //this.rightRows.unbind();
                         //this.Model.unbind("change");
-                        this.destroyCellEdit();
+                        if (this.tableMapControl)
+                            this.tableMapControl.DestroyView();
                         this.destroyTouchClickEvent('btn-add-map', this.AddHeaderButtonClick);
                         this.destroyTouchClickEvent(this.addRowControl, this.AddRowButtonClick);
                         this.destroyTouchClickEvent(this.editRowControl, this.EditRowButtonClick);
@@ -160,50 +162,15 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                         this.tableMapControlSetup(rows);
                     };
                     ProductMapBase.prototype.tableMapControlSetup = function (rows) {
-                        this.destroyEditEvents();
                         this.tableMapControl.Rows = rows;
                         this.tableMapControl.Setup();
-                        this.attachEditEvents();
                     };
-                    ProductMapBase.prototype.attachEditEvents = function () {
-                        this.EditCellClick = this.createTouchClickEvent($('.product-col-sum-auto-rigth'), this.editCellClick);
-                    };
-                    ProductMapBase.prototype.destroyEditEvents = function () {
-                        this.destroyTouchClickEvent($('.product-col-sum-auto-rigth'), this.EditCellClick);
-                    };
-                    ProductMapBase.prototype.editCellClick = function (e) {
-                        if (this.inpurNumber)
-                            this.inpurNumber.remove();
-                        else {
-                            this.inpurNumber = $('<input class="edit-number">');
-                            this.EditCellBlur = utils.createBlurEvent(this.inpurNumber, this.editCellBlur, this);
+                    ProductMapBase.prototype.GetEditControl = function (field) {
+                        var result = undefined;
+                        if (field === "brutto" || field === "percentcold" || field === "netto" || field === "percentheat" || field === "exitproduct" || field === "description") {
+                            result = $('<input class="edit-number">');
                         }
-                        if (this.currentCell)
-                            this.currentCell.removeClass('td-edit-number');
-                        this.currentCell = $(e.currentTarget);
-                        this.currentCell.empty().addClass('td-edit-number').append(this.inpurNumber);
-                        this.inpurNumber.focus();
-                        this.tableMapControl.SetSetelecDataRow(e.currentTarget);
-                        var field = this.currentCell.data("field");
-                        if (field && this.tableMapControl.SelectedDataRow) {
-                            this.inpurNumber.val(this.tableMapControl.SelectedDataRow[field]);
-                            console.log(this.tableMapControl.SelectedDataRow[field]);
-                        }
-                    };
-                    ProductMapBase.prototype.editCellBlur = function (e) {
-                        //if (this.inpurNumber)
-                        //    this.inpurNumber.remove();
-                        if (this.currentCell)
-                            this.currentCell.removeClass('td-edit-number');
-                        this.destroyEditEvents();
-                        this.tableMapControl.UpdateRow();
-                        this.attachEditEvents();
-                    };
-                    ProductMapBase.prototype.destroyCellEdit = function () {
-                        if (this.inpurNumber) {
-                            utils.destroyBlurEvent(this.inpurNumber, this.EditCellBlur);
-                            this.inpurNumber = undefined;
-                        }
+                        return result;
                     };
                     ProductMapBase.prototype.addHeaderButtonClick = function (e) {
                         this.addRowButtonClick(e);

@@ -640,5 +640,5 @@ input[type='number']:hover::-webkit-outer-spin-button {
   text-align: right;
   color: blue; }
 
-.td-edit-number {
+.td-edit-cell {
   padding: 0 0.4em; }

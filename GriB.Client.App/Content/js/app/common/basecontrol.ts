@@ -432,7 +432,8 @@ export namespace Control {
             }
         }
 
-        public SetSetelecDataRow(e: any) {
+        public SetSelectedDataRow(e: any): number {
+            let result: number = -1;
             if (this.selectedRow) {
                 this.selectedRow.removeClass("row-active z-depth-1 brown lighten-5");
             }
@@ -447,14 +448,15 @@ export namespace Control {
                 if (this.selectedRow)
                     this.selectedRow.addClass("row-active z-depth-1 brown lighten-5");
 
-                let index: number = +currentTarget.id.replace('table-row-', '');
-                this.selectedDataRow = this.Rows[index];
+                result = +currentTarget.id.replace('table-row-', '');
+                this.selectedDataRow = this.Rows[result];
             }
+            return result;
         }
 
         private RowClick: { (e: any): void; };
         private rowClick(e) {
-            this.SetSetelecDataRow(e.currentTarget);
+            this.SetSelectedDataRow(e.currentTarget);
             if (this.OnSelect) {
                 this.OnSelect(this.selectedDataRow);
             }
@@ -547,11 +549,9 @@ export namespace Control {
         }
 
         public DestroyView() {
+            this.destroyCurrentInputControl();
             if (this.tableHead)
                 utils.destroyContextMenuEvent(this.tableHead, this.RowHeaderContextClick, this.tableControl);
-            if (!this.rowEditControl) {
-                this.rowEditModel.unbind("change");
-            }
             super.DestroyView();
         }
 
@@ -590,77 +590,85 @@ export namespace Control {
             return false;
         }
 
+
+        private attachEditEvents() {
+            this.EditCellClick = utils.createTouchClickEvent(this.View.find('td'), this.editCellClick, this);
+        }
+
+        private destroyEditEvents() {
+            utils.destroyTouchClickEvent(this.View.find('td'), this.EditCellClick, this.View);
+        }
+
+        protected setupRows(): void {
+            this.destroyEditEvents();
+            super.setupRows();
+            this.attachEditEvents();
+        }
+
+        //private currentInputControl: JQuery;
+        //private currentCell: JQuery;
+        //private oldValue: any;
+
+        private editData: any = { currentInputControl: undefined, currentCell: undefined, oldValue: undefined, field: "", index:-1 };
+
+        private EditCellClick: { (e: any): void; };
+        private editCellClick(e: any) {
+
+            this.destroyCurrentInputControl();
+
+
+            this.editData.currentCell = $(e.currentTarget);
+            this.editData.field = this.editData.currentCell.data("field");
+
+            if (this.editData.field) {
+                if (this.GetEditControl)
+                    this.editData.currentInputControl = this.GetEditControl(this.editData.field);
+
+                if (this.editData.currentInputControl) {
+                    this.EditCellBlur = utils.createBlurEvent(this.editData.currentInputControl, this.editCellBlur, this);
+                    this.editData.currentCell.empty().addClass('td-edit-cell').append(this.editData.currentInputControl);
+                    this.editData.currentInputControl.focus();
+                }
+
+                this.editData.index = this.SetSelectedDataRow(e.currentTarget);
+
+                if (this.SelectedDataRow) {
+                    this.editData.oldValue = this.SelectedDataRow[this.editData.field];
+                    this.editData.currentInputControl.val(this.editData.oldValue);
+                    //console.log(this.SelectedDataRow[this.editData.field]);
+                }
+            }
+        }
+
+        private EditCellBlur: { (e: any): void; };
+        private editCellBlur(e) {
+            this.destroyCurrentInputControl();
+            this.destroyEditEvents();
+            this.UpdateRow();
+            this.attachEditEvents();
+        }
+
+        private EditKeyEvent: { (e: any): void; };
+        private editKeyEvent(e: any) {
+            var key = e.which || e.keyCode;
+            if (key === 13) {
+                // 13 is enter
+                // code for enter
+            }
+        }
+
+        private destroyCurrentInputControl() {
+            if (this.editData.currentInputControl) {
+                this.editData.currentInputControl.remove();
+                utils.destroyBlurEvent(this.editData.currentInputControl, this.EditCellBlur);
+                this.editData.currentInputControl = undefined;
+            }
+            if (this.editData.currentCell)
+                this.editData.currentCell.removeClass('td-edit-cell');
+        }
+
         public OnHeaderContextMenu: { (e: any): void; };
         public OnContextMenu: { (e: any, row: Interfaces.Model.ITableRowModel): void; };
-
-        protected getTableEditRowTemplate(): string {
-            let columns: Interfaces.Control.ITableColumn[] = this.Columns;
-            let html: string = '';
-
-            html += '<tr id="table-row-edit">';
-
-            for (let i = 0, icount = (columns && columns.length ? columns.length : 0); i < icount; i++) {
-                html += '   <td';
-                if (columns[i].FieldEditStyle || columns[i].FieldStyle) {
-                    html += ' class="';
-                    if (columns[i].FieldEditStyle) {
-                        html += columns[i].FieldEditStyle;
-                    }
-                    else if (columns[i].FieldStyle) {
-                        html += columns[i].FieldStyle;
-                    }
-                    html += '"';
-                }
-                html += '>';
-                if (columns[i].FieldEditTemplate)
-                    html += columns[i].FieldEditTemplate;
-                else if (columns[i].FieldTemplate)
-                    html += columns[i].FieldTemplate;
-                else {
-                    html += '#=';
-                    html += columns[i].Field;
-                    html += '#';
-                }
-                html += '</td>';
-            }
-            html += '</tr>';
-
-            return html;
-        }
-
-        protected createEditRowModel(): kendo.data.ObservableObject {
-            let model: kendo.data.ObservableObject = new kendo.data.ObservableObject({
-                "editRowModel": {},
-            });
-            return model;
-        }
-
-
-        private rowEditControl: JQuery;
-        private rowConrol: JQuery;
-        private rowEditModel: kendo.data.ObservableObject;
-        public EditRow(rowModel: Interfaces.Model.ITableRowModel, rowConrol: JQuery) {
-            if (!this.rowEditControl) {
-                let templateRow = vars.getTemplate(this.getTableEditRowTemplate());
-                if (templateRow) {
-                    let html = templateRow(rowModel);
-                    this.rowEditControl = $(html);
-                    this.rowEditModel = new kendo.data.ObservableObject({ "editRowModel": rowModel });
-
-                    kendo.bind(this.rowEditControl, this.rowEditModel);
-                    this.rowEditModel.bind("change", $.proxy(this.changeEditRowModel, this));
-                }
-
-            }
-            else {
-                this.rowEditModel.set("editRowModel", rowModel);
-            }
-            this.rowConrol = rowConrol;
-            rowConrol.replaceWith(this.rowEditControl);
-            //html += templateRow(data[i]);
-        }
-
-        private changeEditRowModel(e: any): void {
-        }
+        public GetEditControl: { (field: string): JQuery; };
     }
 }
