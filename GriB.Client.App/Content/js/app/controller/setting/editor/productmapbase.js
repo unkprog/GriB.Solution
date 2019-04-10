@@ -63,6 +63,7 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                         controller.tableMapControl.OnContextMenu = controller.OnContextMenu;
                         //controller.tableMapControl.OnHeaderContextMenu = controller.OnHeaderContextMenu;
                         controller.tableMapControl.GetEditControl = controller.GetEditControl;
+                        controller.tableMapControl.CheckValueEditControl = controller.CheckValueEditControl;
                         view.find("#editor-view-productmap-table-container").append(controller.tableMapControl.InitView());
                         controller.addRowControl = view.find("#editor-view-productmap-menu-add");
                         controller.addRowHControl = view.find("#editor-view-productmap-menuh-add");
@@ -170,6 +171,81 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                         if (field === "brutto" || field === "percentcold" || field === "netto" || field === "percentheat" || field === "exitproduct" || field === "description") {
                             result = $('<input class="edit-number">');
                         }
+                        return result;
+                    };
+                    ProductMapBase.prototype.CheckValueEditControl = function (field, value, row) {
+                        var result = true;
+                        if (field === "brutto" || field === "percentcold" || field === "netto" || field === "percentheat" || field === "exitproduct") {
+                            var val = Number(value);
+                            if (isNaN(val) == true) {
+                                M.toast({ html: vars._statres("msg$error$invalidvalueenter") });
+                                result = false;
+                            }
+                            else {
+                                row[field] = val;
+                                var editRow = row;
+                                if (field === "brutto") {
+                                    if (editRow.brutto && editRow.brutto > 0) {
+                                        if (editRow.percentcold && editRow.percentcold > 0) {
+                                            editRow.netto = utils.numberRound(editRow.brutto * (100 - editRow.percentcold) / 100, 2);
+                                            if (editRow.percentheat && editRow.percentheat > 0) {
+                                                editRow.exitproduct = utils.numberRound(editRow.netto * (100 - editRow.percentheat) / 100, 2);
+                                            }
+                                            else if (editRow.exitproduct && editRow.exitproduct > 0) {
+                                                editRow.percentheat = utils.numberRound(100 * (editRow.netto - editRow.exitproduct) / editRow.netto, 2);
+                                            }
+                                        }
+                                        else if (editRow.netto && editRow.netto > 0) {
+                                            editRow.percentcold = utils.numberRound(100 * (editRow.brutto - editRow.netto) / editRow.brutto, 2);
+                                        }
+                                    }
+                                }
+                                else if (field === "percentcold") {
+                                    if (editRow.percentcold && editRow.percentcold > 0) {
+                                        if (editRow.brutto && editRow.brutto > 0) {
+                                            editRow.netto = utils.numberRound(editRow.brutto * (100 - editRow.percentcold) / 100, 2);
+                                            if (editRow.percentheat && editRow.percentheat > 0) {
+                                                editRow.exitproduct = utils.numberRound(editRow.netto * (100 - editRow.percentheat) / 100, 2);
+                                            }
+                                            else if (editRow.exitproduct && editRow.exitproduct > 0) {
+                                                editRow.percentheat = utils.numberRound(100 * (editRow.netto - editRow.exitproduct) / editRow.netto, 2);
+                                            }
+                                        }
+                                        else if (editRow.netto && editRow.netto > 0) {
+                                            editRow.brutto = utils.numberRound(100 * editRow.netto / (100 - editRow.percentcold), 2);
+                                        }
+                                    }
+                                }
+                                else if (field === "netto") {
+                                    if (editRow.netto && editRow.netto > 0) {
+                                        if (editRow.brutto && editRow.brutto > 0) {
+                                            editRow.percentcold = utils.numberRound(100 * (editRow.brutto - editRow.netto) / editRow.brutto, 2);
+                                            if (editRow.percentheat && editRow.percentheat > 0) {
+                                                editRow.exitproduct = utils.numberRound(editRow.netto * (100 - editRow.percentheat) / 100, 2);
+                                            }
+                                            else if (editRow.exitproduct && editRow.exitproduct > 0) {
+                                                editRow.percentheat = utils.numberRound(100 * (editRow.netto - editRow.exitproduct) / editRow.netto, 2);
+                                            }
+                                        }
+                                        else if (editRow.percentcold && editRow.percentcold > 0) {
+                                            editRow.brutto = utils.numberRound(100 * editRow.netto / (100 - editRow.percentcold), 2);
+                                        }
+                                    }
+                                }
+                                else if (field === "percentheat") {
+                                    if (editRow.percentheat && editRow.percentheat > 0) {
+                                        editRow.exitproduct = utils.numberRound(editRow.netto * (100 - editRow.percentheat) / 100, 2);
+                                    }
+                                }
+                                if (field === "exitproduct") { // || field === "exitproduct") {
+                                    if (editRow.exitproduct && editRow.exitproduct > 0) {
+                                        editRow.percentheat = utils.numberRound(100 * (editRow.netto - editRow.exitproduct) / editRow.netto, 2);
+                                    }
+                                }
+                            }
+                        }
+                        else
+                            row[field] = value;
                         return result;
                     };
                     ProductMapBase.prototype.addHeaderButtonClick = function (e) {

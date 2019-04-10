@@ -556,34 +556,54 @@ define(["require", "exports", "app/common/utils", "app/common/variables"], funct
                         this.editData.currentInputControl = this.GetEditControl(this.editData.field);
                     if (this.editData.currentInputControl) {
                         this.EditCellBlur = utils.createBlurEvent(this.editData.currentInputControl, this.editCellBlur, this);
+                        this.EditKeyEvent = utils.createEventListener(this.editData.currentInputControl, "keyup", this.editKeyEvent, this);
                         this.editData.currentCell.empty().addClass('td-edit-cell').append(this.editData.currentInputControl);
                         this.editData.currentInputControl.focus();
                     }
                     this.editData.index = this.SetSelectedDataRow(e.currentTarget);
                     if (this.SelectedDataRow) {
                         this.editData.oldValue = this.SelectedDataRow[this.editData.field];
-                        this.editData.currentInputControl.val(this.editData.oldValue);
+                        if (this.editData.currentInputControl)
+                            this.editData.currentInputControl.val(this.editData.oldValue ? this.editData.oldValue : "");
                         //console.log(this.SelectedDataRow[this.editData.field]);
                     }
                 }
             };
             BaseEditTable.prototype.editCellBlur = function (e) {
-                this.destroyCurrentInputControl();
-                this.destroyEditEvents();
-                this.UpdateRow();
-                this.attachEditEvents();
+                var checkResult = false;
+                if (this.CheckValueEditControl && this.editData.currentInputControl && this.SelectedDataRow) {
+                    checkResult = this.CheckValueEditControl(this.editData.field, this.editData.currentInputControl.val(), this.SelectedDataRow);
+                    this.Rows[this.editData.index] = this.SelectedDataRow;
+                }
+                else
+                    checkResult = true;
+                if (checkResult == true) {
+                    this.destroyCurrentInputControl();
+                    this.destroyEditEvents();
+                    this.UpdateRow();
+                    this.attachEditEvents();
+                }
+                else {
+                    if (this.editData.currentInputControl)
+                        this.editData.currentInputControl.focus();
+                }
+                e.preventDefault();
+                e.stopPropagation();
+                return false;
             };
             BaseEditTable.prototype.editKeyEvent = function (e) {
                 var key = e.which || e.keyCode;
                 if (key === 13) {
-                    // 13 is enter
-                    // code for enter
+                    this.editCellBlur(e);
                 }
             };
             BaseEditTable.prototype.destroyCurrentInputControl = function () {
                 if (this.editData.currentInputControl) {
-                    this.editData.currentInputControl.remove();
+                    var parent_1 = this.editData.currentInputControl.parent();
+                    if (parent_1 && parent_1.length > 0)
+                        this.editData.currentInputControl.remove();
                     utils.destroyBlurEvent(this.editData.currentInputControl, this.EditCellBlur);
+                    utils.destroyEventListener(this.editData.currentInputControl, "keyup", this.EditCellBlur);
                     this.editData.currentInputControl = undefined;
                 }
                 if (this.editData.currentCell)

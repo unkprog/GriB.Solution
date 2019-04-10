@@ -146,6 +146,12 @@ export function numberPadZero(value: number, length: number) {
 }
 window.numberPadZero = numberPadZero;
 
+export function numberRound(value: number, places: number): number {
+    let multiplier: number = Math.pow(10, places);
+    return (Math.round(value * multiplier) / multiplier);
+}
+window.numberRound = numberRound;
+
 /**
  * @see http://stackoverflow.com/q/7616461/940217
  * @return {number}

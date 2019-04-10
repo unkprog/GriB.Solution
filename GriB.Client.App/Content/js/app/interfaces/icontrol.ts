@@ -90,7 +90,8 @@
     export interface IControlEditTable extends IControlTable {
         RowHeaderContextClick: { (e: any): void; };
         RowContextClick: { (e: any): void; };
-
+        GetEditControl: { (field: string): JQuery; };
+        CheckValueEditControl: { (field: string, value: any, row: Interfaces.Model.ITableRowModel): boolean; };
     }
 
     export interface ICheckViewControl extends IControl {

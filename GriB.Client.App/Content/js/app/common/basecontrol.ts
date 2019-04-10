@@ -626,6 +626,7 @@ export namespace Control {
 
                 if (this.editData.currentInputControl) {
                     this.EditCellBlur = utils.createBlurEvent(this.editData.currentInputControl, this.editCellBlur, this);
+                    this.EditKeyEvent = utils.createEventListener(this.editData.currentInputControl, "keyup", this.editKeyEvent, this);
                     this.editData.currentCell.empty().addClass('td-edit-cell').append(this.editData.currentInputControl);
                     this.editData.currentInputControl.focus();
                 }
@@ -634,7 +635,8 @@ export namespace Control {
 
                 if (this.SelectedDataRow) {
                     this.editData.oldValue = this.SelectedDataRow[this.editData.field];
-                    this.editData.currentInputControl.val(this.editData.oldValue);
+                    if(this.editData.currentInputControl)
+                        this.editData.currentInputControl.val(this.editData.oldValue ? this.editData.oldValue : "");
                     //console.log(this.SelectedDataRow[this.editData.field]);
                 }
             }
@@ -642,25 +644,43 @@ export namespace Control {
 
         private EditCellBlur: { (e: any): void; };
         private editCellBlur(e) {
-            this.destroyCurrentInputControl();
-            this.destroyEditEvents();
-            this.UpdateRow();
-            this.attachEditEvents();
+            let checkResult = false;
+            if (this.CheckValueEditControl && this.editData.currentInputControl && this.SelectedDataRow) {
+                checkResult = this.CheckValueEditControl(this.editData.field, this.editData.currentInputControl.val(), this.SelectedDataRow);
+                this.Rows[this.editData.index] = this.SelectedDataRow;
+            }
+            else checkResult = true;
+
+            if (checkResult == true) {
+                this.destroyCurrentInputControl();
+                this.destroyEditEvents();
+                this.UpdateRow();
+                this.attachEditEvents();
+            }
+            else {
+                if (this.editData.currentInputControl)
+                    this.editData.currentInputControl.focus();
+            }
+            e.preventDefault();
+            e.stopPropagation();
+            return false;
         }
 
         private EditKeyEvent: { (e: any): void; };
         private editKeyEvent(e: any) {
             var key = e.which || e.keyCode;
             if (key === 13) {
-                // 13 is enter
-                // code for enter
+                this.editCellBlur(e);
             }
         }
 
         private destroyCurrentInputControl() {
             if (this.editData.currentInputControl) {
-                this.editData.currentInputControl.remove();
+                let parent = this.editData.currentInputControl.parent();
+                if (parent && parent.length > 0)
+                    this.editData.currentInputControl.remove();
                 utils.destroyBlurEvent(this.editData.currentInputControl, this.EditCellBlur);
+                utils.destroyEventListener(this.editData.currentInputControl, "keyup", this.EditCellBlur);
                 this.editData.currentInputControl = undefined;
             }
             if (this.editData.currentCell)
@@ -670,5 +690,6 @@ export namespace Control {
         public OnHeaderContextMenu: { (e: any): void; };
         public OnContextMenu: { (e: any, row: Interfaces.Model.ITableRowModel): void; };
         public GetEditControl: { (field: string): JQuery; };
+        public CheckValueEditControl: { (field: string, value: any, row: Interfaces.Model.ITableRowModel): boolean; };
     }
 }

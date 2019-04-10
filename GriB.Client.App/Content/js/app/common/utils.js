@@ -155,6 +155,12 @@ define(["require", "exports"], function (require, exports) {
     }
     exports.numberPadZero = numberPadZero;
     window.numberPadZero = numberPadZero;
+    function numberRound(value, places) {
+        var multiplier = Math.pow(10, places);
+        return (Math.round(value * multiplier) / multiplier);
+    }
+    exports.numberRound = numberRound;
+    window.numberRound = numberRound;
     /**
      * @see http://stackoverflow.com/q/7616461/940217
      * @return {number}
