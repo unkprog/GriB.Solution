@@ -156,6 +156,7 @@ thead, tbody tr {
     display: table;
     width: 100%;
     table-layout: fixed;
+    min-height: 36px;
 }
 
 thead {
@@ -807,12 +808,15 @@ input[type='number']:hover::-webkit-outer-spin-button {
 }
 
 
-.edit-number {
+.edit-number, .edit-text {
     margin: 0 !important;
     height: auto !important;
     font-size: inherit !important;
-    text-align: right;
     color: blue;
+}
+
+.edit-number {
+    text-align: right;
 }
 
 .td-edit-cell {

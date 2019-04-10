@@ -10,7 +10,7 @@ export namespace Controller.Setting.Editor {
         protected createEditorSettings(): Interfaces.Control.IEditorSettings {
             return { EditIdName: "id_productmap", Load: $.proxy(this.Service.GetProduct, this.Service), Save: $.proxy(this.Service.SetProduct, this.Service) };
         }
-
+       
     }
 }
 

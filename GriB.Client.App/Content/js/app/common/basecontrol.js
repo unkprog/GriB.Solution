@@ -233,19 +233,22 @@ define(["require", "exports", "app/common/utils", "app/common/variables"], funct
                 this.detachSortEvents();
                 this.destroyRowsEvents();
             };
-            BaseTable.prototype.Setup = function () {
-                this.detachSortEvents();
-                var headerHtml = this.getTableHeaderHtml();
-                this.tableHead.html(headerHtml);
-                if (this.tableBody) {
-                    if (this.IsScroll === true) {
-                        if (this.tableBody.hasClass("scroll-y") === false)
-                            this.tableBody.addClass("scroll-y");
+            BaseTable.prototype.Setup = function (onlyRows) {
+                if (onlyRows === void 0) { onlyRows = false; }
+                if (onlyRows == false) {
+                    this.detachSortEvents();
+                    var headerHtml = this.getTableHeaderHtml();
+                    this.tableHead.html(headerHtml);
+                    if (this.tableBody) {
+                        if (this.IsScroll === true) {
+                            if (this.tableBody.hasClass("scroll-y") === false)
+                                this.tableBody.addClass("scroll-y");
+                        }
+                        else
+                            this.tableBody.removeClass("scroll-y");
                     }
-                    else
-                        this.tableBody.removeClass("scroll-y");
+                    this.attachSortEvents();
                 }
-                this.attachSortEvents();
                 this.setupRows();
             };
             BaseTable.prototype.createRowsEvents = function () {
@@ -486,9 +489,6 @@ define(["require", "exports", "app/common/utils", "app/common/variables"], funct
             __extends(BaseEditTable, _super);
             function BaseEditTable() {
                 var _this = _super !== null && _super.apply(this, arguments) || this;
-                //private currentInputControl: JQuery;
-                //private currentCell: JQuery;
-                //private oldValue: any;
                 _this.editData = { currentInputControl: undefined, currentCell: undefined, oldValue: undefined, field: "", index: -1 };
                 return _this;
             }
@@ -510,12 +510,12 @@ define(["require", "exports", "app/common/utils", "app/common/variables"], funct
             };
             BaseEditTable.prototype.createRowsEvents = function () {
                 _super.prototype.createRowsEvents.call(this);
-                //if (this.tableRows)
-                //    utils.createContextMenuEvent(this.tableRows, this.RowContextClick, this, this.tableBody);
+                if (this.tableRows)
+                    utils.createContextMenuEvent(this.tableRows, this.RowContextClick, this, this.tableBody);
             };
             BaseEditTable.prototype.destroyRowsEvents = function () {
-                //if (this.tableRows)
-                //    utils.destroyContextMenuEvent(this.tableRows, this.RowContextClick, this.tableBody);
+                if (this.tableRows)
+                    utils.destroyContextMenuEvent(this.tableRows, this.RowContextClick, this.tableBody);
                 _super.prototype.destroyRowsEvents.call(this);
             };
             BaseEditTable.prototype.rowHeaderContextClick = function (e) {
@@ -565,9 +565,13 @@ define(["require", "exports", "app/common/utils", "app/common/variables"], funct
                         this.editData.oldValue = this.SelectedDataRow[this.editData.field];
                         if (this.editData.currentInputControl)
                             this.editData.currentInputControl.val(this.editData.oldValue ? this.editData.oldValue : "");
-                        //console.log(this.SelectedDataRow[this.editData.field]);
                     }
                 }
+            };
+            BaseEditTable.prototype.UpdateRow = function () {
+                this.destroyEditEvents();
+                _super.prototype.UpdateRow.call(this);
+                this.attachEditEvents();
             };
             BaseEditTable.prototype.editCellBlur = function (e) {
                 var checkResult = false;
@@ -579,9 +583,7 @@ define(["require", "exports", "app/common/utils", "app/common/variables"], funct
                     checkResult = true;
                 if (checkResult == true) {
                     this.destroyCurrentInputControl();
-                    this.destroyEditEvents();
                     this.UpdateRow();
-                    this.attachEditEvents();
                 }
                 else {
                     if (this.editData.currentInputControl)

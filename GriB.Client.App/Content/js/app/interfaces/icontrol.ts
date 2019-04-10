@@ -81,7 +81,7 @@
         DestroyView();
         TableBody: JQuery;
         IsScroll: boolean;
-        Setup();
+        Setup(onlyRows?: boolean);
         Rows: Interfaces.Model.ITableRowModel[];
         OnSelect(row: Interfaces.Model.ITableRowModel);
         OnDetalize(row: Interfaces.Model.ITableRowModel);

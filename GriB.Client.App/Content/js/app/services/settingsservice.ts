@@ -168,7 +168,7 @@ export module Services {
             this.GetApi({ Action: "/get_product_newcomposition", RequestData: { id: id }, Callback: Callback });
         }
 
-        public SetProduct(model: Interfaces.Model.ICategory, Callback: (responseData: any) => void) {
+        public SetProduct(model: Interfaces.Model.IProduct, Callback: (responseData: any) => void) {
             this.PostApi({ Action: "/post_product", RequestData: JSON.stringify(model), Callback: Callback });
         }
 

@@ -246,21 +246,22 @@ export namespace Control {
             this.destroyRowsEvents();
         }
 
-        public Setup(): void {
-            this.detachSortEvents();
-            let headerHtml: string = this.getTableHeaderHtml();
-            this.tableHead.html(headerHtml);
-            if (this.tableBody) {
-                if (this.IsScroll === true) {
-                    if (this.tableBody.hasClass("scroll-y") === false)
-                        this.tableBody.addClass("scroll-y");
+        public Setup(onlyRows: boolean = false): void {
+            if (onlyRows == false) {
+                this.detachSortEvents();
+                let headerHtml: string = this.getTableHeaderHtml();
+                this.tableHead.html(headerHtml);
+                if (this.tableBody) {
+                    if (this.IsScroll === true) {
+                        if (this.tableBody.hasClass("scroll-y") === false)
+                            this.tableBody.addClass("scroll-y");
+                    }
+                    else
+                        this.tableBody.removeClass("scroll-y");
                 }
-                else
-                    this.tableBody.removeClass("scroll-y");
+                this.attachSortEvents();
             }
-            this.attachSortEvents();
             this.setupRows();
-
         }
 
         protected createRowsEvents() {
@@ -557,13 +558,13 @@ export namespace Control {
 
         protected createRowsEvents() {
             super.createRowsEvents();
-            //if (this.tableRows)
-            //    utils.createContextMenuEvent(this.tableRows, this.RowContextClick, this, this.tableBody);
+            if (this.tableRows)
+                utils.createContextMenuEvent(this.tableRows, this.RowContextClick, this, this.tableBody);
         }
 
         protected destroyRowsEvents() {
-            //if (this.tableRows)
-            //    utils.destroyContextMenuEvent(this.tableRows, this.RowContextClick, this.tableBody);
+            if (this.tableRows)
+                utils.destroyContextMenuEvent(this.tableRows, this.RowContextClick, this.tableBody);
             super.destroyRowsEvents();
         }
 
@@ -605,17 +606,11 @@ export namespace Control {
             this.attachEditEvents();
         }
 
-        //private currentInputControl: JQuery;
-        //private currentCell: JQuery;
-        //private oldValue: any;
-
         private editData: any = { currentInputControl: undefined, currentCell: undefined, oldValue: undefined, field: "", index:-1 };
 
         private EditCellClick: { (e: any): void; };
         private editCellClick(e: any) {
-
             this.destroyCurrentInputControl();
-
 
             this.editData.currentCell = $(e.currentTarget);
             this.editData.field = this.editData.currentCell.data("field");
@@ -637,9 +632,14 @@ export namespace Control {
                     this.editData.oldValue = this.SelectedDataRow[this.editData.field];
                     if(this.editData.currentInputControl)
                         this.editData.currentInputControl.val(this.editData.oldValue ? this.editData.oldValue : "");
-                    //console.log(this.SelectedDataRow[this.editData.field]);
                 }
             }
+        }
+
+        public UpdateRow() {
+            this.destroyEditEvents();
+            super.UpdateRow();
+            this.attachEditEvents();
         }
 
         private EditCellBlur: { (e: any): void; };
@@ -653,9 +653,7 @@ export namespace Control {
 
             if (checkResult == true) {
                 this.destroyCurrentInputControl();
-                this.destroyEditEvents();
                 this.UpdateRow();
-                this.attachEditEvents();
             }
             else {
                 if (this.editData.currentInputControl)
