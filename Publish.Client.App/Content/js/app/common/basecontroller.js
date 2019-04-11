@@ -238,7 +238,7 @@ define(["require", "exports", "app/common/utils", "app/common/variables", "app/c
                     try {
                         var view = $(options.template);
                         isInit = self._controller.ViewInit(view);
-                        self._content.html(view[0]);
+                        self._content.scrollTop(0).html(view[0]);
                         isInit = self._controller.ViewShow(self) && isInit;
                         self._controller.ViewResize(self);
                     }

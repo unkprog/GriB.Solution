@@ -8,7 +8,7 @@
     <OutputType>WinExe</OutputType>
     <RootNamespace>GriB.PrintServer.Windows</RootNamespace>
     <AssemblyName>GriB.PrintServer.Windows</AssemblyName>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
@@ -178,16 +178,8 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\GriB.Common.Models\GriB.Common.Models.csproj">
-      <Project>{2de5309f-fea6-4fbf-9ce4-fbc20a5d5f03}</Project>
-      <Name>GriB.Common.Models</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\GriB.Common.Net\GriB.Common.Net.csproj">
-      <Project>{e451b9bb-687d-4147-875a-4b44590df871}</Project>
-      <Name>GriB.Common.Net</Name>
-    </ProjectReference>
     <ProjectReference Include="..\GriB.Common\GriB.Common.csproj">
-      <Project>{2d9cba7e-88aa-441f-8f6f-0356ae1dea4c}</Project>
+      <Project>{78f0ccb1-c344-4be7-83c6-ee75df3efd4c}</Project>
       <Name>GriB.Common</Name>
     </ProjectReference>
     <ProjectReference Include="..\GriB.Web\GriB.Web.csproj">

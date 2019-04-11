@@ -226,7 +226,7 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
                         self._controllersModalStack.Push(options.controller);
                         options.controller.ViewResize({});
                     }
-                    content.html(view[0]);
+                    content.scrollTop(0).html(view[0]);
                     isInit = self._controller.ViewShow(this) && isInit;
                 }
                 finally {

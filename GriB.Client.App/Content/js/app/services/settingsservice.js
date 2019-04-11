@@ -224,6 +224,19 @@ define(["require", "exports", "app/common/baseservice"], function (require, expo
             SettingsService.prototype.DelReason = function (id, Callback) {
                 this.GetApi({ Action: "/del_reason", RequestData: { id: id }, Callback: Callback });
             };
+            // Принт-сервер
+            SettingsService.prototype.GetPrintServers = function (Callback) {
+                this.GetApi({ Action: "/get_printservers", Callback: Callback });
+            };
+            SettingsService.prototype.GetPrintServer = function (id, Callback) {
+                this.GetApi({ Action: "/get_printserver", RequestData: { id: id }, Callback: Callback });
+            };
+            SettingsService.prototype.SetPrintServer = function (model, Callback) {
+                this.PostApi({ Action: "/post_printserver", RequestData: JSON.stringify(model), Callback: Callback });
+            };
+            SettingsService.prototype.DelPrintServer = function (id, Callback) {
+                this.GetApi({ Action: "/del_printserver", RequestData: { id: id }, Callback: Callback });
+            };
             return SettingsService;
         }(base.Services.BaseService));
         Services.SettingsService = SettingsService;

@@ -1,62 +1,60 @@
 define(["require", "exports"], function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    function createTouchClickEvent(elemName, clickFunc, thisObject, view) {
+    function createEventListener(elemName, eventName, clickFunc, thisObject, view) {
         var result = $.proxy(clickFunc, thisObject);
         var elem = elemName instanceof $ ? elemName : (view ? view.find("#" + elemName) : $("#" + elemName));
         for (var i = 0, iCount = elem.length; i < iCount; i++)
-            elem[i].addEventListener(("ontouchstart" in window) ? "touchend" : "click", result, false);
+            elem[i].addEventListener(eventName, result, false);
         return result;
     }
-    exports.createTouchClickEvent = createTouchClickEvent;
-    function createDblTouchClickEvent(elemName, clickFunc, thisObject, view) {
-        var result = $.proxy(clickFunc, thisObject);
+    exports.createEventListener = createEventListener;
+    function destroyEventListener(elemName, eventName, proxyFunc, view) {
         var elem = elemName instanceof $ ? elemName : (view ? view.find("#" + elemName) : $("#" + elemName));
         for (var i = 0, iCount = elem.length; i < iCount; i++)
-            elem[i].addEventListener(("ontouchstart" in window) ? "touchend" : "dblclick", result, false);
-        return result;
+            elem[i].removeEventListener(eventName, proxyFunc);
     }
-    exports.createDblTouchClickEvent = createDblTouchClickEvent;
-    function createContextMenuEvent(elemName, clickFunc, thisObject, view) {
-        var result = $.proxy(clickFunc, thisObject);
-        var elem = elemName instanceof $ ? elemName : (view ? view.find("#" + elemName) : $("#" + elemName));
-        for (var i = 0, iCount = elem.length; i < iCount; i++)
-            elem[i].addEventListener("contextmenu", result, false);
-        return result;
-    }
-    exports.createContextMenuEvent = createContextMenuEvent;
+    exports.destroyEventListener = destroyEventListener;
     function createClickEvent(elemName, clickFunc, thisObject, view) {
-        var result = $.proxy(clickFunc, thisObject);
-        var elem = elemName instanceof $ ? elemName : (view ? view.find("#" + elemName) : $("#" + elemName));
-        for (var i = 0, iCount = elem.length; i < iCount; i++)
-            elem[i].addEventListener("click", result, false);
-        return result;
+        return createEventListener(elemName, "click", clickFunc, thisObject, view);
     }
     exports.createClickEvent = createClickEvent;
-    function destroyTouchClickEvent(elemName, proxyFunc, view) {
-        var elem = elemName instanceof $ ? elemName : (view ? view.find("#" + elemName) : $("#" + elemName));
-        for (var i = 0, iCount = elem.length; i < iCount; i++)
-            elem[i].removeEventListener(("ontouchstart" in window) ? "touchend" : "click", proxyFunc);
-    }
-    exports.destroyTouchClickEvent = destroyTouchClickEvent;
-    function destroyDblTouchClickEvent(elemName, proxyFunc, view) {
-        var elem = elemName instanceof $ ? elemName : (view ? view.find("#" + elemName) : $("#" + elemName));
-        for (var i = 0, iCount = elem.length; i < iCount; i++)
-            elem[i].removeEventListener(("ontouchstart" in window) ? "touchend" : "dblclick", proxyFunc);
-    }
-    exports.destroyDblTouchClickEvent = destroyDblTouchClickEvent;
     function destroyClickEvent(elemName, proxyFunc, view) {
-        var elem = elemName instanceof $ ? elemName : (view ? view.find("#" + elemName) : $("#" + elemName));
-        for (var i = 0, iCount = elem.length; i < iCount; i++)
-            elem[i].removeEventListener("click", proxyFunc);
+        return destroyEventListener(elemName, "click", proxyFunc, view);
     }
     exports.destroyClickEvent = destroyClickEvent;
+    function createTouchClickEvent(elemName, clickFunc, thisObject, view) {
+        return createEventListener(elemName, ("ontouchstart" in window) ? "touchend" : "click", clickFunc, thisObject, view);
+    }
+    exports.createTouchClickEvent = createTouchClickEvent;
+    function destroyTouchClickEvent(elemName, proxyFunc, view) {
+        return destroyEventListener(elemName, ("ontouchstart" in window) ? "touchend" : "click", proxyFunc, view);
+    }
+    exports.destroyTouchClickEvent = destroyTouchClickEvent;
+    function createDblTouchClickEvent(elemName, clickFunc, thisObject, view) {
+        return createEventListener(elemName, ("ontouchstart" in window) ? "touchend" : "dblclick", clickFunc, thisObject, view);
+    }
+    exports.createDblTouchClickEvent = createDblTouchClickEvent;
+    function destroyDblTouchClickEvent(elemName, proxyFunc, view) {
+        return destroyEventListener(elemName, ("ontouchstart" in window) ? "touchend" : "dblclick", proxyFunc, view);
+    }
+    exports.destroyDblTouchClickEvent = destroyDblTouchClickEvent;
+    function createContextMenuEvent(elemName, clickFunc, thisObject, view) {
+        return createEventListener(elemName, "contextmenu", clickFunc, thisObject, view);
+    }
+    exports.createContextMenuEvent = createContextMenuEvent;
     function destroyContextMenuEvent(elemName, proxyFunc, view) {
-        var elem = elemName instanceof $ ? elemName : (view ? view.find("#" + elemName) : $("#" + elemName));
-        for (var i = 0, iCount = elem.length; i < iCount; i++)
-            elem[i].removeEventListener("contextmenu", proxyFunc);
+        return destroyEventListener(elemName, "contextmenu", proxyFunc, view);
     }
     exports.destroyContextMenuEvent = destroyContextMenuEvent;
+    function createBlurEvent(elemName, clickFunc, thisObject, view) {
+        return createEventListener(elemName, "blur", clickFunc, thisObject, view);
+    }
+    exports.createBlurEvent = createBlurEvent;
+    function destroyBlurEvent(elemName, proxyFunc, view) {
+        return destroyEventListener(elemName, "blur", proxyFunc, view);
+    }
+    exports.destroyBlurEvent = destroyBlurEvent;
     function isNullOrEmpty(value) {
         return (value === null || value === undefined || value === '');
     }
@@ -157,6 +155,12 @@ define(["require", "exports"], function (require, exports) {
     }
     exports.numberPadZero = numberPadZero;
     window.numberPadZero = numberPadZero;
+    function numberRound(value, places) {
+        var multiplier = Math.pow(10, places);
+        return (Math.round(value * multiplier) / multiplier);
+    }
+    exports.numberRound = numberRound;
+    window.numberRound = numberRound;
     /**
      * @see http://stackoverflow.com/q/7616461/940217
      * @return {number}

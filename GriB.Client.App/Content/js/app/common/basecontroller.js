@@ -228,8 +228,10 @@ define(["require", "exports", "app/common/utils", "app/common/variables", "app/c
                 //}
                 var isInit = false;
                 try {
-                    if (self._controller)
+                    if (self._controller) {
                         self._controller.ViewHide(self);
+                        self._controller.View.remove();
+                    }
                     self._controller = options.controller;
                     if (!options.isRestore)
                         if (options.backController)
@@ -238,6 +240,7 @@ define(["require", "exports", "app/common/utils", "app/common/variables", "app/c
                     try {
                         var view = $(options.template);
                         isInit = self._controller.ViewInit(view);
+                        self._content.html("").children().scrollTop(0);
                         self._content.html(view[0]);
                         isInit = self._controller.ViewShow(self) && isInit;
                         self._controller.ViewResize(self);

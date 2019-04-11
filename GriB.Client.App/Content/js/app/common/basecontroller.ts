@@ -236,8 +236,10 @@ export namespace Controller {
 
             let isInit: boolean = false;
             try {
-                if (self._controller)
+                if (self._controller) {
                     self._controller.ViewHide(self);
+                    self._controller.View.remove();
+                }
 
                 self._controller = options.controller;
                 if (!options.isRestore)
@@ -248,6 +250,7 @@ export namespace Controller {
                 try {
                     let view: any = $(options.template);
                     isInit = self._controller.ViewInit(view);
+                    self._content.html("").children().scrollTop(0);
                     self._content.html(view[0]);
                     isInit = self._controller.ViewShow(self) && isInit;
                     self._controller.ViewResize(self);

@@ -261,5 +261,22 @@ export module Services {
         public DelReason(id: number, Callback: (responseData: any) => void) {
             this.GetApi({ Action: "/del_reason", RequestData: { id: id }, Callback: Callback });
         }
+
+        // Принт-сервер
+        public GetPrintServers(Callback: (responseData: any) => void) {
+            this.GetApi({ Action: "/get_printservers", Callback: Callback });
+        }
+
+        public GetPrintServer(id: number, Callback: (responseData: any) => void) {
+            this.GetApi({ Action: "/get_printserver", RequestData: { id: id }, Callback: Callback });
+        }
+
+        public SetPrintServer(model: Interfaces.Model.IPrintServer, Callback: (responseData: any) => void) {
+            this.PostApi({ Action: "/post_printserver", RequestData: JSON.stringify(model), Callback: Callback });
+        }
+
+        public DelPrintServer(id: number, Callback: (responseData: any) => void) {
+            this.GetApi({ Action: "/del_printserver", RequestData: { id: id }, Callback: Callback });
+        }
     }
 }

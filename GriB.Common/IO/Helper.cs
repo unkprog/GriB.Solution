@@ -35,7 +35,7 @@ namespace GriB.Common.IO
 
                 using (FileStream fileStream = new FileStream(aFileName, FileMode.Open, FileAccess.Read, FileShare.Read, 4096, false))
                 {
-                    using (StreamReader streamReader = new StreamReader(fileStream, Encoding.Default))
+                    using (StreamReader streamReader = new StreamReader(fileStream, Encoding.UTF8)) //.Default))
                     {
                         line = streamReader.ReadLine();
                         while (line != null)
@@ -44,7 +44,7 @@ namespace GriB.Common.IO
                             line = streamReader.ReadLine();
                         }
                     }
-                    fileStream.Close();
+                    //fileStream.Close();
                 }
             }
             return strBuilder.ToString();

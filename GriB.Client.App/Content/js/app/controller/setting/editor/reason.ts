@@ -21,7 +21,7 @@ export namespace Controller.Setting.Editor {
         }
 
 
-        public get EditorModel(): Interfaces.Model.IContractor {
+        public get EditorModel(): Interfaces.Model.IReason {
             return this.Model.get("editModel").toJSON();
         }
 
@@ -36,7 +36,7 @@ export namespace Controller.Setting.Editor {
 
         protected validate(): boolean {
             let result: boolean = true;
-            let model: Interfaces.Model.IContractor = this.EditorModel;
+            let model: Interfaces.Model.IReason = this.EditorModel;
 
             if (utils.isNullOrEmpty(model.name)) {
                 M.toast({ html: vars._statres("msg$error$invalidname") });

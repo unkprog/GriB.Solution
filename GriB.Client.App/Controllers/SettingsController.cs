@@ -16,6 +16,7 @@ using GriB.Web.Http;
 using Newtonsoft.Json.Linq;
 using System.Web.Hosting;
 using System.IO;
+using GriB.Common.Models.Print;
 
 namespace GriB.Client.App.Controllers
 {
@@ -811,6 +812,51 @@ namespace GriB.Client.App.Controllers
             return TryCatchResponseQuery((query) =>
             {
                 Reason.DelReason(query, id, ((Principal)HttpContext.Current.User).Data.User.id);
+                return this.CreateResponse(HttpStatusCode.OK, "Ok");
+            });
+        }
+        #endregion
+
+        #region Принт-сервер
+        [HttpGet]
+        [ActionName("get_printservers")]
+        public HttpResponseMessage GetPrintServers()
+        {
+            return TryCatchResponseQuery((query) =>
+            {
+                return this.CreateResponse(HttpStatusCode.OK, PrintServer.GetPrintServers(query));
+            });
+        }
+
+        [HttpGet]
+        [ActionName("get_printserver")]
+        public HttpResponseMessage GetPrintServer(int id)
+        {
+            return TryCatchResponseQuery((query) =>
+            {
+                return this.CreateResponse(HttpStatusCode.OK, new { record = PrintServer.GetPrintServer(query, id) });
+            });
+        }
+
+        [HttpPost]
+        [ActionName("post_printserver")]
+        public HttpResponseMessage PostPrintServer(printserver printserver)
+        {
+            return TryCatchResponseQuery((query) =>
+            {
+                Principal principal = (Principal)HttpContext.Current.User;
+                PrintServer.SetPrintServer(query, printserver, principal.Data.User.id);
+                return this.CreateResponse(HttpStatusCode.OK, "Ok");
+            });
+        }
+
+        [HttpGet]
+        [ActionName("del_printserver")]
+        public HttpResponseMessage DeletePrintServer(int id)
+        {
+            return TryCatchResponseQuery((query) =>
+            {
+                PrintServer.DelPrintServer(query, id, ((Principal)HttpContext.Current.User).Data.User.id);
                 return this.CreateResponse(HttpStatusCode.OK, "Ok");
             });
         }

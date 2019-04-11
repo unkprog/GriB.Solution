@@ -47,6 +47,9 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
                         "labelReasons": vars._statres("label$reasons"),
                         "labelClients": vars._statres("label$clients"),
                         "labelContractors": vars._statres("label$contractors"),
+                        "labelPrint": vars._statres("label$print"),
+                        "labelPrintServers": vars._statres("label$printservers"),
+                        "labelPrinters": vars._statres("label$printers"),
                     });
                 };
                 Index.prototype.createEvents = function () {
@@ -64,6 +67,8 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
                     this.ReasonButtonClick = this.createTouchClickEvent("btn-reason", this.reasonButtonClick);
                     this.ClientButtonClick = this.createTouchClickEvent("btn-client", this.clientButtonClick);
                     this.ContractorButtonClick = this.createTouchClickEvent("btn-contractor", this.contractorButtonClick);
+                    this.PrintServerButtonClick = this.createTouchClickEvent("btn-printserver", this.printServerButtonClick);
+                    this.PrinterButtonClick = this.createTouchClickEvent("btn-printer", this.printerButtonClick);
                 };
                 Index.prototype.destroyEvents = function () {
                     this.destroyTouchClickEvent("btn-organization", this.OrganizationButtonClick);
@@ -80,6 +85,8 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
                     this.destroyTouchClickEvent("btn-reason", this.ReasonButtonClick);
                     this.destroyTouchClickEvent("btn-client", this.ClientButtonClick);
                     this.destroyTouchClickEvent("btn-contractor", this.ContractorButtonClick);
+                    this.destroyTouchClickEvent("btn-printserver", this.PrintServerButtonClick);
+                    this.destroyTouchClickEvent("btn-printer", this.PrinterButtonClick);
                 };
                 Index.prototype.organizationButtonClick = function (e) {
                     vars._main.OpenController({ urlController: "setting/editor/organization", backController: this });
@@ -122,6 +129,13 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
                 };
                 Index.prototype.contractorButtonClick = function (e) {
                     vars._main.OpenController({ urlController: "setting/card/contractor", backController: this });
+                };
+                Index.prototype.printServerButtonClick = function (e) {
+                    vars._main.OpenController({ urlController: "setting/card/printserver", backController: this });
+                };
+                Index.prototype.printerButtonClick = function (e) {
+                    M.toast({ html: vars._statres("label$indevelopment") });
+                    //vars._main.OpenController({ urlController: "setting/card/printer", backController: this });
                 };
                 return Index;
             }(base.Controller.Base));

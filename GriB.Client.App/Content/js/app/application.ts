@@ -267,7 +267,7 @@ export module App {
                     options.controller.ViewResize({});
                 }
 
-                content.html(view[0]);
+                content.scrollTop(0).html(view[0]);
                 isInit = self._controller.ViewShow(this) && isInit;
             } finally {
                 if (isInit)

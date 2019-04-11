@@ -233,19 +233,22 @@ define(["require", "exports", "app/common/utils", "app/common/variables"], funct
                 this.detachSortEvents();
                 this.destroyRowsEvents();
             };
-            BaseTable.prototype.Setup = function () {
-                this.detachSortEvents();
-                var headerHtml = this.getTableHeaderHtml();
-                this.tableHead.html(headerHtml);
-                if (this.tableBody) {
-                    if (this.IsScroll === true) {
-                        if (this.tableBody.hasClass("scroll-y") === false)
-                            this.tableBody.addClass("scroll-y");
+            BaseTable.prototype.Setup = function (onlyRows) {
+                if (onlyRows === void 0) { onlyRows = false; }
+                if (onlyRows == false) {
+                    this.detachSortEvents();
+                    var headerHtml = this.getTableHeaderHtml();
+                    this.tableHead.html(headerHtml);
+                    if (this.tableBody) {
+                        if (this.IsScroll === true) {
+                            if (this.tableBody.hasClass("scroll-y") === false)
+                                this.tableBody.addClass("scroll-y");
+                        }
+                        else
+                            this.tableBody.removeClass("scroll-y");
                     }
-                    else
-                        this.tableBody.removeClass("scroll-y");
+                    this.attachSortEvents();
                 }
-                this.attachSortEvents();
                 this.setupRows();
             };
             BaseTable.prototype.createRowsEvents = function () {
@@ -262,6 +265,8 @@ define(["require", "exports", "app/common/utils", "app/common/variables"], funct
             };
             BaseTable.prototype.setupRows = function () {
                 this.destroyRowsEvents();
+                this.selectedRow = undefined;
+                this.selectedDataRow = undefined;
                 this.tableBody.html(this.getTableBodyHtml());
                 var valueSum;
                 for (var j = 0, jcount = (this.sumFieldsInfo.fields && this.sumFieldsInfo.fields.length ? this.sumFieldsInfo.fields.length : 0); j < jcount; j++) {
@@ -335,7 +340,7 @@ define(["require", "exports", "app/common/utils", "app/common/variables"], funct
                 var html = '';
                 html += '<tr id="table-row-#=rowtmpitem#">';
                 for (var i = 0, icount = (columns && columns.length ? columns.length : 0); i < icount; i++) {
-                    html += '   <td';
+                    html += '   <td data-field="' + columns[i].Field + '"';
                     if (columns[i].FieldStyle || this.OnDetalize) {
                         html += ' class="';
                         if (columns[i].FieldStyle) {
@@ -379,16 +384,42 @@ define(["require", "exports", "app/common/utils", "app/common/variables"], funct
                 }
                 return html;
             };
-            BaseTable.prototype.rowClick = function (e) {
-                if (this.selectedRow)
+            Object.defineProperty(BaseTable.prototype, "SelectedDataRow", {
+                get: function () {
+                    return this.selectedDataRow;
+                },
+                enumerable: true,
+                configurable: true
+            });
+            BaseTable.prototype.UpdateRow = function () {
+                if (this.selectedRow && this.selectedDataRow) {
+                    var templateRow = vars.getTemplate(this.getTableRowTemplate());
+                    var html = templateRow(this.selectedDataRow);
+                    this.selectedRow.html($(html).html());
+                }
+            };
+            BaseTable.prototype.SetSelectedDataRow = function (e) {
+                var result = -1;
+                if (this.selectedRow) {
                     this.selectedRow.removeClass("row-active z-depth-1 brown lighten-5");
-                this.selectedRow = $(e.currentTarget);
-                if (this.selectedRow)
-                    this.selectedRow.addClass("row-active z-depth-1 brown lighten-5");
+                }
+                var currentTarget = e;
+                while (currentTarget && currentTarget.nodeName != "TR") {
+                    currentTarget = currentTarget.parentElement;
+                }
+                if (currentTarget) {
+                    this.selectedRow = $(currentTarget);
+                    if (this.selectedRow)
+                        this.selectedRow.addClass("row-active z-depth-1 brown lighten-5");
+                    result = +currentTarget.id.replace('table-row-', '');
+                    this.selectedDataRow = this.Rows[result];
+                }
+                return result;
+            };
+            BaseTable.prototype.rowClick = function (e) {
+                this.SetSelectedDataRow(e.currentTarget);
                 if (this.OnSelect) {
-                    var index = +e.currentTarget.id.replace('table-row-', '');
-                    var row = this.Rows[index];
-                    this.OnSelect(row);
+                    this.OnSelect(this.selectedDataRow);
                 }
                 e.preventDefault();
                 e.stopPropagation();
@@ -457,7 +488,9 @@ define(["require", "exports", "app/common/utils", "app/common/variables"], funct
         var BaseEditTable = /** @class */ (function (_super) {
             __extends(BaseEditTable, _super);
             function BaseEditTable() {
-                return _super !== null && _super.apply(this, arguments) || this;
+                var _this = _super !== null && _super.apply(this, arguments) || this;
+                _this.editData = { currentInputControl: undefined, currentCell: undefined, oldValue: undefined, field: "", index: -1 };
+                return _this;
             }
             BaseEditTable.prototype.InitView = function () {
                 var result = _super.prototype.InitView.call(this);
@@ -470,11 +503,9 @@ define(["require", "exports", "app/common/utils", "app/common/variables"], funct
                 return result;
             };
             BaseEditTable.prototype.DestroyView = function () {
+                this.destroyCurrentInputControl();
                 if (this.tableHead)
                     utils.destroyContextMenuEvent(this.tableHead, this.RowHeaderContextClick, this.tableControl);
-                if (!this.rowEditControl) {
-                    this.rowEditModel.unbind("change");
-                }
                 _super.prototype.DestroyView.call(this);
             };
             BaseEditTable.prototype.createRowsEvents = function () {
@@ -505,62 +536,80 @@ define(["require", "exports", "app/common/utils", "app/common/variables"], funct
                 e.stopPropagation();
                 return false;
             };
-            BaseEditTable.prototype.getTableEditRowTemplate = function () {
-                var columns = this.Columns;
-                var html = '';
-                html += '<tr id="table-row-edit">';
-                for (var i = 0, icount = (columns && columns.length ? columns.length : 0); i < icount; i++) {
-                    html += '   <td';
-                    if (columns[i].FieldEditStyle || columns[i].FieldStyle) {
-                        html += ' class="';
-                        if (columns[i].FieldEditStyle) {
-                            html += columns[i].FieldEditStyle;
-                        }
-                        else if (columns[i].FieldStyle) {
-                            html += columns[i].FieldStyle;
-                        }
-                        html += '"';
+            BaseEditTable.prototype.attachEditEvents = function () {
+                this.EditCellClick = utils.createTouchClickEvent(this.View.find('td'), this.editCellClick, this);
+            };
+            BaseEditTable.prototype.destroyEditEvents = function () {
+                utils.destroyTouchClickEvent(this.View.find('td'), this.EditCellClick, this.View);
+            };
+            BaseEditTable.prototype.setupRows = function () {
+                this.destroyEditEvents();
+                _super.prototype.setupRows.call(this);
+                this.attachEditEvents();
+            };
+            BaseEditTable.prototype.editCellClick = function (e) {
+                this.destroyCurrentInputControl();
+                this.editData.currentCell = $(e.currentTarget);
+                this.editData.field = this.editData.currentCell.data("field");
+                if (this.editData.field) {
+                    if (this.GetEditControl)
+                        this.editData.currentInputControl = this.GetEditControl(this.editData.field);
+                    if (this.editData.currentInputControl) {
+                        this.EditCellBlur = utils.createBlurEvent(this.editData.currentInputControl, this.editCellBlur, this);
+                        this.EditKeyEvent = utils.createEventListener(this.editData.currentInputControl, "keyup", this.editKeyEvent, this);
+                        this.editData.currentCell.empty().addClass('td-edit-cell').append(this.editData.currentInputControl);
+                        this.editData.currentInputControl.focus();
                     }
-                    html += '>';
-                    if (columns[i].FieldEditTemplate)
-                        html += columns[i].FieldEditTemplate;
-                    else if (columns[i].FieldTemplate)
-                        html += columns[i].FieldTemplate;
-                    else {
-                        html += '#=';
-                        html += columns[i].Field;
-                        html += '#';
+                    this.editData.index = this.SetSelectedDataRow(e.currentTarget);
+                    if (this.SelectedDataRow) {
+                        this.editData.oldValue = this.SelectedDataRow[this.editData.field];
+                        if (this.editData.currentInputControl)
+                            this.editData.currentInputControl.val(this.editData.oldValue ? this.editData.oldValue : "");
                     }
-                    html += '</td>';
                 }
-                html += '</tr>';
-                return html;
             };
-            BaseEditTable.prototype.createEditRowModel = function () {
-                var model = new kendo.data.ObservableObject({
-                    "editRowModel": {},
-                });
-                return model;
+            BaseEditTable.prototype.UpdateRow = function () {
+                this.destroyEditEvents();
+                _super.prototype.UpdateRow.call(this);
+                this.attachEditEvents();
             };
-            BaseEditTable.prototype.EditRow = function (rowModel, rowConrol) {
-                if (!this.rowEditControl) {
-                    var templateRow = vars.getTemplate(this.getTableEditRowTemplate());
-                    if (templateRow) {
-                        var html = templateRow(rowModel);
-                        this.rowEditControl = $(html);
-                        this.rowEditModel = new kendo.data.ObservableObject({ "editRowModel": rowModel });
-                        kendo.bind(this.rowEditControl, this.rowEditModel);
-                        this.rowEditModel.bind("change", $.proxy(this.changeEditRowModel, this));
-                    }
+            BaseEditTable.prototype.editCellBlur = function (e) {
+                var checkResult = false;
+                if (this.CheckValueEditControl && this.editData.currentInputControl && this.SelectedDataRow) {
+                    checkResult = this.CheckValueEditControl(this.editData.field, this.editData.currentInputControl.val(), this.SelectedDataRow);
+                    this.Rows[this.editData.index] = this.SelectedDataRow;
+                }
+                else
+                    checkResult = true;
+                if (checkResult == true) {
+                    this.destroyCurrentInputControl();
+                    this.UpdateRow();
                 }
                 else {
-                    this.rowEditModel.set("editRowModel", rowModel);
+                    if (this.editData.currentInputControl)
+                        this.editData.currentInputControl.focus();
                 }
-                this.rowConrol = rowConrol;
-                rowConrol.replaceWith(this.rowEditControl);
-                //html += templateRow(data[i]);
+                e.preventDefault();
+                e.stopPropagation();
+                return false;
             };
-            BaseEditTable.prototype.changeEditRowModel = function (e) {
+            BaseEditTable.prototype.editKeyEvent = function (e) {
+                var key = e.which || e.keyCode;
+                if (key === 13) {
+                    this.editCellBlur(e);
+                }
+            };
+            BaseEditTable.prototype.destroyCurrentInputControl = function () {
+                if (this.editData.currentInputControl) {
+                    var parent_1 = this.editData.currentInputControl.parent();
+                    if (parent_1 && parent_1.length > 0)
+                        this.editData.currentInputControl.remove();
+                    utils.destroyBlurEvent(this.editData.currentInputControl, this.EditCellBlur);
+                    utils.destroyEventListener(this.editData.currentInputControl, "keyup", this.EditCellBlur);
+                    this.editData.currentInputControl = undefined;
+                }
+                if (this.editData.currentCell)
+                    this.editData.currentCell.removeClass('td-edit-cell');
             };
             return BaseEditTable;
         }(BaseTable));

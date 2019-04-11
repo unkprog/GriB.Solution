@@ -156,6 +156,11 @@
     export interface IReason extends IReferenceModel, IEditorModel {
     }
 
+    export interface IPrintServer extends IReferenceModel, IEditorModel {
+        pskey: string;
+        description: string;
+    }
+
     export interface IPosParamsSelect {
         category: number;
         salepoint: number;
