@@ -402,6 +402,7 @@
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\DocumentController.cs" />
     <Compile Include="Controllers\POSTerminalController.cs" />
+    <Compile Include="Controllers\PrintController.cs" />
     <Compile Include="Controllers\ReportsController.cs" />
     <Compile Include="Controllers\SettingsController.cs" />
     <Compile Include="Global.asax.cs">

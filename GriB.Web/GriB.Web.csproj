@@ -59,6 +59,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Http\ApiController.cs" />
+    <Compile Include="Http\ApiController.Extension.cs" />
     <Compile Include="Http\Exception.cs" />
     <Compile Include="Http\ResponseMessage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
