@@ -9,10 +9,14 @@ namespace GriB.Common.Models.Print
         public string description { get; set; }
     }
 
-    public class printserverremote
+    public class registerserver
     {
-        public string pskey     { get; set; }
+        public string pskey { get; set; }
+        public int    port  { get; set; }
+    }
+
+    public class printserverremote : registerserver
+    {
         public string ipaddress { get; set; }
-        public int    port      { get; set; }
     }
 }

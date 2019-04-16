@@ -39,4 +39,9 @@ namespace GriB.Web.Http
     {
         public List<employee> Employees { get; set; }
     }
+
+    public class HttpScMessage
+    {
+        public List<sqldb_full> Sc { get; set; }
+    }
 }

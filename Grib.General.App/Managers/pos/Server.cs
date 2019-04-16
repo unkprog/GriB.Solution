@@ -70,5 +70,19 @@ namespace GriB.General.App.Managers.pos
 
             return result;
         }
+
+
+        private const string cmdDbGetAll = @"server\db\[get_all]";
+        public static List<sqldb_full> GetListDatabases(this Query query)
+        {
+            List<sqldb_full> result = new List<sqldb_full>();
+            query.Execute(cmdDbGetAll, sqlParameters: null
+            , action: (values) =>
+            {
+                result.Add(new sqldb_full() { id = (int)values[0], catalog = (string)values[1], user = (string)values[2], pass = (string)values[3], server = (int)values[4], sqlsrv = new sqlsrv() { id = (int)values[4], address = (string)values[5] } });
+            });
+
+            return result;
+        }
     }
 }

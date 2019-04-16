@@ -824,7 +824,7 @@ namespace GriB.Client.App.Controllers
         {
             return TryCatchResponseQuery((query) =>
             {
-                return this.CreateResponse(HttpStatusCode.OK, PrintServer.GetPrintServers(query));
+                return this.CreateResponse(HttpStatusCode.OK, Managers.Editors.PrintServer.GetPrintServers(query));
             });
         }
 
@@ -834,7 +834,7 @@ namespace GriB.Client.App.Controllers
         {
             return TryCatchResponseQuery((query) =>
             {
-                return this.CreateResponse(HttpStatusCode.OK, new { record = PrintServer.GetPrintServer(query, id) });
+                return this.CreateResponse(HttpStatusCode.OK, new { record = Managers.Editors.PrintServer.GetPrintServer(query, id) });
             });
         }
 
@@ -845,7 +845,7 @@ namespace GriB.Client.App.Controllers
             return TryCatchResponseQuery((query) =>
             {
                 Principal principal = (Principal)HttpContext.Current.User;
-                PrintServer.SetPrintServer(query, printserver, principal.Data.User.id);
+                Managers.Editors.PrintServer.SetPrintServer(query, printserver, principal.Data.User.id);
                 return this.CreateResponse(HttpStatusCode.OK, "Ok");
             });
         }
@@ -856,7 +856,7 @@ namespace GriB.Client.App.Controllers
         {
             return TryCatchResponseQuery((query) =>
             {
-                PrintServer.DelPrintServer(query, id, ((Principal)HttpContext.Current.User).Data.User.id);
+                Managers.Editors.PrintServer.DelPrintServer(query, id, ((Principal)HttpContext.Current.User).Data.User.id);
                 return this.CreateResponse(HttpStatusCode.OK, "Ok");
             });
         }

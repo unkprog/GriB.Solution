@@ -6,6 +6,16 @@
         public string catalog { get; set; }
     }
 
+    public class sqldb_full : sqldb
+    {
+        public sqldb_full()
+        {
+            sqlsrv = new sqlsrv();
+        }
+
+        public sqlsrv sqlsrv { get; set; }
+}
+
     public static class sqldb_ext
     {
         public static string ConnectionString(this sqldb _sqldb, sqlsrv _sqlsrv)
@@ -17,6 +27,11 @@
 
             return result;
 
+        }
+
+        public static string ConnectionString(this sqldb_full _sqldb)
+        {
+            return ConnectionString(_sqldb, _sqldb.sqlsrv);
         }
     }
 }

@@ -173,5 +173,20 @@ namespace GriB.General.App.Controllers
             });
         }
         #endregion
+
+
+        #region settings
+        [HttpGet]
+        [AllowAnonymous]
+        [ActionName("sc")]
+        public HttpResponseMessage SC()
+        {
+            return TryCatchResponse(() =>
+            {
+                List<sqldb_full> result = Managers.pos.Server.GetListDatabases(_query);
+                return this.CreateResponse(HttpStatusCode.OK, new HttpScMessage() { Sc = result });
+            });
+        }
+        #endregion settings
     }
 }

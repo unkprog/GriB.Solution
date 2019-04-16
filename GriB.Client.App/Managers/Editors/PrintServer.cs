@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Data.SqlClient;
 using GriB.Common.Sql;
-using GriB.Client.App.Models.Editor;
 using GriB.Common.Models.Print;
 
 namespace GriB.Client.App.Managers.Editors
@@ -11,10 +10,10 @@ namespace GriB.Client.App.Managers.Editors
         private static printserver readFromValues(object[] values) => new printserver() { id = (int)values[0], name = (string)values[1], pskey = (string)values[2], description = (string)values[3] };
 
         private const string cmdGet = @"Editor\PrintServer\[get]";
-        public static List<printserver> GetPrintServers(this Query query)
+        public static List<printserver> GetPrintServers(this Query query, string pskey = "")
         {
             List<printserver> result = new List<printserver>();
-            query.Execute(cmdGet, new SqlParameter[] { new SqlParameter() { ParameterName = "@id", Value = 0 }, new SqlParameter() { ParameterName = "@name", Value = string.Empty } }
+            query.Execute(cmdGet, new SqlParameter[] { new SqlParameter() { ParameterName = "@id", Value = 0 }, new SqlParameter() { ParameterName = "@name", Value = string.Empty }, new SqlParameter() { ParameterName = "@pskey", Value = pskey } }
             , (values) =>
             {
                 result.Add(readFromValues(values));

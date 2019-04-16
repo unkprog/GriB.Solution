@@ -145,7 +145,7 @@ namespace GriB.PrintServer.Windows
                 task.Wait();
                 OnEndPrint?.Invoke(this, fileName);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 //System.Diagnostics.Debug.WriteLine("DoWorkPrintDocument failed: " + ex.Message);
                 OnErrorPrint?.Invoke(this, fileName);

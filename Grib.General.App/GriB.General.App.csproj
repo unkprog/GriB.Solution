@@ -136,6 +136,7 @@
     <Content Include="Content\js\lib\jquery-3.3.1.min.js" />
     <Content Include="Content\Test.html" />
     <Content Include="Global.asax" />
+    <Content Include="Scripts\Query\server\db\[get_all].sql" />
     <Content Include="Scripts\Query\server\db\[get].sql" />
     <Content Include="Scripts\Query\server\db\[ins].sql" />
     <Content Include="Scripts\Query\server\[get].sql" />

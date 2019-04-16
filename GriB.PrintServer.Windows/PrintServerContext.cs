@@ -14,26 +14,25 @@ namespace GriB.PrintServer.Windows
 {
     public class PrintServerContext : ApplicationContext
     {
-        NotifyIcon notifyIcon = new NotifyIcon();
-        ConfigForm configWindow = new ConfigForm();
-
-
-        public static Image GetAppImage(string imageName)
-        {
-            Stream stream = Assembly.GetEntryAssembly().GetManifestResourceStream(string.Format(Properties.Constants.sourceAppImage, imageName));
-            return (stream == null ? null : new Bitmap(stream));
-        }
+        NotifyIcon _notifyIcon = new NotifyIcon();
+        ConfigForm _configWindow = new ConfigForm();
 
         EventHandler showConfigHandler;
-        ToolStripItem toolStripItemStartStop = null;
-        Bitmap printActiveBitmap = GetAppImage("print_active") as Bitmap;
-        Bitmap printDisableBitmap = GetAppImage("print_disabled") as Bitmap;
-        Bitmap printActiveWBitmap = GetAppImage("print_active_w") as Bitmap;
-        Bitmap printDisableWBitmap = GetAppImage("print_disabled_w") as Bitmap;
+        ToolStripItem _toolStripItemStartStop = null;
+        Bitmap _printActiveBitmap = GetAppImage("print_active") as Bitmap;
+        Bitmap _printDisableBitmap = GetAppImage("print_disabled") as Bitmap;
+        Bitmap _printActiveWBitmap = GetAppImage("print_active_w") as Bitmap;
+        Bitmap _printDisableWBitmap = GetAppImage("print_disabled_w") as Bitmap;
         Server _server;
         Printer _printer;
         BackgroundWorker _bwPrintServiceCheck;
         BackgroundWorker _bwPrintFilesCheck;
+
+        internal static Image GetAppImage(string imageName)
+        {
+            Stream stream = Assembly.GetEntryAssembly().GetManifestResourceStream(string.Format(Constants.sourceAppImage, imageName));
+            return (stream == null ? null : new Bitmap(stream));
+        }
 
         public PrintServerContext()
         {
@@ -42,16 +41,16 @@ namespace GriB.PrintServer.Windows
             notifyContextMenu.Items.Add("Настройки", GetAppImage("settings"), showConfigHandler);
             notifyContextMenu.Items.Add(new ToolStripSeparator());
 
-            toolStripItemStartStop = notifyContextMenu.Items.Add("Старт", printActiveBitmap, new EventHandler(StartStopService));
-            toolStripItemStartStop.Enabled = false;
+            _toolStripItemStartStop = notifyContextMenu.Items.Add("Старт", _printActiveBitmap, new EventHandler(StartStopService));
+            _toolStripItemStartStop.Enabled = false;
 
             notifyContextMenu.Items.Add(new ToolStripSeparator());
             notifyContextMenu.Items.Add("Выход", GetAppImage("exit"), new EventHandler(Exit));
 
-            notifyIcon.Icon = Icon.FromHandle(printDisableWBitmap.GetHicon());
-            notifyIcon.DoubleClick += showConfigHandler;
-            notifyIcon.ContextMenuStrip = notifyContextMenu;
-            notifyIcon.Visible = true;
+            _notifyIcon.Icon = Icon.FromHandle(_printDisableWBitmap.GetHicon());
+            _notifyIcon.DoubleClick += showConfigHandler;
+            _notifyIcon.ContextMenuStrip = notifyContextMenu;
+            _notifyIcon.Visible = true;
 
             _bwPrintServiceCheck = new BackgroundWorker();
             _bwPrintServiceCheck.WorkerReportsProgress = true;
@@ -67,21 +66,33 @@ namespace GriB.PrintServer.Windows
             _printer = new Printer();
             _printer.OnEndPrint += _printer_OnEndPrint;
             _printer.OnErrorPrint += _printer_OnErrorPrint;
+
+            _configWindow.FormClosed += ConfigWindow_FormClosed;
             StartService();
+        }
+
+        private void ConfigWindow_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            if (_configWindow.DialogResult == DialogResult.OK)
+                StopService(true);
         }
 
         void ShowConfig(object sender, EventArgs e)
         {
-            if (configWindow.Visible)
-                configWindow.Focus();
+            if (_configWindow.Visible)
+                _configWindow.Focus();
             else
-                configWindow.ShowDialog();
+            {
+                _configWindow.ReadSettings();
+                _configWindow.ShowDialog();
+            }
         }
 
         private void StartStopService(object sender, EventArgs e)
         {
-            toolStripItemStartStop.Enabled = false;
-            if (toolStripItemStartStop.Text == "Старт")
+            _isRestart = false;
+            _toolStripItemStartStop.Enabled = false;
+            if (_toolStripItemStartStop.Text == "Старт")
                 StartService();
             else
                 StopService();
@@ -91,23 +102,25 @@ namespace GriB.PrintServer.Windows
         {
             if (isRuning)
             {
-                if (toolStripItemStartStop.Text != "Стоп")
+                if (_toolStripItemStartStop.Text != "Стоп")
                 {
-                    toolStripItemStartStop.Text = "Стоп";
-                    toolStripItemStartStop.Image = printDisableBitmap;
-                    notifyIcon.Icon = Icon.FromHandle(printActiveWBitmap.GetHicon());
+                    _toolStripItemStartStop.Text = "Стоп";
+                    _toolStripItemStartStop.Image = _printDisableBitmap;
+                    _notifyIcon.Icon = Icon.FromHandle(_printActiveWBitmap.GetHicon());
                 }
             }
             else
             {
-                if (toolStripItemStartStop.Text != "Старт")
+                if (_toolStripItemStartStop.Text != "Старт")
                 {
-                    toolStripItemStartStop.Text = "Старт";
-                    toolStripItemStartStop.Image = printActiveBitmap;
-                    notifyIcon.Icon = Icon.FromHandle(printDisableWBitmap.GetHicon());
+                    _toolStripItemStartStop.Text = "Старт";
+                    _toolStripItemStartStop.Image = _printActiveBitmap;
+                    _notifyIcon.Icon = Icon.FromHandle(_printDisableWBitmap.GetHicon());
+                    if (_isRestart)
+                        StartStopService(null, null);
                 }
             }
-            toolStripItemStartStop.Enabled = true;
+            _toolStripItemStartStop.Enabled = true;
         }
 
         void Exit(object sender, EventArgs e)
@@ -118,7 +131,7 @@ namespace GriB.PrintServer.Windows
                 _printer.OnErrorPrint -= _printer_OnErrorPrint;
                 _printer.OnEndPrint -= _printer_OnEndPrint;
             }
-            notifyIcon.Visible = false;
+            _notifyIcon.Visible = false;
             Application.Exit();
         }
 
@@ -129,8 +142,10 @@ namespace GriB.PrintServer.Windows
             _server.Start();
         }
 
-        private void StopService()
+        private bool _isRestart = false;
+        private void StopService(bool isRestart = false)
         {
+            _isRestart = isRestart;
             if (_server != null)
             {
                 _server.Stop();

@@ -398,6 +398,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="App_Start\WebCacheConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\DocumentController.cs" />
@@ -672,6 +673,10 @@
     <ProjectReference Include="..\GriB.Common\GriB.Common.csproj">
       <Project>{78f0ccb1-c344-4be7-83c6-ee75df3efd4c}</Project>
       <Name>GriB.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\GriB.PrintServer.Windows\GriB.PrintServer.Windows.csproj">
+      <Project>{C9967459-98B5-4D86-842A-F72D490B21F6}</Project>
+      <Name>GriB.PrintServer.Windows</Name>
     </ProjectReference>
     <ProjectReference Include="..\GriB.Web\GriB.Web.csproj">
       <Project>{3e00a39a-bbc4-4b43-8a5d-d2583f974ff4}</Project>
