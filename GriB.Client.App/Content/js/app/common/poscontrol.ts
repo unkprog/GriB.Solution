@@ -4,7 +4,7 @@ import utils = require('app/common/utils');
 export namespace POSControl {
 
     export class CheckViewControl implements Interfaces.Control.ICheckViewControl {
-
+        
         private checkView: JQuery;
         private checkViewPos: JQuery;
 
@@ -21,6 +21,10 @@ export namespace POSControl {
         public DestroyView() {
            
         }
+
+        private printService: Interfaces.IPrintService;
+        public get PrintService(): Interfaces.IPrintService { return this.printService; }
+        public set PrintService(service: Interfaces.IPrintService) { this.printService = service; }
 
         public get View(): JQuery {
             return this.checkView;
@@ -75,7 +79,19 @@ export namespace POSControl {
         }
 
 
-        public Print() {
+        public Print(pskey: string) {
+            let self = this;
+            if (this.printService) {
+                this.printService.PrintCheck(pskey, self.checkView.html()
+                    , (responseData) => { }
+                    , (errorData) => { self.PrintThis(); }
+                );
+            }
+            else
+                this.PrintThis();
+        }
+
+        private PrintThis() {
             this.checkView.printThis({
                 pageTitle: "PRINT CHECK",
                 importCSS: true,

@@ -9,6 +9,7 @@ using System.ComponentModel;
 using GriB.PrintServer.Windows.Common;
 using GriB.PrintServer.Windows.Properties;
 using System.Collections.Generic;
+using GriB.PrintServer.Windows.Controllers;
 
 namespace GriB.PrintServer.Windows
 {
@@ -108,6 +109,11 @@ namespace GriB.PrintServer.Windows
                     _toolStripItemStartStop.Image = _printDisableBitmap;
                     _notifyIcon.Icon = Icon.FromHandle(_printActiveWBitmap.GetHicon());
                 }
+
+                if (StartController.remoteParams != null)
+                    _notifyIcon.Text = StartController.remoteParams.ipaddress;
+                else
+                    _notifyIcon.Text = "Нет подключения";
             }
             else
             {

@@ -34,14 +34,21 @@ export namespace Services {
                 crossDomain: options.CrossDomain,
                 data: options.RequestData,
                 success: function (responseData, textStatus, jqXHR) {
-                    if (responseData.error)
-                        self.handleError(responseData.error);
+                    if (responseData.error) {
+                        if (options.Error)
+                            options.Error(responseData.error);
+                        else
+                            self.handleError(responseData.error);
+                    }
                     else if (options.Callback)
                         options.Callback(responseData);
                     //_app.HideLoading();
                 },
                 error: function (e, textStatus, errorThrown) {
-                    self.handleError(e);
+                    if (options.Error)
+                        options.Error(e);
+                    else
+                        self.handleError(e);
                 }
             });
         }
@@ -58,14 +65,21 @@ export namespace Services {
                 contentType: "application/json",
                 data: options.RequestData,
                 success: function (responseData, textStatus, jqXHR) {
-                    if (responseData.error)
-                        self.handleError(responseData.error);
+                    if (responseData.error) {
+                        if (options.Error)
+                            options.Error(responseData.error);
+                        else
+                            self.handleError(responseData.error);
+                    }
                     else if (options.Callback)
                         options.Callback(responseData);
                    // _app.HideLoading();
                 },
                 error: function (e, textStatus, errorThrown) {
-                    self.handleError(e);
+                    if (options.Error)
+                        options.Error(e);
+                    else
+                        self.handleError(e);
                 }
             });
         }

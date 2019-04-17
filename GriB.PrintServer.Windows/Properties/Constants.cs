@@ -7,5 +7,14 @@
 
         internal const string folderDocuments = "Documents";
         internal const string folderChecks = "Checks";
+
+        internal const int LOCALSERVER = 1;
+        internal static string CloudServer
+        {
+            get
+            {
+                return (LOCALSERVER == 1 ? "http://localhost:50970" : Settings.Default.CloudServer);
+            }
+        }
     }
 }

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -21,7 +20,7 @@ namespace GriB.Web.Http
             logger.IsLogging = true;
         }
 
-        public string PhysicalApplicationPath => HttpContext.Current.Request.PhysicalApplicationPath;
+        public string PhysicalApplicationPath => HttpContext.Current?.Request?.PhysicalApplicationPath;
 
         protected Query CreateQuery(string connectionString, string path)
         {

@@ -8,6 +8,7 @@ using GriB.Common.Diagnostics;
 using GriB.Common.Models.Print;
 using GriB.PrintServer.Windows.Models;
 using GriB.Web.Http;
+using Newtonsoft.Json.Linq;
 
 namespace GriB.Client.App.Controllers
 {
@@ -61,21 +62,22 @@ namespace GriB.Client.App.Controllers
 
         [HttpPost]
         [ActionName("printcheck")]
-        public HttpResponseMessage PrintCheck(string pskey, string document)
+        public HttpResponseMessage PrintCheck(printserverdata data)
         {
-            printserverremote psr = GetServerRemote(pskey, logger);
-            string _serviceAddress = string.Concat("http://", psr.ipaddress, ":", psr.port, "/print/printCheck");
-            PrintCheckModel printCheck = new PrintCheckModel() { dataPrint = document };
+            HttpResponseMessage result = null;
+            printserverremote psr = GetServerRemote(data?.pskey, logger);
+            string _serviceAddress = string.Concat("http://", psr.ipaddress, ":", psr.port, "/print/printcheck");
             try
             {
-
+                result = Common.Net.Json.Post<HttpResponseMessage, printserverdata>(_serviceAddress, "/print/printcheck", data);
             }
             catch(Exception ex)
             {
-
+                logger?.WriteError(ex);
+                result = CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message);
             }
             
-            return CreateResponse(HttpStatusCode.OK);
+            return result;
         }
     }
 }

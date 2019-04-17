@@ -16,6 +16,12 @@ define(["require", "exports", "app/common/variables", "app/common/utils"], funct
             };
             CheckViewControl.prototype.DestroyView = function () {
             };
+            Object.defineProperty(CheckViewControl.prototype, "PrintService", {
+                get: function () { return this.printService; },
+                set: function (service) { this.printService = service; },
+                enumerable: true,
+                configurable: true
+            });
             Object.defineProperty(CheckViewControl.prototype, "View", {
                 get: function () {
                     return this.checkView;
@@ -65,7 +71,15 @@ define(["require", "exports", "app/common/variables", "app/common/utils"], funct
                 }
                 this.checkViewPos.html(html);
             };
-            CheckViewControl.prototype.Print = function () {
+            CheckViewControl.prototype.Print = function (pskey) {
+                var self = this;
+                if (this.printService) {
+                    this.printService.PrintCheck(pskey, self.checkView.html(), function (responseData) { }, function (errorData) { self.PrintThis(); });
+                }
+                else
+                    this.PrintThis();
+            };
+            CheckViewControl.prototype.PrintThis = function () {
                 this.checkView.printThis({
                     pageTitle: "PRINT CHECK",
                     importCSS: true,

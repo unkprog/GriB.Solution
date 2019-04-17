@@ -4,13 +4,15 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Web.Http;
 using GriB.Common.Models.Print;
+using GriB.PrintServer.Windows.Properties;
 
 namespace GriB.PrintServer.Windows.Controllers
 {
     public class StartController : ApiController
     {
+       
         static int _counter = 0;
-        static printserverremote remoteParams = null;
+        internal static printserverremote remoteParams = null;
         
         public HttpResponseMessage Get()
         {
@@ -29,8 +31,9 @@ namespace GriB.PrintServer.Windows.Controllers
                 _counter = 0; 
                 try
                 {
-                    registerserver registerServer = new registerserver() { pskey = Properties.Settings.Default.pskey, port = Properties.Settings.Default.ServicePort };
-                    remoteParams = GriB.Common.Net.Json.Post<printserverremote, registerserver>(Properties.Settings.Default.CloudServer, "/print/registerserver", registerServer);
+                    registerserver registerServerData = new registerserver() { pskey = Settings.Default.pskey, port = Settings.Default.ServicePort };
+                    remoteParams = GriB.Common.Net.Json.Post<printserverremote, registerserver>(Constants.CloudServer, "/api/print/registerserver", registerServerData);
+                    //JObject response = GriB.Common.Net.Json.Post<JObject, registerserver>(Constants.CloudServer, "/api/print/registerserver", registerServerData);
                     //result = data.ToString();
                 }
                 catch (Exception)

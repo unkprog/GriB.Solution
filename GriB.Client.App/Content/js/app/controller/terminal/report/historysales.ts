@@ -5,6 +5,7 @@ import ctrl = require('app/common/basecontrol');
 import posctrl = require('app/common/poscontrol');
 import svcReport = require('app/services/reportsservice');
 import svcTerminal = require('app/services/posterminalservice');
+import svcPrint = require('app/services/printservice');
 
 export namespace Controller.Terminal.Report {
     export class HistorySales extends base.Controller.BaseEditor implements Interfaces.IControllerHistorySales {
@@ -76,6 +77,7 @@ export namespace Controller.Terminal.Report {
 
             controller.checkViewContainer = view.find("#historysales-view-check");
             controller.checkViewControl = new posctrl.POSControl.CheckViewControl();
+            controller.checkViewControl.PrintService = new svcPrint.Services.PrintService(); 
             controller.checkViewContainer.append(controller.checkViewControl.InitView());
 
             return super.ViewInit(view);
@@ -211,7 +213,7 @@ export namespace Controller.Terminal.Report {
         }
 
         public Print(): void {
-            this.checkViewControl.Print();
+            this.checkViewControl.Print('5b9ea524be974c6a8bcd5bef898250dd');
         }
     }
 }

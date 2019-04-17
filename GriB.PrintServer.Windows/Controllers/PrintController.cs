@@ -8,12 +8,16 @@ using System.Web.Http;
 using GriB.Web.Http;
 using GriB.PrintServer.Windows.Common;
 using GriB.PrintServer.Windows.Models;
+using GriB.Common.Models.Print;
+using System.Reflection;
 
 namespace GriB.PrintServer.Windows.Controllers
 {
     //[RoutePrefix("api")]
     public class PrintController : BaseApiController
     {
+        public new string PhysicalApplicationPath => Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+
         [ActionName("printers")]
         public HttpResponseMessage GetPrinters()
         {
@@ -27,8 +31,8 @@ namespace GriB.PrintServer.Windows.Controllers
         }
 
         [HttpPost]
-        [ActionName("PrintCheck")]
-        public HttpResponseMessage PrintCheck(PrintCheckModel printCheck)
+        [ActionName("printcheck")]
+        public HttpResponseMessage PrintCheck(printserverdata data)
         {
             HttpResponseMessage response = this.CreateResponse(HttpStatusCode.OK);
             string printFile = string.Empty;
@@ -41,7 +45,7 @@ namespace GriB.PrintServer.Windows.Controllers
                     {
                         using (StreamWriter writer = new StreamWriter(fs, Encoding.UTF8))
                         {
-                            writer.Write(printCheck.dataPrint);
+                            writer.Write(data.document);
                         }
                     }
                     response = CreateResponse(HttpStatusCode.OK, new { printFile = FileHelper.RelativeFileName(printFile) });

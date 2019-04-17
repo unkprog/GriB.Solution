@@ -95,6 +95,6 @@
     }
 
     export interface ICheckViewControl extends IControl {
-        POSCheck: Interfaces.Model.IPOSCheck;
+        PrintService: Interfaces.IPrintService;
     }
 }

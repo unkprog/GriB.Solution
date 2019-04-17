@@ -11,7 +11,7 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-define(["require", "exports", "app/common/variables", "app/common/basecontroller", "app/common/basecontrol", "app/common/poscontrol", "app/services/reportsservice", "app/services/posterminalservice"], function (require, exports, vars, base, ctrl, posctrl, svcReport, svcTerminal) {
+define(["require", "exports", "app/common/variables", "app/common/basecontroller", "app/common/basecontrol", "app/common/poscontrol", "app/services/reportsservice", "app/services/posterminalservice", "app/services/printservice"], function (require, exports, vars, base, ctrl, posctrl, svcReport, svcTerminal, svcPrint) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var Controller;
@@ -92,6 +92,7 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
                         view.find("#historysales-view-table").append(controller.tableSalesControl.InitView());
                         controller.checkViewContainer = view.find("#historysales-view-check");
                         controller.checkViewControl = new posctrl.POSControl.CheckViewControl();
+                        controller.checkViewControl.PrintService = new svcPrint.Services.PrintService();
                         controller.checkViewContainer.append(controller.checkViewControl.InitView());
                         return _super.prototype.ViewInit.call(this, view);
                     };
@@ -203,7 +204,7 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
                         //this.checkViewControl.Setup();
                     };
                     HistorySales.prototype.Print = function () {
-                        this.checkViewControl.Print();
+                        this.checkViewControl.Print('5b9ea524be974c6a8bcd5bef898250dd');
                     };
                     return HistorySales;
                 }(base.Controller.BaseEditor));

@@ -19,4 +19,11 @@ namespace GriB.Common.Models.Print
     {
         public string ipaddress { get; set; }
     }
+
+
+    public class printserverdata
+    {
+        public string pskey    { get; set; }
+        public string document { get; set; }
+    }
 }
