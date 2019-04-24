@@ -252,6 +252,7 @@ define({
     "label$print": "Печать",
     "label$printers": "Принтеры",
     "label$printer": "Принтер",
+    "label$printsettings": "Настройки печати",
     "label$papersize": "Размер бумаги",
     "label$header": "Верхний колонтитул",
     "label$footer": "Нижний колонтитул",

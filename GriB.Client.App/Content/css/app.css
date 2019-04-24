@@ -34,6 +34,9 @@ body, html {
 .padding-0001em {
   padding: 0 1em; }
 
+.padding-0em {
+  padding: 0; }
+
 #app-content, #main-view-content, .main-view-content-modal {
   overflow-y: auto;
   overflow-x: hidden; }

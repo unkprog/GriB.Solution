@@ -21,48 +21,60 @@
                     <label for="editor-view-printer-name" data-bind="text:labelName"></label>
                 </div>
             </div>
-
+        </div>
+        <div class="row row-inputs">
             <div id="editor-view-printer-printserver-row" class="input-field col s12 m6 l6 xl4">
             </div>
             <div id="editor-view-printer-salepoint-row" class="input-field col s12 m6 l6 xl4">
             </div>
         </div>
-        <div class="row row-inputs">
-            <div class="input-field col s12 m6 l4 xl3">
-                <select id="editor-view-printer-labelsize" class="validate" data-bind="value:editModel.labelsize">
-                    <option value="0" data-bind="text:label58"></option>
-                    <option value="1" data-bind="text:label80"></option>
-                </select>
-                <label for="ditor-view-printer-labelsize" data-bind="text:labelSize"></label>
-            </div>
-        </div>
-        <div class="row row-inputs">
-            <div id="editor-view-printer-collogo" class="col s12 m4 l4 xl2">
-                <div class="row" style="margin-bottom: 0;">
-                    <div id="editor-view-printer-addphoto" class="col s12 m12 l12 xl12 center-align">
-                        <label for="editor-view-printer-photo" data-bind="text:labelLogo"></label>
-                        <img id="editor-view-printer-photo" class="card-image" />
-                        <input type="file" id="editor-view-printer-image-input" style="display:none" />
-                    </div>
 
-                </div>
-            </div>
-            <div class="col s12 m12 l12 xl12">
-                <div class="input-field">
-                    <textarea id="editor-view-printer-header" class="materialize-textarea" type="text" data-length="2000" data-bind="value:editModel.header"></textarea>
-                    <label for="editor-view-printer-header" data-bind="text:labelCheckHeader"></label>
-                </div>
-            </div>
-            <div class="col s12 m12 l12 xl12">
-                <div class="input-field">
-                    <textarea id="editor-view-printer-footer" class="materialize-textarea" type="text" data-length="2000" data-bind="value:editModel.footer"></textarea>
-                    <label for="editor-view-printer-footer" data-bind="text:labelCheckFooter"></label>
-                </div>
-            </div>
+        <div class="section">
+            <h5 data-bind="text:LabelPrintSettings"></h5>
         </div>
-        <div class="row row-inputs">
-            <div class="col s12 m12 l12 xl12">
-                <div id="editor-view-printer-check"></div>
+
+        <div class="row row-inputs padding-0em">
+            <div class="input-field col s12 m6 l6 xl6">
+                <div class="row row-inputs">
+                    <div class="input-field col s12 m6 l6 xl6">
+                        <select id="editor-view-printer-labelsize" class="validate" data-bind="value:editModel.labelsize">
+                            <option value="0" data-bind="text:label58"></option>
+                            <option value="1" data-bind="text:label80"></option>
+                        </select>
+                        <label for="ditor-view-printer-labelsize" data-bind="text:labelSize"></label>
+                    </div>
+                </div>
+                <div class="row row-inputs">
+                    <div id="editor-view-printer-collogo" class="col s12 m8 l8 xl4">
+                        <div class="row" style="margin-bottom: 0;">
+                            <div id="editor-view-printer-addphoto" class="col s12 m12 l12 xl12 center-align">
+                                <label for="editor-view-printer-photo" data-bind="text:labelLogo"></label>
+                                <img id="editor-view-printer-photo" class="card-image" />
+                                <input type="file" id="editor-view-printer-image-input" style="display:none" />
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="col s12 m12 l12 xl12">
+                        <div class="input-field">
+                            <textarea id="editor-view-printer-header" class="materialize-textarea" type="text" data-length="2000" data-bind="value:editModel.header"></textarea>
+                            <label for="editor-view-printer-header" data-bind="text:labelCheckHeader"></label>
+                        </div>
+                    </div>
+                    <div class="col s12 m12 l12 xl12">
+                        <div class="input-field">
+                            <textarea id="editor-view-printer-footer" class="materialize-textarea" type="text" data-length="2000" data-bind="value:editModel.footer"></textarea>
+                            <label for="editor-view-printer-footer" data-bind="text:labelCheckFooter"></label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="input-field col s12 m6 l6 xl6">
+                <div class="row row-inputs">
+                    <div class="col s12 m12 l12 xl12">
+                        <div id="editor-view-printer-check"></div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

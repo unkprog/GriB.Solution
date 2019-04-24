@@ -19,6 +19,7 @@ export namespace Controller.Setting.Editor {
                 "Header": vars._statres("label$printer"),
                 "editModel": {},
                 "labelName": vars._statres("label$name"),
+                "LabelPrintSettings": vars._statres("label$printsettings"),
                 "labelSize": vars._statres("label$papersize"),
                 "label58" : "58",
                 "label80": "80",
@@ -41,6 +42,7 @@ export namespace Controller.Setting.Editor {
         private salepointControl: ctrl.Control.ReferenceFieldControl;
 
         private controlSize: JQuery;
+        private controlAddPhoto: JQuery;
         private imgDialog: any;
         private controlPhoto: JQuery;
         private controlHeader: JQuery;
@@ -61,8 +63,9 @@ export namespace Controller.Setting.Editor {
             controller.controlHeader = view.find("#editor-view-printer-header"); controller.controlHeader.characterCounter();
             controller.controlFooter = view.find("#editor-view-printer-footer"); controller.controlFooter.characterCounter();
 
-            controller.imgDialog = view.find("#editor-view-productmap-image-input");
-            controller.controlPhoto = view.find("#editor-view-productmap-photo");
+            controller.controlAddPhoto = view.find("#editor-view-printer-addphoto");
+            controller.imgDialog = view.find("#editor-view-printer-image-input");
+            controller.controlPhoto = view.find("#editor-view-printer-photo");
 
             controller.checkViewContainer = view.find("#editor-view-printer-check");
             controller.checkViewControl = new posctrl.POSControl.CheckViewControl();
@@ -97,25 +100,28 @@ export namespace Controller.Setting.Editor {
             super.createEvents();
             if (this.printServerControl) this.printServerControl.createEvents();
             if (this.salepointControl) this.salepointControl.createEvents();
-            this.AddPhotoButtonClick = this.createTouchClickEvent("editor-view-printer-addphoto", this.addPhotoButtonClick);
+            this.AddPhotoButtonClick = this.createTouchClickEvent(this.controlAddPhoto, this.addPhotoButtonClick);
+
+            let onUpload = $.proxy(this.uploudImageClick, this);
+            this.imgDialog.bind("change", onUpload);
 
             this.Model.bind("change", $.proxy(this.changeModel, this));
         }
 
         public destroyEvents(): void {
             this.Model.unbind("change");
-
-            this.destroyTouchClickEvent("editor-view-printer-addphoto", this.AddPhotoButtonClick);
+            this.imgDialog.unbind();
+            this.destroyTouchClickEvent(this.controlAddPhoto, this.AddPhotoButtonClick);
             if (this.salepointControl) this.salepointControl.destroyEvents();
             if (this.printServerControl) this.printServerControl.destroyEvents();
             super.destroyEvents();
         }
 
         private changeModel(e: any): void {
-            if (e.field === "editModel.labelsize") {
-                let model: Interfaces.Model.IPrinter = this.EditorModel;
-                this.checkViewControl.LabelSize = +model.labelsize;
-            }
+            //if (e.field === "editModel.labelsize") {
+            //    this.checkViewControl.Printer = this.EditorModel;
+            //}
+            this.checkViewControl.Printer = this.EditorModel;
         }
 
         private setupCheckView() {
@@ -128,7 +134,8 @@ export namespace Controller.Setting.Editor {
             for (let i = 1, icount = 11; i < icount; i++) {
                 checkData.positions.push({ index: i, product: product, quantity: 1, price: 50, sum: 50 });
             }
-            this.checkViewControl.LabelSize = +this.EditorModel.labelsize;
+            //this.checkViewControl.LabelSize = +this.EditorModel.labelsize;
+            this.checkViewControl.Printer = this.EditorModel;
             this.checkViewControl.POSCheck = checkData;
         }
 
@@ -157,7 +164,7 @@ export namespace Controller.Setting.Editor {
 
         public AddPhotoButtonClick: { (e: any): void; };
         private addPhotoButtonClick(e) {
-            $("#editor-view-productmap-image-input").trigger("click");
+            $("#editor-view-printer-image-input").trigger("click");
         }
 
         private uploudImageClick(e) {
@@ -174,7 +181,7 @@ export namespace Controller.Setting.Editor {
                 dataUpload.append("file", files[0]);
 
                 controller.Service.UploadImage(dataUpload, (responseData: any) => {
-                    controller.Model.set("editModel.photo", responseData);
+                    controller.Model.set("editModel.logo", responseData);
                     if (this.EditorModel.logo)
                         this.controlPhoto.css("backgroundImage", "url(" + controller.EditorModel.logo + ")");
                 });

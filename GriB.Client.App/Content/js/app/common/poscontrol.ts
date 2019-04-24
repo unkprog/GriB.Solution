@@ -10,7 +10,7 @@ export namespace POSControl {
         private checkViewPos: JQuery;
 
         public InitView(): JQuery {
-            this.labelSize = 1;
+            
             this.checkContainer = $('<div class="check-container"></div>');
             this.checkView = $('<div class="check-view"></div>');
             this.checkViewPos = $('<div id="check-view-positions"></div>');
@@ -42,21 +42,26 @@ export namespace POSControl {
             this.updateView();
         }
 
-        private labelSize: number;
         public get LabelSize(): number {
-            return this.labelSize;
+            return (this.printer ? +this.printer.labelsize : 1);
         }
 
-        public set LabelSize(value: number) {
-            this.labelSize = value;
+        private printer: Interfaces.Model.IPrinter;
+        public get Printer(): Interfaces.Model.IPrinter {
+            return this.printer;
+        }
+
+        public set Printer(value: Interfaces.Model.IPrinter) {
+            this.printer = value;
             this.updateView();
         }
 
         private updateView() {
             let html: string = '';
             let sum: number = 0;
-
-            if (this.labelSize === 0) {
+            let classSize: string = ' size80';
+            if (this.LabelSize === 0) {
+                classSize = ' size58';
                 this.checkContainer.removeClass('size80').addClass('size58');
                 this.checkView.removeClass('size80').addClass('size58');
                 this.checkViewPos.removeClass('size80').addClass('size58');
@@ -67,6 +72,14 @@ export namespace POSControl {
                 this.checkViewPos.removeClass('size58').addClass('size80');
             }
 
+            if (this.printer && utils.isNullOrEmpty(this.printer.logo) === false)
+                html += '<img style="width:100%;" src = "' + this.printer.logo + '">';
+
+            if (this.printer && utils.isNullOrEmpty(this.printer.header) === false)
+                html += '<span class="truncate-print check-view-row center-print">' + this.printer.header.replace('\n', '<br />') + '</span>';
+
+            if (this.printer && this.printer.salepoint && utils.isNullOrEmpty(this.printer.salepoint.name) === false)
+                html += '<span class="truncate-print check-view-row center-print">' + this.printer.salepoint.name.replace('\n', '<br />') + '</span>';
 
             if (this.posCheck) {
 
@@ -75,31 +88,35 @@ export namespace POSControl {
                 html += '<div class="check-view-row-delimiter"></div><br/>';
                 //for (let j = 0; j < 10; j++) {
                     for (let i = 0, icount = (this.posCheck.positions && this.posCheck.positions.length ? this.posCheck.positions.length : 0); i < icount; i++) {
-                        html += '<span class="truncate-print check-view-name' + (this.labelSize === 0 ? ' size58' : ' size80') + '">' + this.posCheck.positions[i].product.name + '</span>';
-                        html += '<span class="truncate-print right-print check-view-price' + (this.labelSize === 0 ? ' size58' : ' size80') + '">' + this.posCheck.positions[i].quantity + 'x' + utils.numberToString(this.posCheck.positions[i].price, 2) + '</span><br/>';
+                        html += '<span class="truncate-print check-view-name' + classSize + '">' + this.posCheck.positions[i].product.name + '</span>';
+                        html += '<span class="truncate-print right-print check-view-price' + classSize + '">' + this.posCheck.positions[i].quantity + 'x' + utils.numberToString(this.posCheck.positions[i].price, 2) + '</span><br/>';
                         sum = sum + (this.posCheck.positions[i].quantity * this.posCheck.positions[i].price);
                     }
                 //}
                 html += '<br/><div class="check-view-row-delimiter"></div>';
-                html += '<span class="truncate-print check-view-total bold' + (this.labelSize === 0 ? ' size58' : ' size80') + '">' + vars._statres("label$sum") + '</span>';
-                html += '<span class="truncate-print right-print check-view-total-price' + (this.labelSize === 0 ? ' size58' : ' size80') + '">' + utils.numberToString(sum, 2) + '</span><br/>';
+                html += '<span class="truncate-print check-view-total bold' + classSize + '">' + vars._statres("label$sum") + '</span>';
+                html += '<span class="truncate-print right-print check-view-total-price' + classSize + '">' + utils.numberToString(sum, 2) + '</span><br/>';
 
                 let discountSum: number = (this.posCheck.discount && this.posCheck.discount > 0 ? (this.posCheck.discount / 100.0) : 0) * sum;
                
                 if (this.posCheck.discount && this.posCheck.discount > 0) {
-                    html += '<span class="truncate-print check-view-total bold' + (this.labelSize === 0 ? ' size58' : ' size80') + '">' + vars._statres("label$discount") + ' ' + this.posCheck.discount + '</span>';
+                    html += '<span class="truncate-print check-view-total bold' + classSize + '">' + vars._statres("label$discount") + ' ' + this.posCheck.discount + '</span>';
 
-                    html += '<span class="truncate-print right-print check-view-total-price' + (this.labelSize === 0 ? ' size58' : ' size80') + '">' + this.posCheck.discount + ' %</span><br/>';
-                    html += '<span class="truncate-print check-view-total bold' + (this.labelSize === 0 ? ' size58' : ' size80') + '">' + vars._statres("label$discount") + '</span>';
-                    html += '<span class="truncate-print right-print check-view-total-price' + (this.labelSize === 0 ? ' size58' : ' size80') + '">' + utils.numberToString(discountSum, 2) + '</span><br/>';
+                    html += '<span class="truncate-print right-print check-view-total-price' + classSize + '">' + this.posCheck.discount + ' %</span><br/>';
+                    html += '<span class="truncate-print check-view-total bold' + classSize + '">' + vars._statres("label$discount") + '</span>';
+                    html += '<span class="truncate-print right-print check-view-total-price' + classSize + '">' + utils.numberToString(discountSum, 2) + '</span><br/>';
                 }
                 
-                html += '<span class="truncate-print check-view-total bold' + (this.labelSize === 0 ? ' size58' : ' size80') + '">' + vars._statres("label$total") + '</span>';
-                html += '<span class="truncate-print right-print check-view-total-price' + (this.labelSize === 0 ? ' size58' : ' size80') + '">' + utils.numberToString(sum - discountSum, 2) + '</span><br/>';
-                html += '<span class="truncate-print check-view-total bold' + (this.labelSize === 0 ? ' size58' : ' size80') + '">' + (this.posCheck.ptype == 2 ? vars._statres("label$cash$noin") : vars._statres("label$cash$in")) + '</span>';
-                html += '<span class="truncate-print right-print check-view-total-price' + (this.labelSize === 0 ? ' size58' : ' size80') + '">' + utils.numberToString(sum - discountSum, 2) + '</span><br/>';
+                html += '<span class="truncate-print check-view-total bold' + classSize + '">' + vars._statres("label$total") + '</span>';
+                html += '<span class="truncate-print right-print check-view-total-price' + classSize + '">' + utils.numberToString(sum - discountSum, 2) + '</span><br/>';
+                html += '<span class="truncate-print check-view-total bold' + classSize + '">' + (this.posCheck.ptype == 2 ? vars._statres("label$cash$noin") : vars._statres("label$cash$in")) + '</span>';
+                html += '<span class="truncate-print right-print check-view-total-price' + classSize + '">' + utils.numberToString(sum - discountSum, 2) + '</span><br/>';
 
             }
+
+            if (this.printer && utils.isNullOrEmpty(this.printer.footer) === false)
+                html += '<span class="truncate-print check-view-row center-print">' + this.printer.footer.replace('\n', '<br />') + '</span>';
+
             this.checkViewPos.html(html);
         }
 
