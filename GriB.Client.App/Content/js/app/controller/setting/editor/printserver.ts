@@ -14,7 +14,7 @@ export namespace Controller.Setting.Editor {
 
         protected createModel(): kendo.data.ObservableObject {
             return new kendo.data.ObservableObject({
-                "Header": vars._statres("label$reason"),
+                "Header": vars._statres("label$printserver"),
                 "editModel": {},
                 "labelName": vars._statres("label$name"),
                 "labelKey": vars._statres("label$printserverkey"),

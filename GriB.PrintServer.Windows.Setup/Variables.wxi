@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Include>
+  <?define ProductName="GriB.PrintServer.Windows.Setup" ?>
+  <?define ProductVersion="1.0.0.0" ?>
+  <?define ProductCode="4ae6055f-4b69-43c6-834f-adfde9774cd2"?>
+  <?define UpgradeCode="8edf9dba-b66b-4ff1-8853-17dbcba6f5d0"?>
+  <?define Manufacturer="POS Cloud"?>
+</Include>

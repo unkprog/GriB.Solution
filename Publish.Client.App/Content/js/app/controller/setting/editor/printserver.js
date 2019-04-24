@@ -30,7 +30,7 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                     };
                     PrintServer.prototype.createModel = function () {
                         return new kendo.data.ObservableObject({
-                            "Header": vars._statres("label$reason"),
+                            "Header": vars._statres("label$printserver"),
                             "editModel": {},
                             "labelName": vars._statres("label$name"),
                             "labelKey": vars._statres("label$printserverkey"),

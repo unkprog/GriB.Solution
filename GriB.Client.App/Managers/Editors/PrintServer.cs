@@ -25,7 +25,7 @@ namespace GriB.Client.App.Managers.Editors
         public static printserver GetPrintServer(this Query query, int id)
         {
             printserver result = new printserver() { pskey = System.Guid.NewGuid().ToString().Replace("-", "") };
-            query.Execute(cmdGet, new SqlParameter[] { new SqlParameter() { ParameterName = "@id", Value = id }, new SqlParameter() { ParameterName = "@name", Value = string.Empty } }
+            query.Execute(cmdGet, new SqlParameter[] { new SqlParameter() { ParameterName = "@id", Value = id }, new SqlParameter() { ParameterName = "@name", Value = string.Empty }, new SqlParameter() { ParameterName = "@pskey", Value = string.Empty } }
             , (values) =>
             {
                 result = readFromValues(values);

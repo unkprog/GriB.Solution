@@ -132,6 +132,9 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
                         this._controllerNavigation.ControllerBack(e);
                 }
             };
+            Application.prototype.ResetScroll = function () {
+                this.contentControl.scrollTop(0);
+            };
             Application.prototype.RestoreController = function () {
                 if (this._controllerNavigation === this) {
                     if (this._controllersStack.Current)
@@ -226,7 +229,9 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
                         self._controllersModalStack.Push(options.controller);
                         options.controller.ViewResize({});
                     }
-                    content.scrollTop(0).html(view[0]);
+                    else
+                        self.ResetScroll();
+                    content.html(view[0]);
                     isInit = self._controller.ViewShow(this) && isInit;
                 }
                 finally {

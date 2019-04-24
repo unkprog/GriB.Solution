@@ -1,4 +1,6 @@
-﻿namespace GriB.Client.App.Models.Editor
+﻿using GriB.Common.Models.Print.Editor;
+
+namespace GriB.Client.App.Models.Editor
 {
     public class account : reference
     {

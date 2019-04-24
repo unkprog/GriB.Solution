@@ -163,7 +163,7 @@ export namespace Controller {
         }
 
         protected GetContent(): JQuery {
-            return null;
+            return this._content;
         }
 
         public ViewInit(view): boolean {
@@ -177,6 +177,10 @@ export namespace Controller {
             if (this._controller)
                 this._controller.ViewShow(e);
             return result;
+        }
+
+        public ResetScroll() {
+            this._content.scrollTop(0);
         }
 
         public ViewResize(e) {
@@ -250,7 +254,7 @@ export namespace Controller {
                 try {
                     let view: any = $(options.template);
                     isInit = self._controller.ViewInit(view);
-                    self._content.html("").children().scrollTop(0);
+                    self.ResetScroll();
                     self._content.html(view[0]);
                     isInit = self._controller.ViewShow(self) && isInit;
                     self._controller.ViewResize(self);
@@ -550,7 +554,7 @@ export namespace Controller {
 
             let tbody: JQuery = this.tableBody;
             if (tbody && tbody.length > 0) {
-                tbody.height($(window).height() - tbody.offset().top - (0.2 * parseFloat(getComputedStyle(tbody[0]).fontSize)) - 1);
+                tbody.height($(window).height() - tbody.offset().top - tbody.parent().parent().parent().parent().parent().scrollTop() - (0.2 * parseFloat(getComputedStyle(tbody[0]).fontSize)) - 1);
             }
         }
 

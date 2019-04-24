@@ -1,5 +1,5 @@
 ﻿@page {
-  margin: 15mm; }
+  margin: 5mm; }
 
 .truncate-print {
   display: block;
@@ -19,27 +19,49 @@
 .check-container {
   margin-left: auto;
   margin-right: auto;
-  width: 78mm;
-  padding: 5mm;
   border: 1px solid silver; }
+
+.check-container.size80 {
+  width: 78mm;
+  padding: 5mm; }
+
+.check-container.size58 {
+  width: 57mm;
+  padding: 4mm; }
 
 .check-view {
   font-family: Arial;
-  font-size: 2.8mm;
   font-weight: normal;
-  color: black;
+  color: black; }
+
+.check-view.size80 {
+  font-size: 2.8mm;
   width: 68mm; }
+
+.check-view.size58 {
+  font-size: 2.5mm;
+  width: 50mm; }
 
 .check-view-row-delimiter {
   border-bottom: 1px solid black; }
 
 .check-view-name, .check-view-total {
-  width: 45mm;
   float: left; }
 
+.check-view-name.size80, .check-view-total.size80 {
+  width: 45mm; }
+
+.check-view-name.size58, .check-view-total.size58 {
+  width: 33mm; }
+
 .check-view-price, .check-view-total-price {
-  width: 20mm;
   float: right; }
+
+.check-view-price.size80, .check-view-total-price.size80 {
+  width: 20mm; }
+
+.check-view-price.size58, .check-view-total-price.size58 {
+  width: 15mm; }
 
 .check-view-total {
   text-transform: uppercase;

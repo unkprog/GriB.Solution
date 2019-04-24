@@ -1,28 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
-  <?define ProductName="GriB.PrintServer.Windows.Setup" ?>
-  <?define ProductVersion="1.0.0.0" ?>
-  <?define ProductCode="4ae6055f-4b69-43c6-834f-adfde9774cd2"?>
-  <?define UpgradeCode="8edf9dba-b66b-4ff1-8853-17dbcba6f5d0"?>
-  <?define Manufacturer="POS Cloud"?>
-
+  <?include Variables.wxi?>
   
   <Product Id="$(var.ProductCode)" Name="$(var.ProductName)" Language="1049" Version="$(var.ProductVersion)" Manufacturer="$(var.Manufacturer)" UpgradeCode="$(var.UpgradeCode)">
 		<Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" />
+    <Media Id="1" Cabinet="media1.cab" EmbedCab="yes" />
 
-		<MajorUpgrade DowngradeErrorMessage="A newer version of POS Cloud PrintServer is already installed." />
-		<MediaTemplate />
-
+    <MajorUpgrade DowngradeErrorMessage="A newer version of POS Cloud PrintServer is already installed." />
+    
 		<Feature Id="ProductFeature" Title="GriB.PrintServer.Windows.Setup" Level="1">
 			<ComponentGroupRef Id="ProductComponents" />
 		</Feature>
+
+    <Property Id="WIXUI_INSTALLDIR" Value="INSTALLLOCATION" ></Property>
+    <!--WixVariable Id="WixUILicenseRtf" Overridable="yes" Value="License.rtf"/-->
+    <UIRef Id="WixUI_InstallDir"/>
 	</Product>
 
 	<Fragment>
 		<Directory Id="TARGETDIR" Name="SourceDir">
 			<Directory Id="ProgramFilesFolder">
 				<Directory Id="INSTALLFOLDER" Name="GriB.PrintServer.Windows.Setup" />
-			</Directory>
+        
+      </Directory>
 		</Directory>
 	</Fragment>
 
@@ -31,7 +31,7 @@
 			<!-- TODO: Remove the comments around this Component element and the ComponentRef below in order to add resources to this installer. -->
     
 			<Component Id="ProductComponent">
-        <File Source="$(var.MyApplication.TargetPath)" />
+        <File Id='Calc' DiskId='1' Source='C:\WINDOWS\system32\calc.exe'/>
 			</Component>
 		</ComponentGroup>
 	</Fragment>

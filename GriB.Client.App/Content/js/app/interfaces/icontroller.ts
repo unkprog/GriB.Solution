@@ -48,6 +48,7 @@
         RestoreController(): void;
         OpenController(options: IOpenControllerOptions): void;
         OpenView(options: IOpenViewOptions): void;
+        ResetScroll(): void;
     }
 
     export interface IControllerEditor extends IController {

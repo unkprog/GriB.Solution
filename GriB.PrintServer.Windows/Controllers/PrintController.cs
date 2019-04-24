@@ -7,7 +7,6 @@ using System.Text;
 using System.Web.Http;
 using GriB.Web.Http;
 using GriB.PrintServer.Windows.Common;
-using GriB.PrintServer.Windows.Models;
 using GriB.Common.Models.Print;
 using System.Reflection;
 

@@ -161,6 +161,15 @@
         description: string;
     }
 
+    export interface IPrinter extends IReferenceModel, IEditorModel {
+        printserver: IPrintServer;
+        salepoint: ISalepoint;
+        labelsize: number;
+        logo: string;
+        header: string;
+        footer: string;
+    }
+
     export interface IPosParamsSelect {
         category: number;
         salepoint: number;

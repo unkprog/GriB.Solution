@@ -25,7 +25,6 @@ export namespace Controller.Setting.Editor {
                 "labelDefaultUnit": vars._statres("label$defaultcurrency"),
             });
         }
-
        
         public get EditorModel(): Interfaces.Model.ICompany {
             return this.Model.get("editModel").toJSON();

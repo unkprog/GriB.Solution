@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using GriB.Common.Models.Print.Editor;
 
 namespace GriB.Client.App.Models.Editor
 {

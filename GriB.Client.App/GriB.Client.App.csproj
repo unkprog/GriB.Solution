@@ -226,6 +226,7 @@
     <Content Include="Content\view\app.html" />
     <Content Include="Content\view\setting\card\card.html" />
     <Content Include="Content\view\setting\editor\costincome.html" />
+    <Content Include="Content\view\setting\editor\printer.html" />
     <Content Include="Content\view\setting\editor\productmapapprovesign.html" />
     <Content Include="Content\view\setting\editor\productmap.html" />
     <Content Include="Content\view\setting\editor\printserver.html" />
@@ -273,6 +274,9 @@
     <Content Include="Scripts\Query\Editor\Client\[get].sql" />
     <Content Include="Scripts\Query\Editor\Client\[ins].sql" />
     <Content Include="Scripts\Query\Editor\Client\[set].sql" />
+    <Content Include="Scripts\Query\Editor\Printer\[del].sql" />
+    <Content Include="Scripts\Query\Editor\Printer\[get].sql" />
+    <Content Include="Scripts\Query\Editor\Printer\[set].sql" />
     <Content Include="Scripts\Query\Editor\Product\Map\[get].sql" />
     <Content Include="Scripts\Query\Editor\Product\Map\[set].sql" />
     <Content Include="Scripts\Query\Editor\Product\[getmap].sql" />
@@ -380,6 +384,7 @@
     <Content Include="Scripts\Sql\11.001.[t_contractor].sql" />
     <Content Include="Scripts\Sql\10.001.[t_discount].sql" />
     <Content Include="Scripts\Sql\12.005.[t_document].sql" />
+    <Content Include="Scripts\Sql\13.002.[t_printer].sql" />
     <Content Include="Scripts\Sql\13.001.[t_printserver].sql" />
     <Content Include="Scripts\Sql\09.002.[t_payment].sql" />
     <Content Include="Scripts\Sql\07.002.[t_check].sql" />
@@ -412,6 +417,7 @@
     <Compile Include="Handlers\AuthorizationHeaderHandler.cs" />
     <Compile Include="Managers\AppSettings.cs" />
     <Compile Include="Managers\AuthUser.cs" />
+    <Compile Include="Managers\Editors\Printer.cs" />
     <Compile Include="Managers\Editors\PrintServer.cs" />
     <Compile Include="Managers\POSTerminal\Change.cs" />
     <Compile Include="Managers\Editors\Reason.cs" />
@@ -445,7 +451,6 @@
     <Compile Include="Models\Editor\Employee.cs" />
     <Compile Include="Models\Editor\Organization.cs" />
     <Compile Include="Models\Editor\Product.cs" />
-    <Compile Include="Models\Editor\References.cs" />
     <Compile Include="Models\Editor\Account.cs" />
     <Compile Include="Models\Editor\Unit.cs" />
     <Compile Include="Models\POSTerminal\Check.cs" />
@@ -590,6 +595,7 @@
     <TypeScriptCompile Include="Content\js\app\controller\setting\card\costincome.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\setting\card\card.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\setting\card\client.ts" />
+    <TypeScriptCompile Include="Content\js\app\controller\setting\card\printer.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\setting\card\productmap.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\setting\card\printserver.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\setting\card\reason.ts" />
@@ -603,6 +609,7 @@
     <TypeScriptCompile Include="Content\js\app\controller\setting\card\currency.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\setting\card\salepoint.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\setting\editor\costincome.ts" />
+    <TypeScriptCompile Include="Content\js\app\controller\setting\editor\printer.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\setting\editor\productmap.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\setting\editor\productmapapprovesign.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\setting\editor\productmapedit.ts" />

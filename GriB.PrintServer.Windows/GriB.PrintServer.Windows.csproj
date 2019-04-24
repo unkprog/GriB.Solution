@@ -14,6 +14,8 @@
     <Deterministic>true</Deterministic>
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <TargetFrameworkProfile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
     <PublishUrl>D:\Projects\Visual Studio\2017\Development\GriB.Solution\GriB.PrintServer.Windows.Publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -30,8 +32,6 @@
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
-    <NuGetPackageImportStamp>
-    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -76,7 +76,7 @@
     </AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <PropertyGroup>
-    <TargetZone>LocalIntranet</TargetZone>
+    <TargetZone>Internet</TargetZone>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
@@ -225,4 +225,7 @@
     </PropertyGroup>
     <Error Condition="!Exists('..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets'))" />
   </Target>
+  <PropertyGroup>
+    <PostBuildEvent>xcopy /y /s "$(TargetDir)*"  "$(ProjectDir)..\GriB.PrintServer.Windows.Setup\PrintServer\"</PostBuildEvent>
+  </PropertyGroup>
 </Project>

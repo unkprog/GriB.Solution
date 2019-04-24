@@ -144,6 +144,10 @@ export module App {
             }
         }
 
+        public ResetScroll() {
+            this.contentControl.scrollTop(0);
+        }
+
         public RestoreController() {
             if (this._controllerNavigation === this) {
                 if (this._controllersStack.Current)
@@ -266,8 +270,10 @@ export module App {
                     self._controllersModalStack.Push(options.controller);
                     options.controller.ViewResize({});
                 }
+                else
+                    self.ResetScroll();
 
-                content.scrollTop(0).html(view[0]);
+                content.html(view[0]);
                 isInit = self._controller.ViewShow(this) && isInit;
             } finally {
                 if (isInit)

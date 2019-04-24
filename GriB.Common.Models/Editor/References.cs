@@ -1,6 +1,6 @@
 ﻿using GriB.Common.Models.pos;
 
-namespace GriB.Client.App.Models.Editor
+namespace GriB.Common.Models.Print.Editor
 {
     public class reference : model_base
     {

@@ -168,7 +168,7 @@ define(["require", "exports", "app/common/utils", "app/common/variables", "app/c
                 return {};
             };
             BaseContent.prototype.GetContent = function () {
-                return null;
+                return this._content;
             };
             BaseContent.prototype.ViewInit = function (view) {
                 var result = _super.prototype.ViewInit.call(this, view);
@@ -180,6 +180,9 @@ define(["require", "exports", "app/common/utils", "app/common/variables", "app/c
                 if (this._controller)
                     this._controller.ViewShow(e);
                 return result;
+            };
+            BaseContent.prototype.ResetScroll = function () {
+                this._content.scrollTop(0);
             };
             BaseContent.prototype.ViewResize = function (e) {
                 if (this._content) {
@@ -240,7 +243,7 @@ define(["require", "exports", "app/common/utils", "app/common/variables", "app/c
                     try {
                         var view = $(options.template);
                         isInit = self._controller.ViewInit(view);
-                        self._content.html("").children().scrollTop(0);
+                        self.ResetScroll();
                         self._content.html(view[0]);
                         isInit = self._controller.ViewShow(self) && isInit;
                         self._controller.ViewResize(self);
@@ -496,7 +499,7 @@ define(["require", "exports", "app/common/utils", "app/common/variables", "app/c
                     this.cardSettings.FilterSettings.ResizeControls();
                 var tbody = this.tableBody;
                 if (tbody && tbody.length > 0) {
-                    tbody.height($(window).height() - tbody.offset().top - (0.2 * parseFloat(getComputedStyle(tbody[0]).fontSize)) - 1);
+                    tbody.height($(window).height() - tbody.offset().top - tbody.parent().parent().parent().parent().parent().scrollTop() - (0.2 * parseFloat(getComputedStyle(tbody[0]).fontSize)) - 1);
                 }
             };
             BaseCard.prototype.ViewShow = function (e) {

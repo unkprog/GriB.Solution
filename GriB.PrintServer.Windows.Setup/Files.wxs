@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs">
+	<Fragment>
+    <DirectoryRef Id="INSTALLLOCATION" FileSource="D:\Projects\Visual Studio\2017\Development\GriB.Solution\GriB.PrintServer.Windows.Setup\PrintServer\">
+      <Component Id="ProductComponent" Guid="25525E11-02F7-40D0-9165-0D4FC9F8DF53" DiskId='1'>
+         <File Id='GriB.Common.dll' Name='GriB.Common.dll'/>
+         <File Id='GriB.Common.Models.dll' Name='GriB.Common.Models.dll'/>
+         <File Id='GriB.Common.Net.dll' Name='GriB.Common.Net.dll'/>
+         <File Id='GriB.Common.Sql.dll' Name='GriB.Common.Sql.dll'/>
+         <File Id='GriB.Web.dll' Name='GriB.Web.dll'/>
+         <File Id='Newtonsoft.Json.dll' Name='Newtonsoft.Json.dll'/>
+         <File Id='System.Net.Http.Extensions.dll' Name='System.Net.Http.Extensions.dll'/>
+         <File Id='System.Net.Http.Formatting.dll' Name='System.Net.Http.Formatting.dll'/>
+         <File Id='System.Net.Http.Primitives.dll' Name='System.Net.Http.Primitives.dll'/>
+         <File Id='System.Web.Http.dll' Name='System.Web.Http.dll'/>
+         <File Id='System.Web.Http.SelfHost.dll' Name='System.Web.Http.SelfHost.dll'/>
+      </Component>
+    </DirectoryRef>
+    
+    <DirectoryRef Id="INSTALLLOCATIONRU" FileSource="D:\Projects\Visual Studio\2017\Development\GriB.Solution\GriB.PrintServer.Windows.Setup\PrintServer\ru">
+      <Component Id="ProductComponent" Guid="9DB76851-4571-4D88-A4B0-47DFAB3CF83A" DiskId='1'>
+        <File Id='System.Net.Http.Formatting.resources.dll' Name='System.Net.Http.Formatting.resources.dll'/>
+        <File Id='System.Web.Http.resources.dll' Name='System.Web.Http.resources.dll'/>
+      </Component>
+    </DirectoryRef>
+  </Fragment>
+</Wix>

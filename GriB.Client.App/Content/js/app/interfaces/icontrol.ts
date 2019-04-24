@@ -95,6 +95,7 @@
     }
 
     export interface ICheckViewControl extends IControl {
+        LabelSize: number;
         PrintService: Interfaces.IPrintService;
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using GriB.Common.Models.Print.Editor;
+using System.Collections.Generic;
 
 namespace GriB.Client.App.Models.Editor
 {

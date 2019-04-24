@@ -41,6 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Editor\References.cs" />
     <Compile Include="POS\constants.cs" />
     <Compile Include="POS\model_base.cs" />
     <Compile Include="POS\role.cs" />
@@ -48,6 +49,7 @@
     <Compile Include="POS\sqldb.cs" />
     <Compile Include="POS\sqlsrv.cs" />
     <Compile Include="POS\user.cs" />
+    <Compile Include="Print\printer.cs" />
     <Compile Include="Print\printserver.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Security\Identity.cs" />
