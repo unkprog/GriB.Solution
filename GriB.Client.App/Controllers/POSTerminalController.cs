@@ -9,9 +9,12 @@ using GriB.Common.Models.Security;
 using GriB.Common.Sql;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Web;
+using System.Web.Hosting;
 using System.Web.Http;
 
 namespace GriB.Client.App.Controllers
@@ -251,6 +254,34 @@ namespace GriB.Client.App.Controllers
             return TryCatchResponseQuery((query) =>
             {
                 List<printer> printers = Printer.GetPrinters(query, salepoint);
+
+                //foreach(printer prn in printers)
+                //{
+                //    if (!string.IsNullOrEmpty(prn.logo))
+                //    {
+                //        string path = HostingEnvironment.ApplicationPhysicalPath;
+                //        path = string.Concat(path, prn.logo.Replace("/", "\\"));
+                //        string logo = string.Empty;
+                //        using (Image image = Image.FromFile(path))
+                //        {
+                //            using (MemoryStream m = new MemoryStream())
+                //            {
+                //                image.Save(m, image.RawFormat);
+                //                byte[] imageBytes = m.ToArray();
+
+                //                // Convert byte[] to Base64 String
+                //                logo = "data:image/png;base64," + Convert.ToBase64String(imageBytes);
+                //                //logo = logo.Replace("+", @"%2B");
+                //                //logo = logo.Replace("/", @"%2F");
+                //                //logo = logo.Replace("=", @"%3D");// Base64.EncodeToString(byteArray, Base64Flags.Default); // 
+                //            }
+                //        }
+                //        prn.logo = logo;
+                //    }
+                //}
+            
+
+
                 return CreateResponse(HttpStatusCode.OK, printers);
             });
         }

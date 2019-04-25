@@ -215,6 +215,9 @@
     </COMReference>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="..\GriB.Client.App\Content\css\app.print.min.css">
+      <Link>Css\app.print.min.css</Link>
+    </EmbeddedResource>
     <Content Include="Icons\settings.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

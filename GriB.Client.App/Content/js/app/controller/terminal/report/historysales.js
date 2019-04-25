@@ -207,6 +207,7 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
                     };
                     HistorySales.prototype.Print = function () {
                         var pskey = (this.checkViewControl.Printer && this.checkViewControl.Printer.printserver ? this.checkViewControl.Printer.printserver.pskey : '');
+                        //let logo: string = (this.checkViewControl.Printer ? this.checkViewControl.Printer.logo : '');
                         this.checkViewControl.Print(pskey);
                     };
                     return HistorySales;

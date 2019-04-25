@@ -44,7 +44,16 @@ namespace GriB.PrintServer.Windows.Controllers
                     {
                         using (StreamWriter writer = new StreamWriter(fs, Encoding.UTF8))
                         {
-                            writer.Write(data.document);
+                            writer.WriteLine("<!DOCTYPE html>");
+                            writer.WriteLine("<html>");
+                            writer.WriteLine("<head>");
+                            writer.WriteLine("    <link type=\"text/css\" rel=\"stylesheet\" href=\"css/app.print.min.css\" />");
+                            writer.WriteLine("    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\" />");
+                            writer.WriteLine("</head>");
+                            writer.WriteLine("<body>");
+                            writer.WriteLine(data.document);
+                            writer.WriteLine("</body>");
+                            writer.WriteLine("</html>");
                         }
                     }
                     response = CreateResponse(HttpStatusCode.OK, new { printFile = FileHelper.RelativeFileName(printFile) });

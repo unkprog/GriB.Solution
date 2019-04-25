@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.IO;
 using System.Net;
 using System.Net.Http;
+using System.Web.Hosting;
 using System.Web.Http;
 using System.Web.Http.Results;
 using GriB.Common.Diagnostics;
@@ -69,7 +72,32 @@ namespace GriB.Client.App.Controllers
             string _serviceAddress = string.Concat("http://", psr.ipaddress, ":", psr.port, "/print/printcheck");
             try
             {
-                result = Common.Net.Json.Post<HttpResponseMessage, printserverdata>(_serviceAddress, "/print/printcheck", data);
+                //printserverdata dataToSent = new printserverdata() { pskey = data.pskey, logo = string.Empty };
+                //if (!string.IsNullOrEmpty(data.logo))
+                //{
+                //    string path = HostingEnvironment.ApplicationPhysicalPath;
+                //    path = string.Concat(path, data.logo.Replace("/", "\\"));
+                //    string logo = string.Empty;
+                //    using (Image image = Image.FromFile(path))
+                //    {
+                //        using (MemoryStream m = new MemoryStream())
+                //        {
+                //            image.Save(m, image.RawFormat);
+                //            byte[] imageBytes = m.ToArray();
+
+                //            // Convert byte[] to Base64 String
+                //            logo = Convert.ToBase64String(imageBytes);
+                //            logo = logo.Replace("+", @"%2B");
+                //            logo = logo.Replace("/", @"%2F");
+                //            logo = logo.Replace("=", @"%3D");// Base64.EncodeToString(byteArray, Base64Flags.Default); // 
+                //        }
+                //    }
+                //    dataToSent.document = data.document.Replace(data.logo, logo);
+                //}
+                //else
+                //    dataToSent.document = data.document;
+                printserverdata dataToSent = data;
+                result = Common.Net.Json.Post<HttpResponseMessage, printserverdata>(_serviceAddress, "/print/printcheck", dataToSent);
             }
             catch(Exception ex)
             {

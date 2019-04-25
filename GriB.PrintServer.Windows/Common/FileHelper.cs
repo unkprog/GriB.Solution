@@ -17,6 +17,22 @@ namespace GriB.PrintServer.Windows.Common
             try
             {
                 string path = GetFolder(folderName);
+                result = CheckFolderPath(path);
+            }
+            catch
+            {
+                result = false;
+            }
+
+            return result;
+        }
+
+        public static bool CheckFolderPath(string path)
+        {
+            bool result = true;
+            try
+            {
+                
                 if (!Directory.Exists(path))
                     Directory.CreateDirectory(path);
             }

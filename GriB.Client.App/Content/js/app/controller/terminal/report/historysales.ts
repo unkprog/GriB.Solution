@@ -216,6 +216,7 @@ export namespace Controller.Terminal.Report {
 
         public Print(): void {
             let pskey: string = (this.checkViewControl.Printer && this.checkViewControl.Printer.printserver ? this.checkViewControl.Printer.printserver.pskey : '');
+            //let logo: string = (this.checkViewControl.Printer ? this.checkViewControl.Printer.logo : '');
             this.checkViewControl.Print(pskey);
         }
     }

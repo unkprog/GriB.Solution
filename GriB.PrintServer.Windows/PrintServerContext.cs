@@ -35,6 +35,11 @@ namespace GriB.PrintServer.Windows
             return (stream == null ? null : new Bitmap(stream));
         }
 
+        internal static Stream GetAppCSS(string cssName)
+        {
+            return Assembly.GetEntryAssembly().GetManifestResourceStream(string.Format(Constants.sourceAppCss, cssName));
+        }
+
         public PrintServerContext()
         {
             showConfigHandler = new EventHandler(ShowConfig);
@@ -183,13 +188,34 @@ namespace GriB.PrintServer.Windows
         private Dictionary<string, string> listChecks = new Dictionary<string, string>();
         private Dictionary<string, string> listDocuments = new Dictionary<string, string>();
 
+        private void restoreCssCheck(string folderChecks)
+        {
+            string cssFolderFile = string.Concat(folderChecks, "\\css");
+            FileHelper.CheckFolderPath(cssFolderFile);
+            string cssFile = string.Concat(cssFolderFile, "\\app.print.min.css");
+            if (!File.Exists(cssFile))
+            {
+                using (Stream cssStream = GetAppCSS("app.print.min"))
+                {
+                    if (cssStream != null)
+                    {
+                        using (var fileStream = new FileStream(cssFile, FileMode.Create, FileAccess.Write))
+                        {
+                            cssStream.CopyTo(fileStream);
+                        }
+                    }
+                }
+            }
+        }
         private void _bwPrintFilesCheck_DoWork(object sender, DoWorkEventArgs e)
         {
             while (true)
             {
                 if (_printer != null && !_printer.IsPrinting && listChecks.Count == 0 && listDocuments.Count == 0)
                 {
-                    string[] filesCheck = Directory.GetFiles(FileHelper.GetFolderChecks());
+                    string folderChecks = FileHelper.GetFolderChecks();
+                    restoreCssCheck(folderChecks);
+                    string[] filesCheck = Directory.GetFiles(folderChecks, "*.html");
                     if (filesCheck != null && filesCheck.Length > 0)
                     {
                         foreach (var fileName in filesCheck)
@@ -214,7 +240,6 @@ namespace GriB.PrintServer.Windows
                 _printer.PrintDocument(listChecks.Values.First());
             else if (listDocuments.Count > 0)
                 _printer.PrintDocument(listDocuments.Values.First());
-
         }
 
         private void RemovePrint(string fileName)

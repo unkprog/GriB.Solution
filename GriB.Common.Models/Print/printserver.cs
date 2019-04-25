@@ -24,6 +24,7 @@ namespace GriB.Common.Models.Print
     public class printserverdata
     {
         public string pskey    { get; set; }
+        public string logo     { get; set; }
         public string document { get; set; }
     }
 }

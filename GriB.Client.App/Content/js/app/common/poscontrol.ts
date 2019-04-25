@@ -76,7 +76,7 @@ export namespace POSControl {
             }
 
             if (this.printer && utils.isNullOrEmpty(this.printer.logo) === false)
-                html += '<img style="width:100%;" src = "' + this.printer.logo + '">';
+                html += '<img style="width:100%;" src = "' + location.protocol + '//' + location.hostname + (location.port ? ':' + location.port : '') + this.printer.logo + '">';
 
             if (this.printer && utils.isNullOrEmpty(this.printer.header) === false)
                 html += '<span class="truncate-print check-view-row center-print">' + this.printer.header.replace('\n', '<br />') + '</span>';
@@ -127,7 +127,7 @@ export namespace POSControl {
         public Print(pskey: string) {
             let self = this;
             if (this.printService) {
-                this.printService.PrintCheck(pskey, self.checkView.html()
+                this.printService.PrintCheck(pskey, self.checkContainer.html()
                     , (responseData) => { }
                     , (errorData) => { self.PrintThis(); }
                 );
@@ -137,7 +137,7 @@ export namespace POSControl {
         }
 
         private PrintThis() {
-            this.checkView.printThis({
+            this.checkContainer.printThis({
                 pageTitle: "PRINT CHECK",
                 importCSS: true,
                 //importStyle: true,         // import style tags
