@@ -122,9 +122,6 @@ export namespace Controller.Terminal {
                 if (salePoints[i].isaccess === true) {
                     if (+id === salePoints[i].salepoint.id) {
                         self.terminal.Model.set("POSData.CurrentSalePoint", salePoints[i].salepoint);
-                        self.terminal.UpdateSumInCash();
-                        self.terminal.Reset();
-                        self.terminal.GetChange(() => {});
                     }
                 }
             }

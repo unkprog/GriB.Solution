@@ -174,9 +174,11 @@ export namespace Controller.Terminal {
 
         protected createEvents(): void {
             if (this.navCheck) this.navCheck.createEvents();
+            this.Model.bind("change", $.proxy(this.changeModel, this));
         }
 
         protected destroyEvents(): void {
+            this.Model.unbind("change");
             if (this.navCheck) this.navCheck.destroyEvents();
             if (this.navProduct) this.navProduct.destroyEvents();
             if (this.navBar) this.navBar.destroyEvents();
@@ -252,6 +254,26 @@ export namespace Controller.Terminal {
                 M.toast({ html: vars._statres("label$change$close") });
             }
             return result;
+        }
+
+        private GetPrinters() {
+            let self = this;
+            if (self.CurrentSalePoint == 0)
+                vars._identity.printers = undefined;
+            else
+                self.Service.GetPrinters(self.CurrentSalePoint, (responseData) => {
+                    vars._identity.printers = responseData;
+                });
+        }
+
+        private changeModel(e: any) {
+            let self = this;
+            if (e.field === "POSData.CurrentSalePoint") {
+                self.UpdateSumInCash();
+                self.Reset();
+                self.GetChange(() => { });
+                self.GetPrinters();
+            }
         }
 
         public CloseChange(): void {

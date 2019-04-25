@@ -1,8 +1,10 @@
 ﻿using GriB.Client.App.Managers;
+using GriB.Client.App.Managers.Editors;
 using GriB.Client.App.Managers.POSTerminal;
 using GriB.Client.App.Models.Editor;
 using GriB.Client.App.Models.POSTerminal;
 using GriB.Client.App.Models.Report;
+using GriB.Common.Models.Print;
 using GriB.Common.Models.Security;
 using GriB.Common.Sql;
 using System;
@@ -242,5 +244,15 @@ namespace GriB.Client.App.Controllers
             });
         }
 
+        [HttpGet]
+        [ActionName("getprinters")]
+        public HttpResponseMessage GetPrinters(int salepoint)
+        {
+            return TryCatchResponseQuery((query) =>
+            {
+                List<printer> printers = Printer.GetPrinters(query, salepoint);
+                return CreateResponse(HttpStatusCode.OK, printers);
+            });
+        }
     }
 }

@@ -57,6 +57,9 @@ export namespace POSControl {
         }
 
         private updateView() {
+            if (!this.checkContainer)
+                return;
+
             let html: string = '';
             let sum: number = 0;
             let classSize: string = ' size80';

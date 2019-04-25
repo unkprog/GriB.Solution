@@ -6,4 +6,6 @@ left outer join [t_printserver] [ps] with(nolock) on [ps].[d] = 0 and [t].[print
 left outer join [t_org]         [sp] with(nolock) on [sp].[d] = 0 and [t].[salepoint]   = [sp].[id]
 where [t].[d] = 0 and (@id = 0 or (@id <> 0 and [t].[id] = @id))
   and (@name = '' or (@name <> '' and  [t].[name] = @name))
+  and (@salepoint = 0 or (@salepoint <> 0 and  [t].[salepoint] = @salepoint))
+
   

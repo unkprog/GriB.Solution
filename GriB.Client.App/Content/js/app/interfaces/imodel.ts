@@ -30,6 +30,7 @@
         auth: boolean;
         token: string;
         employee: IEmployeeModel;
+        printers: IPrinter[];
     }
 
     export interface IEditorModel extends IBaseModel {

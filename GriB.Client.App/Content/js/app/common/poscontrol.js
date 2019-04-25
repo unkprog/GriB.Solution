@@ -59,6 +59,8 @@ define(["require", "exports", "app/common/variables", "app/common/utils"], funct
                 configurable: true
             });
             CheckViewControl.prototype.updateView = function () {
+                if (!this.checkContainer)
+                    return;
                 var html = '';
                 var sum = 0;
                 var classSize = ' size80';

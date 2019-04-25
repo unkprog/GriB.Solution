@@ -33,6 +33,7 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                             "Header": vars._statres("label$printer"),
                             "editModel": {},
                             "labelName": vars._statres("label$name"),
+                            "LabelPrintSettings": vars._statres("label$printsettings"),
                             "labelSize": vars._statres("label$papersize"),
                             "label58": "58",
                             "label80": "80",
@@ -63,8 +64,9 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                         controller.controlHeader.characterCounter();
                         controller.controlFooter = view.find("#editor-view-printer-footer");
                         controller.controlFooter.characterCounter();
-                        controller.imgDialog = view.find("#editor-view-productmap-image-input");
-                        controller.controlPhoto = view.find("#editor-view-productmap-photo");
+                        controller.controlAddPhoto = view.find("#editor-view-printer-addphoto");
+                        controller.imgDialog = view.find("#editor-view-printer-image-input");
+                        controller.controlPhoto = view.find("#editor-view-printer-photo");
                         controller.checkViewContainer = view.find("#editor-view-printer-check");
                         controller.checkViewControl = new posctrl.POSControl.CheckViewControl();
                         //controller.checkViewControl.PrintService = new svcPrint.Services.PrintService();
@@ -95,12 +97,15 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                             this.printServerControl.createEvents();
                         if (this.salepointControl)
                             this.salepointControl.createEvents();
-                        this.AddPhotoButtonClick = this.createTouchClickEvent("editor-view-printer-addphoto", this.addPhotoButtonClick);
+                        this.AddPhotoButtonClick = this.createTouchClickEvent(this.controlAddPhoto, this.addPhotoButtonClick);
+                        var onUpload = $.proxy(this.uploudImageClick, this);
+                        this.imgDialog.bind("change", onUpload);
                         this.Model.bind("change", $.proxy(this.changeModel, this));
                     };
                     Printer.prototype.destroyEvents = function () {
                         this.Model.unbind("change");
-                        this.destroyTouchClickEvent("editor-view-printer-addphoto", this.AddPhotoButtonClick);
+                        this.imgDialog.unbind();
+                        this.destroyTouchClickEvent(this.controlAddPhoto, this.AddPhotoButtonClick);
                         if (this.salepointControl)
                             this.salepointControl.destroyEvents();
                         if (this.printServerControl)
@@ -108,10 +113,10 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                         _super.prototype.destroyEvents.call(this);
                     };
                     Printer.prototype.changeModel = function (e) {
-                        if (e.field === "editModel.labelsize") {
-                            var model = this.EditorModel;
-                            this.checkViewControl.LabelSize = +model.labelsize;
-                        }
+                        //if (e.field === "editModel.labelsize") {
+                        //    this.checkViewControl.Printer = this.EditorModel;
+                        //}
+                        this.checkViewControl.Printer = this.EditorModel;
                     };
                     Printer.prototype.setupCheckView = function () {
                         var checkData = {
@@ -123,7 +128,8 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                         for (var i = 1, icount = 11; i < icount; i++) {
                             checkData.positions.push({ index: i, product: product, quantity: 1, price: 50, sum: 50 });
                         }
-                        this.checkViewControl.LabelSize = +this.EditorModel.labelsize;
+                        //this.checkViewControl.LabelSize = +this.EditorModel.labelsize;
+                        this.checkViewControl.Printer = this.EditorModel;
                         this.checkViewControl.POSCheck = checkData;
                     };
                     Printer.prototype.validate = function () {
@@ -148,7 +154,7 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                         return result;
                     };
                     Printer.prototype.addPhotoButtonClick = function (e) {
-                        $("#editor-view-productmap-image-input").trigger("click");
+                        $("#editor-view-printer-image-input").trigger("click");
                     };
                     Printer.prototype.uploudImageClick = function (e) {
                         this.UploadImage(this.imgDialog[0].files);
@@ -162,7 +168,7 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                             dataUpload.append("photo", controller.EditorModel.logo);
                             dataUpload.append("file", files[0]);
                             controller.Service.UploadImage(dataUpload, function (responseData) {
-                                controller.Model.set("editModel.photo", responseData);
+                                controller.Model.set("editModel.logo", responseData);
                                 if (_this.EditorModel.logo)
                                     _this.controlPhoto.css("backgroundImage", "url(" + controller.EditorModel.logo + ")");
                             });

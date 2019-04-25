@@ -78,5 +78,9 @@ export namespace Services {
         public CheckClose(checkParamsClose: Interfaces.Model.ICheckCloseParams, Callback: (responseData: any) => void) {
             this.PostApi({ Action: "/check_close", RequestData: JSON.stringify(checkParamsClose), Callback: Callback });
         }
+
+        public GetPrinters(salepoint: number, Callback: (responseData: any) => void) {
+            this.GetApi({ Action: "/getprinters", RequestData: { salepoint: salepoint }, Callback: Callback });
+        }
     }
 }

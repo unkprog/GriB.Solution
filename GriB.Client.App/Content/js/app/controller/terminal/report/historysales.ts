@@ -77,7 +77,9 @@ export namespace Controller.Terminal.Report {
 
             controller.checkViewContainer = view.find("#historysales-view-check");
             controller.checkViewControl = new posctrl.POSControl.CheckViewControl();
-            controller.checkViewControl.PrintService = new svcPrint.Services.PrintService(); 
+            controller.checkViewControl.PrintService = new svcPrint.Services.PrintService();
+            if (vars._identity.printers && vars._identity.printers.length > 0)
+                controller.checkViewControl.Printer = vars._identity.printers[0];
             controller.checkViewContainer.append(controller.checkViewControl.InitView());
 
             return super.ViewInit(view);
@@ -213,7 +215,8 @@ export namespace Controller.Terminal.Report {
         }
 
         public Print(): void {
-            this.checkViewControl.Print('5b9ea524be974c6a8bcd5bef898250dd');
+            let pskey: string = (this.checkViewControl.Printer && this.checkViewControl.Printer.printserver ? this.checkViewControl.Printer.printserver.pskey : '');
+            this.checkViewControl.Print(pskey);
         }
     }
 }
