@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi"
+     xmlns:util="http://schemas.microsoft.com/wix/UtilExtension"
+     xmlns:bal="http://schemas.microsoft.com/wix/BalExtension">
+	<Bundle Name="POS Cloud Installer" Version="1.0.0.0" Manufacturer="POS Cloud" UpgradeCode="FA89551D-4FF2-43E3-B45D-0C154D4D1CC1">
+    <BootstrapperApplicationRef Id="ManagedBootstrapperApplicationHost">
+      <Payload Name="BootstrapperCore.config" SourceFile="..\GriB.Installer.UI\BootstrapperCore.config"/>
+      <Payload SourceFile="..\GriB.Installer.UI\bin\Debug\POSCloudInstallerUI.dll"/>
+
+      <Payload SourceFile="C:\Program Files (x86)\WiX Toolset v3.11\SDK\Microsoft.Deployment.WindowsInstaller.dll"/>
+    </BootstrapperApplicationRef>
+    <Chain>
+      <PackageGroupRef Id='Netfx47Full'/>
+      <MsiPackage SourceFile="..\GriB.Installer\bin\Debug\GriB.Installer.msi" Id="InstallationPackageId" Cache="yes" Visible="no"/>
+    </Chain>
+  </Bundle>
+
+  <Fragment>
+    <WixVariable Id="WixMbaPrereqPackageId" Value="Netfx47Full" />
+    <WixVariable Id="WixMbaPrereqLicenseUrl" Value="NetfxLicense.rtf" />
+    
+    <util:RegistrySearch Id="Netfx47FullVersion" Variable="Netfx47FullVersion" Root="HKLM" Key="SOFTWARE\Microsoft\Net Framework Setup\NDP\v4\Full"  Value="Version" />
+    <util:RegistrySearch Id="Netfx47x64FullVersion" Variable="Netfx47x64FullVersion" Root="HKLM" Key="SOFTWARE\Microsoft\Net Framework Setup\NDP\v4\Full" Value="Version"  Win64="yes" />
+
+
+
+    <PackageGroup Id="Netfx47Full">
+      <ExePackage Id="Netfx47Full" Cache="no" Compressed="yes" PerMachine="yes" Permanent="yes" Vital="yes"
+                  SourceFile="..\GriB.Installer.UI\Resources\Binaries\NDP47-KB3186497-x86-x64-AllOS-ENU.exe"
+                  DownloadUrl="http://go.microsoft.com/fwlink/?linkid=825302"
+                  DetectCondition="Netfx47FullVersion AND (NOT VersionNT64 OR Netfx47x64FullVersion)" />
+    </PackageGroup>
+  </Fragment>
+</Wix>

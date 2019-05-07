@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+	<Product Id="*" Name="GriB.Installer" Language="1033" Version="1.0.0.0" Manufacturer="POS Cloud" UpgradeCode="FD5B9352-092B-471D-84D3-6B4E898F2A71">
+		<Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" />
+
+		<MajorUpgrade DowngradeErrorMessage="A newer version of POS Cloud applications is already installed." />
+		<MediaTemplate />
+
+		<Feature Id="ProductFeature" Title="GriB.Installer" Level="1">
+			<ComponentGroupRef Id="ProductComponents" />
+		</Feature>
+	</Product>
+
+	<Fragment>
+		<Directory Id="TARGETDIR" Name="SourceDir">
+			<Directory Id="ProgramFilesFolder">
+				<Directory Id="INSTALLFOLDER" Name=" " />
+			</Directory>
+		</Directory>
+	</Fragment>
+
+	<Fragment>
+		<ComponentGroup Id="ProductComponents" Directory="INSTALLFOLDER">
+		  <Component Id="ProductComponent" KeyPath="yes" Guid="498EAEE4-9017-4ECA-B6B7-1090B7C6394F">
+        <CreateFolder />
+      </Component>
+		</ComponentGroup>
+	</Fragment>
+</Wix>

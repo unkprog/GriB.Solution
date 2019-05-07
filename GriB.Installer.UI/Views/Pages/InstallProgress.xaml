@@ -1,0 +1,44 @@
+﻿<UserControl x:Class="GriB.Installer.UI.Views.Pages.InstallProgress"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:GriB.Installer.UI.Views.Pages"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+
+        <ResourceDictionary >
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="../../Resources/Styles/Welcome.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Border Background="{StaticResource clrPrimaryHeader}">
+            <TextBlock Text="Загрузка и установка приложений POS Cloud" Style="{StaticResource TextBlockHeader}" />
+        </Border>
+        <Grid Grid.Row="1" Margin="25" >
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <TextBlock Grid.Row="0" Margin="0 0 0 25" FontSize="20" Text="{Binding TitleMessage}" TextWrapping="WrapWithOverflow" />
+
+            <TextBlock Grid.Row="1" Text="{Binding DownloadMessage}" />
+            <ProgressBar Grid.Row="2" Height="10" Maximum="{Binding InstallCount , UpdateSourceTrigger=PropertyChanged}" Value="{Binding DownloadedCount, UpdateSourceTrigger=PropertyChanged}" />
+
+            <TextBlock Grid.Row ="3" Text="{Binding InstallMessage}" Margin="0 30 0 0"/>
+            <ProgressBar Grid.Row="4" Height="10"  Maximum="{Binding InstallCount , UpdateSourceTrigger=PropertyChanged}" Value="{Binding InstalledCount, UpdateSourceTrigger=PropertyChanged}"/>
+        </Grid>
+    </Grid>
+</UserControl>
