@@ -89,7 +89,7 @@ namespace GriB.Installer.UI
                     }
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return false;
             }

@@ -24,7 +24,7 @@ namespace GriB.Installer.UI
             if (!Launcher.IsRunAsAdmin())
                 Launcher.RunAsAdministrator();
 
-            Debugger.Launch();
+            //Debugger.Launch();
 
             MainViewModel = new MainViewModel(this);
             //viewModel.Bootstrapper.Engine.Detect();

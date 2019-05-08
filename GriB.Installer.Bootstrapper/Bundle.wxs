@@ -5,6 +5,8 @@
 	<Bundle Name="POS Cloud Installer" Version="1.0.0.0" Manufacturer="POS Cloud" UpgradeCode="FA89551D-4FF2-43E3-B45D-0C154D4D1CC1">
     <BootstrapperApplicationRef Id="ManagedBootstrapperApplicationHost">
       <Payload Name="BootstrapperCore.config" SourceFile="..\GriB.Installer.UI\BootstrapperCore.config"/>
+      <Payload SourceFile="..\GriB.Installer.UI\bin\Debug\Microsoft.WindowsAPICodePack.dll"/>
+      <Payload SourceFile="..\GriB.Installer.UI\bin\Debug\Microsoft.WindowsAPICodePack.Shell.dll"/>
       <Payload SourceFile="..\GriB.Installer.UI\bin\Debug\POSCloudInstallerUI.dll"/>
 
       <Payload SourceFile="C:\Program Files (x86)\WiX Toolset v3.11\SDK\Microsoft.Deployment.WindowsInstaller.dll"/>

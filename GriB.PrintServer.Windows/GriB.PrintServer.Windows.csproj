@@ -78,6 +78,9 @@
   <PropertyGroup>
     <TargetZone>Internet</TargetZone>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>print_active.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.12.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
@@ -215,6 +218,7 @@
     </COMReference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="print_active.ico" />
     <EmbeddedResource Include="..\GriB.Client.App\Content\css\app.print.min.css">
       <Link>Css\app.print.min.css</Link>
     </EmbeddedResource>

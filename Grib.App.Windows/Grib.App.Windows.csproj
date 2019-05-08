@@ -51,6 +51,9 @@
   <PropertyGroup>
     <StartupObject>Grib.App.Windows.Program</StartupObject>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>poscloud.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -102,6 +105,11 @@
     <PackageReference Include="CefSharp.WinForms">
       <Version>71.0.2</Version>
     </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Icons\poscloud.ico" />
+    <Content Include="Icons\poscloud.png" />
+    <Content Include="poscloud.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

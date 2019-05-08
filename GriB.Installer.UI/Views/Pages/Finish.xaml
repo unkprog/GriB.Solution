@@ -27,7 +27,7 @@
             <TextBlock Text="Завершение установки и настройки приложений POS Cloud" Style="{StaticResource TextBlockHeader}" />
         </Border>
 
-        <TextBlock Grid.Row="1" Margin="25" FontSize="20" Text="Установка приложений завершилась успешно." TextWrapping="WrapWithOverflow" />
+        <TextBlock Grid.Row="1" Margin="25" FontSize="20" Text="Установка приложений завершена успешно." TextWrapping="WrapWithOverflow" />
 
     </Grid>
 </UserControl>

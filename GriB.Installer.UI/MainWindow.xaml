@@ -27,7 +27,7 @@
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="15">
                 <Button Content="Назад" Command="{Binding BackCommand}" Visibility="{Binding VisibilityBack}" Style="{StaticResource NavigationButton}"/>
                 <Button Content="Далее" Command="{Binding NextCommand}" Visibility="{Binding VisibilityNext}" Style="{StaticResource NavigationButton}"/>
-                <Button Content="Отмена" Command="{Binding CancelCommand}" Style="{StaticResource NavigationButton}"/>
+                <Button Content="{Binding TitleCancel}" Command="{Binding CancelCommand}" Style="{StaticResource NavigationButton}"/>
             </StackPanel>
         </Border>
     </Grid>

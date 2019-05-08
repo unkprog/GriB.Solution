@@ -15,7 +15,9 @@ namespace GriB.Installer.UI.ViewModels.Pages
         public InstallProgressViewModel()
         {
             _intallProgress = new InstallProgress() { DataContext = this };
-            OnDownloadAppsComplite += ConfigurateApplications;
+            OnDownloadAppsComplite += DownloadAppsComplite;
+            OnInstallAppsComplite += InstallAppsComplite;
+            OnComplite += Complite;
         }
 
         private UserControl _intallProgress;
@@ -29,23 +31,9 @@ namespace GriB.Installer.UI.ViewModels.Pages
             DownloadMessage = "Ожидание загрузки...";
             InstallMessage = "Ожидание установки...";
             InstallItems = installItems;
-
-            Task.Factory.StartNew(() =>
-            {
-                if (!CreateTempDirectory())
-                {
-                    MessageBox.Show("Ошибка при установке приложения. Не удалось создать временную папку установки.");
-                    return;
-                }
-                if (!CreateApplicationDirectories())
-                {
-                    MessageBox.Show("Ошибка при установке приложения. Не удалось создать каталог приложений.");
-                    return;
-                }
-            }).ContinueWith((t) =>
-            {
-                DownloadAppliactions();
-            });
+            DownloadedCount = 0;
+            InstalledCount = 0;
+            DownloadAppliactions();
         }
 
         string _installPath;
@@ -59,14 +47,16 @@ namespace GriB.Installer.UI.ViewModels.Pages
             {
                 if (_installItems != value)
                 {
-                    _installItems = value; RaisePropertyChanged("InstallItems");
+                    _installItems = value;
+                    RaisePropertyChanged("InstallItems");
+                    RaisePropertyChanged("InstallCount");
                 }
             }
         }
 
         public int InstallCount 
         {
-            get { return _installItems == null ? 0 : _installItems.Count; }
+            get { return _installItems == null ? 1 : _installItems.Count; }
         }
 
         string _titleMessage = "Идет установка приложений, дождитесь завершения...";
@@ -76,8 +66,15 @@ namespace GriB.Installer.UI.ViewModels.Pages
             set { _titleMessage = value; RaisePropertyChanged("TitleMessage"); }
         }
 
-        int _downloadedCount = 0;
-        public int DownloadedCount
+        long _downloadCount = 1;
+        public long DownloadCount
+        {
+            get { return _downloadCount; }
+            set { _downloadCount = value; RaisePropertyChanged("DownloadCount"); }
+        }
+
+        long _downloadedCount = 0;
+        public long DownloadedCount
         {
             get { return _downloadedCount; }
             set { _downloadedCount = value; RaisePropertyChanged("DownloadedCount"); }

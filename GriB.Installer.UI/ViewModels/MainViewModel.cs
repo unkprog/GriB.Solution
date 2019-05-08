@@ -41,12 +41,14 @@ namespace GriB.Installer.UI.ViewModels
                     RaisePropertyChanged("CurrentViewModel");
                     RaisePropertyChanged("VisibilityNext");
                     RaisePropertyChanged("VisibilityBack");
+                    RaisePropertyChanged("TitleCancel");
                 }
             }
         }
 
-        public Visibility VisibilityNext => _сurrentViewModel == null || _сurrentViewModel == _finishViewModel ? Visibility.Collapsed : Visibility.Visible;
-        public Visibility VisibilityBack => _сurrentViewModel == null || _сurrentViewModel == _welcomeViewModel ? Visibility.Collapsed : Visibility.Visible;
+        public Visibility VisibilityNext => _сurrentViewModel == _intallProgressViewModel || _сurrentViewModel == _finishViewModel ? Visibility.Collapsed : Visibility.Visible;
+        public Visibility VisibilityBack => _сurrentViewModel == _applicationViewModel ? Visibility.Visible : Visibility.Collapsed;
+        public string TitleCancel => _сurrentViewModel == _finishViewModel ? "Завершено" : "Отмена";
 
         public BootstrapperApplication Bootstrapper { get; private set; }
 

@@ -13,9 +13,9 @@ using System.Windows.Forms;
 
 namespace Grib.App.Windows
 {
-    public partial class FormApp : Form
+    public partial class POSCloudApp : Form
     {
-        public FormApp()
+        public POSCloudApp()
         {
             InitializeComponent();
             WindowState = FormWindowState.Maximized;

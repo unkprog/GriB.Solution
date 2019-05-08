@@ -7,6 +7,7 @@ using GriB.Installer.UI.Models.Pages;
 using GriB.Installer.UI.Views.Pages;
 using Microsoft.Win32;
 using System.Windows;
+using Microsoft.WindowsAPICodePack.Dialogs;
 
 namespace GriB.Installer.UI.ViewModels.Pages
 {
@@ -14,7 +15,7 @@ namespace GriB.Installer.UI.ViewModels.Pages
     {
         public ApplicationViewModel()
         {
-            _installPath = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles);
+            _installPath = Constants.ProgramPath;
             _applicationsPage = new Applications() { DataContext = this };
         }
 
@@ -29,8 +30,8 @@ namespace GriB.Installer.UI.ViewModels.Pages
                 if (_appsItems == null)
                 {
                     _appsItems = new ObservableCollection<ApplicationModel>();
-                    _appsItems.Add(new ApplicationModel() { ImageIcon = @"/Png48/poscloud.png", Name = "Приложение POS Cloud", Description = "Приложение POS Cloud для работы на локальном компьютере", DownloadSource= "http://poscloudgb.ru/Binaries/POSCloud.App.Windows.zip", DestinationSource = "App" });
-                    _appsItems.Add(new ApplicationModel() { ImageIcon = @"/Png48/print-server.png", Name = "Принт-сервер", Description = "Приложение-сервис для печати чеков и документов", DownloadSource = "http://poscloudgb.ru/Binaries/POSCloud.PrintServer.zip", DestinationSource = "PrintServer" });
+                    _appsItems.Add(new ApplicationModel() { ImageIcon = @"/Png48/poscloud.png", Name = "Приложение POS Cloud", Description = "Приложение POS Cloud для работы на локальном компьютере", DownloadSource= "http://poscloudgb.ru/Binaries/POSCloud.App.Windows.zip", DestinationSource = "App", ExecutableFile = "Grib.App.Windows.exe" });
+                    _appsItems.Add(new ApplicationModel() { ImageIcon = @"/Png48/print-server.png", Name = "Принт-сервер", Description = "Приложение-сервис для печати чеков и документов", DownloadSource = "http://poscloudgb.ru/Binaries/POSCloud.PrintServer.zip", DestinationSource = "PrintServer", ExecutableFile = "GriB.PrintServer.Windows.exe" });
                 }
                 return _appsItems;
             }
@@ -47,18 +48,38 @@ namespace GriB.Installer.UI.ViewModels.Pages
                 return selectFolderCommand ??
                   (selectFolderCommand = new BaseCommand(obj =>
                   {
-                      SaveFileDialog dialog = new SaveFileDialog();
+                      CommonOpenFileDialog dialog = new CommonOpenFileDialog();
                       {
                           //dialog.Multiselect = false;
-                          dialog.Title = "Select a Directory"; // instead of default "Save As"
-                          dialog.Filter = "Directory|*.*"; // Prevents displaying files
-                          dialog.FileName = Constants.AppsPath; // Filename will then be "select.this.directory"
+                          dialog.Title = "Укажите путь установки"; // instead of default "Save As"
+                          dialog.IsFolderPicker = true;
+                          dialog.DefaultDirectory = InstallPath.Replace(@"\" + Constants.AppsPath, ""); // Filename will then be "select.this.directory"
+                          dialog.InitialDirectory = dialog.DefaultDirectory;
 
-                          dialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-                          if (dialog.ShowDialog() == true)
+                          dialog.AddToMostRecentlyUsedList = false;
+                          dialog.AllowNonFileSystemItems = false;
+                          dialog.EnsureFileExists = true;
+                          dialog.EnsurePathExists = true;
+                          dialog.EnsureReadOnly = false;
+                          dialog.EnsureValidNames = true;
+                          dialog.Multiselect = false;
+                          dialog.ShowPlacesList = true;
+
+                          if (dialog.ShowDialog() == CommonFileDialogResult.Ok)
                           {
                               string path = dialog.FileName;
-                              // If user has changed the filename, create the new directory
+                              if(!string.IsNullOrEmpty(path))
+                              {
+                                  int index = path.LastIndexOf(@"\");
+                                  if (index >= 0)
+                                  {
+                                      string lastFolder = path.Substring(index);
+                                      if(lastFolder != Constants.AppsPath)
+                                      {
+                                          path = string.Concat(path, @"\", Constants.AppsPath);
+                                      }
+                                  }
+                              }
                               InstallPath = path;
                           }
                       }
