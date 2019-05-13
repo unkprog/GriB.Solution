@@ -7,6 +7,7 @@ export declare let _statres: (id: string) => string;
 export declare let _absUrl: (id: string) => string;   //Create absolute ref to resource
 export declare let _showError: (error: string) => void;
 
+
 export declare let _appSettings: {
     IsDebug: boolean;
     Version: string;

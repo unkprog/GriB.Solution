@@ -30,8 +30,8 @@ namespace GriB.Installer.UI.ViewModels.Pages
                 if (_appsItems == null)
                 {
                     _appsItems = new ObservableCollection<ApplicationModel>();
-                    _appsItems.Add(new ApplicationModel() { ImageIcon = @"/Png48/poscloud.png", Name = "Приложение POS Cloud", Description = "Приложение POS Cloud для работы на локальном компьютере", DownloadSource= "http://poscloudgb.ru/Binaries/POSCloud.App.Windows.zip", DestinationSource = "App", ExecutableFile = "Grib.App.Windows.exe" });
-                    _appsItems.Add(new ApplicationModel() { ImageIcon = @"/Png48/print-server.png", Name = "Принт-сервер", Description = "Приложение-сервис для печати чеков и документов", DownloadSource = "http://poscloudgb.ru/Binaries/POSCloud.PrintServer.zip", DestinationSource = "PrintServer", ExecutableFile = "GriB.PrintServer.Windows.exe" });
+                    _appsItems.Add(new ApplicationModel() { ImageIcon = @"/Png48/poscloud.png", Name = "Приложение POS Cloud", Description = "Приложение POS Cloud для работы на локальном компьютере", DownloadSource= "http://poscloudgb.ru/Binaries/POSCloud.App.Windows.zip", DestinationSource = "App", ExecutableFile = "Grib.App.Windows.exe", GUID = "31E41CFF-4BE9-4597-86B4-C0B2B00D88EB" });
+                    _appsItems.Add(new ApplicationModel() { ImageIcon = @"/Png48/print-server.png", Name = "Принт-сервер", Description = "Приложение-сервис для печати чеков и документов", DownloadSource = "http://poscloudgb.ru/Binaries/POSCloud.PrintServer.zip", DestinationSource = "PrintServer", ExecutableFile = "GriB.PrintServer.Windows.exe", GUID = "5540B7CE-124E-47DF-9DA3-FE277987BB4F" });
                 }
                 return _appsItems;
             }
@@ -103,5 +103,51 @@ namespace GriB.Installer.UI.ViewModels.Pages
             }
             return result;
         }
+
+
+        //internal static bool IsApplicationInstalled(string name)
+        //{
+        //    try
+        //    {
+        //        string displayName;
+
+        //        // search in: LocalMachine_32
+        //        var key = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall");
+        //        if (key != null)
+        //        {
+        //            foreach (string keyName in key.GetSubKeyNames())
+        //            {
+        //                RegistryKey subkey = key.OpenSubKey(keyName, true);
+        //                displayName = subkey?.GetValue("DisplayName") as string;
+        //                if (name.Equals(displayName, StringComparison.OrdinalIgnoreCase))
+        //                {
+        //                    return true;
+        //                }
+        //            }
+        //        }
+
+        //        // search in: LocalMachine_64
+        //        key = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall");
+        //        if (key != null)
+        //        {
+        //            foreach (string keyName in key.GetSubKeyNames())
+        //            {
+        //                RegistryKey subkey = key.OpenSubKey(keyName, true);
+        //                displayName = subkey?.GetValue("DisplayName") as string;
+        //                if (name.Equals(displayName, StringComparison.OrdinalIgnoreCase))
+        //                {
+        //                    return true;
+        //                }
+        //            }
+        //        }
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        return false;
+        //    }
+
+        //    // NOT FOUND
+        //    return false;
+        //}
     }
 }

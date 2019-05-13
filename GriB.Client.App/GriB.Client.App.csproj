@@ -545,6 +545,7 @@
     <TypeScriptCompile Include="Content\js\app\application.ts" />
     <TypeScriptCompile Include="Content\js\app\common\basecontrol.ts" />
     <TypeScriptCompile Include="Content\js\app\common\basedialog.ts" />
+    <TypeScriptCompile Include="Content\js\app\common\utils.d.ts" />
     <TypeScriptCompile Include="Content\js\app\common\poscontrol.ts" />
     <TypeScriptCompile Include="Content\js\app\common\utils.ts" />
     <TypeScriptCompile Include="Content\js\app\common\variables.ts" />

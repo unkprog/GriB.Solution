@@ -139,6 +139,8 @@ export namespace Controller {
             this.sideNav.sidenav('close');
             if (!utils.isNullOrEmpty(urlController))
                 this.OpenController({ urlController: urlController });
+
+           // nativeBridge.showMessage('Message from JS');
         }
     }
 }

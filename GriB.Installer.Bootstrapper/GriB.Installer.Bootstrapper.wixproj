@@ -6,7 +6,7 @@
     <ProductVersion>3.10</ProductVersion>
     <ProjectGuid>22be9e9a-02ed-4c41-b1e7-4194ba74fd95</ProjectGuid>
     <SchemaVersion>2.0</SchemaVersion>
-    <OutputName>POSCloudInstaller</OutputName>
+    <OutputName>GriB.Installer.Bootstrapper</OutputName>
     <OutputType>Bundle</OutputType>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">

@@ -26,7 +26,7 @@ namespace Grib.App.Windows
         private void InitBrowser()
         {
 
-            browser = new ChromiumWebBrowser("www.poscloudgb.ru")
+            browser = new ChromiumWebBrowser("http://localhost:50970?IsNativeApp") // new ChromiumWebBrowser("www.poscloudgb.ru")
             {
                 Dock = DockStyle.Fill,
             };
@@ -42,6 +42,9 @@ namespace Grib.App.Windows
             var bitness = Environment.Is64BitProcess ? "x64" : "x86";
             var version = string.Format("Chromium: {0}, CEF: {1}, CefSharp: {2}, Environment: {3}", Cef.ChromiumVersion, Cef.CefVersion, Cef.CefSharpVersion, bitness);
             DisplayOutput(version);
+            CefSharpSettings.LegacyJavascriptBindingEnabled = true;
+            browser.RegisterAsyncJsObject("nativeBridge", new JavaScript.Bridge());
+
         }
 
         private void OnIsBrowserInitializedChanged(object sender, IsBrowserInitializedChangedEventArgs e)

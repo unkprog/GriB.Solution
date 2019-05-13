@@ -119,6 +119,7 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
                 this.sideNav.sidenav('close');
                 if (!utils.isNullOrEmpty(urlController))
                     this.OpenController({ urlController: urlController });
+                // nativeBridge.showMessage('Message from JS');
             };
             return Main;
         }(ctrl.Controller.BaseContent));

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
 using GriB.Installer.UI.Models;
@@ -86,15 +87,26 @@ namespace GriB.Installer.UI.ViewModels.Pages
         public void ConfigurateApplications()
         {
             InstallMessage = string.Concat("Настройка приложений...");
-            CreateStartMenuDirectory();
+            CreateAppShortCutDirectory();
             CreateShortcuts();
             InstallMessage = string.Concat("Установка приложений завершена...");
             InstallerApplication.AppDispatcher.Invoke(() => { OnComplite?.Invoke(); });
         }
 
-        public void CreateStartMenuDirectory()
+        public void CreateAppShortCutDirectory()
         {
-            string appDirPath = Constants.StartMenyAppPath;
+            string appDirPath = Constants.DesktopAppPath;
+            try
+            {
+                if (!Directory.Exists(appDirPath))
+                    Directory.CreateDirectory(appDirPath);
+            }
+            catch (Exception)
+            {
+                // ignored
+            }
+
+            appDirPath = Constants.StartMenyAppPath;
             try
             {
                 if (!Directory.Exists(appDirPath))
@@ -137,6 +149,7 @@ namespace GriB.Installer.UI.ViewModels.Pages
 
         public void CreateShortcuts()
         {
+
             foreach (var installItem in InstallItems)
             {
                 string shortcutPath = string.Concat(Constants.DesktopAppPath, @"\", installItem.Name, ".lnk");
@@ -152,8 +165,47 @@ namespace GriB.Installer.UI.ViewModels.Pages
 
         private void Complite()
         {
-            //InstallCacheAndRegistry();
+            InstallCacheAndRegistry();
             InstallerApplication.MainViewModel.NextCommand.Execute(null);
         }
+
+        internal void InstallCacheAndRegistry()
+        {
+            try
+            {
+                Directory.CreateDirectory(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData) + @"\Package Cache\" + Constants.GUID);
+                string directory = Environment.CurrentDirectory;
+                string fileName = Process.GetCurrentProcess().MainModule.ModuleName;
+                string installerPath = directory + $@"\{fileName}";
+                string cacheFilePath = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData) + @"\Package Cache\" + Constants.GUID + $@"\{fileName}";
+                File.Copy(installerPath, cacheFilePath);
+
+                RegistryKey registryKey = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall", true);
+                var key = registryKey?.CreateSubKey(Constants.GUID);
+                if (key != null)
+                {
+                    key.SetValue("ApplicationPath", InstallPath);
+                    key.SetValue("BundleCachePath", $@"{cacheFilePath} ");
+                    key.SetValue("BundleProviderKey", Constants.GUID);
+                    key.SetValue("BundleVersion", "1.0.0.0");
+                    key.SetValue("DisplayIcon", $@"{cacheFilePath} ,0");
+                    key.SetValue("DisplayName", Constants.GUID);
+                    //key.SetValue("DisplayVersion", Settings.Version);
+                    //key.SetValue("EstimatedSize", EstimatedSize);
+                    key.SetValue("Installed", 1);
+                    key.SetValue("NoElevateOnModify", 1);
+                    key.SetValue("Publisher", Constants.Manufacturer);
+                    key.SetValue("QuietUninstallString", 1);
+                    key.SetValue("UninstallString", $"{cacheFilePath} /uninstall");
+                    //key.SetValue("URLInfoAbout", SupportUrl);
+                }
+
+            }
+            catch (Exception)
+            {
+
+            }
+        }
+
     }
 }

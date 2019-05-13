@@ -12,5 +12,7 @@ namespace GriB.Installer.UI.Models.Pages
         public string DownloadSource { get; set; }
         public string DestinationSource { get; set; }
         public string ExecutableFile { get; set; }
+
+        public string GUID { get; set; }
     }
 }

@@ -93,9 +93,9 @@ namespace GriB.Client.App.Managers.Editors
                     query.Execute(cmdSetSalepointAcces, new SqlParameter[] { new SqlParameter("@id", empl.id), new SqlParameter("@salepoint", item.salepoint.id), new SqlParameter("@isaccess", item.isaccess) }
                     , (values) => { });
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                int i = 0;
+                //int i = 0;
             }
 
             return result;
