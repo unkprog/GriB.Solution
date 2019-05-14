@@ -60,32 +60,9 @@ namespace Grib.App.Windows
             string printFile = GriB.Print.Windows.PrintCheck.Print(check);
             Printer _printer = new Printer();
 
-
-
-            //EventHandler<string> _printer_OnEndPrint = null, _printer_OnErrorPrint = null;
-
-            //_printer_OnEndPrint = (object sender, string fileName) =>
-            //{
-            //    _printer.OnEndPrint -= _printer_OnEndPrint;
-            //    _printer.OnErrorPrint -= _printer_OnErrorPrint;
-            //    _printer = null;
-            //};
-
-            //_printer_OnErrorPrint = (object sender, string error) =>
-            //{
-            //    _printer.OnEndPrint -= _printer_OnEndPrint;
-            //    _printer.OnErrorPrint -= _printer_OnErrorPrint;
-            //    _printer = null;
-            //};
-
-            //_printer.OnEndPrint += _printer_OnEndPrint;
-            //_printer.OnErrorPrint += _printer_OnErrorPrint;
             string folderChecks = FileHelper.GetFolderChecks();
             GriB.Print.Windows.PrintCheck.RestoreCssCheck(folderChecks);
-            //_printer.PrintDocument(printFile);
-            var res = _printer.DoWorkPrintDocument(new object[] { printFile });
-            //res.Start();
-            //res.Wait();
+            _ = _printer.DoWorkPrintDocument(new object[] { printFile });
         }
 
         private void OnIsBrowserInitializedChanged(object sender, IsBrowserInitializedChangedEventArgs e)
