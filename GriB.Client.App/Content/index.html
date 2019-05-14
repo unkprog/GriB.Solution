@@ -15,7 +15,7 @@
 
             var backlen = history.length;
             history.go(-backlen);
-            window.location.replace('/Content/view/index.html?' + (window.location.href.toLocaleLowerCase().indexOf('?admin') > -1 ? 'admin&' : '') + 'gb=' + new Date().getTime().toString());
+            window.location.replace('/Content/view/index.html?' + (window.location.href.toLocaleLowerCase().indexOf('?admin') > -1 ? 'admin&' : '') + (window.location.href.toLocaleLowerCase().indexOf('isnativeapp') > -1 ? 'isnativeapp&' : '') + 'gb=' + new Date().getTime().toString());
         }
     </script>
 </body>

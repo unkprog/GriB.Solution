@@ -83,7 +83,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.12.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\packages\Newtonsoft.Json.12.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -117,7 +117,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Common\FileHelper.cs" />
     <Compile Include="ConfigForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -129,7 +128,6 @@
     <Compile Include="Controllers\StartController.cs" />
     <Compile Include="Controllers\TestController.cs" />
     <Compile Include="Models\PrintCheckModel.cs" />
-    <Compile Include="Printer.cs" />
     <Compile Include="Properties\Constants.cs" />
     <Compile Include="PrintServerContext.cs" />
     <Compile Include="Program.cs" />
@@ -197,6 +195,10 @@
       <Project>{78f0ccb1-c344-4be7-83c6-ee75df3efd4c}</Project>
       <Name>GriB.Common</Name>
     </ProjectReference>
+    <ProjectReference Include="..\GriB.Print.Windows\GriB.Print.Windows.csproj">
+      <Project>{af4dbc8c-9e86-447d-8ba5-1aaac79f5441}</Project>
+      <Name>GriB.Print.Windows</Name>
+    </ProjectReference>
     <ProjectReference Include="..\GriB.Web\GriB.Web.csproj">
       <Project>{3e00a39a-bbc4-4b43-8a5d-d2583f974ff4}</Project>
       <Name>GriB.Web</Name>
@@ -207,21 +209,7 @@
     <EmbeddedResource Include="Icons\print_disabled.png" />
   </ItemGroup>
   <ItemGroup>
-    <COMReference Include="SHDocVw">
-      <Guid>{EAB22AC0-30C1-11CF-A7EB-0000C05BAE0B}</Guid>
-      <VersionMajor>1</VersionMajor>
-      <VersionMinor>1</VersionMinor>
-      <Lcid>0</Lcid>
-      <WrapperTool>tlbimp</WrapperTool>
-      <Isolated>False</Isolated>
-      <EmbedInteropTypes>True</EmbedInteropTypes>
-    </COMReference>
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="print_active.ico" />
-    <EmbeddedResource Include="..\GriB.Client.App\Content\css\app.print.min.css">
-      <Link>Css\app.print.min.css</Link>
-    </EmbeddedResource>
     <Content Include="Icons\settings.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

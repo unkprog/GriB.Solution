@@ -7,7 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace GriB.PrintServer.Windows
+namespace GriB.Print.Windows
 {
     public class Printer
     {
@@ -156,7 +156,7 @@ namespace GriB.PrintServer.Windows
             }
         }
 
-        private async Task<object> DoWorkPrintDocument(object[] args)
+        public async Task<object> DoWorkPrintDocument(object[] args)
         {
             SetupPrintSettings();
             //return null;
@@ -254,7 +254,7 @@ namespace GriB.PrintServer.Windows
                     }
 
                     // signal to exit the message loop Application.Run will exit at this point
-                    Application.ExitThread();
+                    //Application.ExitThread();
                 };
 
                 // handle Application.Idle just once

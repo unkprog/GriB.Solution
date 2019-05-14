@@ -6,10 +6,11 @@ using System.Reflection;
 using System.Windows.Forms;
 using System.Threading;
 using System.ComponentModel;
-using GriB.PrintServer.Windows.Common;
 using GriB.PrintServer.Windows.Properties;
 using System.Collections.Generic;
 using GriB.PrintServer.Windows.Controllers;
+using GriB.Print.Windows;
+using GriB.Print.Windows.Common;
 
 namespace GriB.PrintServer.Windows
 {
@@ -35,11 +36,7 @@ namespace GriB.PrintServer.Windows
             return (stream == null ? null : new Bitmap(stream));
         }
 
-        internal static Stream GetAppCSS(string cssName)
-        {
-            return Assembly.GetEntryAssembly().GetManifestResourceStream(string.Format(Constants.sourceAppCss, cssName));
-        }
-
+       
         public PrintServerContext()
         {
             showConfigHandler = new EventHandler(ShowConfig);
@@ -188,25 +185,7 @@ namespace GriB.PrintServer.Windows
         private Dictionary<string, string> listChecks = new Dictionary<string, string>();
         private Dictionary<string, string> listDocuments = new Dictionary<string, string>();
 
-        private void restoreCssCheck(string folderChecks)
-        {
-            string cssFolderFile = string.Concat(folderChecks, "\\css");
-            FileHelper.CheckFolderPath(cssFolderFile);
-            string cssFile = string.Concat(cssFolderFile, "\\app.print.min.css");
-            if (!File.Exists(cssFile))
-            {
-                using (Stream cssStream = GetAppCSS("app.print.min"))
-                {
-                    if (cssStream != null)
-                    {
-                        using (var fileStream = new FileStream(cssFile, FileMode.Create, FileAccess.Write))
-                        {
-                            cssStream.CopyTo(fileStream);
-                        }
-                    }
-                }
-            }
-        }
+        
         private void _bwPrintFilesCheck_DoWork(object sender, DoWorkEventArgs e)
         {
             while (true)
@@ -214,7 +193,7 @@ namespace GriB.PrintServer.Windows
                 if (_printer != null && !_printer.IsPrinting && listChecks.Count == 0 && listDocuments.Count == 0)
                 {
                     string folderChecks = FileHelper.GetFolderChecks();
-                    restoreCssCheck(folderChecks);
+                    PrintCheck.RestoreCssCheck(folderChecks);
                     string[] filesCheck = Directory.GetFiles(folderChecks, "*.html");
                     if (filesCheck != null && filesCheck.Length > 0)
                     {
@@ -245,7 +224,7 @@ namespace GriB.PrintServer.Windows
         private void RemovePrint(string fileName)
         {
             FileInfo fi = new FileInfo(fileName);
-            if (fi.Directory.Name == Constants.folderChecks)
+            if (fi.Directory.Name == Print.Windows.Properties.Constants.folderChecks)
             {
                 if (listChecks.ContainsKey(fileName))
                     listChecks.Remove(fileName);
@@ -270,7 +249,7 @@ namespace GriB.PrintServer.Windows
             if (File.Exists(fileName))
             {
                 FileInfo fi = new FileInfo(fileName);
-                string fileTo = string.Concat(fi.Directory.Name == Constants.folderChecks ? FileHelper.GetFolderChecksPrintError() : FileHelper.GetFolderDocumentsPrintError(), "\\", fi.Name);
+                string fileTo = string.Concat(fi.Directory.Name == Print.Windows.Properties.Constants.folderChecks ? FileHelper.GetFolderChecksPrintError() : FileHelper.GetFolderDocumentsPrintError(), "\\", fi.Name);
                 File.Move(fileName, fileTo);
                 RemovePrint(fileName);
                 NextPrint();

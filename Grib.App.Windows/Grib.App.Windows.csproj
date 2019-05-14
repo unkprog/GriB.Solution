@@ -106,11 +106,28 @@
     <PackageReference Include="CefSharp.WinForms">
       <Version>71.0.2</Version>
     </PackageReference>
+    <PackageReference Include="Newtonsoft.Json">
+      <Version>12.0.2</Version>
+    </PackageReference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Icons\poscloud.ico" />
     <Content Include="Icons\poscloud.png" />
     <Content Include="poscloud.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\GriB.Common.Models\GriB.Common.Models.csproj">
+      <Project>{2AB9C7F5-10C3-4EBC-8991-788FF4D6B64E}</Project>
+      <Name>GriB.Common.Models</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\GriB.Print.Windows\GriB.Print.Windows.csproj">
+      <Project>{af4dbc8c-9e86-447d-8ba5-1aaac79f5441}</Project>
+      <Name>GriB.Print.Windows</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\GriB.Web\GriB.Web.csproj">
+      <Project>{3e00a39a-bbc4-4b43-8a5d-d2583f974ff4}</Project>
+      <Name>GriB.Web</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

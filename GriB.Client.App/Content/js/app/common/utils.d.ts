@@ -7,8 +7,8 @@
     numberPadZero(value: number, length: number): string;
     numberRound(value: number, places: number): number;
     strToHashCode(str: string): number;
-    printDocumentPage(documentPage: string | JQuery): void;
     WeekNamesByValue: Array<string>;
 }
+
 
 declare let nativeBridge: any;

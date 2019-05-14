@@ -25,5 +25,8 @@
         //OpenViewModal(options: IOpenViewOptions);
         OpenViewTemplate(options: IOpenViewTemplate);
         IsModal: boolean;
+        IsNativeApp: boolean;
+
+        NativeCommand(command: string, data: any);
     }
 }

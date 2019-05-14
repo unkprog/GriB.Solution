@@ -35,6 +35,8 @@ Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "GriB.Installer.Bootstrapper
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GriB.Installer.UI", "GriB.Installer.UI\GriB.Installer.UI.csproj", "{71DB3E5F-9D5B-4AC0-8242-5F70852CE8C8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GriB.Print.Windows", "GriB.Print.Windows\GriB.Print.Windows.csproj", "{AF4DBC8C-9E86-447D-8BA5-1AAAC79F5441}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -256,6 +258,24 @@ Global
 		{71DB3E5F-9D5B-4AC0-8242-5F70852CE8C8}.Release|x64.Build.0 = Release|Any CPU
 		{71DB3E5F-9D5B-4AC0-8242-5F70852CE8C8}.Release|x86.ActiveCfg = Release|Any CPU
 		{71DB3E5F-9D5B-4AC0-8242-5F70852CE8C8}.Release|x86.Build.0 = Release|Any CPU
+		{AF4DBC8C-9E86-447D-8BA5-1AAAC79F5441}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AF4DBC8C-9E86-447D-8BA5-1AAAC79F5441}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AF4DBC8C-9E86-447D-8BA5-1AAAC79F5441}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{AF4DBC8C-9E86-447D-8BA5-1AAAC79F5441}.Debug|x64.Build.0 = Debug|Any CPU
+		{AF4DBC8C-9E86-447D-8BA5-1AAAC79F5441}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{AF4DBC8C-9E86-447D-8BA5-1AAAC79F5441}.Debug|x86.Build.0 = Debug|Any CPU
+		{AF4DBC8C-9E86-447D-8BA5-1AAAC79F5441}.Publish|Any CPU.ActiveCfg = Release|Any CPU
+		{AF4DBC8C-9E86-447D-8BA5-1AAAC79F5441}.Publish|Any CPU.Build.0 = Release|Any CPU
+		{AF4DBC8C-9E86-447D-8BA5-1AAAC79F5441}.Publish|x64.ActiveCfg = Release|Any CPU
+		{AF4DBC8C-9E86-447D-8BA5-1AAAC79F5441}.Publish|x64.Build.0 = Release|Any CPU
+		{AF4DBC8C-9E86-447D-8BA5-1AAAC79F5441}.Publish|x86.ActiveCfg = Release|Any CPU
+		{AF4DBC8C-9E86-447D-8BA5-1AAAC79F5441}.Publish|x86.Build.0 = Release|Any CPU
+		{AF4DBC8C-9E86-447D-8BA5-1AAAC79F5441}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AF4DBC8C-9E86-447D-8BA5-1AAAC79F5441}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AF4DBC8C-9E86-447D-8BA5-1AAAC79F5441}.Release|x64.ActiveCfg = Release|Any CPU
+		{AF4DBC8C-9E86-447D-8BA5-1AAAC79F5441}.Release|x64.Build.0 = Release|Any CPU
+		{AF4DBC8C-9E86-447D-8BA5-1AAAC79F5441}.Release|x86.ActiveCfg = Release|Any CPU
+		{AF4DBC8C-9E86-447D-8BA5-1AAAC79F5441}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -273,9 +293,10 @@ Global
 		{210D8818-C1B9-4698-940F-770E5281C08D} = {7DAB38BE-65AD-4137-A926-E67265E93090}
 		{22BE9E9A-02ED-4C41-B1E7-4194BA74FD95} = {7DAB38BE-65AD-4137-A926-E67265E93090}
 		{71DB3E5F-9D5B-4AC0-8242-5F70852CE8C8} = {7DAB38BE-65AD-4137-A926-E67265E93090}
+		{AF4DBC8C-9E86-447D-8BA5-1AAAC79F5441} = {EA6E92E4-6874-427A-8486-870B4DDDF9A1}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		EnterpriseLibraryConfigurationToolBinariesPathV6 = packages\EnterpriseLibrary.Common.6.0.1304.0\lib\NET45;packages\EnterpriseLibrary.Logging.6.0.1304.0\lib\NET45
 		SolutionGuid = {EAC2E5AA-F73A-4301-87B1-0A49A98CD79B}
+		EnterpriseLibraryConfigurationToolBinariesPathV6 = packages\EnterpriseLibrary.Common.6.0.1304.0\lib\NET45;packages\EnterpriseLibrary.Logging.6.0.1304.0\lib\NET45
 	EndGlobalSection
 EndGlobal

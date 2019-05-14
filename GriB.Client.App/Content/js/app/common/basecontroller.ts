@@ -331,9 +331,10 @@ export namespace Controller {
             this.btnSave = $('<li><a id="editor-btn-save" class="editor-header-button tooltipped" data-position="bottom" data-tooltip="' + vars._statres("button$label$save") + '"><i class="material-icons editor-header">done</i></a></li>');
             this.btnCancel = $('<li><a id="editor-btn-cancel" class="editor-header-button tooltipped" data-position="bottom" data-tooltip="' + vars._statres("button$label$cancel") + '"><i class="material-icons editor-header">close</i></a></li>');
 
-            if (this.editorSettings.ButtonSetings.IsPrint === true) this.navHeader.find("#editButtons").append(this.btnPrint);
-            if (this.editorSettings.ButtonSetings.IsSave === true) this.navHeader.find("#editButtons").append(this.btnSave);
-            if (this.editorSettings.ButtonSetings.IsCancel === true) this.navHeader.find("#editButtons").append(this.btnCancel);
+            let editButtons: JQuery = this.navHeader.find("#editButtons");
+            if (this.editorSettings.ButtonSetings.IsPrint === true) editButtons.append(this.btnPrint);
+            if (this.editorSettings.ButtonSetings.IsSave === true) editButtons.append(this.btnSave);
+            if (this.editorSettings.ButtonSetings.IsCancel === true) editButtons.append(this.btnCancel);
 
             if (this.editorSettings.ButtonSetings.IsSave === true || this.editorSettings.ButtonSetings.IsCancel === true)
                 view.prepend(this.navHeader);

@@ -1,21 +1,10 @@
-define(["require", "exports", "app/common/variables", "app/common/basecontroller"], function (require, exports, vars, base) {
+define(["require", "exports", "app/common/utils", "app/common/variables", "app/common/basecontroller"], function (require, exports, utils, vars, base) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var App;
     (function (App) {
         var Application = /** @class */ (function () {
             function Application() {
-                //public OpenViewModal(options: Interfaces.IOpenViewOptions): void {
-                //    this._controllersModalStack.Push(options.controller);
-                //    let modalContent: JQuery = $('<div class="main-view-content-modal"></div>');
-                //    try {
-                //        isInit = options.controller.ViewInit(view);
-                //        self.contentControl.html(view[0]);
-                //        isInit = isInit && self._controller.ViewShow(this);
-                //    }
-                //    this.contentControl.parent().add(modalContent);
-                //    //self.OpenViewTemplate({ controller: options.controller, template: template, backController: options.backController, isRestore: options.isRestore });
-                //}
                 this.contentModals = [];
                 vars._app = this;
                 this._controllersStack = new base.Controller.ControllersStack();
@@ -81,6 +70,17 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
                 //else
                 //    this._controller.ViewShow(this);
             };
+            Object.defineProperty(Application.prototype, "IsNativeApp", {
+                get: function () {
+                    return (window.location.href.toLocaleLowerCase().indexOf('isnativeapp') > -1 ? true : false); //(window.location.href.toLocaleLowerCase().indexOf('isnativeapp') > -1);
+                },
+                enumerable: true,
+                configurable: true
+            });
+            Application.prototype.NativeCommand = function (command, data) {
+                if (this.IsNativeApp)
+                    nativeBridge.command(command, JSON.stringify(data));
+            };
             Application.prototype.loadAppView = function () {
                 var _this = this;
                 var self = this;
@@ -90,7 +90,13 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
                         kendo.bind($("#app-view"), _this._model);
                         self.contentControl = $("#app-content");
                         self.navbarControl = $("#app-navbar");
-                        //$('.sidenav').sidenav();
+                        self.rigthMenuItems = $("#rigthMenuItems");
+                        //alert('IsNativeApp=' + app.IsNativeApp);
+                        if (self.IsNativeApp == true) {
+                            self.buttonAppClose = $('<li><a id="app-btn-close" class="tooltipped" data-position="bottom" data-tooltip="' + vars._statres("button$close") + '"><i class="material-icons">close</i></a></li>');
+                            self.rigthMenuItems.append(self.buttonAppClose);
+                            utils.createClickEvent(self.buttonAppClose, self.CloseApp, self);
+                        }
                         self.resize(undefined);
                         self.initAfterLoaded();
                         self.SetControlNavigation(_this);
@@ -101,6 +107,9 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
                     self.HideLoading();
                     alert(e.responseText);
                 });
+            };
+            Application.prototype.CloseApp = function (e) {
+                this.NativeCommand("CloseApp", {});
             };
             Application.prototype.SetControlNavigation = function (controlNavigation) {
                 if (controlNavigation)

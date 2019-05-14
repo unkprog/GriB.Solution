@@ -1,4 +1,4 @@
-define(["require", "exports", "app/common/variables", "app/common/utils"], function (require, exports, vars, utils) {
+define(["require", "exports", "app/common/variables", "app/common/utils", "app/common/variables"], function (require, exports, vars, utils, variables_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var POSControl;
@@ -113,11 +113,16 @@ define(["require", "exports", "app/common/variables", "app/common/utils"], funct
             };
             CheckViewControl.prototype.Print = function (pskey) {
                 var self = this;
-                if (this.printService) {
-                    this.printService.PrintCheck(pskey, self.checkContainer.html(), function (responseData) { }, function (errorData) { self.PrintThis(); });
+                if (variables_1._app.IsNativeApp == true) {
+                    variables_1._app.NativeCommand('PrintCheck', { pskey: pskey, document: self.checkContainer.html() });
                 }
-                else
-                    this.PrintThis();
+                else {
+                    if (this.printService) {
+                        this.printService.PrintCheck(pskey, self.checkContainer.html(), function (responseData) { }, function (errorData) { self.PrintThis(); });
+                    }
+                    else
+                        this.PrintThis();
+                }
             };
             CheckViewControl.prototype.PrintThis = function () {
                 this.checkContainer.printThis({

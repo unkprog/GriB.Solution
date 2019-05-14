@@ -1,5 +1,7 @@
 ﻿import vars = require('app/common/variables');
 import utils = require('app/common/utils');
+import { App } from '../application';
+import { _app } from 'app/common/variables';
 
 export namespace POSControl {
 
@@ -126,14 +128,19 @@ export namespace POSControl {
 
         public Print(pskey: string) {
             let self = this;
-            if (this.printService) {
-                this.printService.PrintCheck(pskey, self.checkContainer.html()
-                    , (responseData) => { }
-                    , (errorData) => { self.PrintThis(); }
-                );
+            if (_app.IsNativeApp == true) {
+                _app.NativeCommand('PrintCheck', { pskey: pskey, document: self.checkContainer.html() });
             }
-            else
-                this.PrintThis();
+            else {
+                if (this.printService) {
+                    this.printService.PrintCheck(pskey, self.checkContainer.html()
+                        , (responseData) => { }
+                        , (errorData) => { self.PrintThis(); }
+                    );
+                }
+                else
+                    this.PrintThis();
+            }
         }
 
         private PrintThis() {

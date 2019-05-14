@@ -1,4 +1,5 @@
-﻿import vars = require('app/common/variables');
+﻿import utils = require('app/common/utils');
+import vars = require('app/common/variables');
 import base = require('app/common/basecontroller');
 
 export module App {
@@ -53,6 +54,9 @@ export module App {
         private progressControl: JQuery;
         private navbarControl: JQuery;
         private contentControl: JQuery;
+        private rigthMenuItems: JQuery;
+        private buttonAppClose: JQuery;
+
         public Initailize(): void {
             let app = this;
 
@@ -60,7 +64,6 @@ export module App {
           
             app.progressControl = $("#progress-container");
             app.contentControl = $("#app-content");
-
             app.Resize = $.proxy(app.resize, app);
             app.ControllerBack = $.proxy(app.controllerBack, app);
             app.loadAppView();
@@ -88,7 +91,17 @@ export module App {
             //    this._controller.ViewShow(this);
         }
 
-      
+
+        public get IsNativeApp(): boolean {
+            return (window.location.href.toLocaleLowerCase().indexOf('isnativeapp') > -1 ? true : false); //(window.location.href.toLocaleLowerCase().indexOf('isnativeapp') > -1);
+        }
+
+        public NativeCommand(command: string, data: any) {
+            if (this.IsNativeApp)
+                nativeBridge.command(command, JSON.stringify(data));
+        }
+
+
         private loadAppView() {
             let self = this;
             $.when($.ajax({ url: "/Content/view/app.html", cache: false })).done((template) => {
@@ -98,7 +111,13 @@ export module App {
 
                     self.contentControl = $("#app-content");
                     self.navbarControl = $("#app-navbar");
-                    //$('.sidenav').sidenav();
+                    self.rigthMenuItems = $("#rigthMenuItems");
+                    //alert('IsNativeApp=' + app.IsNativeApp);
+                    if (self.IsNativeApp == true) {
+                        self.buttonAppClose = $('<li><a id="app-btn-close" class="tooltipped" data-position="bottom" data-tooltip="' + vars._statres("button$close") + '"><i class="material-icons">close</i></a></li>');
+                        self.rigthMenuItems.append(self.buttonAppClose);
+                        utils.createClickEvent(self.buttonAppClose, self.CloseApp, self);
+                    }
                     self.resize(undefined);
                     self.initAfterLoaded();
                     self.SetControlNavigation(this);
@@ -109,6 +128,10 @@ export module App {
                 self.HideLoading();
                 alert(e.responseText);
             });
+        }
+
+        private CloseApp(e): void {
+            this.NativeCommand("CloseApp", {});
         }
 
         public SetControlNavigation(controlNavigation: Interfaces.IControllerNavigation): void {
@@ -209,18 +232,6 @@ export module App {
             });
         }
 
-        //public OpenViewModal(options: Interfaces.IOpenViewOptions): void {
-        //    this._controllersModalStack.Push(options.controller);
-        //    let modalContent: JQuery = $('<div class="main-view-content-modal"></div>');
-        //    try {
-        //        isInit = options.controller.ViewInit(view);
-        //        self.contentControl.html(view[0]);
-        //        isInit = isInit && self._controller.ViewShow(this);
-        //    }
-
-        //    this.contentControl.parent().add(modalContent);
-        //    //self.OpenViewTemplate({ controller: options.controller, template: template, backController: options.backController, isRestore: options.isRestore });
-        //}
         private contentModals: JQuery[] = [];
         public get IsModal(): boolean {
             return (this.contentModals.length > 0);

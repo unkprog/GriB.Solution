@@ -1,10 +1,10 @@
 ﻿using System;
 using System.IO;
-using GriB.PrintServer.Windows.Properties;
+using GriB.Print.Windows.Properties;
 
-namespace GriB.PrintServer.Windows.Common
+namespace GriB.Print.Windows.Common
 {
-    internal static class FileHelper
+    public static class FileHelper
     {
         public static string GetFolder(string folderName)
         {
