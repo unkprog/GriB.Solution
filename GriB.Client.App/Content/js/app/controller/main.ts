@@ -48,7 +48,7 @@ export namespace Controller {
             this.Model.set("employee", vars._identity.employee);
             this.menu = $('<li><a id="app-btn-menu"><i class="material-icons">menu</i></a></li>');
             this.sideNav = view.find('#main-view-slide');
-            this.sideNav.sidenav({ draggable: false });
+            this.sideNav.sidenav({ edge: 'left', closeOnClick: false, draggable: false });
             $("#app-navbar").find(".left").append(this.menu);
             this.buttonMenu = this.menu.find("#app-btn-menu");
             this.content = view.find("#main-view-content");
@@ -100,6 +100,8 @@ export namespace Controller {
 
         public OpenMenuButtonClick: { (e: any): void; };
         private openMenuButtonClick(e) {
+            e.preventDefault();
+            e.stopPropagation();
             this.sideNav.sidenav('open');
         }
 

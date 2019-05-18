@@ -301,6 +301,13 @@ define(["require", "exports", "app/common/utils", "app/common/variables", "app/c
             BaseEditor.prototype.createEditorSettings = function () {
                 return { EditIdName: "", Load: undefined, Save: undefined };
             };
+            Object.defineProperty(BaseEditor.prototype, "EditorHeader", {
+                get: function () {
+                    return (this.editorSettings.ButtonSetings.IsSave === true || this.editorSettings.ButtonSetings.IsCancel === true ? this.navHeader : undefined);
+                },
+                enumerable: true,
+                configurable: true
+            });
             BaseEditor.prototype.ViewInit = function (view) {
                 var navbarHeader = '<div class="navbar-fixed editor-header">';
                 navbarHeader += '        <nav class="editor-header-nav">';

@@ -314,6 +314,11 @@ export namespace Controller {
         private btnSave: JQuery;
         private btnCancel: JQuery;
         private tooltips: JQuery;
+
+        public get EditorHeader(): JQuery {
+            return (this.editorSettings.ButtonSetings.IsSave === true || this.editorSettings.ButtonSetings.IsCancel === true ? this.navHeader : undefined);
+        }
+
         public ViewInit(view: JQuery): boolean {
 
             let navbarHeader: string = '<div class="navbar-fixed editor-header">';
@@ -345,7 +350,6 @@ export namespace Controller {
             return this.loadData();
 
         }
-
 
         public ViewShow(e): boolean {
             if (this.tooltips)

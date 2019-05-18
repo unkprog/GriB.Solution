@@ -79,6 +79,9 @@ define(["require", "exports", "app/common/baseservice"], function (require, expo
             POSTerminalService.prototype.CheckClose = function (checkParamsClose, Callback) {
                 this.PostApi({ Action: "/check_close", RequestData: JSON.stringify(checkParamsClose), Callback: Callback });
             };
+            POSTerminalService.prototype.GetPrinters = function (salepoint, Callback) {
+                this.GetApi({ Action: "/getprinters", RequestData: { salepoint: salepoint }, Callback: Callback });
+            };
             return POSTerminalService;
         }(base.Services.BaseService));
         Services.POSTerminalService = POSTerminalService;

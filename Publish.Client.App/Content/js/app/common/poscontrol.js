@@ -1,4 +1,4 @@
-define(["require", "exports", "app/common/variables", "app/common/utils"], function (require, exports, vars, utils) {
+define(["require", "exports", "app/common/variables", "app/common/utils", "app/common/variables"], function (require, exports, vars, utils, variables_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var POSControl;
@@ -59,6 +59,8 @@ define(["require", "exports", "app/common/variables", "app/common/utils"], funct
                 configurable: true
             });
             CheckViewControl.prototype.updateView = function () {
+                if (!this.checkContainer)
+                    return;
                 var html = '';
                 var sum = 0;
                 var classSize = ' size80';
@@ -74,7 +76,7 @@ define(["require", "exports", "app/common/variables", "app/common/utils"], funct
                     this.checkViewPos.removeClass('size58').addClass('size80');
                 }
                 if (this.printer && utils.isNullOrEmpty(this.printer.logo) === false)
-                    html += '<img style="width:100%;" src = "' + this.printer.logo + '">';
+                    html += '<img style="width:100%;" src = "' + location.protocol + '//' + location.hostname + (location.port ? ':' + location.port : '') + this.printer.logo + '">';
                 if (this.printer && utils.isNullOrEmpty(this.printer.header) === false)
                     html += '<span class="truncate-print check-view-row center-print">' + this.printer.header.replace('\n', '<br />') + '</span>';
                 if (this.printer && this.printer.salepoint && utils.isNullOrEmpty(this.printer.salepoint.name) === false)
@@ -111,14 +113,19 @@ define(["require", "exports", "app/common/variables", "app/common/utils"], funct
             };
             CheckViewControl.prototype.Print = function (pskey) {
                 var self = this;
-                if (this.printService) {
-                    this.printService.PrintCheck(pskey, self.checkView.html(), function (responseData) { }, function (errorData) { self.PrintThis(); });
+                if (variables_1._app.IsNativeApp == true) {
+                    variables_1._app.NativeCommand('PrintCheck', { pskey: pskey, document: self.checkContainer.html() });
                 }
-                else
-                    this.PrintThis();
+                else {
+                    if (this.printService) {
+                        this.printService.PrintCheck(pskey, self.checkContainer.html(), function (responseData) { }, function (errorData) { self.PrintThis(); });
+                    }
+                    else
+                        this.PrintThis();
+                }
             };
             CheckViewControl.prototype.PrintThis = function () {
-                this.checkView.printThis({
+                this.checkContainer.printThis({
                     pageTitle: "PRINT CHECK",
                     importCSS: true,
                     //importStyle: true,         // import style tags

@@ -103,9 +103,6 @@ define(["require", "exports", "app/common/variables", "app/common/utils"], funct
                         if (salePoints[i].isaccess === true) {
                             if (+id === salePoints[i].salepoint.id) {
                                 self.terminal.Model.set("POSData.CurrentSalePoint", salePoints[i].salepoint);
-                                self.terminal.UpdateSumInCash();
-                                self.terminal.Reset();
-                                self.terminal.GetChange(function () { });
                             }
                         }
                     }

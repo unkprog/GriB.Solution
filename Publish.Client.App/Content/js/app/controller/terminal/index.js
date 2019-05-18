@@ -183,8 +183,10 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                 Index.prototype.createEvents = function () {
                     if (this.navCheck)
                         this.navCheck.createEvents();
+                    this.Model.bind("change", $.proxy(this.changeModel, this));
                 };
                 Index.prototype.destroyEvents = function () {
+                    this.Model.unbind("change");
                     if (this.navCheck)
                         this.navCheck.destroyEvents();
                     if (this.navProduct)
@@ -261,6 +263,24 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                         M.toast({ html: vars._statres("label$change$close") });
                     }
                     return result;
+                };
+                Index.prototype.GetPrinters = function () {
+                    var self = this;
+                    if (self.CurrentSalePoint == 0)
+                        vars._identity.printers = undefined;
+                    else
+                        self.Service.GetPrinters(self.CurrentSalePoint, function (responseData) {
+                            vars._identity.printers = responseData;
+                        });
+                };
+                Index.prototype.changeModel = function (e) {
+                    var self = this;
+                    if (e.field === "POSData.CurrentSalePoint") {
+                        self.UpdateSumInCash();
+                        self.Reset();
+                        self.GetChange(function () { });
+                        self.GetPrinters();
+                    }
                 };
                 Index.prototype.CloseChange = function () {
                     var self = this;

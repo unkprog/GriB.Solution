@@ -54,6 +54,7 @@
     export interface IControllerEditor extends IController {
         EditorModel: Model.IBaseModel;
         EditorSettings: Control.IEditorSettings;
+        EditorHeader: JQuery;
         Print(): void;
         Save(): void;
         Cancel(): void;

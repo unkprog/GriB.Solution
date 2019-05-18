@@ -93,6 +93,8 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
                         controller.checkViewContainer = view.find("#historysales-view-check");
                         controller.checkViewControl = new posctrl.POSControl.CheckViewControl();
                         controller.checkViewControl.PrintService = new svcPrint.Services.PrintService();
+                        if (vars._identity.printers && vars._identity.printers.length > 0)
+                            controller.checkViewControl.Printer = vars._identity.printers[0];
                         controller.checkViewContainer.append(controller.checkViewControl.InitView());
                         return _super.prototype.ViewInit.call(this, view);
                     };
@@ -204,7 +206,9 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
                         //this.checkViewControl.Setup();
                     };
                     HistorySales.prototype.Print = function () {
-                        this.checkViewControl.Print('5b9ea524be974c6a8bcd5bef898250dd');
+                        var pskey = (this.checkViewControl.Printer && this.checkViewControl.Printer.printserver ? this.checkViewControl.Printer.printserver.pskey : '');
+                        //let logo: string = (this.checkViewControl.Printer ? this.checkViewControl.Printer.logo : '');
+                        this.checkViewControl.Print(pskey);
                     };
                     return HistorySales;
                 }(base.Controller.BaseEditor));

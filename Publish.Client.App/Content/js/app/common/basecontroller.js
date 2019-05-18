@@ -301,6 +301,13 @@ define(["require", "exports", "app/common/utils", "app/common/variables", "app/c
             BaseEditor.prototype.createEditorSettings = function () {
                 return { EditIdName: "", Load: undefined, Save: undefined };
             };
+            Object.defineProperty(BaseEditor.prototype, "EditorHeader", {
+                get: function () {
+                    return (this.editorSettings.ButtonSetings.IsSave === true || this.editorSettings.ButtonSetings.IsCancel === true ? this.navHeader : undefined);
+                },
+                enumerable: true,
+                configurable: true
+            });
             BaseEditor.prototype.ViewInit = function (view) {
                 var navbarHeader = '<div class="navbar-fixed editor-header">';
                 navbarHeader += '        <nav class="editor-header-nav">';
@@ -314,12 +321,13 @@ define(["require", "exports", "app/common/utils", "app/common/variables", "app/c
                 this.btnPrint = $('<li><a id="editor-btn-print" class="editor-header-button tooltipped" data-position="bottom" data-tooltip="' + vars._statres("button$label$print") + '"><i class="material-icons editor-header">print</i></a></li>');
                 this.btnSave = $('<li><a id="editor-btn-save" class="editor-header-button tooltipped" data-position="bottom" data-tooltip="' + vars._statres("button$label$save") + '"><i class="material-icons editor-header">done</i></a></li>');
                 this.btnCancel = $('<li><a id="editor-btn-cancel" class="editor-header-button tooltipped" data-position="bottom" data-tooltip="' + vars._statres("button$label$cancel") + '"><i class="material-icons editor-header">close</i></a></li>');
+                var editButtons = this.navHeader.find("#editButtons");
                 if (this.editorSettings.ButtonSetings.IsPrint === true)
-                    this.navHeader.find("#editButtons").append(this.btnPrint);
+                    editButtons.append(this.btnPrint);
                 if (this.editorSettings.ButtonSetings.IsSave === true)
-                    this.navHeader.find("#editButtons").append(this.btnSave);
+                    editButtons.append(this.btnSave);
                 if (this.editorSettings.ButtonSetings.IsCancel === true)
-                    this.navHeader.find("#editButtons").append(this.btnCancel);
+                    editButtons.append(this.btnCancel);
                 if (this.editorSettings.ButtonSetings.IsSave === true || this.editorSettings.ButtonSetings.IsCancel === true)
                     view.prepend(this.navHeader);
                 this.tooltips = this.navHeader.find(".tooltipped");

@@ -33,6 +33,17 @@
     }
   },
   {
+    "outputFile": "Content/css/app.mobile.css",
+    "inputFile": "Scss/app.mobile.scss",
+    "minify": {
+      "termSemicolons": true
+    },
+    "options": {
+      "relativeUrls": false,
+      "lineFeed": "crlf"
+    }
+  },
+  {
     "outputFile": "Content/css/app.print.css",
     "inputFile": "Scss/app.print.scss",
     "minify": {

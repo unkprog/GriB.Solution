@@ -120,6 +120,10 @@
       <DependentUpon>app.css</DependentUpon>
     </Content>
     <None Condition="$(Configuration) == 'Debug'" Include="Content\css\app.print.css" />
+    <Content Include="Content\css\app.mobile.css" />
+    <Content Include="Content\css\app.mobile.min.css">
+      <DependentUpon>app.mobile.css</DependentUpon>
+    </Content>
     <Content Condition="$(Configuration) == 'Debug'" Include="Content\css\app.print.min.css">
       <DependentUpon>app.print.css</DependentUpon>
     </Content>
@@ -396,6 +400,7 @@
     <Content Include="Scripts\Sql\02.001.[t_unit].sql" />
     <Content Include="Scripts\Sql\03.001.[t_org].sql" />
     <None Include="packages.config" />
+    <Content Include="Scss\app.mobile.scss" />
     <None Include="TODO.txt" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>

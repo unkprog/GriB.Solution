@@ -51,7 +51,7 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
                 this.Model.set("employee", vars._identity.employee);
                 this.menu = $('<li><a id="app-btn-menu"><i class="material-icons">menu</i></a></li>');
                 this.sideNav = view.find('#main-view-slide');
-                this.sideNav.sidenav({ draggable: false });
+                this.sideNav.sidenav({ edge: 'left', closeOnClick: false, draggable: false });
                 $("#app-navbar").find(".left").append(this.menu);
                 this.buttonMenu = this.menu.find("#app-btn-menu");
                 this.content = view.find("#main-view-content");
@@ -94,6 +94,8 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
                     this.MenuPOSTerminalButtonClick({});
             };
             Main.prototype.openMenuButtonClick = function (e) {
+                e.preventDefault();
+                e.stopPropagation();
                 this.sideNav.sidenav('open');
             };
             Main.prototype.menuPOSTerminalButtonClick = function (e) {
@@ -119,6 +121,7 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
                 this.sideNav.sidenav('close');
                 if (!utils.isNullOrEmpty(urlController))
                     this.OpenController({ urlController: urlController });
+                // nativeBridge.showMessage('Message from JS');
             };
             return Main;
         }(ctrl.Controller.BaseContent));
