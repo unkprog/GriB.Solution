@@ -32,35 +32,35 @@ export namespace Controller.Document {
         }
 
         protected createEvents(): void {
-            this.ArrivalButtonClick = this.createTouchClickEvent("btn-arrival", this.arrivalButtonClick);
-            this.WriteoffButtonClick = this.createTouchClickEvent("btn-writeoff", this.writeoffButtonClick);
-            this.MovementButtonClick = this.createTouchClickEvent("btn-movement", this.movementButtonClick);
-            this.SaleButtonClick = this.createTouchClickEvent("btn-sale", this.saleButtonClick);
+            this.ArrivalButtonClick = this.createClickEvent("btn-arrival", this.arrivalButtonClick);
+            this.WriteoffButtonClick = this.createClickEvent("btn-writeoff", this.writeoffButtonClick);
+            this.MovementButtonClick = this.createClickEvent("btn-movement", this.movementButtonClick);
+            this.SaleButtonClick = this.createClickEvent("btn-sale", this.saleButtonClick);
 
-            this.PaymentButtonClick = this.createTouchClickEvent("btn-payment", this.paymentButtonClick);
-            this.EncashmentButtonClick = this.createTouchClickEvent("btn-encashment", this.encashmentButtonClick);
-            this.DepositButtonClick = this.createTouchClickEvent("btn-deposit", this.depositButtonClick);
-            this.WithdrawalButtonClick = this.createTouchClickEvent("btn-withdrawal", this.withdrawalButtonClick);
+            this.PaymentButtonClick = this.createClickEvent("btn-payment", this.paymentButtonClick);
+            this.EncashmentButtonClick = this.createClickEvent("btn-encashment", this.encashmentButtonClick);
+            this.DepositButtonClick = this.createClickEvent("btn-deposit", this.depositButtonClick);
+            this.WithdrawalButtonClick = this.createClickEvent("btn-withdrawal", this.withdrawalButtonClick);
 
-            //this.ConsumptionButtonClick = this.createTouchClickEvent("btn-consumption", this.consumptionButtonClick);
-            //this.ReturnButtonClick = this.createTouchClickEvent("btn-return", this.returnButtonClick);
-            //this.ProductionButtonClick = this.createTouchClickEvent("btn-production", this.productionButtonClick);
+            //this.ConsumptionButtonClick = this.createClickEvent("btn-consumption", this.consumptionButtonClick);
+            //this.ReturnButtonClick = this.createClickEvent("btn-return", this.returnButtonClick);
+            //this.ProductionButtonClick = this.createClickEvent("btn-production", this.productionButtonClick);
         }
 
         protected destroyEvents(): void {
-            this.destroyTouchClickEvent("btn-arrival", this.ArrivalButtonClick);
-            this.destroyTouchClickEvent("btn-writeoff", this.WriteoffButtonClick);
-            this.destroyTouchClickEvent("btn-movement", this.MovementButtonClick);
-            this.destroyTouchClickEvent("btn-sale", this.SaleButtonClick);
+            this.destroyClickEvent("btn-arrival", this.ArrivalButtonClick);
+            this.destroyClickEvent("btn-writeoff", this.WriteoffButtonClick);
+            this.destroyClickEvent("btn-movement", this.MovementButtonClick);
+            this.destroyClickEvent("btn-sale", this.SaleButtonClick);
 
-            this.destroyTouchClickEvent("btn-payment", this.PaymentButtonClick);
-            this.destroyTouchClickEvent("btn-encashment", this.EncashmentButtonClick);
-            this.destroyTouchClickEvent("btn-deposit", this.DepositButtonClick);
-            this.destroyTouchClickEvent("btn-withdrawal", this.WithdrawalButtonClick);
+            this.destroyClickEvent("btn-payment", this.PaymentButtonClick);
+            this.destroyClickEvent("btn-encashment", this.EncashmentButtonClick);
+            this.destroyClickEvent("btn-deposit", this.DepositButtonClick);
+            this.destroyClickEvent("btn-withdrawal", this.WithdrawalButtonClick);
 
-            //this.destroyTouchClickEvent("btn-consumption", this.ConsumptionButtonClick);
-            //this.destroyTouchClickEvent("btn-return", this.ReturnButtonClick);
-            //this.destroyTouchClickEvent("btn-production", this.ProductionButtonClick);
+            //this.destroyClickEvent("btn-consumption", this.ConsumptionButtonClick);
+            //this.destroyClickEvent("btn-return", this.ReturnButtonClick);
+            //this.destroyClickEvent("btn-production", this.ProductionButtonClick);
         }
 
         public ArrivalButtonClick: { (e: any): void; };
