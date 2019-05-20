@@ -80,6 +80,7 @@ export namespace Controller.Terminal {
             this.controlSalePoints = view.find('#posterminal-view-salepoints');
             let salePoints: Interfaces.Model.ISalePointAccessModel[] = vars._identity.employee.accesssalepoints;
             let html: string = '';
+            let CurrentSalePoint = undefined;
             for (let i = 0, icount = salePoints.length; i < icount; i++) {
                 if (salePoints[i].isaccess === true) {
                     html += '<li><a id="set_salepoint_';
@@ -89,13 +90,16 @@ export namespace Controller.Terminal {
                     html += '</a></li>';
 
                     if (vars._identity.employee.defaultsalepoint === salePoints[i].salepoint.id || vars._identity.employee.defaultsalepoint === 0) {
-                        let CurrentSalePoint = this.terminal.Model.get("POSData.CurrentSalePoint").toJSON();
+                        //CurrentSalePoint = this.terminal.Model.get("POSData.CurrentSalePoint").toJSON();
                         CurrentSalePoint = salePoints[i].salepoint;
                         vars._identity.employee.defaultsalepoint = CurrentSalePoint;
-                        this.terminal.Model.set("POSData.CurrentSalePoint", CurrentSalePoint);
-                        this.terminal.UpdateSumInCash();
                     }
                 }
+            }
+
+            if (CurrentSalePoint) {
+                this.terminal.Model.set("POSData.CurrentSalePoint", CurrentSalePoint);
+                this.terminal.UpdateSumInCash();
             }
 
             this.controlSalePoints.html(html);

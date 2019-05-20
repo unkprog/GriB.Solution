@@ -270,9 +270,11 @@ export namespace Controller.Terminal {
             let self = this;
             if (e.field === "POSData.CurrentSalePoint") {
                 self.UpdateSumInCash();
-                self.Reset();
-                self.GetChange(() => { });
-                self.GetPrinters();
+                self.GetChange(() => {
+                    self.Reset();
+                    self.GetPrinters();
+                });
+               
             }
         }
 

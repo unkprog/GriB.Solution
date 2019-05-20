@@ -277,9 +277,10 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                     var self = this;
                     if (e.field === "POSData.CurrentSalePoint") {
                         self.UpdateSumInCash();
-                        self.Reset();
-                        self.GetChange(function () { });
-                        self.GetPrinters();
+                        self.GetChange(function () {
+                            self.Reset();
+                            self.GetPrinters();
+                        });
                     }
                 };
                 Index.prototype.CloseChange = function () {

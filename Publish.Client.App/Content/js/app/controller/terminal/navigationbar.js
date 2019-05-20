@@ -68,6 +68,7 @@ define(["require", "exports", "app/common/variables", "app/common/utils"], funct
                     this.controlSalePoints = view.find('#posterminal-view-salepoints');
                     var salePoints = vars._identity.employee.accesssalepoints;
                     var html = '';
+                    var CurrentSalePoint = undefined;
                     for (var i = 0, icount = salePoints.length; i < icount; i++) {
                         if (salePoints[i].isaccess === true) {
                             html += '<li><a id="set_salepoint_';
@@ -76,13 +77,15 @@ define(["require", "exports", "app/common/variables", "app/common/utils"], funct
                             html += salePoints[i].salepoint.name;
                             html += '</a></li>';
                             if (vars._identity.employee.defaultsalepoint === salePoints[i].salepoint.id || vars._identity.employee.defaultsalepoint === 0) {
-                                var CurrentSalePoint = this.terminal.Model.get("POSData.CurrentSalePoint").toJSON();
+                                //CurrentSalePoint = this.terminal.Model.get("POSData.CurrentSalePoint").toJSON();
                                 CurrentSalePoint = salePoints[i].salepoint;
                                 vars._identity.employee.defaultsalepoint = CurrentSalePoint;
-                                this.terminal.Model.set("POSData.CurrentSalePoint", CurrentSalePoint);
-                                this.terminal.UpdateSumInCash();
                             }
                         }
+                    }
+                    if (CurrentSalePoint) {
+                        this.terminal.Model.set("POSData.CurrentSalePoint", CurrentSalePoint);
+                        this.terminal.UpdateSumInCash();
                     }
                     this.controlSalePoints.html(html);
                     $("#pos-btn-salepoint").dropdown({ constrainWidth: false });
