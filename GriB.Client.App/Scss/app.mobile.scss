@@ -3,6 +3,34 @@
         line-height: 1.3em;
     }
 
+    .app-login-empty-row {
+        display: none;
+    }
+
+    .app-login-row {
+        width: 80%;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .app-login-card-title {
+        line-height: 14px !important;
+        font-size: 24px !important;
+    }
+
+    .app-login-card-content {
+        padding: 6px 24px 10px 24px !important;
+    }
+
+    .app-login-input {
+        margin-top: 0.3rem;
+        margin-bottom: 0.3rem;
+    }
+
+    #btn-login {
+        margin-bottom: 10px;
+    }
+
     nav .brand-logo {
         font-size: 1.3rem;
     }

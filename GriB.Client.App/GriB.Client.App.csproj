@@ -400,7 +400,7 @@
     <Content Include="Scripts\Sql\02.001.[t_unit].sql" />
     <Content Include="Scripts\Sql\03.001.[t_org].sql" />
     <None Include="packages.config" />
-    <Content Include="Scss\app.mobile.scss" />
+    <None Include="Scss\app.mobile.scss" />
     <None Include="TODO.txt" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
