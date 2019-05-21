@@ -129,9 +129,9 @@ export namespace Controller.Terminal {
                     }
                 }
             }
-            e.preventDefault();
-            e.stopPropagation();
-            return false;
+            //e.preventDefault();
+            //e.stopPropagation();
+            //return false;
         }
 
         private menuCashControl: JQuery;
@@ -145,6 +145,9 @@ export namespace Controller.Terminal {
             let instance: any = this.menuCashControl[0];
             instance.M_Dropdown.el = e.currentTarget;
             instance.M_Dropdown.open();
+            e.preventDefault();
+            e.stopPropagation();
+            return false;
         }
 
         public CloseChangeClick: { (e: any): any }

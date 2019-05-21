@@ -109,9 +109,9 @@ define(["require", "exports", "app/common/variables", "app/common/utils"], funct
                             }
                         }
                     }
-                    e.preventDefault();
-                    e.stopPropagation();
-                    return false;
+                    //e.preventDefault();
+                    //e.stopPropagation();
+                    //return false;
                 };
                 NavigationBar.prototype.openMenuCashClick = function (e) {
                     if (!this.menuCashControl) {
@@ -121,6 +121,9 @@ define(["require", "exports", "app/common/variables", "app/common/utils"], funct
                     var instance = this.menuCashControl[0];
                     instance.M_Dropdown.el = e.currentTarget;
                     instance.M_Dropdown.open();
+                    e.preventDefault();
+                    e.stopPropagation();
+                    return false;
                 };
                 NavigationBar.prototype.closeChangeClick = function (e) {
                     this.terminal.CloseChange();

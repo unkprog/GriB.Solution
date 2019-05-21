@@ -5,6 +5,9 @@ using Android.Runtime;
 using Android.Webkit;
 using Android.Content.PM;
 using Grib.App.Windows.JavaScript;
+using RU.Atol.Drivers10.Fptr;
+using System;
+using Android.Widget;
 
 namespace GriB.Droid.POSCloud
 {
@@ -34,15 +37,48 @@ namespace GriB.Droid.POSCloud
         private void InitBridge(WebView browser)
         {
             browser.Settings.JavaScriptEnabled = true;
+            browser.Settings.DomStorageEnabled = true;
 
             bridge = new Bridge(this);
             bridge.AddCommand("CloseApp", (string data) => { POSCloud.UI.Helper.CloseApp(); });
-            //bridge.AddCommand("PrintCheck", this.PrintCheck);
+            bridge.AddCommand("PrintCheck", this.PrintCheck);
 
             browser.AddJavascriptInterface(bridge, "nativeBridge");
             browser.SetWebViewClient(new MainWebViewClient());
 
             browser.LoadUrl("http://poscloudgb.ru?isnativeapp");
+        }
+
+        private void PrintCheck(string data)
+        {
+            try
+            {
+                IFptr fptr = new Fptr(ApplicationContext);
+                try
+                {
+                    string version = fptr.Version();
+                    TostMessage(version);
+                }
+                finally
+                {
+                    fptr.Destroy();
+                }
+            }
+            catch(Exception ex)
+            {
+                TostMessage(ex.Message);
+            }
+
+        }
+
+        public static void TostMessage(string message)
+        {
+            var context = Android.App.Application.Context;
+            var tostMessage = message;
+            var durtion = ToastLength.Long;
+
+
+            Toast.MakeText(context, tostMessage, durtion).Show();
         }
     }
 }

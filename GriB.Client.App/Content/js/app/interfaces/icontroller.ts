@@ -113,7 +113,7 @@
 
         ControlChecks: JQuery;
         GetChange(callback?: () => void): void;
-        CheckChange(callback?: () => void): void;
+        CheckChange(isRequire: boolean, callback?: () => void): void;
         CloseChange(): void;
         UpdateSumInCash(): void;
         Reset(): void;

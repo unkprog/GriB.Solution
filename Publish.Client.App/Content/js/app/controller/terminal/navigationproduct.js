@@ -97,7 +97,7 @@ define(["require", "exports", "app/common/utils", "app/services/posterminalservi
                         self.loadData();
                     }
                     else {
-                        self.terminal.CheckChange(function () {
+                        self.terminal.CheckChange(true, function () {
                             self.terminal.Cheks.AddPosition(id);
                         });
                     }

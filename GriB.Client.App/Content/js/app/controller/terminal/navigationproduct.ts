@@ -114,7 +114,7 @@ export namespace Controller.Terminal {
                 self.loadData();
             }
             else {
-                self.terminal.CheckChange(() => {
+                self.terminal.CheckChange(true, () => {
                     self.terminal.Cheks.AddPosition(id);
                 });
             }

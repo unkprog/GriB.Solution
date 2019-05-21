@@ -1,6 +1,8 @@
 ﻿import vars = require('app/common/variables');
 import utils = require('app/common/utils');
 import svc = require('app/services/posterminalservice');
+import posctrl = require('app/common/poscontrol');
+import svcPrint = require('app/services/printservice');
 
 export namespace Controller.Terminal {
     export class NavigationCheck implements Interfaces.ITerminalCheks {
@@ -160,7 +162,7 @@ export namespace Controller.Terminal {
 
         public loadData(): void {
             let self = this;
-            self.terminal.CheckChange(() => {
+            self.terminal.CheckChange(false, () => {
                 self.Service.CheckOpened(self.terminal.CurrentSalePoint, self.terminal.CurrentChange, (responseData) => {
                     self.openedChecks = responseData.checkopened;
                     self.drawChecks(true);
@@ -354,7 +356,7 @@ export namespace Controller.Terminal {
         private NewCheckButtonClick: { (e: any): void; };
         private newCheckButtonClick(e): void {
             let self = this;
-            self.terminal.CheckChange(() => {
+            self.terminal.CheckChange(true, () => {
                 self.setCurrentOrNew(undefined);
             });
         }
@@ -740,10 +742,24 @@ export namespace Controller.Terminal {
             M.toast({ html: vars._statres("label$indevelopment") });
         }
 
+        private checkViewControl: posctrl.POSControl.CheckViewControl;
         public PrintPreCheckClick: { (e: any): any }
         private printPreCheckClick(e: any): any {
             this.CloseSlideChecks();
-            M.toast({ html: vars._statres("label$indevelopment") });
+
+            let controller = this;
+            if (!controller.checkViewControl) {
+                controller.checkViewControl = new posctrl.POSControl.CheckViewControl();
+                controller.checkViewControl.PrintService = new svcPrint.Services.PrintService();
+                if (vars._identity.printers && vars._identity.printers.length > 0)
+                    controller.checkViewControl.Printer = vars._identity.printers[0];
+               controller.checkViewControl.InitView();
+            }
+            if (controller.currentCheck) {
+                controller.checkViewControl.POSCheck = controller.currentCheck;
+                let pskey: string = (this.checkViewControl.Printer && this.checkViewControl.Printer.printserver ? this.checkViewControl.Printer.printserver.pskey : '');
+                this.checkViewControl.Print(pskey);
+            }
         }
     }
 }

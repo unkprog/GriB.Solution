@@ -234,7 +234,7 @@ export namespace Controller.Terminal {
             }
         }
 
-        public CheckChange(callback: () => void): void {
+        public CheckChange(isRequire: boolean, callback: () => void): void {
             let self = this;
             if (self.CurrentChange == 0) {
                 this.GetChange(callback);

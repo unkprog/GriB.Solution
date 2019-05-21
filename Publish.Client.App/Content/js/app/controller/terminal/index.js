@@ -244,7 +244,7 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                         self.checkChangeCallBack = undefined;
                     }
                 };
-                Index.prototype.CheckChange = function (callback) {
+                Index.prototype.CheckChange = function (isRequire, callback) {
                     var self = this;
                     if (self.CurrentChange == 0) {
                         this.GetChange(callback);

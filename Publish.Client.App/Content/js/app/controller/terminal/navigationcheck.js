@@ -1,4 +1,4 @@
-define(["require", "exports", "app/common/variables", "app/common/utils", "app/services/posterminalservice"], function (require, exports, vars, utils, svc) {
+define(["require", "exports", "app/common/variables", "app/common/utils", "app/services/posterminalservice", "app/common/poscontrol", "app/services/printservice"], function (require, exports, vars, utils, svc, posctrl, svcPrint) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var Controller;
@@ -136,7 +136,7 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/s
                 };
                 NavigationCheck.prototype.loadData = function () {
                     var self = this;
-                    self.terminal.CheckChange(function () {
+                    self.terminal.CheckChange(false, function () {
                         self.Service.CheckOpened(self.terminal.CurrentSalePoint, self.terminal.CurrentChange, function (responseData) {
                             self.openedChecks = responseData.checkopened;
                             self.drawChecks(true);
@@ -306,7 +306,7 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/s
                 };
                 NavigationCheck.prototype.newCheckButtonClick = function (e) {
                     var self = this;
-                    self.terminal.CheckChange(function () {
+                    self.terminal.CheckChange(true, function () {
                         self.setCurrentOrNew(undefined);
                     });
                 };
@@ -657,7 +657,19 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/s
                 };
                 NavigationCheck.prototype.printPreCheckClick = function (e) {
                     this.CloseSlideChecks();
-                    M.toast({ html: vars._statres("label$indevelopment") });
+                    var controller = this;
+                    if (!controller.checkViewControl) {
+                        controller.checkViewControl = new posctrl.POSControl.CheckViewControl();
+                        controller.checkViewControl.PrintService = new svcPrint.Services.PrintService();
+                        if (vars._identity.printers && vars._identity.printers.length > 0)
+                            controller.checkViewControl.Printer = vars._identity.printers[0];
+                        controller.checkViewControl.InitView();
+                    }
+                    if (controller.currentCheck) {
+                        controller.checkViewControl.POSCheck = controller.currentCheck;
+                        var pskey = (this.checkViewControl.Printer && this.checkViewControl.Printer.printserver ? this.checkViewControl.Printer.printserver.pskey : '');
+                        this.checkViewControl.Print(pskey);
+                    }
                 };
                 return NavigationCheck;
             }());

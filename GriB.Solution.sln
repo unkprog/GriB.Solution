@@ -41,6 +41,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Android", "Android", "{947B
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GriB.Droid.POSCloud", "GriB.Droid.POSCloud\GriB.Droid.POSCloud.csproj", "{76CFBF12-0642-4076-9402-809770761CCB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GriB.Droid.Atol", "GriB.Droid.Atol\GriB.Droid.Atol.csproj", "{BB9EE7DB-E80C-45E4-89AF-DF95A9B0CBF4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -307,6 +309,24 @@ Global
 		{76CFBF12-0642-4076-9402-809770761CCB}.Release|x86.ActiveCfg = Release|Any CPU
 		{76CFBF12-0642-4076-9402-809770761CCB}.Release|x86.Build.0 = Release|Any CPU
 		{76CFBF12-0642-4076-9402-809770761CCB}.Release|x86.Deploy.0 = Release|Any CPU
+		{BB9EE7DB-E80C-45E4-89AF-DF95A9B0CBF4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BB9EE7DB-E80C-45E4-89AF-DF95A9B0CBF4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BB9EE7DB-E80C-45E4-89AF-DF95A9B0CBF4}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{BB9EE7DB-E80C-45E4-89AF-DF95A9B0CBF4}.Debug|x64.Build.0 = Debug|Any CPU
+		{BB9EE7DB-E80C-45E4-89AF-DF95A9B0CBF4}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{BB9EE7DB-E80C-45E4-89AF-DF95A9B0CBF4}.Debug|x86.Build.0 = Debug|Any CPU
+		{BB9EE7DB-E80C-45E4-89AF-DF95A9B0CBF4}.Publish|Any CPU.ActiveCfg = Release|Any CPU
+		{BB9EE7DB-E80C-45E4-89AF-DF95A9B0CBF4}.Publish|Any CPU.Build.0 = Release|Any CPU
+		{BB9EE7DB-E80C-45E4-89AF-DF95A9B0CBF4}.Publish|x64.ActiveCfg = Release|Any CPU
+		{BB9EE7DB-E80C-45E4-89AF-DF95A9B0CBF4}.Publish|x64.Build.0 = Release|Any CPU
+		{BB9EE7DB-E80C-45E4-89AF-DF95A9B0CBF4}.Publish|x86.ActiveCfg = Release|Any CPU
+		{BB9EE7DB-E80C-45E4-89AF-DF95A9B0CBF4}.Publish|x86.Build.0 = Release|Any CPU
+		{BB9EE7DB-E80C-45E4-89AF-DF95A9B0CBF4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BB9EE7DB-E80C-45E4-89AF-DF95A9B0CBF4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BB9EE7DB-E80C-45E4-89AF-DF95A9B0CBF4}.Release|x64.ActiveCfg = Release|Any CPU
+		{BB9EE7DB-E80C-45E4-89AF-DF95A9B0CBF4}.Release|x64.Build.0 = Release|Any CPU
+		{BB9EE7DB-E80C-45E4-89AF-DF95A9B0CBF4}.Release|x86.ActiveCfg = Release|Any CPU
+		{BB9EE7DB-E80C-45E4-89AF-DF95A9B0CBF4}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -326,9 +346,10 @@ Global
 		{71DB3E5F-9D5B-4AC0-8242-5F70852CE8C8} = {7DAB38BE-65AD-4137-A926-E67265E93090}
 		{AF4DBC8C-9E86-447D-8BA5-1AAAC79F5441} = {EA6E92E4-6874-427A-8486-870B4DDDF9A1}
 		{76CFBF12-0642-4076-9402-809770761CCB} = {947B9D72-2EBE-4B1A-80B8-968A17F0D7FA}
+		{BB9EE7DB-E80C-45E4-89AF-DF95A9B0CBF4} = {947B9D72-2EBE-4B1A-80B8-968A17F0D7FA}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {EAC2E5AA-F73A-4301-87B1-0A49A98CD79B}
 		EnterpriseLibraryConfigurationToolBinariesPathV6 = packages\EnterpriseLibrary.Common.6.0.1304.0\lib\NET45;packages\EnterpriseLibrary.Logging.6.0.1304.0\lib\NET45
+		SolutionGuid = {EAC2E5AA-F73A-4301-87B1-0A49A98CD79B}
 	EndGlobalSection
 EndGlobal
