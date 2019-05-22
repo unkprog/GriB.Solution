@@ -1,6 +1,24 @@
 ﻿@media only screen and (max-height: 667px) {
   html {
     line-height: 1.3em; }
+  .app-login-empty-row {
+    display: none; }
+  .app-login-row {
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto; }
+  .app-login-card-title {
+    line-height: 14px !important;
+    font-size: 24px !important; }
+  .app-login-card-content {
+    padding: 6px 24px 10px 24px !important; }
+  .app-login-input {
+    margin-top: 0.3rem;
+    margin-bottom: 0.3rem; }
+  #btn-login {
+    margin-bottom: 10px; }
+  .app-login-buttons, #btn-forgot {
+    margin-bottom: 0; }
   nav .brand-logo {
     font-size: 1.3rem; }
   nav, nav .nav-wrapper i, nav a.sidenav-trigger, nav a.sidenav-trigger i {

@@ -37,23 +37,23 @@ body, html {
 .padding-0em {
   padding: 0; }
 
-.app-login-row {
-  width: 80%;
-  margin-left: auto;
-  margin-right: auto; }
-
 @media only screen and (min-width: 601px) {
-  .app-login-row {
-    width: 70%; } }
+    .app-login-row {
+        width: 70%;
+    }
+}
 
 @media only screen and (min-width: 993px) {
-  .app-login-row {
-    width: 45%; } }
+    .app-login-row {
+        width: 60%;
+    }
+}
 
 @media only screen and (min-width: 1201px) {
-  .app-login-row {
-    width: 40%; } }
-
+    .app-login-row {
+        width: 50%;
+    }
+}
 #app-content, #main-view-content, .main-view-content-modal {
   overflow-y: auto;
   overflow-x: hidden; }
