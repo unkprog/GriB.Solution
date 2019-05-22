@@ -111,12 +111,22 @@
 
     .btn-numpad {
         margin: .1em 0 !important;
-        height: 60px;
-        line-height: 60px;
+        height: 40px;
+        line-height: 40px;
     }
 
     .input-numpad {
         font-size: 2em !important;
         height: 2.5rem;
+    }
+
+    .check-btn-typepayment {
+        font-size: 1.2em;
+        height: 45px;
+        line-height: 45px;
+    }
+
+    .col-numpad {
+        margin-top: 0;
     }
 }
