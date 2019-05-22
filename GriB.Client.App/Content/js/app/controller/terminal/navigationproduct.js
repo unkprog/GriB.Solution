@@ -40,7 +40,7 @@ define(["require", "exports", "app/common/utils", "app/services/posterminalservi
                 };
                 NavigationProduct.prototype.ViewResize = function (e) {
                     if (this.controlItems) {
-                        this.controlItems.width($(window).width() - ($(window).width() >= 600 ? this.terminal.ControlChecks.width() : 0));
+                        this.controlItems.width($(window).width() - ($(window).width() >= 600 ? this.terminal.ControlChecks.width() : 0) - 2);
                         this.controlItems.height(this.terminal.ControlChecks.height());
                     }
                     if (this.controlSaleProducts) {
@@ -67,17 +67,24 @@ define(["require", "exports", "app/common/utils", "app/services/posterminalservi
                 NavigationProduct.prototype.drawSaleProducts = function (items) {
                     this.destroyEvents();
                     var html = '';
+                    var height = $(window).height();
+                    var width = $(window).width();
                     var item;
                     for (var i = 0, icount = (items ? items.length : 0); i < icount; i++) {
                         item = items[i];
                         html += '<a id="saleproduct_' + item.id + '" class="pos-item-sale ' + (item.iscategory === true ? 'category' : '') + '" data-name="' + item.name + '">';
-                        html += '   <div class="col s6 m6 l4 xl3">';
+                        html += '   <div class="col ' + ((width < 667) || height < 667 ? 's6 m6' : 's4 m4') + ' l4 xl3">'; //&& width < 992
                         html += '       <div class="card pos-item-card hoverable">';
                         html += '           <div class="pos-item-card-image" style="background-image:url(' + item.photo + ')">';
-                        html += '             <div class="card-content pos-item-card-content center">';
-                        html += '                   <div class="pos-item-card-description">';
+                        html += '             <div class="card-content pos-item-card-content">';
+                        html += '                   <div class="pos-item-card-description center">';
                         html += '                       <p>' + item.name + '</p>';
                         html += '                   </div>';
+                        if (item.iscategory === false) {
+                            html += '                   <span class="rigth center z-depth-2 pos-item-card-price">';
+                            html += '                       <p>' + '1000' + '</p>';
+                            html += '                   </span>';
+                        }
                         html += '            </div>';
                         html += '           </div>';
                         html += '       </div>';
