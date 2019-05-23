@@ -179,6 +179,7 @@
     export interface IPOSSaleProduct extends IReferenceModel {
         iscategory: boolean;
         photo: string;
+        price?: number;
     }
 
 

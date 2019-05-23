@@ -3197,9 +3197,6 @@ namespace GriB.Droid.POSCloud
 			// aapt resource value: 0x7f030000
 			public const int ic_launcher = 2130903040;
 			
-			// aapt resource value: 0x7f030001
-			public const int ic_launcher_round = 2130903041;
-			
 			static Mipmap()
 			{
 				global::Android.Runtime.ResourceIdManager.UpdateIdValues();

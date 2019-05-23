@@ -13,5 +13,7 @@ namespace GriB.Client.App.Models.POSTerminal
         public bool iscategory { get; set; }
         public string name { get; set; }
         public string photo { get; set; }
+
+        public double price { get; set; }
     }
 }

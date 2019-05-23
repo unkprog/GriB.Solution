@@ -95,8 +95,8 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/s
                 NavigationCheck.prototype.ViewShow = function (e) {
                     //let controller = this;
                     $('.chips').chips(); //{ onChipDelete: $.proxy(controller.CheckDelete, controller) }
-                    $('#btn-check-discount').dropdown();
-                    $('#btn-check-menu').dropdown();
+                    $('#btn-check-discount').dropdown({ constrainWidth: false });
+                    $('#btn-check-menu').dropdown({ constrainWidth: false });
                     this.ViewResize({});
                 };
                 NavigationCheck.prototype.ViewResize = function (e) {

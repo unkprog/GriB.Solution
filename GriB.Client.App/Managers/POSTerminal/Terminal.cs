@@ -8,7 +8,7 @@ namespace GriB.Client.App.Managers.POSTerminal
     public static class Terminal
     {
 
-        private static posproductitem readFromValues(object[] values) => new posproductitem() { id = (int)values[0], iscategory=(bool)values[1], name = (string)values[2], photo = (string)values[3] };
+        private static posproductitem readFromValues(object[] values) => new posproductitem() { id = (int)values[0], iscategory=(bool)values[1], name = (string)values[2], photo = (string)values[3], price = (double)values[4] };
 
         private const string cmdGet = @"POSTerminal\[get]";
         public static List<posproductitem> GetSaleProducts(this Query query, posparamsselect posparams)

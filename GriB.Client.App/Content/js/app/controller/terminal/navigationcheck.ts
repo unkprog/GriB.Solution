@@ -114,8 +114,8 @@ export namespace Controller.Terminal {
         public ViewShow(e: any): void {
             //let controller = this;
             $('.chips').chips(); //{ onChipDelete: $.proxy(controller.CheckDelete, controller) }
-            $('#btn-check-discount').dropdown();
-            $('#btn-check-menu').dropdown();
+            $('#btn-check-discount').dropdown({ constrainWidth: false });
+            $('#btn-check-menu').dropdown({ constrainWidth: false });
             this.ViewResize({});
 
         }

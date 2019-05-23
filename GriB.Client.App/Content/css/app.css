@@ -286,7 +286,8 @@ input[type='number']:hover::-webkit-outer-spin-button {
   position: absolute;
   width: 35%;
   border-top: 1px solid #a1887f;
-  border-right: 1px solid #a1887f; }
+  border-right: 1px solid #a1887f;
+  overflow: auto; }
 
 #posterminal-view-checks {
   padding: 5px; }
@@ -562,7 +563,8 @@ input[type='number']:hover::-webkit-outer-spin-button {
   min-width: 120px !important; }
 
 #btn-check-menu-dropdown {
-  min-width: 150px !important; }
+  min-width: 185px !important;
+  width: 185px !important; }
 
 .check_pos_q_add, .check_pos_q_del {
   cursor: pointer; }

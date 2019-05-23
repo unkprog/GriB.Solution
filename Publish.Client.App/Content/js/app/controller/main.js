@@ -67,21 +67,21 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
             };
             Main.prototype.createEvents = function () {
                 this.OpenMenuButtonClick = this.createTouchClickEvent(this.buttonMenu, this.openMenuButtonClick);
-                this.MenuPOSTerminalButtonClick = this.createTouchClickEvent("main-view-btn-posterminal", this.menuPOSTerminalButtonClick);
-                this.MenuSettingsButtonClick = this.createTouchClickEvent("main-view-btn-settings", this.menuSettingsButtonClick);
-                this.MenuDocumentsButtonClick = this.createTouchClickEvent("main-view-btn-documents", this.menuDocumentsButtonClick);
-                this.MenuReportsButtonClick = this.createTouchClickEvent("main-view-btn-reports", this.menuReportsButtonClick);
-                this.MenuAboutButtonClick = this.createTouchClickEvent("main-view-btn-about", this.menuAboutButtonClick);
-                this.MenuExitButtonClick = this.createTouchClickEvent("main-view-btn-exit", this.menuExitButtonClick);
+                this.MenuPOSTerminalButtonClick = this.createClickEvent("main-view-btn-posterminal", this.menuPOSTerminalButtonClick);
+                this.MenuSettingsButtonClick = this.createClickEvent("main-view-btn-settings", this.menuSettingsButtonClick);
+                this.MenuDocumentsButtonClick = this.createClickEvent("main-view-btn-documents", this.menuDocumentsButtonClick);
+                this.MenuReportsButtonClick = this.createClickEvent("main-view-btn-reports", this.menuReportsButtonClick);
+                this.MenuAboutButtonClick = this.createClickEvent("main-view-btn-about", this.menuAboutButtonClick);
+                this.MenuExitButtonClick = this.createClickEvent("main-view-btn-exit", this.menuExitButtonClick);
             };
             Main.prototype.destroyEvents = function () {
                 this.destroyTouchClickEvent(this.buttonMenu, this.OpenMenuButtonClick);
-                this.destroyTouchClickEvent("main-view-btn-posterminal", this.MenuPOSTerminalButtonClick);
-                this.destroyTouchClickEvent("main-view-btn-settings", this.MenuSettingsButtonClick);
-                this.destroyTouchClickEvent("main-view-btn-documents", this.MenuDocumentsButtonClick);
-                this.destroyTouchClickEvent("main-view-btn-reports", this.MenuReportsButtonClick);
-                this.destroyTouchClickEvent("main-view-btn-about", this.MenuAboutButtonClick);
-                this.destroyTouchClickEvent("main-view-btn-exit", this.MenuExitButtonClick);
+                this.destroyClickEvent("main-view-btn-posterminal", this.MenuPOSTerminalButtonClick);
+                this.destroyClickEvent("main-view-btn-settings", this.MenuSettingsButtonClick);
+                this.destroyClickEvent("main-view-btn-documents", this.MenuDocumentsButtonClick);
+                this.destroyClickEvent("main-view-btn-reports", this.MenuReportsButtonClick);
+                this.destroyClickEvent("main-view-btn-about", this.MenuAboutButtonClick);
+                this.destroyClickEvent("main-view-btn-exit", this.MenuExitButtonClick);
             };
             Main.prototype.navigateOnStart = function () {
                 if (vars._identity.employee.openonlogin === 1)

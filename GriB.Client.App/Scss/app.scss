@@ -356,6 +356,7 @@ input[type='number']:hover::-webkit-outer-spin-button {
     width: 35%;
     border-top: 1px solid #a1887f;
     border-right: 1px solid #a1887f;
+    overflow:auto;
 }
 
 #posterminal-view-checks {
@@ -711,7 +712,8 @@ input[type='number']:hover::-webkit-outer-spin-button {
 }
 
 #btn-check-menu-dropdown {
-    min-width: 150px !important;
+    min-width: 185px !important;
+    width: 185px !important;
 }
 
 .check_pos_q_add, .check_pos_q_del {
