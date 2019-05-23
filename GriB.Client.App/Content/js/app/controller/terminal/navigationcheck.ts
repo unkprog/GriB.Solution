@@ -738,7 +738,21 @@ export namespace Controller.Terminal {
 
         public SplitCheckClick: { (e: any): any }
         private splitCheckClick(e: any): any {
+            let self = this;
             this.CloseSlideChecks();
+            vars._app.OpenController({
+                urlController: 'terminal/splitcheck', isModal: true, onLoadController: (controller: Interfaces.IController) => {
+                    //let ctrlPaymentWithOut: Interfaces.IControllerPaymentWithOut = controller as Interfaces.IControllerPaymentWithOut;
+                    //ctrlPaymentWithOut.EditorSettings.ButtonSetings = { IsSave: false, IsCancel: false };
+                    //ctrlPaymentWithOut.TotalSum = this.model.get("checkSum");
+                    //ctrlPaymentWithOut.ReceivedSum = this.model.get("checkSum");
+                    //ctrlPaymentWithOut.SurrenderSum = 0;
+                    //if (self.currentCheck.client)
+                    //    ctrlPaymentWithOut.Client = self.currentCheck.client;
+                    //ctrlPaymentWithOut.OnPaymentApply = $.proxy(self.applyWithOut, self)
+                }
+            });
+
             M.toast({ html: vars._statres("label$indevelopment") });
         }
 

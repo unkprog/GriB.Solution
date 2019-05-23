@@ -248,6 +248,7 @@
     <Content Include="Content\view\setting\editor\organization.html" />
     <Content Include="Content\view\setting\index.html" />
     <Content Include="Content\view\terminal\cashdialog.html" />
+    <Content Include="Content\view\terminal\splitcheck.html" />
     <Content Include="Content\view\terminal\changedialog.html" />
     <Content Include="Content\view\terminal\paymentwithout.html" />
     <Content Include="Content\view\terminal\checkcomment.html" />
@@ -636,6 +637,7 @@
     <TypeScriptCompile Include="Content\js\app\controller\setting\editor\organization.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\setting\index.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\terminal\cashdialog.ts" />
+    <TypeScriptCompile Include="Content\js\app\controller\terminal\splitcheck.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\terminal\changedialog.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\terminal\paymentnoncash.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\terminal\payment.ts" />

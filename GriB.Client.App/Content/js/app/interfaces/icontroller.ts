@@ -171,6 +171,10 @@
         CurrentSalePoint: number;
     }
 
+    export interface IControllerSplitCheck extends IControllerEditor {
+    }
+
+
     export interface IControllerReportWithFilter extends IControllerEditor {
         SaveFilter(): void;
         RestoreFilter(): void;

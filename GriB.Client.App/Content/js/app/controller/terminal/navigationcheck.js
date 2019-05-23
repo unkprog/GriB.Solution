@@ -652,7 +652,20 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/s
                     }
                 };
                 NavigationCheck.prototype.splitCheckClick = function (e) {
+                    var self = this;
                     this.CloseSlideChecks();
+                    vars._app.OpenController({
+                        urlController: 'terminal/splitcheck', isModal: true, onLoadController: function (controller) {
+                            //let ctrlPaymentWithOut: Interfaces.IControllerPaymentWithOut = controller as Interfaces.IControllerPaymentWithOut;
+                            //ctrlPaymentWithOut.EditorSettings.ButtonSetings = { IsSave: false, IsCancel: false };
+                            //ctrlPaymentWithOut.TotalSum = this.model.get("checkSum");
+                            //ctrlPaymentWithOut.ReceivedSum = this.model.get("checkSum");
+                            //ctrlPaymentWithOut.SurrenderSum = 0;
+                            //if (self.currentCheck.client)
+                            //    ctrlPaymentWithOut.Client = self.currentCheck.client;
+                            //ctrlPaymentWithOut.OnPaymentApply = $.proxy(self.applyWithOut, self)
+                        }
+                    });
                     M.toast({ html: vars._statres("label$indevelopment") });
                 };
                 NavigationCheck.prototype.printPreCheckClick = function (e) {
