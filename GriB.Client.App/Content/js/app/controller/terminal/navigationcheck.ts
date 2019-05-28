@@ -503,7 +503,7 @@ export namespace Controller.Terminal {
 
         private applyQuantity(controller: Interfaces.IControllerPayment) {
             let self = this;
-            if (this.currentCheck) {
+            if (self.currentCheck) {
                 let positionsArray: Interfaces.Model.IPOSCheckPosition[] = (self.currentCheck.positions ? self.currentCheck.positions : []);
                 if (self.editRowQuantity > -1)
                     self._EditPosition(positionsArray[self.editRowQuantity].product.id, controller.ReceivedSum);
@@ -742,18 +742,25 @@ export namespace Controller.Terminal {
             this.CloseSlideChecks();
             vars._app.OpenController({
                 urlController: 'terminal/splitcheck', isModal: true, onLoadController: (controller: Interfaces.IController) => {
-                    //let ctrlPaymentWithOut: Interfaces.IControllerPaymentWithOut = controller as Interfaces.IControllerPaymentWithOut;
-                    //ctrlPaymentWithOut.EditorSettings.ButtonSetings = { IsSave: false, IsCancel: false };
-                    //ctrlPaymentWithOut.TotalSum = this.model.get("checkSum");
-                    //ctrlPaymentWithOut.ReceivedSum = this.model.get("checkSum");
-                    //ctrlPaymentWithOut.SurrenderSum = 0;
-                    //if (self.currentCheck.client)
-                    //    ctrlPaymentWithOut.Client = self.currentCheck.client;
-                    //ctrlPaymentWithOut.OnPaymentApply = $.proxy(self.applyWithOut, self)
+                    let ctrlSplitCheck: Interfaces.IControllerSplitCheck = controller as Interfaces.IControllerSplitCheck;
+                    let data: any = { currentCheck: self.currentCheck };
+                    ctrlSplitCheck.EditorModel = data;
+                    ctrlSplitCheck.OnResult = $.proxy(self.applySplitCheck, self);
                 }
             });
+        }
 
-            M.toast({ html: vars._statres("label$indevelopment") });
+        private applySplitCheck(controller: Interfaces.IControllerSplitCheck) {
+            let self = this;
+
+            if (self.currentCheck) {
+                let data: Interfaces.Model.ISplitCheckModel = controller.EditorModel;
+                data.salepoint = self.terminal.CurrentSalePoint;
+                data.change = self.terminal.CurrentChange;
+                this.Service.CheckSplit(data, (responseData) => {
+                    self.Reset();
+                });
+            }
         }
 
         private checkViewControl: posctrl.POSControl.CheckViewControl;

@@ -223,5 +223,11 @@ namespace GriB.Client.App.Managers.POSTerminal
             query.Execute(cmdCancel, new SqlParameter[] { new SqlParameter() { ParameterName = "@id", Value = check.id }, new SqlParameter("@u", user), new SqlParameter() { ParameterName = "@options", Value = check.options }, new SqlParameter() { ParameterName = "@comment", Value = check.comment } }
             , (values) => { });
         }
+
+        //public static void Cancel(this Query query, check check, int user)
+        //{
+        //    query.Execute(cmdCancel, new SqlParameter[] { new SqlParameter() { ParameterName = "@id", Value = check.id }, new SqlParameter("@u", user), new SqlParameter() { ParameterName = "@options", Value = check.options }, new SqlParameter() { ParameterName = "@comment", Value = check.comment } }
+        //    , (values) => { });
+        //}
     }
 }

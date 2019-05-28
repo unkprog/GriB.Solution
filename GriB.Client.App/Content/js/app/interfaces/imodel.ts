@@ -230,6 +230,18 @@
         comment: string;
     }
 
+    export interface IPOSCheckPositionSplit extends IPOSCheckPosition {
+        quantityOld: number;
+    }
+
+    export interface ISplitCheckModel extends IEditorModel {
+        currentCheck: Interfaces.Model.IPOSCheck;
+        positions: IPOSCheckPositionSplit[];
+        salepoint?: number;
+        change?: number;
+    }
+    
+
     export interface IDateParams {
         datefrom: string;
         dateto: string;

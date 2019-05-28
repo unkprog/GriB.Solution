@@ -172,6 +172,8 @@
     }
 
     export interface IControllerSplitCheck extends IControllerEditor {
+        EditorModel: Interfaces.Model.ISplitCheckModel;
+        OnResult(controller: IControllerSplitCheck): void;
     }
 
 

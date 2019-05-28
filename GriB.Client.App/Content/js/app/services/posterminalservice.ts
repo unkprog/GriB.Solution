@@ -79,6 +79,10 @@ export namespace Services {
             this.PostApi({ Action: "/check_close", RequestData: JSON.stringify(checkParamsClose), Callback: Callback });
         }
 
+        public CheckSplit(checkSplit: Interfaces.Model.ISplitCheckModel, Callback: (responseData: any) => void) {
+            this.PostApi({ Action: "/check_split", RequestData: JSON.stringify(checkSplit), Callback: Callback });
+        }
+
         public GetPrinters(salepoint: number, Callback: (responseData: any) => void) {
             this.GetApi({ Action: "/getprinters", RequestData: { salepoint: salepoint }, Callback: Callback });
         }

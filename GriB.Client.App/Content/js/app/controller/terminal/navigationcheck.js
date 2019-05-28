@@ -445,7 +445,7 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/s
                 };
                 NavigationCheck.prototype.applyQuantity = function (controller) {
                     var self = this;
-                    if (this.currentCheck) {
+                    if (self.currentCheck) {
                         var positionsArray = (self.currentCheck.positions ? self.currentCheck.positions : []);
                         if (self.editRowQuantity > -1)
                             self._EditPosition(positionsArray[self.editRowQuantity].product.id, controller.ReceivedSum);
@@ -656,17 +656,23 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/s
                     this.CloseSlideChecks();
                     vars._app.OpenController({
                         urlController: 'terminal/splitcheck', isModal: true, onLoadController: function (controller) {
-                            //let ctrlPaymentWithOut: Interfaces.IControllerPaymentWithOut = controller as Interfaces.IControllerPaymentWithOut;
-                            //ctrlPaymentWithOut.EditorSettings.ButtonSetings = { IsSave: false, IsCancel: false };
-                            //ctrlPaymentWithOut.TotalSum = this.model.get("checkSum");
-                            //ctrlPaymentWithOut.ReceivedSum = this.model.get("checkSum");
-                            //ctrlPaymentWithOut.SurrenderSum = 0;
-                            //if (self.currentCheck.client)
-                            //    ctrlPaymentWithOut.Client = self.currentCheck.client;
-                            //ctrlPaymentWithOut.OnPaymentApply = $.proxy(self.applyWithOut, self)
+                            var ctrlSplitCheck = controller;
+                            var data = { currentCheck: self.currentCheck };
+                            ctrlSplitCheck.EditorModel = data;
+                            ctrlSplitCheck.OnResult = $.proxy(self.applySplitCheck, self);
                         }
                     });
-                    M.toast({ html: vars._statres("label$indevelopment") });
+                };
+                NavigationCheck.prototype.applySplitCheck = function (controller) {
+                    var self = this;
+                    if (self.currentCheck) {
+                        var data = controller.EditorModel;
+                        data.salepoint = self.terminal.CurrentSalePoint;
+                        data.change = self.terminal.CurrentChange;
+                        this.Service.CheckSplit(data, function (responseData) {
+                            self.Reset();
+                        });
+                    }
                 };
                 NavigationCheck.prototype.printPreCheckClick = function (e) {
                     this.CloseSlideChecks();

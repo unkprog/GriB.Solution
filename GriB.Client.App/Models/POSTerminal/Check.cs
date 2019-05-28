@@ -77,5 +77,11 @@ namespace GriB.Client.App.Models.POSTerminal
         public string comment    { get; set; }
     }
 
-   
+    public class split_check
+    {
+        public check currentCheck { get; set; }
+        public List<check_position> positions { get; set; }
+        public int salepoint { get; set; }
+        public int change { get; set; }
+    }
 }

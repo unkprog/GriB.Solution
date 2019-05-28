@@ -1,21 +1,19 @@
-﻿using GriB.Client.App.Managers;
+﻿using System;
+using System.Linq;
+using System.Collections.Generic;
+using System.Net;
+using System.Net.Http;
+using System.Web;
+using System.Web.Http;
+using GriB.Common.Models.Print;
+using GriB.Common.Models.Security;
+using GriB.Common.Sql;
+using GriB.Client.App.Managers;
 using GriB.Client.App.Managers.Editors;
 using GriB.Client.App.Managers.POSTerminal;
 using GriB.Client.App.Models.Editor;
 using GriB.Client.App.Models.POSTerminal;
 using GriB.Client.App.Models.Report;
-using GriB.Common.Models.Print;
-using GriB.Common.Models.Security;
-using GriB.Common.Sql;
-using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.IO;
-using System.Net;
-using System.Net.Http;
-using System.Web;
-using System.Web.Hosting;
-using System.Web.Http;
 
 namespace GriB.Client.App.Controllers
 {
@@ -223,6 +221,37 @@ namespace GriB.Client.App.Controllers
                 Principal principal = (Principal)HttpContext.Current.User;
                 check_position position = Check.SetPosition(query, new check_position() { id = addposparams.check, product = new Models.Editor.product() { id = addposparams.product }, quantity = addposparams.quantity });
                 return CreateResponse(HttpStatusCode.OK, new { newposition = position });
+            });
+        }
+
+        [HttpPost]
+        [ActionName("check_split")]
+        public HttpResponseMessage PostCheckClose(split_check splitCheck)
+        {
+            return TryCatchResponseQuery((query) =>
+            {
+                if (splitCheck.positions != null && splitCheck.positions.Count > 0 && splitCheck.positions.FirstOrDefault(f => f.quantity > 0) != null)
+                {
+                    Principal principal = (Principal)HttpContext.Current.User;
+                    check checknew = Check.NewCheck(query, principal.Data.User.id, splitCheck.salepoint, splitCheck.change);
+                    check_position item;
+                    for (int i = 0, icount =  splitCheck.positions.Count; i< icount; i++)
+                    {
+                        item = splitCheck.positions[i];
+                        if (item.quantity > 0)
+                        {
+                            item.id = checknew.id;
+                            Check.AddPosition(query, item);
+                            if (splitCheck.currentCheck != null && splitCheck.positions != null)
+                            {
+                                splitCheck.currentCheck.positions[i].id = splitCheck.currentCheck.id;
+                                splitCheck.currentCheck.positions[i].quantity = splitCheck.currentCheck.positions[i].quantity - item.quantity;
+                                Check.SetPosition(query, splitCheck.currentCheck.positions[i]);
+                            }
+                        }
+                    }
+                }
+                return CreateResponse(HttpStatusCode.OK, "Ok");
             });
         }
 
