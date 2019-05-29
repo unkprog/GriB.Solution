@@ -1,5 +1,6 @@
 ﻿<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="..\packages\Microsoft.Net.Compilers.3.0.0\build\Microsoft.Net.Compilers.props" Condition="Exists('..\packages\Microsoft.Net.Compilers.3.0.0\build\Microsoft.Net.Compilers.props')" />
+  <Import Project="..\packages\Microsoft.Net.Compilers.3.1.0\build\Microsoft.Net.Compilers.props" Condition="Exists('..\packages\Microsoft.Net.Compilers.3.1.0\build\Microsoft.Net.Compilers.props')" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.Default.props" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.Default.props')" />
   <Import Project="..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props" Condition="Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" />
   <Import Project="..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.0\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props" Condition="Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.0\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
@@ -26,6 +27,7 @@
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
     <TargetFrameworkProfile />
+    <TypeScriptToolsVersion>3.4</TypeScriptToolsVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -37,6 +39,19 @@
     <WarningLevel>4</WarningLevel>
     <PublishDatabases>true</PublishDatabases>
     <FilesToIncludeForPublish>OnlyFilesToRunTheApp</FilesToIncludeForPublish>
+    <TypeScriptTarget>ES5</TypeScriptTarget>
+    <TypeScriptJSXEmit>None</TypeScriptJSXEmit>
+    <TypeScriptModuleKind>AMD</TypeScriptModuleKind>
+    <TypeScriptCompileOnSaveEnabled>True</TypeScriptCompileOnSaveEnabled>
+    <TypeScriptNoImplicitAny>False</TypeScriptNoImplicitAny>
+    <TypeScriptRemoveComments>False</TypeScriptRemoveComments>
+    <TypeScriptOutFile />
+    <TypeScriptOutDir />
+    <TypeScriptGeneratesDeclarations>False</TypeScriptGeneratesDeclarations>
+    <TypeScriptNoEmitOnError>True</TypeScriptNoEmitOnError>
+    <TypeScriptSourceMap>True</TypeScriptSourceMap>
+    <TypeScriptMapRoot />
+    <TypeScriptSourceRoot />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -55,12 +70,12 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.12.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\packages\Newtonsoft.Json.12.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="System.Data.SqlClient, Version=4.5.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Data.SqlClient.4.6.0\lib\net461\System.Data.SqlClient.dll</HintPath>
+    <Reference Include="System.Data.SqlClient, Version=4.5.0.1, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Data.SqlClient.4.6.1\lib\net461\System.Data.SqlClient.dll</HintPath>
     </Reference>
     <Reference Include="System.IO, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.IO.4.3.0\lib\net462\System.IO.dll</HintPath>
@@ -132,9 +147,85 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\css\app.css" />
+    <Content Include="Content\css\app.min.css">
+      <DependentUpon>app.css</DependentUpon>
+    </Content>
+    <Content Include="Content\css\material-icons\MaterialIcons-Regular.svg" />
     <Content Include="Content\index.html" />
+    <Content Include="Content\js\app\init.js" />
+    <Content Include="Content\js\lib\i18n.es5.js">
+      <DependentUpon>i18n.js</DependentUpon>
+    </Content>
+    <Content Include="Content\js\lib\i18n.es5.min.js">
+      <DependentUpon>i18n.es5.js</DependentUpon>
+    </Content>
+    <Content Include="Content\js\lib\i18n.js" />
     <Content Include="Content\js\lib\jquery-3.3.1.min.js" />
+    <Content Include="Content\js\lib\kendo\kendo.binder.es5.js">
+      <DependentUpon>kendo.binder.js</DependentUpon>
+    </Content>
+    <Content Include="Content\js\lib\kendo\kendo.binder.es5.min.js">
+      <DependentUpon>kendo.binder.es5.js</DependentUpon>
+    </Content>
+    <Content Include="Content\js\lib\kendo\kendo.binder.js" />
+    <Content Include="Content\js\lib\kendo\kendo.core.es5.js">
+      <DependentUpon>kendo.core.js</DependentUpon>
+    </Content>
+    <Content Include="Content\js\lib\kendo\kendo.core.es5.min.js">
+      <DependentUpon>kendo.core.es5.js</DependentUpon>
+    </Content>
+    <Content Include="Content\js\lib\kendo\kendo.core.js" />
+    <Content Include="Content\js\lib\kendo\kendo.data.es5.js">
+      <DependentUpon>kendo.data.js</DependentUpon>
+    </Content>
+    <Content Include="Content\js\lib\kendo\kendo.data.es5.min.js">
+      <DependentUpon>kendo.data.es5.js</DependentUpon>
+    </Content>
+    <Content Include="Content\js\lib\kendo\kendo.data.js" />
+    <Content Include="Content\js\lib\kendo\kendo.data.odata.es5.js">
+      <DependentUpon>kendo.data.odata.js</DependentUpon>
+    </Content>
+    <Content Include="Content\js\lib\kendo\kendo.data.odata.es5.min.js">
+      <DependentUpon>kendo.data.odata.es5.js</DependentUpon>
+    </Content>
+    <Content Include="Content\js\lib\kendo\kendo.data.odata.js" />
+    <Content Include="Content\js\lib\kendo\kendo.data.xml.es5.js">
+      <DependentUpon>kendo.data.xml.js</DependentUpon>
+    </Content>
+    <Content Include="Content\js\lib\kendo\kendo.data.xml.es5.min.js">
+      <DependentUpon>kendo.data.xml.es5.js</DependentUpon>
+    </Content>
+    <Content Include="Content\js\lib\kendo\kendo.data.xml.js" />
+    <Content Include="Content\js\lib\materialize\materialize.es5.js">
+      <DependentUpon>materialize.js</DependentUpon>
+    </Content>
+    <Content Include="Content\js\lib\materialize\materialize.es5.min.js">
+      <DependentUpon>materialize.es5.js</DependentUpon>
+    </Content>
+    <Content Include="Content\js\lib\materialize\materialize.js" />
+    <Content Include="Content\js\lib\require\domReady.es5.js">
+      <DependentUpon>domReady.js</DependentUpon>
+    </Content>
+    <Content Include="Content\js\lib\require\domReady.es5.min.js">
+      <DependentUpon>domReady.es5.js</DependentUpon>
+    </Content>
+    <Content Include="Content\js\lib\require\domReady.js" />
+    <Content Include="Content\js\lib\require\require.es5.js">
+      <DependentUpon>require.js</DependentUpon>
+    </Content>
+    <Content Include="Content\js\lib\require\require.es5.min.js">
+      <DependentUpon>require.es5.js</DependentUpon>
+    </Content>
+    <Content Include="Content\js\lib\require\require.js" />
+    <Content Include="Content\js\nls\en\strings.js" />
+    <Content Include="Content\js\nls\root\strings.js" />
+    <Content Include="Content\js\nls\strings.js" />
     <Content Include="Content\Test.html" />
+    <Content Include="Content\view\app.html" />
+    <Content Include="Content\view\index.html" />
+    <Content Include="Content\view\main.html" />
+    <Content Include="Content\view\security\login.html" />
     <Content Include="Global.asax" />
     <Content Include="Scripts\Query\server\db\[get_all].sql" />
     <Content Include="Scripts\Query\server\db\[get].sql" />
@@ -179,8 +270,62 @@
     <Content Include="appSettings.config">
       <SubType>Designer</SubType>
     </Content>
+    <Content Include="bundleconfig.json" />
+    <Content Include="compilerconfig.json" />
+    <None Include="compilerconfig.json.defaults">
+      <DependentUpon>compilerconfig.json</DependentUpon>
+    </None>
+    <Content Include="Content\css\material-icons\MaterialIcons-Regular.eot" />
+    <Content Include="Content\css\material-icons\MaterialIcons-Regular.ijmap" />
+    <Content Include="Content\css\material-icons\MaterialIcons-Regular.ttf" />
+    <Content Include="Content\css\material-icons\MaterialIcons-Regular.woff" />
+    <Content Include="Content\css\material-icons\MaterialIcons-Regular.woff2" />
     <None Include="packages.config" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
+    <Content Include="Scss\app.scss" />
+    <Content Include="Scss\components\forms\_checkboxes.scss" />
+    <Content Include="Scss\components\forms\_file-input.scss" />
+    <Content Include="Scss\components\forms\_forms.scss" />
+    <Content Include="Scss\components\forms\_input-fields.scss" />
+    <Content Include="Scss\components\forms\_radio-buttons.scss" />
+    <Content Include="Scss\components\forms\_range.scss" />
+    <Content Include="Scss\components\forms\_select.scss" />
+    <Content Include="Scss\components\forms\_switches.scss" />
+    <Content Include="Scss\components\_badges.scss" />
+    <Content Include="Scss\components\_buttons.scss" />
+    <Content Include="Scss\components\_cards.scss" />
+    <Content Include="Scss\components\_carousel.scss" />
+    <Content Include="Scss\components\_chips.scss" />
+    <Content Include="Scss\components\_collapsible.scss" />
+    <Content Include="Scss\components\_color-classes.scss" />
+    <Content Include="Scss\components\_color-variables.scss" />
+    <Content Include="Scss\components\_datepicker.scss" />
+    <Content Include="Scss\components\_dropdown.scss" />
+    <Content Include="Scss\components\_global.scss" />
+    <Content Include="Scss\components\_grid.scss" />
+    <Content Include="Scss\components\_icons-material-design.scss" />
+    <Content Include="Scss\components\_materialbox.scss" />
+    <Content Include="Scss\components\_modal.scss" />
+    <Content Include="Scss\components\_navbar.scss" />
+    <Content Include="Scss\components\_normalize.scss" />
+    <Content Include="Scss\components\_preloader.scss" />
+    <Content Include="Scss\components\_pulse.scss" />
+    <Content Include="Scss\components\_sidenav.scss" />
+    <Content Include="Scss\components\_slider.scss" />
+    <Content Include="Scss\components\_table_of_contents.scss" />
+    <Content Include="Scss\components\_tabs.scss" />
+    <Content Include="Scss\components\_tapTarget.scss" />
+    <Content Include="Scss\components\_timepicker.scss" />
+    <Content Include="Scss\components\_toast.scss" />
+    <Content Include="Scss\components\_tooltip.scss" />
+    <Content Include="Scss\components\_transitions.scss" />
+    <Content Include="Scss\components\_typography.scss" />
+    <Content Include="Scss\components\_variables.scss" />
+    <Content Include="Scss\components\_waves.scss" />
+    <Content Include="Scss\ghpages-materialize.scss" />
+    <Content Include="Scss\MaterialIcons.scss" />
+    <Content Include="Scss\materialize.scss" />
+    <Content Include="Scss\_style.scss" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -212,6 +357,32 @@
       <Project>{3e00a39a-bbc4-4b43-8a5d-d2583f974ff4}</Project>
       <Name>GriB.Web</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <TypeScriptCompile Include="Content\js\app\application.ts" />
+    <TypeScriptCompile Include="Content\js\app\common\baseapplication.ts" />
+    <TypeScriptCompile Include="Content\js\app\common\basecontrol.ts" />
+    <TypeScriptCompile Include="Content\js\app\common\basecontroller.ts" />
+    <TypeScriptCompile Include="Content\js\app\common\basedialog.ts" />
+    <TypeScriptCompile Include="Content\js\app\common\baseservice.ts" />
+    <TypeScriptCompile Include="Content\js\app\common\utils.d.ts" />
+    <TypeScriptCompile Include="Content\js\app\common\utils.ts" />
+    <TypeScriptCompile Include="Content\js\app\common\variables.ts" />
+    <TypeScriptCompile Include="Content\js\app\controller\security\account.ts" />
+    <TypeScriptCompile Include="Content\js\app\controller\security\login.ts" />
+    <TypeScriptCompile Include="Content\js\app\interfaces\iapplication.ts" />
+    <TypeScriptCompile Include="Content\js\app\interfaces\icontrol.ts" />
+    <TypeScriptCompile Include="Content\js\app\interfaces\icontroller.ts" />
+    <TypeScriptCompile Include="Content\js\app\interfaces\imodel.ts" />
+    <TypeScriptCompile Include="Content\js\app\interfaces\iservice.ts" />
+    <TypeScriptCompile Include="Content\js\app\services\accountservice.ts" />
+    <TypeScriptCompile Include="Content\js\lib\jquery.d.ts" />
+    <TypeScriptCompile Include="Content\js\lib\kendo\kendo.d.ts" />
+    <TypeScriptCompile Include="Content\js\lib\materialize\materialize.d.ts" />
+    <TypeScriptCompile Include="Content\js\lib\require\require.d.ts" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
@@ -258,6 +429,7 @@
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets')" />
   <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
   <ProjectExtensions>
@@ -284,7 +456,7 @@
     </PropertyGroup>
     <Error Condition="!Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.0\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.0\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props'))" />
     <Error Condition="!Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props'))" />
-    <Error Condition="!Exists('..\packages\Microsoft.Net.Compilers.3.0.0\build\Microsoft.Net.Compilers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Net.Compilers.3.0.0\build\Microsoft.Net.Compilers.props'))" />
+    <Error Condition="!Exists('..\packages\Microsoft.Net.Compilers.3.1.0\build\Microsoft.Net.Compilers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Net.Compilers.3.1.0\build\Microsoft.Net.Compilers.props'))" />
   </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

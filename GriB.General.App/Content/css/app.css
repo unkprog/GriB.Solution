@@ -1,0 +1,58 @@
+﻿body, html {
+  padding: 0;
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden; }
+
+.container-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  -webkit-transform: translate(-50%, -50%); }
+
+.width100p {
+  width: 100%; }
+
+.width150px {
+  width: 150px; }
+
+.margin-0 {
+  margin: 0; }
+
+.margin16px {
+  margin-bottom: 16px; }
+
+.padding-bottom-0 {
+  padding-bottom: 0 !important; }
+
+.padding-1em {
+  padding: 1em; }
+
+.padding-0001em {
+  padding: 0 1em; }
+
+.padding-0em {
+  padding: 0; }
+
+.app-login-row {
+  width: 80%;
+  margin-left: auto;
+  margin-right: auto; }
+
+@media only screen and (min-width: 601px) {
+  .app-login-row {
+    width: 70%; } }
+
+@media only screen and (min-width: 993px) {
+  .app-login-row {
+    width: 45%; } }
+
+@media only screen and (min-width: 1201px) {
+  .app-login-row {
+    width: 40%; } }
+
+#app-content, #main-view-content, .main-view-content-modal {
+  overflow-y: auto;
+  overflow-x: hidden; }

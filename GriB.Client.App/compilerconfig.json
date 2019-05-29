@@ -55,8 +55,8 @@
     }
   },
   {
-    "outputFile": "Content/js/lib/materialize.es5.js",
-    "inputFile": "Content/js/lib/materialize.js"
+    "outputFile": "Content/js/lib/materialize/materialize.es5.js",
+    "inputFile": "Content/js/lib/materialize/materialize.js"
   },
   {
     "outputFile": "Content/js/lib/kendo/kendo.binder.es5.js",

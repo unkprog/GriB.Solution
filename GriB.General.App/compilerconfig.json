@@ -1,0 +1,89 @@
+﻿[
+  {
+    "outputFile": "Content/css/material-icons/MaterialIcons.css",
+    "inputFile": "Scss/MaterialIcons.scss",
+    "minify": {
+      "termSemicolons": true
+    },
+    "options": {
+      "relativeUrls": false,
+      "lineFeed": "crlf"
+    }
+  },
+  {
+    "outputFile": "Content/css/materialize.css",
+    "inputFile": "Scss/materialize.scss",
+    "minify": {
+      "termSemicolons": true
+    },
+    "options": {
+      "relativeUrls": false,
+      "lineFeed": "crlf"
+    }
+  },
+  {
+    "outputFile": "Content/css/app.css",
+    "inputFile": "Scss/app.scss",
+    "minify": {
+      "termSemicolons": true
+    },
+    "options": {
+      "relativeUrls": false,
+      "lineFeed": "crlf"
+    }
+  },
+  {
+    "outputFile": "Content/js/lib/materialize/materialize.es5.js",
+    "inputFile": "Content/js/lib/materialize/materialize.js"
+  },
+  {
+    "outputFile": "Content/js/lib/kendo/kendo.binder.es5.js",
+    "inputFile": "Content/js/lib/kendo/kendo.binder.js"
+  },
+  {
+    "outputFile": "Content/js/lib/kendo/kendo.core.es5.js",
+    "inputFile": "Content/js/lib/kendo/kendo.core.js"
+  },
+  {
+    "outputFile": "Content/js/lib/kendo/kendo.data.es5.js",
+    "inputFile": "Content/js/lib/kendo/kendo.data.js"
+  },
+  {
+    "outputFile": "Content/js/lib/kendo/kendo.data.odata.es5.js",
+    "inputFile": "Content/js/lib/kendo/kendo.data.odata.js"
+  },
+  {
+    "outputFile": "Content/js/lib/kendo/kendo.data.xml.es5.js",
+    "inputFile": "Content/js/lib/kendo/kendo.data.xml.js"
+  },
+  {
+    "outputFile": "Content/js/lib/materialize/materialize.es5.js",
+    "inputFile": "Content/js/lib/materialize/materialize.js"
+  },
+  {
+    "outputFile": "Content/js/lib/require/domReady.es5.js",
+    "inputFile": "Content/js/lib/require/domReady.js"
+  },
+  {
+    "outputFile": "Content/js/lib/require/require.es5.js",
+    "inputFile": "Content/js/lib/require/require.js"
+  },
+  {
+    "outputFile": "Content/js/lib/i18n.es5.js",
+    "inputFile": "Content/js/lib/i18n.js"
+  },
+  {
+    "outputFile": "../GriB.Client.App/Content/js/lib/require/require.es5.js",
+    "inputFile": "../GriB.Client.App/Content/js/lib/require/require.js"
+  },
+  {
+    "outputFile": "../GriB.Client.App/Content/js/lib/kendo/kendo.binder.es5.js",
+    "inputFile": "../GriB.Client.App/Content/js/lib/kendo/kendo.binder.js"
+  },
+  {
+    "outputFile": "../GriB.Client.App/Content/js/lib/kendo/kendo.data.es5.js",
+    "inputFile": "../GriB.Client.App/Content/js/lib/kendo/kendo.data.js"
+  }
+  
+
+]
