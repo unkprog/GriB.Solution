@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GriB.General.App.Handlers;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
@@ -16,6 +17,7 @@ namespace GriB.General.App
         public static void Register(HttpConfiguration config)
         {
             // Конфигурация и службы веб-API
+            config.Filters.Add(new AuthorizeAttribute());
 
             // Маршруты веб-API
             config.MapHttpAttributeRoutes();
@@ -27,6 +29,8 @@ namespace GriB.General.App
                 //constraints: null,
                 //handler: new NormalizeHandler(config)
             );
+
+            GlobalConfiguration.Configuration.MessageHandlers.Add(new AuthorizationHeaderHandler());
         }
     }
 

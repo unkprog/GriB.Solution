@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
+﻿using System.Configuration;
 using System.Data.SqlClient;
 
 namespace GriB.General.App.Managers
@@ -88,6 +86,12 @@ namespace GriB.General.App.Managers
         {
             public static string Address => GetAttribute("Mail.Address");
             public static string Password => GetAttribute("Mail.Password");
+        }
+
+        public static class Admin
+        {
+            public static string UserID => GetAttribute("Admin.UserID");
+            public static string Password => GetAttribute("Admin.Password");
         }
     }
 }

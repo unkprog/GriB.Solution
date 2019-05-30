@@ -225,6 +225,8 @@
     <Content Include="Content\view\app.html" />
     <Content Include="Content\view\index.html" />
     <Content Include="Content\view\main.html" />
+    <Content Include="Content\view\setting\card\card.html" />
+    <Content Include="Content\view\setting\index.html" />
     <Content Include="Content\view\security\login.html" />
     <Content Include="Global.asax" />
     <Content Include="Scripts\Query\server\db\[get_all].sql" />
@@ -257,10 +259,14 @@
   <ItemGroup>
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\BaseController.cs" />
+    <Compile Include="Controllers\SettingsController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Handlers\AuthorizationHeaderHandler.cs" />
     <Compile Include="Managers\AppSettings.cs" />
+    <Compile Include="Managers\AuthUser.cs" />
     <Compile Include="Managers\pos\Server.cs" />
     <Compile Include="Managers\pos\Settings\Employee.cs" />
     <Compile Include="Managers\pos\Users.cs" />
@@ -335,6 +341,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Content\js\app\controller\setting\editor\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\GriB.Common.Models\GriB.Common.Models.csproj">
@@ -368,6 +375,10 @@
     <TypeScriptCompile Include="Content\js\app\common\utils.d.ts" />
     <TypeScriptCompile Include="Content\js\app\common\utils.ts" />
     <TypeScriptCompile Include="Content\js\app\common\variables.ts" />
+    <TypeScriptCompile Include="Content\js\app\controller\dialog\modaldialog.ts" />
+    <TypeScriptCompile Include="Content\js\app\controller\setting\card\card.ts" />
+    <TypeScriptCompile Include="Content\js\app\controller\setting\card\server.ts" />
+    <TypeScriptCompile Include="Content\js\app\controller\setting\index.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\security\account.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\security\login.ts" />
     <TypeScriptCompile Include="Content\js\app\interfaces\iapplication.ts" />
@@ -375,6 +386,7 @@
     <TypeScriptCompile Include="Content\js\app\interfaces\icontroller.ts" />
     <TypeScriptCompile Include="Content\js\app\interfaces\imodel.ts" />
     <TypeScriptCompile Include="Content\js\app\interfaces\iservice.ts" />
+    <TypeScriptCompile Include="Content\js\app\services\settingsservice.ts" />
     <TypeScriptCompile Include="Content\js\app\services\accountservice.ts" />
     <TypeScriptCompile Include="Content\js\lib\jquery.d.ts" />
     <TypeScriptCompile Include="Content\js\lib\kendo\kendo.d.ts" />

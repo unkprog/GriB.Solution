@@ -11,20 +11,8 @@ export namespace Services {
             return { BaseUrl: '/api/account' };
         }
 
-        public Register(model: Interfaces.Model.IRegisterModel, Callback: (responseData: any) => void) {
-            this.PostApi({ Action: "/register", RequestData: JSON.stringify(model), Callback: Callback });
-        }
-
-        public Recovery(model: Interfaces.Model.IRegisterModel, Callback: (responseData: any) => void) {
-            this.PostApi({ Action: "/recovery", RequestData: JSON.stringify(model), Callback: Callback });
-        }
-
         public Login(model: Interfaces.Model.ILoginModel, Callback: (responseData: any) => void) {
-            this.PostApi({ Action: "/login", RequestData: JSON.stringify(model), Callback: Callback });
-        }
-
-        public AccountData(Callback: (responseData: any) => void) {
-            this.GetApi({ Action: "/accountdata", Callback: Callback });
+            this.PostApi({ Action: "/loginadm", RequestData: JSON.stringify(model), Callback: Callback });
         }
     }
 }

@@ -9,9 +9,11 @@ using GriB.Common.Models.pos;
 using GriB.Common.Models.Security;
 using GriB.Common.Models.pos.settings;
 using GriB.Common.Net;
+using GriB.General.App.Handlers;
 
 namespace GriB.General.App.Controllers
 {
+    [AllowAnonymous]
     public class AccountController : BaseApiController
     {
         private Query _query;
@@ -188,5 +190,39 @@ namespace GriB.General.App.Controllers
             });
         }
         #endregion settings
+
+
+        [HttpPost]
+        [ActionName("loginadm")]
+        public HttpResponseMessage loginadmin(login_user login)
+        {
+            return TryCatchResponse(() =>
+            {
+                if (login == null)
+                    throw new ApiException("Неверные параметры для входа.");
+
+                if(login.phone == AppSettings.Admin.UserID && login.pass == AppSettings.Admin.Password)
+                {
+                    PrincipalData principalData = new PrincipalData()
+                    {
+                        Database = new sqldb() { user = AppSettings.Database.UserID, pass = AppSettings.Database.Password, catalog = AppSettings.Database.InitialCatalog },
+                        Server = new sqlsrv() { address = AppSettings.Database.DataSource, user = AppSettings.Database.UserID, pass = AppSettings.Database.Password },
+                        User = new user() { phone = login.phone },
+                        Person = new user_person() { fname = login.phone }
+                    };
+
+                    //// TODO: Добавить проверку Expires!!!
+                    Principal principal = new Principal(principalData);
+                    AuthUser.LogIn(principal);
+                    AuthorizationHeaderHandler.SetPrincipal(principal);
+                    
+                    return this.CreateResponse(HttpStatusCode.OK, new { result = "Ok", indetity = new { auth = true, token = principal.GetKey() } });
+                }
+                else
+                    throw new ApiException("Неверный логин или пароль.");
+
+                
+            });
+        }
     }
 }

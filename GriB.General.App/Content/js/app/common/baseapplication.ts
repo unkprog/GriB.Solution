@@ -36,7 +36,7 @@ export namespace App {
                 //jqXHR.setRequestHeader("X-Application-Language", _config.Language);
 
                 if (vars._identity && vars._identity.auth && vars._identity.token) {
-                    jqXHR.setRequestHeader("Authorization", "POSCloud-ApiKey " + vars._identity.token);
+                    jqXHR.setRequestHeader("Authorization", "POSCloudAdmin-ApiKey " + vars._identity.token);
                 }
             });
 

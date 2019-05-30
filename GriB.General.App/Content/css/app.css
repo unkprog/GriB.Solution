@@ -41,6 +41,10 @@
   margin-left: auto;
   margin-right: auto; }
 
+.btncol {
+  margin: 0.5em 0;
+  width: 100%; }
+
 @media only screen and (min-width: 601px) {
   .app-login-row {
     width: 70%; } }

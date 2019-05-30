@@ -37,13 +37,9 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                 };
                 Login.prototype.createEvents = function () {
                     this.LoginButtonClick = this.createTouchClickEvent("btn-login", this.loginButtonClick);
-                    this.RegisterButtonClick = this.createTouchClickEvent("btn-register", this.registerButtonClick);
-                    this.ForgotButtonClick = this.createTouchClickEvent("btn-forgot", this.forgotButtonClick);
                 };
                 Login.prototype.destroyEvents = function () {
                     this.destroyTouchClickEvent("btn-login", this.LoginButtonClick);
-                    this.destroyTouchClickEvent("btn-register", this.RegisterButtonClick);
-                    this.destroyTouchClickEvent("btn-forgot", this.ForgotButtonClick);
                 };
                 Login.prototype.loginButtonClick = function (e) {
                     vars._app.ShowLoading();
@@ -54,14 +50,14 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                     };
                     // TODO: Заглушка на демо-вход
                     if (utils.isNullOrEmpty(model.phone) && utils.isNullOrEmpty(model.pass)) {
-                        model.phone = "9264042915";
+                        model.phone = "admin";
                         model.pass = "1";
                     }
                     if (this.validate(model)) {
                         controller.AccountService.Login(model, function (responseData) {
                             if (responseData.result == "Ok") {
                                 vars._identity = responseData.indetity;
-                                vars._app.OpenController({ urlController: "main" });
+                                vars._app.OpenController({ urlController: "setting/index" });
                             }
                             else
                                 vars._app.ShowError(responseData.error);
@@ -72,21 +68,15 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                 };
                 Login.prototype.validate = function (model) {
                     var result = true;
-                    if (!utils.validatePhone(model.phone)) {
-                        M.toast({ html: vars._statres('msg$error$phoneNumberIncorrect') });
-                        result = false;
-                    }
-                    if (utils.isNullOrEmpty(model.pass)) {
-                        M.toast({ html: vars._statres('msg$error$invalidPassword') });
-                        result = false;
-                    }
+                    //if (!utils.validatePhone(model.phone)) {
+                    //    M.toast({ html: vars._statres('msg$error$phoneNumberIncorrect') });
+                    //    result = false;
+                    //}
+                    //if (utils.isNullOrEmpty(model.pass)) {
+                    //    M.toast({ html: vars._statres('msg$error$invalidPassword') });
+                    //    result = false;
+                    //}
                     return result;
-                };
-                Login.prototype.registerButtonClick = function (e) {
-                    vars._app.OpenController({ urlController: "security/register", backController: this });
-                };
-                Login.prototype.forgotButtonClick = function (e) {
-                    vars._app.OpenController({ urlController: "security/recovery", backController: this });
                 };
                 return Login;
             }(acc.Controller.Security.Account));

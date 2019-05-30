@@ -24,14 +24,10 @@ export namespace Controller.Security {
 
         protected createEvents(): void {
             this.LoginButtonClick = this.createTouchClickEvent("btn-login", this.loginButtonClick);
-            this.RegisterButtonClick = this.createTouchClickEvent("btn-register", this.registerButtonClick);
-            this.ForgotButtonClick = this.createTouchClickEvent("btn-forgot", this.forgotButtonClick);
         }
 
         protected destroyEvents(): void {
             this.destroyTouchClickEvent("btn-login", this.LoginButtonClick);
-            this.destroyTouchClickEvent("btn-register", this.RegisterButtonClick);
-            this.destroyTouchClickEvent("btn-forgot", this.ForgotButtonClick);
         }
 
         public LoginButtonClick: { (e: any): void; };
@@ -45,7 +41,7 @@ export namespace Controller.Security {
 
             // TODO: Заглушка на демо-вход
             if (utils.isNullOrEmpty(model.phone) && utils.isNullOrEmpty(model.pass)) {
-                model.phone = "9264042915";
+                model.phone = "admin";
                 model.pass = "1";
             }
 
@@ -53,7 +49,7 @@ export namespace Controller.Security {
                 controller.AccountService.Login(model, (responseData) => {
                     if (responseData.result == "Ok") {
                         vars._identity = responseData.indetity;
-                        vars._app.OpenController({ urlController: "main" });
+                        vars._app.OpenController({ urlController: "setting/index" });
                     }
                     else
                         vars._app.ShowError(responseData.error);
@@ -66,27 +62,17 @@ export namespace Controller.Security {
         private validate(model: Interfaces.Model.ILoginModel): boolean {
             let result: boolean = true;
 
-            if (!utils.validatePhone(model.phone)) {
-                M.toast({ html: vars._statres('msg$error$phoneNumberIncorrect') });
-                result = false;
-            }
+            //if (!utils.validatePhone(model.phone)) {
+            //    M.toast({ html: vars._statres('msg$error$phoneNumberIncorrect') });
+            //    result = false;
+            //}
 
-            if (utils.isNullOrEmpty(model.pass)) {
-                M.toast({ html: vars._statres('msg$error$invalidPassword') });
-                result = false;
-            }
+            //if (utils.isNullOrEmpty(model.pass)) {
+            //    M.toast({ html: vars._statres('msg$error$invalidPassword') });
+            //    result = false;
+            //}
 
             return result;
-        }
-
-        public RegisterButtonClick: { (e: any): void; };
-        private registerButtonClick(e) {
-            vars._app.OpenController({ urlController: "security/register", backController: this });
-        }
-
-        public ForgotButtonClick: { (e: any): void; };
-        private forgotButtonClick(e) {
-            vars._app.OpenController({ urlController: "security/recovery", backController: this });
         }
     }
 }

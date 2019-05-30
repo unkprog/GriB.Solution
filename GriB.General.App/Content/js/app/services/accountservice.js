@@ -28,17 +28,8 @@ define(["require", "exports", "app/common/baseservice"], function (require, expo
                 enumerable: true,
                 configurable: true
             });
-            AccountService.prototype.Register = function (model, Callback) {
-                this.PostApi({ Action: "/register", RequestData: JSON.stringify(model), Callback: Callback });
-            };
-            AccountService.prototype.Recovery = function (model, Callback) {
-                this.PostApi({ Action: "/recovery", RequestData: JSON.stringify(model), Callback: Callback });
-            };
             AccountService.prototype.Login = function (model, Callback) {
-                this.PostApi({ Action: "/login", RequestData: JSON.stringify(model), Callback: Callback });
-            };
-            AccountService.prototype.AccountData = function (Callback) {
-                this.GetApi({ Action: "/accountdata", Callback: Callback });
+                this.PostApi({ Action: "/loginadm", RequestData: JSON.stringify(model), Callback: Callback });
             };
             return AccountService;
         }(base.Services.BaseService));

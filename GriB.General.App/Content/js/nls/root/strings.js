@@ -28,5 +28,13 @@ define({
     "label$password": "Пароль",
     "label$unspecified": "Не указан",
     "button$label$enter": "Вход",
-   
+
+
+    "label$settings": "Настройки",
+    "label$servers": "Серверы",
+    "label$databases": "Базы данных",
+    "label$users": "Пользователи",
+
+    "label$id": "id",
+    "label$address": "Адрес",
 });

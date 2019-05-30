@@ -23,8 +23,5 @@ export namespace Services {
             this.PostApi({ Action: "/login", RequestData: JSON.stringify(model), Callback: Callback });
         }
 
-        public AccountData(Callback: (responseData: any) => void) {
-            this.GetApi({ Action: "/accountdata", Callback: Callback });
-        }
     }
 }

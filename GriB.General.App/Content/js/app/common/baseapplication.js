@@ -33,7 +33,7 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
                 $.ajaxPrefilter(function (options, originalOptions, jqXHR) {
                     //jqXHR.setRequestHeader("X-Application-Language", _config.Language);
                     if (vars._identity && vars._identity.auth && vars._identity.token) {
-                        jqXHR.setRequestHeader("Authorization", "POSCloud-ApiKey " + vars._identity.token);
+                        jqXHR.setRequestHeader("Authorization", "POSCloudAdmin-ApiKey " + vars._identity.token);
                     }
                 });
                 // $(document).ajaxError(this.GlobalAjaxErrorHandler);
