@@ -34,7 +34,7 @@ define(["require", "exports", "app/common/baseservice"], function (require, expo
             SettingsService.prototype.GetServer = function (id, Callback) {
                 this.GetApi({ Action: "/get_server", RequestData: { id: id }, Callback: Callback });
             };
-            SettingsService.prototype.SetSalePoint = function (model, Callback) {
+            SettingsService.prototype.SetServer = function (model, Callback) {
                 this.PostApi({ Action: "/post_server", RequestData: JSON.stringify(model), Callback: Callback });
             };
             SettingsService.prototype.DelServer = function (id, Callback) {

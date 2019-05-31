@@ -226,6 +226,7 @@
     <Content Include="Content\view\index.html" />
     <Content Include="Content\view\main.html" />
     <Content Include="Content\view\setting\card\card.html" />
+    <Content Include="Content\view\setting\editor\server.html" />
     <Content Include="Content\view\setting\index.html" />
     <Content Include="Content\view\security\login.html" />
     <Content Include="Global.asax" />
@@ -341,7 +342,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Content\js\app\controller\setting\editor\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\GriB.Common.Models\GriB.Common.Models.csproj">
@@ -376,8 +376,11 @@
     <TypeScriptCompile Include="Content\js\app\common\utils.ts" />
     <TypeScriptCompile Include="Content\js\app\common\variables.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\dialog\modaldialog.ts" />
+    <TypeScriptCompile Include="Content\js\app\controller\main.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\setting\card\card.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\setting\card\server.ts" />
+    <TypeScriptCompile Include="Content\js\app\controller\setting\editor\editor.ts" />
+    <TypeScriptCompile Include="Content\js\app\controller\setting\editor\server.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\setting\index.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\security\account.ts" />
     <TypeScriptCompile Include="Content\js\app\controller\security\login.ts" />

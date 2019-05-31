@@ -94,9 +94,5 @@
         CheckValueEditControl: { (field: string, value: any, row: Interfaces.Model.ITableRowModel): boolean; };
     }
 
-    export interface ICheckViewControl extends IControl {
-        LabelSize: number;
-        Printer: Interfaces.Model.IPrinter;
-        PrintService: Interfaces.IPrintService;
-    }
+
 }

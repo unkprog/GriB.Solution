@@ -57,7 +57,7 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                         controller.AccountService.Login(model, function (responseData) {
                             if (responseData.result == "Ok") {
                                 vars._identity = responseData.indetity;
-                                vars._app.OpenController({ urlController: "setting/index" });
+                                vars._app.OpenController({ urlController: "main" });
                             }
                             else
                                 vars._app.ShowError(responseData.error);

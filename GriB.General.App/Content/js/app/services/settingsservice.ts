@@ -19,7 +19,7 @@ export namespace Services {
             this.GetApi({ Action: "/get_server", RequestData: { id: id }, Callback: Callback });
         }
 
-        public SetSalePoint(model: Interfaces.Model.ISalepoint, Callback: (responseData: any) => void) {
+        public SetServer(model: Interfaces.Model.IServer, Callback: (responseData: any) => void) {
             this.PostApi({ Action: "/post_server", RequestData: JSON.stringify(model), Callback: Callback });
         }
 

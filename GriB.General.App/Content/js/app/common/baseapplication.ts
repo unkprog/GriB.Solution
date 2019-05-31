@@ -109,7 +109,8 @@ export namespace App {
         public OpenViewTemplate(options: Interfaces.IOpenViewTemplate) {
             let self = this;
             let isInit: boolean = false;
-            let isModal: boolean = (options.isModal && options.isModal === true);
+            let isModal: boolean = (options.isModal ? options.isModal === true : false);
+            let isRestore: boolean = (options.isRestore ? options.isRestore === true : false);
             let content: JQuery = self.contentControl;
             try {
 
@@ -121,7 +122,7 @@ export namespace App {
 
                 self._controller = options.controller;
 
-                if (isModal === false && options.isRestore === false)
+                if (isModal === false && isRestore === false)
                     self._controllersStack.Push(options.backController);
 
                 if (!isModal)

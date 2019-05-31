@@ -89,7 +89,8 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
             Application.prototype.OpenViewTemplate = function (options) {
                 var self = this;
                 var isInit = false;
-                var isModal = (options.isModal && options.isModal === true);
+                var isModal = (options.isModal ? options.isModal === true : false);
+                var isRestore = (options.isRestore ? options.isRestore === true : false);
                 var content = self.contentControl;
                 try {
                     if (!isModal && self._controller)
@@ -97,7 +98,7 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
                     if (isModal === true && self.IsModal === false)
                         self._controllersStack.Push(self._controller);
                     self._controller = options.controller;
-                    if (isModal === false && options.isRestore === false)
+                    if (isModal === false && isRestore === false)
                         self._controllersStack.Push(options.backController);
                     if (!isModal)
                         self.SetHeader(self._controller);
