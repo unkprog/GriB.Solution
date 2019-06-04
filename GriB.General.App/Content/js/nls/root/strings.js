@@ -35,7 +35,9 @@ define({
     "label$databases": "Базы данных",
     "label$users": "Пользователи",
 
-    "label$server": "Сервер",
     "label$id": "id",
+    "label$server": "Сервер",
+    "label$database": "База данных",
     "label$address": "Адрес",
+    "label$catalog": "Каталог",
 });

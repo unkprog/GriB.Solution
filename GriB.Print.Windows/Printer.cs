@@ -76,7 +76,7 @@ namespace GriB.Print.Windows
         //public static extern bool SetDefaultPrinter(string Name);
 
 
-        object footer, header, margin_left, margin_right, margin_top, margin_bottom, Print_Background, Shrink_To_Fit, font;
+        object footer, header, margin_left, margin_right, margin_top, margin_bottom, Print_Background, Shrink_To_Fit, font, PaperSize;
         private void SaveDefaultPrintSettings()
         {
             using (RegistryKey registryKey = Registry.CurrentUser.CreateSubKey("Software\\Microsoft\\Internet Explorer\\PageSetup"))
@@ -91,6 +91,7 @@ namespace GriB.Print.Windows
                 Shrink_To_Fit = registryKey.GetValue("Shrink_To_Fit");
                 font = registryKey.GetValue("font");
                 header = registryKey.GetValue("header");
+                PaperSize = registryKey.GetValue("PaperSize");
             }
         }
 
@@ -109,6 +110,7 @@ namespace GriB.Print.Windows
                 if (Print_Background != null) registryKey.SetValue("Print_Background", Print_Background);
                 if (Shrink_To_Fit != null) registryKey.SetValue("Shrink_To_Fit", Shrink_To_Fit);
                 if (font != null) registryKey.SetValue("font", font);
+                if (PaperSize != null) registryKey.SetValue("PaperSize", PaperSize);
             }
         }
 
@@ -127,6 +129,8 @@ namespace GriB.Print.Windows
                 registryKey.SetValue("Print_Background", "yes");
                 registryKey.SetValue("Shrink_To_Fit", "no");
                 registryKey.SetValue("font", "");
+                registryKey.SetValue("PaperSize", "1");
+                
             }
         }
 

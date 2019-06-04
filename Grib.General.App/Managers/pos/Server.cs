@@ -36,7 +36,7 @@ namespace GriB.General.App.Managers.pos
         private const string cmdDbGet = @"server\db\[get]";
         public static sqldb GetServerDatabase(this Query query, int id)
         {
-            sqldb result = null;
+            sqldb result = new sqldb();
             query.Execute(cmdDbGet, sqlParameters: new SqlParameter[] { new SqlParameter("@field", "id"), new SqlParameter("@id", id), new SqlParameter() { ParameterName = "@server", Value = 0 }, new SqlParameter() { ParameterName = "@catalog", Value = string.Empty } }
             , action: (values) =>
             {
@@ -70,13 +70,31 @@ namespace GriB.General.App.Managers.pos
 
             return result;
         }
+        public static sqldb InsertServerDatabases(this Query query, sqldb_full database)
+        {
+            sqldb result = database;
+            query.Execute(cmdDbIns, sqlParameters: new SqlParameter[] { new SqlParameter("@server", Helper.GetSqlParamValue(database.sqlsrv)), new SqlParameter("@catalog", database.catalog), new SqlParameter("@user", database.user), new SqlParameter("@pass", database.pass) }
+            , action: (values) =>
+            {
+                result.id = (int)values[0];
+            });
 
+            return result;
+        }
+
+
+        private const string cmdDbDel = @"server\db\[del]";
+        public static void DelServerDatabases(this Query query, int id)
+        {
+            query.Execute(cmdDbDel, sqlParameters: new SqlParameter[] { new SqlParameter("@id", id) }
+            , action: (values) => { });
+        }
 
         private const string cmdDbGetAll = @"server\db\[get_all]";
-        public static List<sqldb_full> GetListDatabases(this Query query)
+        public static List<sqldb_full> GetListDatabases(this Query query, int id = 0)
         {
             List<sqldb_full> result = new List<sqldb_full>();
-            query.Execute(cmdDbGetAll, sqlParameters: null
+            query.Execute(cmdDbGetAll, sqlParameters: new SqlParameter[] { new SqlParameter("@id", id) }
             , action: (values) =>
             {
                 result.Add(new sqldb_full() { id = (int)values[0], catalog = (string)values[1], user = (string)values[2], pass = (string)values[3], server = (int)values[4], sqlsrv = new sqlsrv() { id = (int)values[4], address = (string)values[5] } });

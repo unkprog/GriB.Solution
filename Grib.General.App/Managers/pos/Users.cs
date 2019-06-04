@@ -127,5 +127,23 @@ namespace GriB.General.App.Managers.pos
             });
             return user_db;
         }
+
+        private const string cmdGetFull = @"user\[get_full]";
+        private static user_full readUserFullFromValues(object[] values) => new user_full() { id = (int)values[0], d = (int)values[1], cd = (DateTime)values[2], cu = (int)values[3], ud = (DateTime)values[4], uu = (int)values[5], pid = (int)values[6]
+            , phone = (string)values[7]
+            , person = new user_person() { sex = (int)values[8], birth = (DateTime)values[9], fname=(string)values[10], mname = (string)values[11], lname = (string)values[12], email = (string)values[13] }
+            , db = new sqldb_full() { id = (int)values[15], catalog = (string)values[16], server = (int)values[17], sqlsrv = new sqlsrv() {  id= (int)values[17], address = (string)values[18] } }
+        };
+        public static List<user_full> GetUsersFull(this Query query, int id = 0)
+        {
+            List<user_full> result = new List<user_full>();
+            query.Execute(cmdGetFull, new SqlParameter[] { new SqlParameter("@id", id) }
+            , (values) =>
+            {
+                result.Add(readUserFullFromValues(values));
+            });
+
+            return result;
+        }
     }
 }

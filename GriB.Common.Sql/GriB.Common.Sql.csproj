@@ -41,12 +41,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Constants.cs" />
     <Compile Include="Database.cs" />
     <Compile Include="Helper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Query.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\GriB.Common.Models\GriB.Common.Models.csproj">
+      <Project>{2AB9C7F5-10C3-4EBC-8991-788FF4D6B64E}</Project>
+      <Name>GriB.Common.Models</Name>
+    </ProjectReference>
     <ProjectReference Include="..\GriB.Common\GriB.Common.csproj">
       <Project>{78f0ccb1-c344-4be7-83c6-ee75df3efd4c}</Project>
       <Name>GriB.Common</Name>

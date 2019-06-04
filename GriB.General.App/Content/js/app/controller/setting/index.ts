@@ -24,11 +24,14 @@ export namespace Controller.Setting {
         protected createEvents(): void {
             this.ServersButtonClick = this.createClickEvent("btn-servers", this.serversButtonClick);
             this.DataBasesButtonClick = this.createClickEvent("btn-databases", this.dataBasesButtonClick);
+            this.UsersButtonClick = this.createClickEvent("btn-users", this.usersButtonClick);
         }
 
         protected destroyEvents(): void {
             this.destroyClickEvent("btn-servers", this.ServersButtonClick);
             this.destroyClickEvent("btn-databases", this.DataBasesButtonClick);
+            this.destroyClickEvent("btn-users", this.UsersButtonClick);
+            
         }
 
 
@@ -39,9 +42,13 @@ export namespace Controller.Setting {
 
         public DataBasesButtonClick: { (e: any): void; };
         private dataBasesButtonClick(e) {
-            //vars._app.OpenController({ urlController: "document/card/arrival", backController: this });
+            vars._app.OpenController({ urlController: "setting/card/database", backController: this });
         }
 
+        public UsersButtonClick: { (e: any): void; };
+        private usersButtonClick(e) {
+            vars._app.OpenController({ urlController: "setting/card/user", backController: this });
+        }
     }
 }
 

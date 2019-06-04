@@ -55,4 +55,25 @@
         pass: string;
     }
 
+    export interface IDatabase extends IReferenceModel, IEditorModel {
+        sqlsrv: IServer;
+        server: number;
+        catalog: string;
+        user: string;
+        pass: string;
+    }
+
+    export interface IPerson {
+        sex: number;
+        birth: Date;
+        fname: string;
+        mname: string;
+        lname: string;
+        email: string;
+    }
+
+    export interface IUser extends IReferenceHierarhyModel, IEditorModel, ILoginModel {
+        person: IPerson;
+        db: IDatabase;
+    }
 }

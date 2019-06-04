@@ -40,6 +40,30 @@ define(["require", "exports", "app/common/baseservice"], function (require, expo
             SettingsService.prototype.DelServer = function (id, Callback) {
                 this.GetApi({ Action: "/del_server", RequestData: { id: id }, Callback: Callback });
             };
+            SettingsService.prototype.GetDatabases = function (Callback) {
+                this.GetApi({ Action: "/get_databases", Callback: Callback });
+            };
+            SettingsService.prototype.GetDatabase = function (id, Callback) {
+                this.GetApi({ Action: "/get_database", RequestData: { id: id }, Callback: Callback });
+            };
+            SettingsService.prototype.SetDatabase = function (model, Callback) {
+                this.PostApi({ Action: "/post_database", RequestData: JSON.stringify(model), Callback: Callback });
+            };
+            SettingsService.prototype.DelDatabase = function (id, Callback) {
+                this.GetApi({ Action: "/del_database", RequestData: { id: id }, Callback: Callback });
+            };
+            SettingsService.prototype.GetUsers = function (Callback) {
+                this.GetApi({ Action: "/get_users", Callback: Callback });
+            };
+            SettingsService.prototype.GetUser = function (id, Callback) {
+                this.GetApi({ Action: "/get_user", RequestData: { id: id }, Callback: Callback });
+            };
+            SettingsService.prototype.SetUser = function (model, Callback) {
+                this.PostApi({ Action: "/post_usere", RequestData: JSON.stringify(model), Callback: Callback });
+            };
+            SettingsService.prototype.DelUser = function (id, Callback) {
+                this.GetApi({ Action: "/del_user", RequestData: { id: id }, Callback: Callback });
+            };
             return SettingsService;
         }(base.Services.BaseService));
         Services.SettingsService = SettingsService;

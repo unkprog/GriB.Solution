@@ -57,6 +57,11 @@ namespace GriB.Common.Models.pos
 
     public class model_login : model_base
     {
+        public model_login()
+        {
+            user = string.Empty;
+            pass = string.Empty;
+        }
         public string user { get; set; }
         public string pass { get; set; }
 

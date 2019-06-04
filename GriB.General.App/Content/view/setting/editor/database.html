@@ -1,0 +1,31 @@
+﻿<div id="editor-view-database">
+    <div class="padding-0001em">
+
+        <div class="section">
+            <h5 data-bind="text:Header"></h5>
+        </div>
+
+        <div class="row row-inputs">
+            <div id="editor-view-database-server-row" class="input-field col s12 m6 l6 xl4">
+            </div>
+        </div>
+        <div class="row row-inputs">
+            <div class="input-field col s12 m6 l6 xl4">
+                <input id="editor-view-database-catalog" type="text" data-length="50" data-bind="value:editModel.catalog">
+                <label for="editor-view-database-catalog" data-bind="text:labelCatalog"></label>
+            </div>
+        </div>
+        <div class="row row-inputs">
+            <div class="input-field col s12 m6 l6 xl4">
+                <input id="editor-view-database-user" type="text" data-length="50" data-bind="value:editModel.user">
+                <label for="editor-view-database-user" data-bind="text:labelLogin"></label>
+            </div>
+        </div>
+        <div class="row row-inputs">
+            <div class="input-field col s12 m6 l6 xl4">
+                <input id="editor-view-database-password" type="text" data-length="50" data-bind="value:editModel.pass">
+                <label for="editor-view-database-password" data-bind="text:labelPassword"></label>
+            </div>
+        </div>
+    </div>
+</div>

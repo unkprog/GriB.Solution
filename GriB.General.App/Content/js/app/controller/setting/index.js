@@ -38,16 +38,21 @@ define(["require", "exports", "app/common/variables", "app/common/basecontroller
                 Index.prototype.createEvents = function () {
                     this.ServersButtonClick = this.createClickEvent("btn-servers", this.serversButtonClick);
                     this.DataBasesButtonClick = this.createClickEvent("btn-databases", this.dataBasesButtonClick);
+                    this.UsersButtonClick = this.createClickEvent("btn-users", this.usersButtonClick);
                 };
                 Index.prototype.destroyEvents = function () {
                     this.destroyClickEvent("btn-servers", this.ServersButtonClick);
                     this.destroyClickEvent("btn-databases", this.DataBasesButtonClick);
+                    this.destroyClickEvent("btn-users", this.UsersButtonClick);
                 };
                 Index.prototype.serversButtonClick = function (e) {
                     vars._app.OpenController({ urlController: "setting/card/server", backController: this });
                 };
                 Index.prototype.dataBasesButtonClick = function (e) {
-                    //vars._app.OpenController({ urlController: "document/card/arrival", backController: this });
+                    vars._app.OpenController({ urlController: "setting/card/database", backController: this });
+                };
+                Index.prototype.usersButtonClick = function (e) {
+                    vars._app.OpenController({ urlController: "setting/card/user", backController: this });
                 };
                 return Index;
             }(base.Controller.Base));

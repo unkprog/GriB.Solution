@@ -2,6 +2,9 @@
 {
     public class sqldb : model_login
     {
+        public sqldb() {
+            catalog = string.Empty;
+        }
         public int    server  { get; set; }
         public string catalog { get; set; }
     }

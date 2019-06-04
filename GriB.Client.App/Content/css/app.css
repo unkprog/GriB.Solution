@@ -177,6 +177,13 @@ input[type='number']:hover::-webkit-outer-spin-button {
 .col-table {
   padding: 0 !important; }
 
+.doc-edit-ref {
+  cursor: pointer; }
+
+.doc-edit-ref-del {
+  margin-top: -48px;
+  cursor: pointer; }
+
 /**********************************************************************************/
 /*******************************     END COMMON     *******************************/
 /**********************************************************************************/
@@ -577,13 +584,6 @@ input[type='number']:hover::-webkit-outer-spin-button {
 
 .doc-col-conduct {
   width: 30px; }
-
-.doc-edit-ref {
-  cursor: pointer; }
-
-.doc-edit-ref-del {
-  margin-top: -48px;
-  cursor: pointer; }
 
 .reportcheck {
   margin-top: -2.2em; }

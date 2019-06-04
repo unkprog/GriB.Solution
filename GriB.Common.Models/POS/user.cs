@@ -44,4 +44,17 @@ namespace GriB.Common.Models.pos
         public string email { get; set; }
 
     }
+
+    public class user_full : user
+    {
+        public user_full()
+        {
+            person = new user_person();
+            db = new sqldb_full();
+        }
+        public int pid { get; set; }
+        public user_person person { get; set; }
+        public sqldb_full db { get; set; }
+
+    }
 }
