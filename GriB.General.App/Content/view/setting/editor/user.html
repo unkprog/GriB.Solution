@@ -1,0 +1,50 @@
+﻿<div id="editor-view-user">
+    <div class="padding-0001em">
+
+        <div class="section">
+            <h5 data-bind="text:Header"></h5>
+        </div>
+
+        <div class="row row-inputs">
+            <div id="editor-view-user-database-row" class="input-field col s12 m6 l6 xl4">
+            </div>
+        </div>
+        <div class="col s12 m6 l4 xl3">
+            <div class="input-field">
+                <input id="editor-view-user-phone" type="text" data-bind="value:editModel.phone">
+                <label for="editor-view-user-phone" data-bind="text:labelLogin"></label>
+            </div>
+        </div>
+        <div class="col s12 m6 l4 xl3">
+            <div class="input-field">
+                <input id="editor-view-user-surname" type="text" data-length="62" data-bind="value:editModel.person.fname">
+                <label for="editor-view-user-surname" data-bind="text:labelSurname"></label>
+            </div>
+        </div>
+        <div class="col s12 m6 l4 xl3">
+            <div class="input-field">
+                <input id="editor-view-user-name" type="text" data-length="62" data-bind="value:editModel.person.mname">
+                <label for="editor-view-user-name" data-bind="text:labelName"></label>
+            </div>
+        </div>
+        <div class="col s12 m6 l4 xl3">
+            <div class="input-field">
+                <input id="editor-view-user-patronymic" type="text" data-length="62" data-bind="value:editModel.person.lname">
+                <label for="editor-view-user-patronymic" data-bind="text:labelPatronymic"></label>
+            </div>
+        </div>
+    </div>
+    <div class="row row-inputs">
+        <div class="col s12 m6 l4 xl3 ">
+            <div class="input-field">
+                <select id="editor-view-user-sex-list" data-bind="value:editModel.person.sex">
+                    <option value="0" data-bind="text:labelUnspecified"></option>
+                    <option value="1" data-bind="text:labelMale"></option>
+                    <option value="2" data-bind="text:labelFemale"></option>
+                </select>
+                <label for="employee-sex-list" data-bind="text:labelSex"></label>
+            </div>
+        </div>
+    </div>
+</div>
+

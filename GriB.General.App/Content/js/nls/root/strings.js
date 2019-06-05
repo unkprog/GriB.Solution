@@ -36,8 +36,16 @@ define({
     "label$users": "Пользователи",
 
     "label$id": "id",
+    "label$pid": "pid",
     "label$server": "Сервер",
     "label$database": "База данных",
     "label$address": "Адрес",
     "label$catalog": "Каталог",
+    "label$owner": "Владелец",
+
+    "label$surname": "Фамилия",
+    "label$fname": "Имя",
+    "label$patronymic": "Отчество",
+    "label$male": "Мужской",
+    "label$female": "Женский",
 });

@@ -37,18 +37,15 @@ define(["require", "exports", "app/common/variables", "app/controller/setting/ca
                             IsAdd: true, IsAddCopy: false, IsEdit: true, IsDelete: true, IsSelect: false,
                             Load: $.proxy(this.Service.GetUsers, this.Service), Delete: $.proxy(this.Service.DelUser, this.Service),
                             Columns: [
-                                { Header: "", Field: "d", FieldTemplate: '#if (d != 0) {#<label><input type="checkbox" checked="checked" disabled="disabled"/><span></span></label>#}#' },
-                                { Header: "id", Field: "id" },
-                                { Header: "pid", Field: "pid" },
+                                { Header: "", Field: "d", FieldTemplate: '#if (d != 0) {#<i class="material-icons">close</i>#}#' },
+                                { Header: vars._statres("label$id") + ' - ' + vars._statres("label$pid"), Field: "id", FieldTemplate: "#=id# - #=pid#" },
                                 { Header: vars._statres("label$login"), Field: "phone" },
-                                { Header: vars._statres("label$name"), Field: "person.fname" },
-                                { Header: vars._statres("label$name"), Field: "person.mname" },
-                                { Header: vars._statres("label$name"), Field: "person.lname" },
+                                { Header: vars._statres("label$surname"), Field: "person.fname" },
+                                { Header: vars._statres("label$fname"), Field: "person.mname" },
+                                { Header: vars._statres("label$patronymic"), Field: "person.lname" },
                                 { Header: vars._statres("label$email"), Field: "person.email" },
-                                { Header: "", Field: "db.id" },
-                                { Header: vars._statres("label$database"), Field: "db.catalog" },
-                                { Header: "", Field: "db.sqlsrv.id" },
-                                { Header: vars._statres("label$server"), Field: "db.sqlsrv.address" },
+                                { Header: vars._statres("label$database"), Field: "db.catalog", FieldTemplate: "#=db.id# - #=db.catalog#" },
+                                { Header: vars._statres("label$server"), Field: "db.sqlsrv.address", FieldTemplate: "#=db.sqlsrv.id# - #=db.sqlsrv.address#" },
                             ]
                         };
                     };
