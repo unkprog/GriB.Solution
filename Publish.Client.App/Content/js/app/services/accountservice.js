@@ -4,7 +4,7 @@ var __extends = (this && this.__extends) || (function () {
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
             function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
         return extendStatics(d, b);
-    }
+    };
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
@@ -36,9 +36,6 @@ define(["require", "exports", "app/common/baseservice"], function (require, expo
             };
             AccountService.prototype.Login = function (model, Callback) {
                 this.PostApi({ Action: "/login", RequestData: JSON.stringify(model), Callback: Callback });
-            };
-            AccountService.prototype.AccountData = function (Callback) {
-                this.GetApi({ Action: "/accountdata", Callback: Callback });
             };
             return AccountService;
         }(base.Services.BaseService));

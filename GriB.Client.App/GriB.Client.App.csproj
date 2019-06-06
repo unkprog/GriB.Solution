@@ -453,8 +453,6 @@
     <Compile Include="Managers\POSTerminal\Payment.cs" />
     <Compile Include="Managers\POSTerminal\Terminal.cs" />
     <Compile Include="Managers\Reports\Cash.cs" />
-    <Compile Include="Managers\Constants.cs" />
-    <Compile Include="Managers\Helper.cs" />
     <Compile Include="Managers\Reports\Sales.cs" />
     <Compile Include="Managers\Reports\Stocks.cs" />
     <Compile Include="Models\Editor\CostIncome.cs" />

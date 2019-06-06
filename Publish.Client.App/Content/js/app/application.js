@@ -1,97 +1,57 @@
-define(["require", "exports", "app/common/utils", "app/common/variables", "app/common/basecontroller"], function (require, exports, utils, vars, base) {
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+define(["require", "exports", "app/common/utils", "app/common/variables", "app/common/baseapplication"], function (require, exports, utils, vars, baseapp) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var App;
     (function (App) {
-        var Application = /** @class */ (function () {
+        var Application = /** @class */ (function (_super) {
+            __extends(Application, _super);
             function Application() {
-                this.contentModals = [];
-                vars._app = this;
-                this._controllersStack = new base.Controller.ControllersStack();
-                this._controllersModalStack = new base.Controller.ControllersStack();
-                this._model = new kendo.data.ObservableObject({
+                return _super.call(this) || this;
+            }
+            Application.prototype.CreateModel = function () {
+                return new kendo.data.ObservableObject({
                     "AppHeader": "POS Cloud",
                     "labelOk": vars._statres("button$label$ok"),
                     "labelError": vars._statres("label$error"),
                     "contentError": ""
                 });
-                this.Initailize();
-            }
-            Object.defineProperty(Application.prototype, "Controller", {
-                get: function () {
-                    return this._controller;
-                },
-                enumerable: true,
-                configurable: true
-            });
-            Application.prototype.resize = function (e) {
-                var heigth = window.innerHeight;
-                heigth = heigth - (this.navbarControl ? this.navbarControl.height() : 0);
-                if (this.contentControl)
-                    this.contentControl.height(heigth);
-                if (this._controller)
-                    this._controller.ViewResize(e);
-            };
-            Application.prototype.GlobalAjaxSetup = function () {
-                $.ajaxPrefilter(function (options, originalOptions, jqXHR) {
-                    //jqXHR.setRequestHeader("X-Application-Language", _config.Language);
-                    if (vars._identity && vars._identity.auth && vars._identity.token) {
-                        jqXHR.setRequestHeader("Authorization", "POSCloud-ApiKey " + vars._identity.token);
-                    }
-                });
-                // $(document).ajaxError(this.GlobalAjaxErrorHandler);
             };
             Application.prototype.Initailize = function () {
+                _super.prototype.Initailize.call(this);
                 var app = this;
-                app.GlobalAjaxSetup();
                 app.progressControl = $("#progress-container");
                 app.contentControl = $("#app-content");
-                app.Resize = $.proxy(app.resize, app);
-                app.ControllerBack = $.proxy(app.controllerBack, app);
-                app.loadAppView();
             };
             Application.prototype.ShowLoading = function () {
                 this.progressControl.show();
-                if (this.contentControl)
-                    this.contentControl.hide();
+                _super.prototype.ShowLoading.call(this);
             };
             Application.prototype.HideLoading = function () {
                 this.progressControl.hide();
-                if (this.IsModal)
-                    this.contentModals[this.contentModals.length - 1].show();
-                else if (this.contentControl) {
-                    this.contentControl.show();
-                    //if (this._controller)
-                    //    this._controller.AfterShow(this);
-                }
-                this.resize({});
-                //if (this.IsModal)
-                //    this._controllersModalStack.Last.ViewShow(undefined);
-                //else
-                //    this._controller.ViewShow(this);
-            };
-            Object.defineProperty(Application.prototype, "IsNativeApp", {
-                get: function () {
-                    return (window.location.href.toLocaleLowerCase().indexOf('isnativeapp') > -1 ? true : false); //(window.location.href.toLocaleLowerCase().indexOf('isnativeapp') > -1);
-                },
-                enumerable: true,
-                configurable: true
-            });
-            Application.prototype.NativeCommand = function (command, data) {
-                if (this.IsNativeApp)
-                    nativeBridge.command(command, JSON.stringify(data));
+                _super.prototype.HideLoading.call(this);
             };
             Application.prototype.loadAppView = function () {
-                var _this = this;
                 var self = this;
                 $.when($.ajax({ url: "/Content/view/app.html", cache: false })).done(function (template) {
                     try {
                         $("#app-view").html(template);
-                        kendo.bind($("#app-view"), _this._model);
+                        kendo.bind($("#app-view"), self.Model);
                         self.contentControl = $("#app-content");
                         self.navbarControl = $("#app-navbar");
                         self.rigthMenuItems = $("#rigthMenuItems");
-                        //alert('IsNativeApp=' + app.IsNativeApp);
                         if (self.IsNativeApp == true) {
                             self.buttonAppClose = $('<li><a id="app-btn-close" class="tooltipped" data-position="bottom" data-tooltip="' + vars._statres("button$close") + '"><i class="material-icons">close</i></a></li>');
                             self.rigthMenuItems.append(self.buttonAppClose);
@@ -99,7 +59,6 @@ define(["require", "exports", "app/common/utils", "app/common/variables", "app/c
                         }
                         self.resize(undefined);
                         self.initAfterLoaded();
-                        self.SetControlNavigation(_this);
                     }
                     finally {
                     }
@@ -111,142 +70,19 @@ define(["require", "exports", "app/common/utils", "app/common/variables", "app/c
             Application.prototype.CloseApp = function (e) {
                 this.NativeCommand("CloseApp", {});
             };
-            Application.prototype.SetControlNavigation = function (controlNavigation) {
-                if (controlNavigation)
-                    this._controllerNavigation = controlNavigation;
-            };
-            Application.prototype.controllerBack = function (e) {
-                if (this.IsModal === true) {
-                    var contentModal = this.contentModals.pop();
-                    var controllerModal = this._controllersModalStack.Last;
-                    controllerModal.ViewHide(this);
-                    contentModal.remove();
-                    this._controllersModalStack.Pop();
-                    if (this.IsModal === true)
-                        this._controllersModalStack.Last.View.parent().show();
-                    else {
-                        $("#app-btn-menu").removeClass("hide");
-                        this._controllersStack.Pop();
-                        this._controller = this._controllersStack.Current;
-                        this.contentControl.show();
-                    }
-                    return;
-                }
-                else {
-                    if (this._controllerNavigation === this) {
-                        this._controllersStack.Pop();
-                        this.RestoreController();
-                    }
-                    else
-                        this._controllerNavigation.ControllerBack(e);
-                }
-            };
-            Application.prototype.ResetScroll = function () {
-                this.contentControl.scrollTop(0);
-            };
-            Application.prototype.RestoreController = function () {
-                if (this._controllerNavigation === this) {
-                    if (this._controllersStack.Current)
-                        this.OpenView({ controller: this._controllersStack.Current });
-                }
-                else
-                    this._controllerNavigation.RestoreController();
-            };
-            Application.prototype.OpenController = function (options) {
-                var self = this;
-                var url = "/Content/js/app/controller/" + options.urlController + ".js";
-                require([url], function (module) {
-                    var ctrlCreate = vars._controllers[options.urlController];
-                    if (ctrlCreate) {
-                        var controller = ctrlCreate(module);
-                        if (options.onLoadController)
-                            options.onLoadController(controller);
-                        self.OpenView({ controller: controller, isModal: options.isModal, backController: options.backController });
-                    }
-                });
-            };
             Application.prototype.SetHeader = function (controller) {
                 var header = controller.Header;
                 if (header)
-                    this._model.set("AppHeader", header); // + ' ' + self.contentControl.width()
-                else if ("POS Cloud" !== this._model.get("AppHeader"))
-                    this._model.set("AppHeader", "POS Cloud");
+                    this.Model.set("AppHeader", header); // + ' ' + self.contentControl.width()
+                else if ("POS Cloud" !== this.Model.get("AppHeader"))
+                    this.Model.set("AppHeader", "POS Cloud");
             };
-            Application.prototype.OpenView = function (options) {
-                var self = this;
-                if (options.isModal && options.isModal === true) {
-                    $.when($.ajax({ url: options.controller.Options.Url, cache: false })).done(function (template) {
-                        self.OpenViewTemplate({ controller: options.controller, isModal: options.isModal, template: template, backController: options.backController, isRestore: options.isRestore });
-                    }).fail(function (e) {
-                        self.HideLoading();
-                    });
-                    return;
-                }
-                if (self._controllerNavigation !== self) {
-                    self._controllerNavigation.OpenView(options);
-                    return;
-                }
-                if ($("#" + options.controller.Options.Id).length > 0)
-                    return; //Already loaded and current
-                self.ShowLoading();
-                //<div id="main-view-content-modal" style="display:none"></div>
-                $.when($.ajax({ url: options.controller.Options.Url, cache: false })).done(function (template) {
-                    self.OpenViewTemplate({ controller: options.controller, isModal: options.isModal, template: template, backController: options.backController, isRestore: options.isRestore });
-                }).fail(function (e) {
-                    self.HideLoading();
-                });
+            Application.prototype.OpenViewTemplateIsModal = function () {
+                if ($("#app-btn-menu").hasClass("hide") == false)
+                    $("#app-btn-menu").addClass("hide");
             };
-            Object.defineProperty(Application.prototype, "IsModal", {
-                get: function () {
-                    return (this.contentModals.length > 0);
-                },
-                enumerable: true,
-                configurable: true
-            });
-            Application.prototype.OpenViewTemplate = function (options) {
-                var self = this;
-                var isInit = false;
-                var isModal = (options.isModal && options.isModal === true);
-                var content = self.contentControl;
-                try {
-                    if (!isModal && self._controller)
-                        self._controller.ViewHide(self);
-                    //if (isModal && self._controller) {
-                    //    if (this.IsModal)
-                    //        self._controllersModalStack.Current.View.hide();
-                    //}
-                    //if (!isModal)
-                    if (isModal === true && self.IsModal === false)
-                        self._controllersStack.Push(self._controller);
-                    self._controller = options.controller;
-                    if (isModal === false && options.isRestore === false)
-                        self._controllersStack.Push(options.backController);
-                    if (!isModal)
-                        self.SetHeader(self._controller);
-                    var view = $(options.template);
-                    isInit = self._controller.ViewInit(view);
-                    if (isModal) {
-                        if ($("#app-btn-menu").hasClass("hide") == false)
-                            $("#app-btn-menu").addClass("hide");
-                        if (this.IsModal)
-                            self._controllersModalStack.Last.View.parent().hide();
-                        content = $('<div class="main-view-content-modal"></div>');
-                        content.height(self.contentControl.height());
-                        self.contentModals.push(content);
-                        self.contentControl.hide();
-                        self.contentControl.parent().append(content);
-                        self._controllersModalStack.Push(options.controller);
-                        options.controller.ViewResize({});
-                    }
-                    else
-                        self.ResetScroll();
-                    content.html(view[0]);
-                    isInit = self._controller.ViewShow(this) && isInit;
-                }
-                finally {
-                    if (isInit)
-                        self.HideLoading();
-                }
+            Application.prototype.ControllerBackEndModal = function () {
+                $("#app-btn-menu").removeClass("hide");
             };
             Application.prototype.login = function () {
                 this.OpenController({ urlController: "security/login" });
@@ -267,18 +103,8 @@ define(["require", "exports", "app/common/utils", "app/common/variables", "app/c
                     messagerDialog.Show(header, message);
                 });
             };
-            Object.defineProperty(Application.prototype, "Identity", {
-                get: function () {
-                    return this._identity;
-                },
-                set: function (identity) {
-                    this._identity = identity;
-                },
-                enumerable: true,
-                configurable: true
-            });
             return Application;
-        }());
+        }(baseapp.App.Application));
         App.Application = Application;
     })(App = exports.App || (exports.App = {}));
 });
