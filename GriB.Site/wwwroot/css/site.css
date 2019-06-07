@@ -8,19 +8,51 @@
 }
 
 .header-parallax {
-    text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 15px #324158, 0 0 20px #324158, 0 0 25px #324158, 0 0 30px #324158, 0 0 35px #324158;
+    text-shadow: 0 0 5px #3e2723, 0 0 10px #3e2723; /*, 0 0 15px #3e2723, 0 0 20px #3e2723, 0 0 25px #3e2723, 0 0 30px #3e2723, 0 0 35px #3e2723;
+    */
 }
 
 @media only screen and (max-width : 992px) {
-    .header-parallax {
-        font-size: 3rem;
+    h1.header-parallax {
+        font-size: 3.5rem;
     }
 }
 
 @media only screen and (max-width : 600px) {
-    .header-parallax {
-        font-size: 2rem;
+    h1.header-parallax {
+        font-size: 3rem;
     }
 }
 
+.btncol {
+    margin: 0.5em 0;
+    width: 100%;
+}
 
+.btn-parralax1 {
+    font-weight: bold;
+    background-color: rgba(255,255,255,0.9);
+}
+
+.waves-effect.waves-parralax1 .waves-ripple {
+    color: white;
+    background-color: #3e2723;
+}
+
+
+.img-cover {
+    height: 100vh;
+    width: 100%;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    background-color: #000;
+    background-repeat: no-repeat;
+    background-position: center center;
+    text-align: center;
+    vertical-align: middle;
+    position: relative;
+    background-attachment: fixed;
+    overflow: hidden;
+}

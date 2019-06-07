@@ -13,35 +13,37 @@
     <link rel="stylesheet" href="~/css/site.css" />
 </head>
 <body>
-    <header>
-        <nav class="site-color" role="navigation">
-            <div class="nav-wrapper">
-                <a id="logo-container" href="~/Home/Index" class="brand-logo">POS Cloud</a>
-                <ul class="right hide-on-med-and-down">
-                    <li><a href="~/Home/Index">Главная</a></li>
-                    <li><a href="~/About/Index">О программе</a></li>
-                    <li><a href="~/Prices/Index">Цены</a></li>
-                    <li><a href="~/Support/Index">Поддержка</a></li>
-                    <li><a href="~/Contact/Index">Контакты</a></li>
-                </ul>
-                <ul id="nav-mobile" class="sidenav site-color">
-                    <li><a class="white-text" href="~/Home/Index">Главная</a></li>
-                    <li><a class="white-text" href="~/About/Index">О программе</a></li>
-                    <li><a class="white-text" href="~/Prices/Index">Цены</a></li>
-                    <li><a class="white-text" href="~/Support/Index">Поддержка</a></li>
-                    <li><a class="white-text" href="~/Contact/Index">Контакты</a></li>
-                </ul>
-                <a href="#" data-target="nav-mobile" class="sidenav-trigger"><i class="material-icons">menu</i></a>
-            </div>
-        </nav>
+    <header id="layout-header">
+        <div class="navbar-fixed">
+            <nav class="site-color" role="navigation">
+                <div class="nav-wrapper">
+                    <a id="logo-container" href="~/Home/Index" class="brand-logo">POS Cloud</a>
+                    <ul class="right hide-on-med-and-down">
+                        <li><a href="~/Home/Index">Главная</a></li>
+                        <li><a href="~/About/Index">О программе</a></li>
+                        <li><a href="~/Prices/Index">Цены</a></li>
+                        <li><a href="~/Support/Index">Поддержка</a></li>
+                        <li><a href="~/Contact/Index">Контакты</a></li>
+                    </ul>
+                    <ul id="nav-mobile" class="sidenav site-color">
+                        <li><a class="white-text" href="~/Home/Index">Главная</a></li>
+                        <li><a class="white-text" href="~/About/Index">О программе</a></li>
+                        <li><a class="white-text" href="~/Prices/Index">Цены</a></li>
+                        <li><a class="white-text" href="~/Support/Index">Поддержка</a></li>
+                        <li><a class="white-text" href="~/Contact/Index">Контакты</a></li>
+                    </ul>
+                    <a href="#" data-target="nav-mobile" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+                </div>
+            </nav>
+        </div>
     </header>
-  
-        <partial name="_CookieConsentPartial" />
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
 
-    <footer class="page-footer site-color">
+    <partial name="_CookieConsentPartial" />
+    <main role="main" class="pb-3">
+        @RenderBody()
+    </main>
+
+    <footer id="layout-footer" class="page-footer site-color">
         <div class="container">
             &copy; 2019 - GriB.Site - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
