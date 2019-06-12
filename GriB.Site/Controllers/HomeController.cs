@@ -20,6 +20,11 @@ namespace GriB.Site.Controllers
             return View();
         }
 
+        public IActionResult PrivacyPersonal()
+        {
+            return View();
+        }
+
         public IActionResult Register()
         {
             return View();
