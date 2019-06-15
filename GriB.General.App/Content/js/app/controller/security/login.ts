@@ -39,11 +39,7 @@ export namespace Controller.Security {
                 pass: <string>$('#login-pass').val()
             };
 
-            // TODO: Заглушка на демо-вход
-            if (utils.isNullOrEmpty(model.phone) && utils.isNullOrEmpty(model.pass)) {
-                model.phone = "admin";
-                model.pass = "1";
-            }
+           
 
             if (this.validate(model)) {
                 controller.AccountService.Login(model, (responseData) => {

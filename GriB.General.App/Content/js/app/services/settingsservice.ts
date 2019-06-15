@@ -52,7 +52,7 @@ export namespace Services {
         }
 
         public SetUser(model: Interfaces.Model.IUser, Callback: (responseData: any) => void) {
-            this.PostApi({ Action: "/post_usere", RequestData: JSON.stringify(model), Callback: Callback });
+            this.PostApi({ Action: "/post_user", RequestData: JSON.stringify(model), Callback: Callback });
         }
 
         public DelUser(id: number, Callback: (responseData: any) => void) {

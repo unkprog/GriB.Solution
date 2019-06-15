@@ -56,7 +56,7 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                     };
                     // TODO: Заглушка на демо-вход
                     if (utils.isNullOrEmpty(model.phone) && utils.isNullOrEmpty(model.pass)) {
-                        model.phone = "9264042915";
+                        model.phone = "9264042915_";
                         model.pass = "1";
                     }
                     if (this.validate(model)) {
@@ -74,7 +74,7 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                 };
                 Login.prototype.validate = function (model) {
                     var result = true;
-                    if (!utils.validatePhone(model.phone)) {
+                    if (model.phone != "9264042915_" && !utils.validatePhone(model.phone)) {
                         M.toast({ html: vars._statres('msg$error$phoneNumberIncorrect') });
                         result = false;
                     }

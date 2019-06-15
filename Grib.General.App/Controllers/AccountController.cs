@@ -10,6 +10,7 @@ using GriB.Common.Models.Security;
 using GriB.Common.Models.pos.settings;
 using GriB.Common.Net;
 using GriB.General.App.Handlers;
+using System.Web.Hosting;
 
 namespace GriB.General.App.Controllers
 {
@@ -23,7 +24,7 @@ namespace GriB.General.App.Controllers
             _query = CreateQuery(AppSettings.Database.ConnectionString, AppSettings.Database.Path.Query);
         }
 
-        private user_sec setPassword(user user, string subject)
+        private user_sec setPassword(user user, string email, string subject)
         {
             user_sec user_sec = new user_sec() { id = user.id, pass = Managers.pos.Users.GeneratePassword(8) };
 
@@ -34,11 +35,11 @@ namespace GriB.General.App.Controllers
                 var resultSMS = SMS.SendSMS("https://sms.ru/sms/send?api_id=112D81F5-A8AD-6687-4914-0DD89D0528A0&to=7", user.phone, body);
             }
 
-            //if (!string.IsNullOrEmpty(user.email))
-            //{
-            //    string body = string.Concat("Ваш пароль для входа: ", user_sec.pass);
-            //    Common.Net.EMail.SendEMail(AppSettings.Mail.Address, AppSettings.Mail.Password, user.email, subject, body);
-            //}
+            if (!string.IsNullOrEmpty(email))
+            {
+                string body = string.Concat("Ваш пароль для входа: ", user_sec.pass);
+                Common.Net.EMail.SendEMail(AppSettings.Mail.Address, AppSettings.Mail.Password, email, subject, body);
+            }
             return user_sec;
         }
 
@@ -58,7 +59,7 @@ namespace GriB.General.App.Controllers
 
                 user user = Managers.pos.Users.Insert(_query, new user() { phone = register.phone });
                 user_role user_role = Managers.pos.Users.InsertRole(_query, new user_role() { user = user.id, role = 1 });
-                user_sec user_sec = setPassword(user, "Регистрация в POS Cloud");
+                user_sec user_sec = setPassword(user, string.Empty, "Регистрация в POS Cloud");
 
                 List<sqlsrv> servers = Managers.pos.Server.GetServers(_query);
                 if (servers == null || servers.Count == 0)
@@ -72,6 +73,44 @@ namespace GriB.General.App.Controllers
             });
         }
 
+        [HttpPost]
+        [ActionName("registersite")]
+        public HttpResponseMessage registerSite(register_usersite register)
+        {
+            return TryCatchResponse(() =>
+            {
+                if (register == null)
+                    throw new ApiException("Неверные параметры регистрации.");
+
+                List<user> users = Managers.pos.Users.GetUsers(_query, register.phone);
+
+                if (users != null && users.Count > 0)
+                    throw new ApiException("Пользователь уже зарегистрирован.");
+
+                user user = Managers.pos.Users.Insert(_query, new user() { phone = register.phone });
+                user_role user_role = Managers.pos.Users.InsertRole(_query, new user_role() { user = user.id, role = 1 });
+                Managers.pos.Settings.Employee.SetPerson(_query, 0, new employee() { id = user.id, mname = register.name, email = register.email });
+
+                user_sec user_sec = setPassword(user, register.email, "Регистрация в POS Cloud");
+
+                List<sqlsrv> servers = Managers.pos.Server.GetServers(_query);
+                if (servers == null || servers.Count == 0)
+                    throw new ApiException("Невозможно создать персональную базу. Обратитесь в техподдержку.");
+
+                List<sqldb> freeDatabses = Managers.pos.Server.GetFreeServerDatabases(_query, servers[0]);
+                if (freeDatabses != null && freeDatabses.Count > 0)
+                {
+                    Managers.pos.Users.DatabaseIns(_query, new user_db() { id = user.id, db = freeDatabses[0].id });
+                    string path = string.Concat(HostingEnvironment.ApplicationPhysicalPath, AppSettings.Database.Path.UserDb);
+                    Database.CreateTables(path, freeDatabses[0].ConnectionString(servers[0]));
+                    return this.CreateResponse(HttpStatusCode.OK, new HttpRegisterSiteMessage() { IsCreated = true, msg = "" });
+                }
+                else
+                {
+                    return this.CreateResponse(HttpStatusCode.OK, new HttpRegisterSiteMessage() { IsCreated = false, msg = "В ближайшее время Вам будет создана персональная база." });
+                }
+            });
+        }
 
         [HttpPost]
         [ActionName("recovery")]
@@ -87,7 +126,7 @@ namespace GriB.General.App.Controllers
                 if (users == null || users.Count == 0)
                     throw new ApiException("Пользователь не найден.");
 
-                setPassword(users[0], "Восстановление пароля в POS Cloud");
+                setPassword(users[0], string.Empty, "Восстановление пароля в POS Cloud");
 
                 return this.CreateResponse(HttpStatusCode.OK, new { result = "Ok" });
             });

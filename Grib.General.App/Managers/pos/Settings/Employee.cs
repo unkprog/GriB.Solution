@@ -69,6 +69,12 @@ namespace GriB.General.App.Managers.pos.Settings
             , (values) => { });
 
 
+            SetPerson(query, db, empl);
+
+        }
+
+        public static void SetPerson(this Query query, int db, employee empl)
+        {
             query.Execute(cmdSetUserPersonEmploee, new SqlParameter[] { new SqlParameter("@id", empl.id), new SqlParameter("@sex", empl.sex), new SqlParameter("@birth", empl.birth), new SqlParameter("@fname", empl.fname), new SqlParameter("@mname", empl.mname), new SqlParameter("@lname", empl.lname), new SqlParameter("@email", empl.email) }
             , (values) => { });
 

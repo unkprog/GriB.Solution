@@ -11,7 +11,7 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-define(["require", "exports", "app/common/variables", "app/common/utils", "app/controller/security/account"], function (require, exports, vars, utils, acc) {
+define(["require", "exports", "app/common/variables", "app/controller/security/account"], function (require, exports, vars, acc) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var Controller;
@@ -48,11 +48,6 @@ define(["require", "exports", "app/common/variables", "app/common/utils", "app/c
                         phone: $('#login-phone').val(),
                         pass: $('#login-pass').val()
                     };
-                    // TODO: Заглушка на демо-вход
-                    if (utils.isNullOrEmpty(model.phone) && utils.isNullOrEmpty(model.pass)) {
-                        model.phone = "admin";
-                        model.pass = "1";
-                    }
                     if (this.validate(model)) {
                         controller.AccountService.Login(model, function (responseData) {
                             if (responseData.result == "Ok") {

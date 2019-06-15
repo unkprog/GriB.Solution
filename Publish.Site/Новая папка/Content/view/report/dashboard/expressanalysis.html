@@ -1,0 +1,57 @@
+﻿<div id="report-expana-view">
+    <div class="row row-inputs">
+        <div class="input-field col s6 m4 l2 xl2">
+            <input id="report-expana-view-date-start" type="text" class="datepicker">
+            <label for="report-expana-view-date-start" data-bind="text:labelDateFrom"></label>
+        </div>
+        <div class="input-field col s6 m4 l2 xl2">
+            <input id="report-expana-view-date-end" type="text" class="datepicker">
+            <label for="report-expana-view-date-end" data-bind="text:labelDateTo"></label>
+        </div>
+        <div id="report-expana-view-salepoint-row" class="input-field col s12 m6 l4 xl4 col-input-numpad">
+            <input id="report-expana-view-salepoint" type="text" disabled class="truncate black-text" data-bind="value: filterModel.salepoint.name" style="cursor:pointer;font-weight:bold;">
+            <label for="report-expana-view-salepoint" data-bind="text:labelSalepoint"></label>
+            <i id="report-expana-view-salepoint-clear" class="material-icons editor-header right doc-edit-ref-del">close</i>
+        </div>
+        <div id="report-expana-view-product-row" class="input-field col s12 m6 l4 xl4 col-input-numpad">
+            <input id="report-expana-view-product" type="text" disabled class="truncate black-text" data-bind="value: filterModel.product.name" style="cursor:pointer;font-weight:bold;">
+            <label for="report-expana-view-product" data-bind="text:labelProduct"></label>
+            <i id="report-expana-view-product-clear" class="material-icons editor-header right doc-edit-ref-del">close</i>
+        </div>
+    </div>
+    <div class="row row-inputs">
+        <div class="input-field col s12 m12 l12 xl12 col-input-numpad" style="margin-top: 0;">
+            <a id="report-expana-view-btn-build" class="btn btncol" data-bind="text:labelBuild"></a>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col s12 m12 l12 xl12 center">
+            <h4 data-bind="text:labelRevenueByCategory"></h4>
+        </div>
+        <div class="col s12 m12 l12 xl12">
+            <div id="report-expana-categories-view-table-container"></div>
+        </div>
+
+        <div class="col s12 m12 l12 xl12 center">
+            <h4 data-bind="text:labelDaysOfWeek"></h4>
+        </div>
+        <div class="col s12 m12 l12 xl12">
+            <div id="report-expana-week-view-chart-container"><canvas id="report-expana-week-view-chart"></canvas></div>
+        </div>
+        <div class="col s12 m12 l12 xl12">
+            <div id="report-expana-week-view-table-container" class="input-field col s12 m12 l12 xl12 col-input-numpad"></div>
+        </div>
+
+        <div class="col s12 m12 l12 xl12 center">
+            <h4 data-bind="text:labelInTime"></h4>
+        </div>
+        <div class="col s12 m12 l12 xl12">
+            <div id="report-expana-time-view-chart-container"><canvas id="report-expana-time-view-chart"></canvas></div>
+        </div>
+        <div class="col s12 m12 l12 xl12">
+            <div id="report-expana-time-view-table-container" class="input-field col s12 m12 l12 xl12 col-input-numpad"></div>
+        </div>
+    </div>
+    <div class="row">
+    </div>
+</div>

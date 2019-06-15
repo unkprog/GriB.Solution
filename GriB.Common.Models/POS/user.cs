@@ -7,6 +7,12 @@ namespace GriB.Common.Models.pos
         public string phone { get; set; }
     }
 
+    public class register_usersite: register_user
+    {
+        public string name { get; set; }
+        public string email { get; set; }
+    }
+
     public class login_user
     {
         public string phone { get; set; }

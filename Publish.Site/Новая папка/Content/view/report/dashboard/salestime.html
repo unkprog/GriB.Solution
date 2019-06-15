@@ -1,0 +1,39 @@
+﻿<div id="report-dashboard-salestime-view">
+    <div class="row row-inputs">
+        <div class="input-field col s6 m4 l2 xl2">
+            <input id="report-salestime-view-date-start" type="text" class="datepicker">
+            <label for="report-salestime-view-date-start" data-bind="text:labelDateFrom"></label>
+        </div>
+        <div class="input-field col s6 m4 l2 xl2">
+            <input id="report-salestime-view-date-end" type="text" class="datepicker">
+            <label for="report-salestime-view-date-end" data-bind="text:labelDateTo"></label>
+        </div>
+        <div id="report-salestime-view-salepoint-row" class="input-field col s12 m6 l4 xl4 col-input-numpad">
+            <input id="report-salestime-view-salepoint" type="text" disabled class="truncate black-text" data-bind="value: filterModel.salepoint.name" style="cursor:pointer;font-weight:bold;">
+            <label for="report-salestime-view-salepoint" data-bind="text:labelSalepoint"></label>
+            <i id="report-salestime-view-salepoint-clear" class="material-icons editor-header right doc-edit-ref-del">close</i>
+        </div>
+        <div id="report-salestime-view-product-row" class="input-field col s12 m6 l4 xl4 col-input-numpad">
+            <input id="report-salestime-view-product" type="text" disabled class="truncate black-text" data-bind="value: filterModel.product.name" style="cursor:pointer;font-weight:bold;">
+            <label for="report-salestime-view-product" data-bind="text:labelProduct"></label>
+            <i id="report-salestime-view-product-clear" class="material-icons editor-header right doc-edit-ref-del">close</i>
+        </div>
+    </div>
+    <div class="row row-inputs">
+        <div class="input-field col s12 m12 l12 xl12 col-input-numpad" style="margin-top: 0;">
+            <a id="report-salestime-view-btn-build" class="btn btncol" data-bind="text:labelBuild"></a>
+        </div>
+    </div>
+    <div class="row row-inputs">
+        <div class="input-field col s12 m12 l6 xl6 col-input-numpad">
+            <div id="report-dashboard-salesweek-view-chart-container">
+                <canvas id="report-dashboard-salesweek-view-chart"></canvas>
+            </div>
+        </div>
+        <div class="input-field col s12 m12 l6 xl6 col-input-numpad">
+            <div id="report-dashboard-salestime-view-chart-container">
+                <canvas id="report-dashboard-salestime-view-chart"></canvas>
+            </div>
+        </div>
+    </div>
+</div>

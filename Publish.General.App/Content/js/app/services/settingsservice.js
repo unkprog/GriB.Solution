@@ -59,7 +59,7 @@ define(["require", "exports", "app/common/baseservice"], function (require, expo
                 this.GetApi({ Action: "/get_user", RequestData: { id: id }, Callback: Callback });
             };
             SettingsService.prototype.SetUser = function (model, Callback) {
-                this.PostApi({ Action: "/post_usere", RequestData: JSON.stringify(model), Callback: Callback });
+                this.PostApi({ Action: "/post_user", RequestData: JSON.stringify(model), Callback: Callback });
             };
             SettingsService.prototype.DelUser = function (id, Callback) {
                 this.GetApi({ Action: "/del_user", RequestData: { id: id }, Callback: Callback });

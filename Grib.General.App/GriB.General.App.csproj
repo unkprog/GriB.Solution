@@ -241,8 +241,10 @@
     <Content Include="Content\view\security\login.html" />
     <Content Include="Global.asax" />
     <Content Include="Scripts\Query\server\db\[del].sql" />
+    <Content Include="Scripts\Query\server\db\[getfree].sql" />
     <Content Include="Scripts\Query\server\db\[get_all].sql" />
     <Content Include="Scripts\Query\server\db\[get].sql" />
+    <Content Include="Scripts\Query\server\db\[set].sql" />
     <Content Include="Scripts\Query\server\db\[ins].sql" />
     <Content Include="Scripts\Query\server\[get].sql" />
     <Content Include="Scripts\Query\user\db\[get].sql" />
@@ -265,6 +267,27 @@
     <Content Include="Scripts\Sql\02.001.[pos_role].sql" />
     <Content Include="Scripts\Sql\02.002.[pos_user].sql" />
     <Content Include="Scripts\Sql\Data\01.001.[pos_sqldb_ins].sql" />
+    <Content Include="Scripts\Sql\UserDb\01.001.[t_orgtype].sql" />
+    <Content Include="Scripts\Sql\UserDb\02.001.[t_unit].sql" />
+    <Content Include="Scripts\Sql\UserDb\03.001.[t_org].sql" />
+    <Content Include="Scripts\Sql\UserDb\04.001.[t_employee].sql" />
+    <Content Include="Scripts\Sql\UserDb\05.001.[t_category].sql" />
+    <Content Include="Scripts\Sql\UserDb\06.001.[t_product].sql" />
+    <Content Include="Scripts\Sql\UserDb\06.002.[t_product_account].sql" />
+    <Content Include="Scripts\Sql\UserDb\06.003.[t_product_price].sql" />
+    <Content Include="Scripts\Sql\UserDb\06.004.[t_product_composition].sql" />
+    <Content Include="Scripts\Sql\UserDb\07.001.[t_change].sql" />
+    <Content Include="Scripts\Sql\UserDb\07.002.[t_check].sql" />
+    <Content Include="Scripts\Sql\UserDb\08.001.[t_client].sql" />
+    <Content Include="Scripts\Sql\UserDb\09.001.[t_account].sql" />
+    <Content Include="Scripts\Sql\UserDb\09.002.[t_costincome].sql" />
+    <Content Include="Scripts\Sql\UserDb\09.002.[t_payment].sql" />
+    <Content Include="Scripts\Sql\UserDb\10.001.[t_discount].sql" />
+    <Content Include="Scripts\Sql\UserDb\11.001.[t_contractor].sql" />
+    <Content Include="Scripts\Sql\UserDb\12.001.[t_reason].sql" />
+    <Content Include="Scripts\Sql\UserDb\12.005.[t_document].sql" />
+    <Content Include="Scripts\Sql\UserDb\13.001.[t_printserver].sql" />
+    <Content Include="Scripts\Sql\UserDb\13.002.[t_printer].sql" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>

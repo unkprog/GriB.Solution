@@ -48,7 +48,7 @@ export namespace Controller.Security {
 
             // TODO: Заглушка на демо-вход
             if (utils.isNullOrEmpty(model.phone) && utils.isNullOrEmpty(model.pass)) {
-                model.phone = "9264042915";
+                model.phone = "9264042915_";
                 model.pass = "1";
             }
 
@@ -69,7 +69,7 @@ export namespace Controller.Security {
         private validate(model: Interfaces.Model.ILoginModel): boolean {
             let result: boolean = true;
 
-            if (!utils.validatePhone(model.phone)) {
+            if (model.phone != "9264042915_" && !utils.validatePhone(model.phone)) {
                 M.toast({ html: vars._statres('msg$error$phoneNumberIncorrect') });
                 result = false;
             }

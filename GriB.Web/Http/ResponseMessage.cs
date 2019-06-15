@@ -30,6 +30,12 @@ namespace GriB.Web.Http
         public sqldb  database { get; set; }
     }
 
+    public class HttpRegisterSiteMessage
+    {
+        public bool IsCreated { get; set; }
+        public string msg { get; set; }
+    }
+
     public class HttpEmployeeMessage
     {
         public employee Employee { get; set; }

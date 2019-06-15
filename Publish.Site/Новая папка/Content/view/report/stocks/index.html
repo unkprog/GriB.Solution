@@ -1,0 +1,36 @@
+﻿<div id="report-stocks-view">
+    <div class="row row-inputs">
+        <div class="input-field col s6 m4 l3 xl2">
+            <input id="report-stocks-view-date-start" type="text" class="datepicker">
+            <label for="report-stocks-view-date-start" data-bind="text:labelDateFrom"></label>
+        </div>
+        <div class="input-field col s6 m4 l3 xl2">
+            <input id="report-stocks-view-date-end" type="text" class="datepicker">
+            <label for="report-stocks-view-date-end" data-bind="text:labelDateTo"></label>
+        </div>
+        <div class="input-field col s12 m4 l6 xl6">
+            <select id="report-stocks-view-showfields" multiple data-bind="value:selectedFields">
+                <option value="1" data-bind="text:labelSalepoint"></option>
+                <option value="2" data-bind="text:labelProduct"></option>
+            </select>
+            <label data-bind="text:labelShowFields"></label>
+        </div>
+    </div>
+    <div class="row row-inputs">
+        <div id="report-stocks-view-salepoint-row" class="input-field col s12 m6 l3 xl3 col-input-numpad">
+            <input id="report-stocks-view-salepoint" type="text" disabled class="truncate black-text" data-bind="value: filterModel.salepoint.name" style="cursor:pointer;font-weight:bold;">
+            <label for="report-stocks-view-salepoint" data-bind="text:labelSalepoint"></label>
+            <i id="report-stocks-view-salepoint-clear" class="material-icons editor-header right doc-edit-ref-del">close</i>
+        </div>
+        <div id="report-stocks-view-product-row" class="input-field col s12 m6 l3 xl3 col-input-numpad">
+            <input id="report-stocks-view-product" type="text" disabled class="truncate black-text" data-bind="value: filterModel.product.name" style="cursor:pointer;font-weight:bold;">
+            <label for="report-stocks-view-product" data-bind="text:labelProduct"></label>
+            <i id="report-stocks-view-product-clear" class="material-icons editor-header right doc-edit-ref-del">close</i>
+        </div>
+    </div>
+    <div class="row row-inputs">
+        <div class="input-field col s12 m12 l12 xl12 col-input-numpad" style="margin-top: 0;">
+            <a id="report-stocks-view-btn-build" class="btn btncol" data-bind="text:labelBuild"></a>
+        </div>
+    </div>
+</div>

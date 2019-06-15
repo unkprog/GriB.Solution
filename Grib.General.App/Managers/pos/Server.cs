@@ -58,6 +58,18 @@ namespace GriB.General.App.Managers.pos
             return result;
         }
 
+        private const string cmdDbGetFree = @"server\db\[getfree]";
+        public static List<sqldb> GetFreeServerDatabases(this Query query, sqlsrv server)
+        {
+            List<sqldb> result = new List<sqldb>();
+            query.Execute(cmdDbGetFree, sqlParameters: null, action: (values) =>
+            {
+                result.Add(new sqldb() { id = (int)values[0], server = (int)values[1], catalog = (string)values[2], user = (string)values[3], pass = (string)values[4] });
+            });
+
+            return result;
+        }
+
         private const string cmdDbIns = @"server\db\[ins]";
         public static sqldb InsertServerDatabases(this Query query, sqldb database)
         {
@@ -74,6 +86,19 @@ namespace GriB.General.App.Managers.pos
         {
             sqldb result = database;
             query.Execute(cmdDbIns, sqlParameters: new SqlParameter[] { new SqlParameter("@server", Helper.GetSqlParamValue(database.sqlsrv)), new SqlParameter("@catalog", database.catalog), new SqlParameter("@user", database.user), new SqlParameter("@pass", database.pass) }
+            , action: (values) =>
+            {
+                result.id = (int)values[0];
+            });
+
+            return result;
+        }
+
+        private const string cmdDbSet = @"server\db\[set]";
+        public static sqldb SetServerDatabases(this Query query, sqldb_full database)
+        {
+            sqldb result = database;
+            query.Execute(cmdDbSet, sqlParameters: new SqlParameter[] { new SqlParameter("@id", database.id), new SqlParameter("@server", Helper.GetSqlParamValue(database.sqlsrv)), new SqlParameter("@catalog", database.catalog), new SqlParameter("@user", database.user), new SqlParameter("@pass", database.pass) }
             , action: (values) =>
             {
                 result.id = (int)values[0];

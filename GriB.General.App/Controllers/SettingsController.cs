@@ -83,7 +83,7 @@ namespace GriB.General.App.Controllers
         {
             return TryCatchResponseQuery((query) =>
             {
-                Server.InsertServerDatabases(query, database);
+                Server.SetServerDatabases(query, database);
                 return CreateResponse(HttpStatusCode.OK, "Ok");
             });
         }
