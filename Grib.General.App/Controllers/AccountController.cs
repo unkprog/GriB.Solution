@@ -159,7 +159,7 @@ namespace GriB.General.App.Controllers
 
                 user_person user_person = Managers.pos.Users.GetPerson(_query, user.id);
                 user_db user_db = Managers.pos.Users.GetDatabase(_query, user.id);
-                sqldb database = Managers.pos.Server.GetServerDatabase(_query, user_db.id);
+                sqldb database = Managers.pos.Server.GetServerDatabase(_query, user_db.db);
                 sqlsrv server = Managers.pos.Server.GetServer(_query, database.server);
 
                 return this.CreateResponse(HttpStatusCode.OK, new PrincipalData() { User = user, Person = user_person, Server = server, Database = database });

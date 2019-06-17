@@ -112,7 +112,7 @@ namespace GriB.General.App.Managers.pos
         private const string cmdDatabaseIns = @"user\db\[ins]";
         public static user_db DatabaseIns(this Query query, user_db user_db)
         {
-            query.Execute(cmdDatabaseIns, new SqlParameter[] { new SqlParameter("@id", user_db.db), new SqlParameter("@db", user_db.db) }
+            query.Execute(cmdDatabaseIns, new SqlParameter[] { new SqlParameter("@id", user_db.id), new SqlParameter("@db", user_db.db) }
             , (values) => { });
             return user_db;
         }
