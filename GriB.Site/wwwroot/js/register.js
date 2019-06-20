@@ -41,7 +41,12 @@
                     contentType: "application/json; charset=utf-8",
                     data: JSON.stringify(model),
                     success: function (responseData, textStatus, jqXHR) {
-                        M.toast({ html: responseData });
+                        if (responseData && responseData.result && responseData.result === "Ok") {
+                            window.location.href = 'https://app.poscloudgb.ru';
+                        }
+                        else {
+                            M.toast({ html: JSON.stringify(responseData) });
+                        }
                     },
                     error: function (e, textStatus, errorThrown) {
                         M.toast({ html: e });

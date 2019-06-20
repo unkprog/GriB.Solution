@@ -241,7 +241,9 @@
     <Content Include="Content\view\security\login.html" />
     <Content Include="Global.asax" />
     <Content Include="Scripts\Query\server\db\[del].sql" />
-    <Content Include="Scripts\Query\server\db\[getfree].sql" />
+    <Content Include="Scripts\Query\server\db\[getfree].sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Scripts\Query\server\db\[get_all].sql" />
     <Content Include="Scripts\Query\server\db\[get].sql" />
     <Content Include="Scripts\Query\server\db\[set].sql" />

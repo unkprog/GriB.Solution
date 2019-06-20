@@ -23,9 +23,9 @@ namespace Grib.App.Windows
         private void InitBrowser()
         {
 
-            browser = new ChromiumWebBrowser("http://localhost:50970?isnativeapp") // new ChromiumWebBrowser("www.poscloudgb.ru")
+            browser = new ChromiumWebBrowser("https://app.poscloudgb.ru"); // new ChromiumWebBrowser("http://localhost:50970?isnativeapp") // new ChromiumWebBrowser("www.poscloudgb.ru")
             {
-                Dock = DockStyle.Fill,
+                Dock = DockStyle.Fill
             };
             this.Controls.Add(browser);
 

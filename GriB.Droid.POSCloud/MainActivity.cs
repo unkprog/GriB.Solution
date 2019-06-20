@@ -46,7 +46,7 @@ namespace GriB.Droid.POSCloud
             browser.AddJavascriptInterface(bridge, "nativeBridge");
             browser.SetWebViewClient(new MainWebViewClient());
 
-            browser.LoadUrl("http://poscloudgb.ru?isnativeapp");
+            browser.LoadUrl("http://app.poscloudgb.ru?isnativeapp");
         }
 
         private void PrintCheck(string data)
@@ -73,12 +73,10 @@ namespace GriB.Droid.POSCloud
 
         public static void TostMessage(string message)
         {
-            var context = Android.App.Application.Context;
+            var context = Application.Context;
             var tostMessage = message;
-            var durtion = ToastLength.Long;
-
-
-            Toast.MakeText(context, tostMessage, durtion).Show();
+            var duration = ToastLength.Long;
+            Toast.MakeText(context, tostMessage, duration).Show();
         }
     }
 }
