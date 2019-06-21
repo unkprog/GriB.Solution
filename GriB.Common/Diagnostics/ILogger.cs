@@ -50,7 +50,7 @@ namespace GriB.Common.Diagnostics
         /// </summary>
         public virtual void WriteDebug(string message, string trace)
         {
-            //Write(message, "Debug");
+            Write(message, EventLogEntryType.Debug, trace);
         }
 
         /// <summary>
@@ -85,7 +85,7 @@ namespace GriB.Common.Diagnostics
                 string newFileName = Guid.NewGuid().ToString().Replace("-", string.Empty);
                 using (StreamWriter writer = new StreamWriter(string.IsNullOrEmpty(path) ? newFileName : string.Concat(path, "\\", newFileName)))
                 {
-                    writer.WriteLine(eventType == EventLogEntryType.Information ? "INFO:" : eventType == EventLogEntryType.Error ? "ERROR:" : "");
+                    writer.WriteLine(eventType == EventLogEntryType.Information ? "INFO:" : eventType == EventLogEntryType.Debug ? "DEBUG:" : eventType == EventLogEntryType.Error ? "ERROR:" : "");
                     writer.WriteLine(message);
                     if (!string.IsNullOrEmpty(trace))
                     {

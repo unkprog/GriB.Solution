@@ -87,23 +87,36 @@ namespace GriB.General.App.Controllers
                 if (users != null && users.Count > 0)
                     throw new ApiException("Пользователь уже зарегистрирован.");
 
+                
                 user user = Managers.pos.Users.Insert(_query, new user() { phone = register.phone });
                 user_role user_role = Managers.pos.Users.InsertRole(_query, new user_role() { user = user.id, role = 1 });
                 Managers.pos.Settings.Employee.SetPerson(_query, 0, new employee() { id = user.id, mname = register.name, email = register.email });
 
+                logger.WriteDebug("Пользователь " + register.email + "создан", "");
+
                 user_sec user_sec = setPassword(user, register.email, "Регистрация в POS Cloud");
+
+                logger.WriteDebug("Пользователю " + register.email + " установлен пароль", "");
 
                 List<sqlsrv> servers = Managers.pos.Server.GetServers(_query);
                 if (servers == null || servers.Count == 0)
                     throw new ApiException("Невозможно создать персональную базу. Обратитесь в техподдержку.");
 
+                logger.WriteDebug("Сервер id - " + servers[0].id, "");
+
                 List<sqldb> freeDatabses = Managers.pos.Server.GetFreeServerDatabases(_query, servers[0]);
+                logger.WriteDebug("Проверка наличия свободных БД", "");
                 if (freeDatabses != null && freeDatabses.Count > 0)
                 {
-                    Managers.pos.Users.DatabaseIns(_query, new user_db() { id = user.id, db = freeDatabses[0].id });
+                    logger.WriteDebug("БД id - " + freeDatabses[0].id, "");
+                    user_db udb = new user_db() { id = user.id, db = freeDatabses[0].id };
+                    //logger.WriteError(string.Concat("udb={id:", udb.id, ", db:", udb.db, "}"), "");
+                    Managers.pos.Users.DatabaseIns(_query, udb);
+                    logger.WriteDebug("БД id - " + freeDatabses[0].id + " для пользователя " + register.email + " добавлена", "");
                     string path = string.Concat(HostingEnvironment.ApplicationPhysicalPath, AppSettings.Database.Path.UserDb);
                     Database.CreateTables(path, freeDatabses[0].ConnectionString(servers[0]));
-                    return this.CreateResponse(HttpStatusCode.OK, new HttpRegisterSiteMessage() { IsCreated = true, msg = "" });
+                    logger.WriteDebug("БД id - " + freeDatabses[0].id + " для пользователя " + register.email + " таблицы созданы", "");
+                    return this.CreateResponse(HttpStatusCode.OK, new HttpRegisterSiteMessage() { IsCreated = true, msg = string.Concat("udb={id:", udb.id, ", db:", udb.db, "}") });
                 }
                 else
                 {

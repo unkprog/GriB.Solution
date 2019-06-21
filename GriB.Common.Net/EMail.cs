@@ -14,12 +14,12 @@ namespace GriB.Common.Net
                 myMail.IsBodyHtml = true;
                 myMail.Body = body;
 
-                using (SmtpClient s = new SmtpClient("smtp.gmail.com", 587))
+                using (SmtpClient s = new SmtpClient("webmail.poscloudgb.ru", 25))
                 {
                     s.DeliveryMethod = SmtpDeliveryMethod.Network;
                     s.UseDefaultCredentials = false;
                     s.Credentials = new System.Net.NetworkCredential(myMail.From.ToString(), password);
-                    s.EnableSsl = true;
+                    s.EnableSsl = false;
                     s.Send(myMail);
                 }
             }

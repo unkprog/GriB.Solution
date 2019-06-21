@@ -12,22 +12,39 @@
 
     <script>
         $("#rttest1").click(function () {
-            var model = {
-                db: 1
-            };
+            let model = { name: 'sergey', phone: '9264042915', email: 'bsisoftx@mail.ru' };
 
             $.ajax({
-                url: "/api/account/employees?db=1",
-                type: "get",
+                url: "/api/account/registersite",
+                type: "post",
                 dataType: "json",
-                success: function (data) {
-                    $('#div_result').html(JSON.stringify(data));
+                contentType: "application/json; charset=utf-8",
+                data: JSON.stringify(model),
+                success: function (responseData, textStatus, jqXHR) {
+                    console.log(JSON.stringify(responseData));
                 },
-                error: function (e) {
-                    alert("Error:" + e);
-                },
-                //data: model
+                error: function (e, textStatus, errorThrown) {
+                    console.log(JSON.stringify(e));
+                }
             });
+
+
+            //var model = {
+            //    db: 1
+            //};
+
+            //$.ajax({
+            //    url: "/api/account/employees?db=1",
+            //    type: "get",
+            //    dataType: "json",
+            //    success: function (data) {
+            //        $('#div_result').html(JSON.stringify(data));
+            //    },
+            //    error: function (e) {
+            //        alert("Error:" + e);
+            //    },
+            //    //data: model
+            //});
         });
     </script>
 </body>

@@ -84,8 +84,8 @@ namespace GriB.Site.Controllers
             return await TryCatchResponseJsonAsync(async () =>
             {
             
-                //JObject task = await PostAsync<JObject, RegisterViewModel>("http://localhost:50962", "api/account/registersite", model);
-                JObject task = await PostAsync<JObject, RegisterViewModel>("https://general.poscloudgb.ru", "api/account/registersite", model);
+                JObject task = await PostAsync<JObject, RegisterViewModel>("http://localhost:50962", "api/account/registersite", model);
+                //JObject task = await PostAsync<JObject, RegisterViewModel>("https://general.poscloudgb.ru", "api/account/registersite", model);
                 return new JsonResult(new { result = "Ok" });
             });
         }
