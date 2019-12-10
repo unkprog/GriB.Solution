@@ -1,0 +1,31 @@
+﻿/* icon prefix focus color */
+input[type=text],
+input[type=email],
+input[type=tel] {
+    color: white !important;
+}
+
+    .input-field .prefix.active,
+    input[type=text]:not(.browser-default):focus.valid ~ label, input[type=text]:not(.browser-default):focus:not([readonly]) + label,
+    input[type=email]:not(.browser-default):focus.valid ~ label, input[type=email]:not(.browser-default):focus:not([readonly]) + label,
+    input[type=tel]:not(.browser-default):focus.valid ~ label, input[type=tel]:not(.browser-default):focus:not([readonly]) + label {
+        color: silver !important;
+    }
+
+    input[type=text]:not(.browser-default):focus:not([readonly]),
+    input[type=email]:not(.browser-default):focus:not([readonly]),
+    input[type=tel]:not(.browser-default):focus:not([readonly]),
+    input.valid[type=text]:not(.browser-default),
+    input.valid[type=email]:not(.browser-default),
+    input.valid[type=tel]:not(.browser-default) {
+        border-bottom: 1px solid white;
+        -webkit-box-shadow: 0 1px 0 0 white;
+        box-shadow: 0 1px 0 0 white;
+    }
+
+.btncol-flat:hover {
+    color: white;
+    background-color: #3e2723;
+}
+
+

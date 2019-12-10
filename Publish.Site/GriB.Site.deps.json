@@ -24,6 +24,7 @@
     ".NETFramework,Version=v4.7": {
       "GriB.Site/1.0.0": {
         "dependencies": {
+          "GriB.Common.Net": "1.0.0",
           "Microsoft.AspNetCore": "2.2.0",
           "Microsoft.AspNetCore.CookiePolicy": "2.2.0",
           "Microsoft.AspNetCore.HttpsPolicy": "2.2.0",
@@ -50,6 +51,7 @@
           "System.Transactions": "4.0.0.0",
           "System.Xml": "4.0.0.0",
           "System.Xml.Linq": "4.0.0.0",
+          "System.Configuration": "4.0.0.0",
           "System.IO.Compression.FileSystem": "4.0.0.0",
           "System.Runtime.Serialization": "4.0.0.0",
           "System.Reflection.Emit": "0.0.0.0",
@@ -241,6 +243,11 @@
       "System.Xml.Linq/4.0.0.0": {
         "compile": {
           ".NETFramework/v4.7/System.Xml.Linq.dll": {}
+        }
+      },
+      "System.Configuration/4.0.0.0": {
+        "compile": {
+          ".NETFramework/v4.7/System.Configuration.dll": {}
         }
       },
       "System.IO.Compression.FileSystem/4.0.0.0": {
@@ -2149,11 +2156,17 @@
         "dependencies": {
           "System.Xml.XPath": "4.3.0"
         }
+      },
+      "GriB.Common.Net/1.0.0": {
+        "compile": {
+          "GriB.Common.Net.dll": {}
+        }
       }
     },
     ".NETFramework,Version=v4.7/win7-x86": {
       "GriB.Site/1.0.0": {
         "dependencies": {
+          "GriB.Common.Net": "1.0.0",
           "Microsoft.AspNetCore": "2.2.0",
           "Microsoft.AspNetCore.CookiePolicy": "2.2.0",
           "Microsoft.AspNetCore.HttpsPolicy": "2.2.0",
@@ -2180,6 +2193,7 @@
           "System.Transactions": "4.0.0.0",
           "System.Xml": "4.0.0.0",
           "System.Xml.Linq": "4.0.0.0",
+          "System.Configuration": "4.0.0.0",
           "System.IO.Compression.FileSystem": "4.0.0.0",
           "System.Runtime.Serialization": "4.0.0.0",
           "System.Reflection.Emit": "0.0.0.0",
@@ -3663,6 +3677,11 @@
         "dependencies": {
           "System.Xml.XPath": "4.3.0"
         }
+      },
+      "GriB.Common.Net/1.0.0": {
+        "runtime": {
+          "GriB.Common.Net.dll": {}
+        }
       }
     }
   },
@@ -4946,6 +4965,11 @@
       "path": "system.xml.xpath.xdocument/4.3.0",
       "hashPath": "system.xml.xpath.xdocument.4.3.0.nupkg.sha512"
     },
+    "GriB.Common.Net/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
     "Microsoft.CSharp.Reference/4.0.0.0": {
       "type": "referenceassembly",
       "serviceable": false,
@@ -5022,6 +5046,11 @@
       "sha512": ""
     },
     "System.Xml.Linq/4.0.0.0": {
+      "type": "referenceassembly",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "System.Configuration/4.0.0.0": {
       "type": "referenceassembly",
       "serviceable": false,
       "sha512": ""

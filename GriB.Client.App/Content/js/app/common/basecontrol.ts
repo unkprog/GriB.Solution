@@ -266,15 +266,15 @@ export namespace Control {
 
         protected createRowsEvents() {
             if (this.tableRows) {
-                utils.createTouchClickEvent(this.tableRows, this.RowClick, this, this.tableBody);
+                utils.createClickEvent(this.tableRows, this.RowClick, this, this.tableBody);
                 utils.createDblTouchClickEvent(this.tableRows, this.RowDoubleClick, this, this.tableBody);
             }
         }
 
         protected destroyRowsEvents() {
             if (this.tableRows) {
-                utils.destroyTouchClickEvent(this.tableRows, this.RowClick, this.tableBody);
                 utils.destroyDblTouchClickEvent(this.tableRows, this.RowDoubleClick, this.tableBody);
+                utils.destroyClickEvent(this.tableRows, this.RowClick, this.tableBody);
             }
         }
 

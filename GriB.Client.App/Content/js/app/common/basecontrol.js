@@ -253,14 +253,14 @@ define(["require", "exports", "app/common/utils", "app/common/variables"], funct
             };
             BaseTable.prototype.createRowsEvents = function () {
                 if (this.tableRows) {
-                    utils.createTouchClickEvent(this.tableRows, this.RowClick, this, this.tableBody);
+                    utils.createClickEvent(this.tableRows, this.RowClick, this, this.tableBody);
                     utils.createDblTouchClickEvent(this.tableRows, this.RowDoubleClick, this, this.tableBody);
                 }
             };
             BaseTable.prototype.destroyRowsEvents = function () {
                 if (this.tableRows) {
-                    utils.destroyTouchClickEvent(this.tableRows, this.RowClick, this.tableBody);
                     utils.destroyDblTouchClickEvent(this.tableRows, this.RowDoubleClick, this.tableBody);
+                    utils.destroyClickEvent(this.tableRows, this.RowClick, this.tableBody);
                 }
             };
             BaseTable.prototype.setupRows = function () {

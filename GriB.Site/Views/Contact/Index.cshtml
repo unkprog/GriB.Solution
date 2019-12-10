@@ -2,8 +2,59 @@
     ViewData["Title"] = "Контакты";
 }
 
+<div class="row">
+    <div class="col s12 m12 l12 xl12">
 
-<div style="height:100%;">
-    Страница в разработке
+        <div class="section">
+            <h4>POS Cloud</h4>
+            <h5>Система учета и автоматизации магазина, кафе, ресторана</h5>
+        </div>
+        <div class="divider"></div>
+
+        <div class="section">
+            <h5>Контакты</h5>
+            <p><b>Техническая поддержка:</b> support@poscloudgb.ru</p>
+        </div>
+        <div class="divider"></div>
+
+        <div class="section">
+            <div class="row">
+                <div class="col s12 m8 l8 xl6 offset-m2 offset-l2 offset-xl3">
+                    <div class="row">
+                        <div class="col s12">
+                            <h5 class="">Свяжитесь с нами</h5>
+                        </div>
+
+                        <div class="input-field col s12">
+                            <i class="material-icons prefix">account_box</i>
+                            <input id="sender_name" type="text" class="validate">
+                            <label for="sender_name">Имя</label>
+                        </div>
+                        <div class="input-field col s12">
+                            <i class="material-icons prefix">email</i>
+                            <input id="sender_email" type="email" class="validate">
+                            <label for="sender_email">E-mail</label>
+                        </div>
+
+                        <div class="input-field col s12">
+                            <textarea id="sender_message" class="materialize-textarea"></textarea>
+                            <label for="sender_message">Текст сообщения</label>
+                        </div>
+                        <div class="col s12">
+                            <a id="sender_send" class="waves-effect waves-parralax1 btn btncol site-background-color">ОТПРАВИТЬ</a>
+                        </div>
+
+                        <div class="col s12">
+                            Нажимая кнопку «ОТПРАВИТЬ», вы даете согласие на <a href="~/Home/PrivacyPersonal">обработку своих персональных данных</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </div>
 
+@section scripts {
+    <script src="~/js/contact.js"></script>
+}

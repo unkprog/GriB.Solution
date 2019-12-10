@@ -23,7 +23,7 @@ namespace Grib.App.Windows
         private void InitBrowser()
         {
 
-            browser = new ChromiumWebBrowser("https://app.poscloudgb.ru"); // new ChromiumWebBrowser("http://localhost:50970?isnativeapp") // new ChromiumWebBrowser("www.poscloudgb.ru")
+            browser = new ChromiumWebBrowser("https://app.poscloudgb.ru") // new ChromiumWebBrowser("http://localhost:50970?isnativeapp") // new ChromiumWebBrowser("www.poscloudgb.ru")
             {
                 Dock = DockStyle.Fill
             };
@@ -41,6 +41,11 @@ namespace Grib.App.Windows
             //var bitness = Environment.Is64BitProcess ? "x64" : "x86";
             //var version = string.Format("Chromium: {0}, CEF: {1}, CefSharp: {2}, Environment: {3}", Cef.ChromiumVersion, Cef.CefVersion, Cef.CefSharpVersion, bitness);
             //DisplayOutput(version);
+        }
+
+        private void Browser_IsBrowserInitializedChanged(object sender, EventArgs e)
+        {
+            throw new NotImplementedException();
         }
 
         private void InitBridge(ChromiumWebBrowser browser)
@@ -65,13 +70,14 @@ namespace Grib.App.Windows
             _ = _printer.DoWorkPrintDocument(new object[] { printFile });
         }
 
-        private void OnIsBrowserInitializedChanged(object sender, IsBrowserInitializedChangedEventArgs e)
+        private void OnIsBrowserInitializedChanged(object sender, EventArgs e)
         {
-            if (e.IsBrowserInitialized)
-            {
-                var b = ((ChromiumWebBrowser)sender);
-                this.InvokeOnUiThreadIfRequired(() => b.Focus());
-            }
+            //if (e.IsBrowserInitialized)
+            //{
+            //    var b = ((ChromiumWebBrowser)sender);
+            //    this.InvokeOnUiThreadIfRequired(() => b.Focus());
+            //}
+            this.InvokeOnUiThreadIfRequired(() => browser.Focus());
         }
 
         //private void OnBrowserConsoleMessage(object sender, ConsoleMessageEventArgs args)

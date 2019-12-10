@@ -8,23 +8,24 @@ using Grib.App.Windows.JavaScript;
 using RU.Atol.Drivers10.Fptr;
 using System;
 using Android.Widget;
+using Android.Print;
+using Android.Content;
 
 namespace GriB.Droid.POSCloud
 {
     [Activity(Label = "@string/app_name", Theme = "@style/AppTheme", MainLauncher = true, ScreenOrientation = ScreenOrientation.Landscape)]
     public class MainActivity : AppCompatActivity
     {
-        WebView web_view;
+        WebView webView;
         Bridge bridge;
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
             Xamarin.Essentials.Platform.Init(this, savedInstanceState);
-            // Set our view from the "main" layout resource
             SetContentView(Resource.Layout.activity_main);
 
-            web_view = FindViewById<WebView>(Resource.Id.webview);
-            InitBridge(web_view);
+            webView = FindViewById<WebView>(Resource.Id.webview);
+            ConfigureWebView(webView);
         }
 
         public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Android.Content.PM.Permission[] grantResults)
@@ -34,7 +35,7 @@ namespace GriB.Droid.POSCloud
             base.OnRequestPermissionsResult(requestCode, permissions, grantResults);
         }
 
-        private void InitBridge(WebView browser)
+        private void ConfigureWebView(WebView browser)
         {
             browser.Settings.JavaScriptEnabled = true;
             browser.Settings.DomStorageEnabled = true;
@@ -42,6 +43,7 @@ namespace GriB.Droid.POSCloud
             bridge = new Bridge(this);
             bridge.AddCommand("CloseApp", (string data) => { POSCloud.UI.Helper.CloseApp(); });
             bridge.AddCommand("PrintCheck", this.PrintCheck);
+            bridge.AddCommand("PrintCheckAtol", this.PrintCheckAtol);
 
             browser.AddJavascriptInterface(bridge, "nativeBridge");
             browser.SetWebViewClient(new MainWebViewClient());
@@ -50,6 +52,22 @@ namespace GriB.Droid.POSCloud
         }
 
         private void PrintCheck(string data)
+        {
+            try
+            {
+                PrintManager printManager = (PrintManager)this.GetSystemService(Context.PrintService);
+
+                PrintDocumentAdapter printAdapter = webView.CreatePrintDocumentAdapter("MyDocument");
+                String jobName = GetString(Resource.String.app_name) + " Print Test";
+                printManager.Print(jobName, printAdapter, new PrintAttributes.Builder().Build());
+            }
+            catch(Exception ex)
+            {
+                TostMessage(ex.Message);
+            }
+        }
+
+        private void PrintCheckAtol(string data)
         {
             try
             {
@@ -64,11 +82,10 @@ namespace GriB.Droid.POSCloud
                     fptr.Destroy();
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 TostMessage(ex.Message);
             }
-
         }
 
         public static void TostMessage(string message)

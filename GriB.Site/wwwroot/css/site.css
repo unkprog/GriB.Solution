@@ -12,13 +12,13 @@
 }
 
 #index-banner {
-    margin-top: -3%;
+    /*margin-top: -3%;*/
     height: 400px;
     z-index: 1;
-    -webkit-transform: skewY(-3deg);
+    /*-webkit-transform: skewY(-3deg);
     -moz-transform: skewY(-3deg);
     -o-transform: skewY(-3deg);
-    transform: skewY(-3deg);
+    transform: skewY(-3deg);*/
 }
 
 #banner-content {
@@ -46,6 +46,15 @@
 .header-parallax {
     text-shadow: 0 0 5px #3e2723, 0 0 10px #3e2723; /*, 0 0 15px #3e2723, 0 0 20px #3e2723, 0 0 25px #3e2723, 0 0 30px #3e2723, 0 0 35px #3e2723;*/
 }
+
+.btn-parralax1 {
+    font-weight: bold;
+    background-color: rgba(255,255,255,0.9);
+}
+    .btn-parralax1:hover {
+        color: white;
+        background-color: #3e2723;
+    }
 
 .site-background-wrapper-right {
     -webkit-transform: skewY(-3deg);
@@ -115,10 +124,6 @@
     width: 100%;
 }
 
-.btn-parralax1 {
-    font-weight: bold;
-    background-color: rgba(255,255,255,0.9);
-}
 
 .waves-effect.waves-parralax1 .waves-ripple {
     color: white;
@@ -130,10 +135,7 @@
     width: 100%;
 }
 
-    .btncol-flat:hover {
-        color: white;
-        background-color: #3e2723;
-    }
+
 
 .img-cover {
     height: 100vh;
@@ -154,15 +156,17 @@
 
 
 /* label color */
-.input-field label {
+.input-field label,
+textarea.materialize-textarea:focus:not([readonly]) + label {
     color: silver;
 }
+
 
 /* icon prefix focus color */
 input[type=text],
 input[type=email],
 input[type=tel] {
-    color: white !important;
+    color: #3e2723 !important;
 }
 
     .input-field .prefix.active,
@@ -172,19 +176,29 @@ input[type=tel] {
         color: silver !important;
     }
 
-input[type=text]:not(.browser-default):focus:not([readonly]),
-input[type=email]:not(.browser-default):focus:not([readonly]),
-input[type=tel]:not(.browser-default):focus:not([readonly]),
-input.valid[type=text]:not(.browser-default),
-input.valid[type=email]:not(.browser-default),
-input.valid[type=tel]:not(.browser-default) {
-    border-bottom: 1px solid white;
-    -webkit-box-shadow: 0 1px 0 0 white;
-    box-shadow: 0 1px 0 0 white;
-}
+    input[type=text]:not(.browser-default):focus:not([readonly]),
+    input[type=email]:not(.browser-default):focus:not([readonly]),
+    input[type=tel]:not(.browser-default):focus:not([readonly]),
+    textarea.materialize-textarea:focus:not([readonly]),
+    input.valid[type=text]:not(.browser-default),
+    input.valid[type=email]:not(.browser-default),
+    input.valid[type=tel]:not(.browser-default) {
+        border-bottom: 1px solid #3e2723;
+        -webkit-box-shadow: 0 1px 0 0 #3e2723;
+        box-shadow: 0 1px 0 0 #3e2723;
+    }
 
 .vertical-center {
     position: relative;
     top: 50%;
     transform: translateY(-50%);
 }
+
+.btn {
+    color: white;
+    background-color: #3e2723
+}
+    .btn:hover {
+        color: white;
+        background-color: #5d4037;
+    }
