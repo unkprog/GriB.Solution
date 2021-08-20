@@ -13,7 +13,7 @@ begin
 	[ud]      [datetime]      not null default (getdate()),
 	[uu]      [int]           not null default (0),
 	[type]    [int]           not null default (0),
-	[defunit] [int]           not null default (0),
+	[defcurrency] [int]       not null default (0),
 	[name]  [nvarchar](238) not null default (N''),
     primary key clustered ([id])
   )

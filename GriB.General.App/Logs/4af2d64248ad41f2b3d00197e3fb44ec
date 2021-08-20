@@ -1,0 +1,5 @@
+ERROR:
+Пользователь не найден.
+Stack trace:
+   в GriB.General.App.Controllers.AccountController.<>c__DisplayClass6_0.<login>b__0() в D:\Projects\Visual Studio\2017\Development\GriB.Solution\Grib.General.App\Controllers\AccountController.cs:строка 171
+   в GriB.Web.Http.BaseApiController.TryCatchResponse(Func`1 func) в D:\Projects\Visual Studio\2017\Development\GriB.Solution\GriB.Web\Http\ApiController.cs:строка 34
